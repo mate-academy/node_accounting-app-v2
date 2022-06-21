@@ -1,4 +1,16 @@
-# Sum() - [put the task name here]
-[put a short description here] Implement the `sum` function returning a sum of two numbers
-
-**Read [the guideline](https://github.com/mate-academy/js_task-guideline/blob/master/README.md) before start**
+# Accounting app (with Node.js)
+Implement an expense tracking app
+- implement CRUD endpoints for expenses
+- An expense should have a
+  - user
+  - date
+  - title
+  - amount
+  - category (just a label for now)
+  - note (optional text)
+  - any other field you want
+- Save expenses in a JSON file
+- Implement an ability to get the stats for (with query params)
+  - some period (from - to)
+  - some user 
+  - some categories (one or several)
