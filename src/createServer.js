@@ -116,6 +116,32 @@ function createServer() {
     res.send(foundExpense);
   });
 
+  app.patch('/expenses/:id', express.json(), (req, res) => {
+    const { id } = req.params;
+
+    const expenseId = Number(id);
+
+    if (typeof expenseId !== 'number') {
+      res.sendStatus(400);
+
+      return;
+    }
+
+    const foundExpense = expenses.find(expense => expense.id === expenseId);
+
+    if (!foundExpense) {
+      res.sendStatus(404);
+
+      return;
+    }
+
+    Object.assign(foundExpense, req.body);
+
+    res.statusCode = 200;
+
+    res.send(foundExpense);
+  });
+
   app.post('/users', express.json(), (req, res) => {
     const { name } = req.body;
 
@@ -168,6 +194,33 @@ function createServer() {
 
       return;
     }
+
+    res.statusCode = 200;
+
+    res.send(foundUser);
+  });
+
+  app.patch('/users/:id', express.json(), (req, res) => {
+    const { id } = req.params;
+    const { name } = req.body;
+
+    const userId = Number(id);
+
+    if (typeof userId !== 'number') {
+      res.sendStatus(400);
+
+      return;
+    }
+
+    const foundUser = users.find(user => user.id === userId);
+
+    if (!foundUser) {
+      res.sendStatus(404);
+
+      return;
+    }
+
+    Object.assign(foundUser, { name });
 
     res.statusCode = 200;
 
