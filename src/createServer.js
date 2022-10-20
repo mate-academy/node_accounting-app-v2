@@ -1,13 +1,20 @@
 'use strict';
 
-// const express = require('express');
+const express = require('express');
+const bodyParser = require('body-parser');
+const userRouts = require('./routes/users.js');
 
 function createServer() {
-  // Use express to create a server
-  // Add a routes to the server
-  // Return the server (express app)
+  const app = express();
+
+  app.use(bodyParser.json());
+  app.use('/', userRouts);
+
+  // app.get('/', (req, res) => {
+  //   res.send('users');
+  // });
+
+  return app;
 }
 
-module.exports = {
-  createServer,
-};
+module.exports = { createServer };
