@@ -92,6 +92,30 @@ function createServer() {
     res.send(expenses);
   });
 
+  app.get('/expenses/:id', express.json(), (req, res) => {
+    const { id } = req.params;
+
+    const expenseId = Number(id);
+
+    if (typeof expenseId !== 'number') {
+      res.sendStatus(400);
+
+      return;
+    }
+
+    const foundExpense = expenses.find(expense => expense.id === expenseId);
+
+    if (!foundExpense) {
+      res.sendStatus(404);
+
+      return;
+    }
+
+    res.statusCode = 200;
+
+    res.send(foundExpense);
+  });
+
   app.post('/users', express.json(), (req, res) => {
     const { name } = req.body;
 
@@ -124,6 +148,30 @@ function createServer() {
     res.statusCode = 200;
 
     res.send(users);
+  });
+
+  app.get('/users/:id', express.json(), (req, res) => {
+    const { id } = req.params;
+
+    const userId = Number(id);
+
+    if (typeof userId !== 'number') {
+      res.sendStatus(400);
+
+      return;
+    }
+
+    const foundUser = users.find(user => user.id === userId);
+
+    if (!foundUser) {
+      res.sendStatus(404);
+
+      return;
+    }
+
+    res.statusCode = 200;
+
+    res.send(foundUser);
   });
 
   return app;
