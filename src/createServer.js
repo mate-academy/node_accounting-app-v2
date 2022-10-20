@@ -97,6 +97,36 @@ function createServer() {
     res.send();
   });
 
+  app.patch('/users/:id', express.json(), (req, res) => {
+    const { id } = req.params;
+
+    const foundUser = users.find((user) => user.id === Number(id));
+
+    if (!foundUser) {
+      res.statusCode = 404;
+
+      res.send();
+
+      return;
+    }
+
+    const { name } = req.body;
+
+    if (!name) {
+      res.statusCode = 400;
+
+      res.send();
+
+      return;
+    }
+
+    foundUser.name = name;
+
+    res.statusCode = 200;
+
+    res.send(foundUser);
+  });
+
   return app;
 }
 
