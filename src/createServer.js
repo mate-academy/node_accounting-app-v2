@@ -142,6 +142,23 @@ function createServer() {
     res.send(foundExpense);
   });
 
+  app.delete('/expenses/:id', express.json(), (req, res) => {
+    const { id } = req.params;
+
+    const expenseId = Number(id);
+
+    const foundExpense = expenses.find(expense => expense.id === expenseId);
+
+    if (!foundExpense) {
+      res.sendStatus(404);
+
+      return;
+    }
+
+    expenses = expenses.filter(expense => expense.id !== expenseId);
+    res.sendStatus(204);
+  });
+
   app.post('/users', express.json(), (req, res) => {
     const { name } = req.body;
 
@@ -225,6 +242,23 @@ function createServer() {
     res.statusCode = 200;
 
     res.send(foundUser);
+  });
+
+  app.delete('/users/:id', express.json(), (req, res) => {
+    const { id } = req.params;
+
+    const userId = Number(id);
+
+    const foundUser = users.find(user => user.id === userId);
+
+    if (!foundUser) {
+      res.sendStatus(404);
+
+      return;
+    }
+
+    users = users.filter(user => user.id !== userId);
+    res.sendStatus(204);
   });
 
   return app;
