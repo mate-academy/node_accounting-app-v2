@@ -2,17 +2,36 @@
 'use strict';
 
 const express = require('express');
-// const { v4: uuidv4 } = require('uuid');
 const cors = require('cors');
+const {
+  init,
+  getAll,
+  getUserById,
+  createUser,
+  removeUser,
+  updateUser,
+} = require('./services/user');
+
+const {
+  getAllExpenses,
+  getExpenseById,
+  updateExpenses,
+  removeExpenses,
+  createNewExpenses,
+  initExpenses,
+} = require('./services/expenses');
 
 function createServer() {
-  let users = [];
-  let expenses = [];
+  // const router = require('./routers/user');
   const app = express();
 
   app.use(cors());
+  init();
+  initExpenses();
 
   app.get('/users', (req, res) => {
+    const users = getAll();
+
     res.send(users);
     res.statusCode = 200;
   });
@@ -20,7 +39,7 @@ function createServer() {
   app.get('/users/:userId', (req, res) => {
     const { userId } = req.params;
 
-    const foundUser = users.find((user) => user.id === +userId);
+    const foundUser = getUserById(userId);
 
     if (!foundUser) {
       res.sendStatus(404);
@@ -32,10 +51,6 @@ function createServer() {
     res.send(foundUser);
   });
 
-  // Use express to create a server
-  // Add a routes to the server
-  // Return the server (express app)
-
   app.post('/users', express.json(), (req, res) => {
     const { name } = req.body;
 
@@ -45,12 +60,8 @@ function createServer() {
       return;
     }
 
-    const newUser = {
-      id: Math.max(0, ...users.map(({ id }) => id + 1)),
-      name,
-    };
+    const newUser = createUser(name);
 
-    users.push(newUser);
     res.statusCode = 201;
     res.send(newUser);
   });
@@ -58,22 +69,22 @@ function createServer() {
   app.delete('/users/:userId', (req, res) => {
     const { userId } = req.params;
 
-    const filteredUsers = users.filter((user) => user.id !== +userId);
+    const foundUser = getUserById(userId);
 
-    if (filteredUsers.length === users.length) {
+    if (!foundUser) {
       res.sendStatus(404);
 
       return;
     }
 
-    users = filteredUsers;
+    removeUser(userId);
     res.sendStatus(204);
   });
 
   app.patch('/users/:userId', express.json(), (req, res) => {
     const { userId } = req.params;
 
-    const foundUser = users.find((user) => user.id === +userId);
+    const foundUser = getUserById(userId);
 
     if (!foundUser) {
       res.sendStatus(404);
@@ -83,7 +94,7 @@ function createServer() {
 
     const { name } = req.body;
 
-    Object.assign(foundUser, { name });
+    updateUser({ id: userId, name });
 
     res.send(foundUser);
     res.statusCode = 200;
@@ -95,7 +106,7 @@ function createServer() {
     const expenseData = req.body;
     const { userId } = expenseData;
 
-    const foundUser = users.find((user) => user.id === +userId);
+    const foundUser = getUserById(userId);
 
     if (!foundUser) {
       res.sendStatus(400);
@@ -103,12 +114,7 @@ function createServer() {
       return;
     }
 
-    const newExtense = {
-      id: Math.max(0, ...users.map(({ id }) => id + 1)),
-      ...expenseData,
-    };
-
-    expenses.push(newExtense);
+    const newExtense = createNewExpenses(expenseData);
 
     res.statusCode = 201;
     res.send(newExtense);
@@ -117,7 +123,7 @@ function createServer() {
   app.get('/expenses/:expenseId', (req, res) => {
     const { expenseId } = req.params;
 
-    const foundExpens = expenses.find((expense) => expense.id === +expenseId);
+    const foundExpens = getExpenseById(expenseId);
 
     if (!foundExpens) {
       res.sendStatus(404);
@@ -130,6 +136,7 @@ function createServer() {
   });
 
   app.get('/expenses', (req, res) => {
+    const expenses = getAllExpenses();
     const query = req.query;
     const { userId, category, to, from } = query;
 
@@ -176,23 +183,22 @@ function createServer() {
   app.delete('/expenses/:expenseId', (req, res) => {
     const { expenseId } = req.params;
 
-    const filteredExpenses = expenses.filter(
-      (expense) => expense.id !== +expenseId
-    );
+    const filteredExpenses = getExpenseById(expenseId);
 
-    if (filteredExpenses.length === expenses.length) {
+    if (!filteredExpenses) {
       res.sendStatus(404);
 
       return;
     }
-    expenses = filteredExpenses;
+
+    removeExpenses(expenseId);
     res.sendStatus(204);
   });
 
   app.patch('/expenses/:expenseId', express.json(), (req, res) => {
     const { expenseId } = req.params;
 
-    const foundExpenses = expenses.find((expense) => expense.id === +expenseId);
+    const foundExpenses = getExpenseById(expenseId);
 
     if (!foundExpenses) {
       res.sendStatus(404);
@@ -202,7 +208,7 @@ function createServer() {
 
     const { title } = req.body;
 
-    Object.assign(foundExpenses, { title });
+    updateExpenses({ expenseId, title });
 
     res.send(foundExpenses);
     res.statusCode = 200;
