@@ -2,17 +2,20 @@
 
 const express = require('express');
 const bodyParser = require('body-parser');
-const userRouts = require('./routes/users.js');
+const userRoutes = require('./routes/users.js');
+const expensesRoutes = require('./routes/expenses.js');
+const userService = require('./controllers/userService.js');
+const expensesService = require('./controllers/expensesService.js');
 
 function createServer() {
   const app = express();
 
   app.use(bodyParser.json());
-  app.use('/', userRouts);
+  app.use('/', bodyParser.json(), userRoutes);
+  userService.init();
 
-  // app.get('/', (req, res) => {
-  //   res.send('users');
-  // });
+  app.use('/', bodyParser.json(), expensesRoutes);
+  expensesService.init();
 
   return app;
 }
