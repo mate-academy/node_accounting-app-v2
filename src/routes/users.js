@@ -1,10 +1,17 @@
 'use strict';
 
 const express = require('express');
-const cors = require('cors');
-const servises = require('./services/users');
+const userControllers = require('../controllers/users');
 
-const router = express.Router;
+const router = express.Router();
 
-router.get()
-router.
+router.get('/', userControllers.getAll);
+router.get('/:userId', userControllers.getOne);
+
+router.post('/', userControllers.createUser);
+router.delete('/:userId', userControllers.deleteUser);
+router.patch('/:userId', userControllers.updateUser);
+
+module.exports = {
+  router,
+};

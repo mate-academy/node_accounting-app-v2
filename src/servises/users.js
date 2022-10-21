@@ -1,7 +1,5 @@
 'use strict';
 
-const { v4: uuidv4 } = require('uuid');
-
 let users = [];
 
 function getAll() {
@@ -16,15 +14,13 @@ function getById(userId) {
 
 function create(name) {
   const newUser = {
-    id: uuidv4(),
+    id: Math.floor(Math.random() * 10000),
     name,
   };
 
   users.push(newUser);
-}
 
-function remove(userId) {
-  users = users.filter(user => user.id !== userId);
+  return newUser;
 }
 
 function update(userId, name) {
@@ -35,10 +31,19 @@ function update(userId, name) {
   return user;
 }
 
+function remove(userId) {
+  users.filter(user => user.id !== userId);
+}
+
+function deleteAll() {
+  users = [];
+}
+
 module.exports = {
   getAll,
   getById,
   create,
   remove,
   update,
+  deleteAll,
 };

@@ -1,26 +1,36 @@
 'use strict';
 
-const { v4: uuidv4 } = require('uuid');
-
 let expenses = [];
 
-function getExpenses() {
-  return expenses;
+function getExpenses({ userId, category, from, to }) {
+  let filteredExpenses = expenses;
+
+  if (userId) {
+    filteredExpenses = filteredExpenses.filter(expense => (
+      expense.userId === +userId
+    ));
+  }
+
+  if (category) {
+    filteredExpenses = filteredExpenses.filter(expense => (
+      category.includes(expense.category)
+    ));
+  }
+
+  if (from) {
+    filteredExpenses = filteredExpenses.filter(expense => (
+      new Date(from) < new Date(expense.spentAt)
+    ));
+  }
+
+  if (to) {
+    filteredExpenses = filteredExpenses.filter(expense => (
+      new Date(to) > new Date(expense.spentAt)
+    ));
+  }
+
+  return filteredExpenses;
 };
-
-function filterByDate(start, end) {
-  const userExpenses = expenses
-    .filter(expense => expense.spentAt > start && expense.spentAt < end);
-
-  return userExpenses;
-}
-
-function filterById(expenseId) {
-  const expensesById = expenses
-    .filter(expense => expense.id !== expenseId);
-
-  return expensesById;
-}
 
 function getExpenseById(expenseId) {
   const neededExpense = expenses.find(expense => expense.id === expenseId);
@@ -37,7 +47,7 @@ function createExpense(
   note,
 ) {
   const newExpense = {
-    id: uuidv4(),
+    id: Math.floor(Math.random() * 10000),
     userId,
     spentAt,
     title,
@@ -52,23 +62,39 @@ function createExpense(
 }
 
 function removeExpense(expenseId) {
-  expenses = expenses.filter(expense => expense.id !== expenseId);
+  expenses.filter(expense => expense.id !== expenseId);
 }
 
-function updateExpense(expenseId, title) {
+function updateExpense(
+  expenseId,
+  spentAt,
+  title,
+  amount,
+  category,
+  note
+) {
   const expense = getExpenseById(expenseId);
 
-  Object.assign(expense, { title });
+  Object.assign(expense, {
+    spentAt: spentAt || expense.spentAt,
+    title: title || expense.title,
+    amount: amount || expense.amount,
+    category: category || expense.category,
+    note: note || expense.note,
+  });
 
   return expense;
 }
 
+function deleteAll() {
+  expenses = [];
+}
+
 module.exports = {
   getExpenses,
-  filterByDate,
-  filterById,
   getExpenseById,
   createExpense,
   removeExpense,
   updateExpense,
+  deleteAll,
 };
