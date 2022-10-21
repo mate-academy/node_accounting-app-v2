@@ -19,7 +19,6 @@ const controllerPostExpense = (req, res) => {
   const expense = postExpense(req.body, expenses);
 
   if (user === null) {
-    // console.log(user);
     res.sendStatus(400);
 
     return;
