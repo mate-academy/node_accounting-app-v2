@@ -42,8 +42,6 @@ const get = (req, res) => {
 
   if (expenses.length === 0) {
     res.send([]);
-
-    return;
   };
 
   const userIdExpensed = userServise.findById(+userId);
@@ -64,7 +62,7 @@ const get = (req, res) => {
     return;
   }
 
-  if (from && to) {
+  if (from || to) {
     const expensesBetweenDate = expenses.filter(
       (expense) => expense.spentAt >= from && expense.spentAt <= to);
 

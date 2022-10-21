@@ -5,7 +5,7 @@ const userServise = require('../services/users.js');
 const post = (req, res) => {
   const { name } = req.body;
 
-  if (!name) {
+  if (!name || typeof name !== 'string') {
     res.sendStatus(400);
 
     return;
@@ -29,8 +29,6 @@ const get = (req, res) => {
 
   if (users.length === 0) {
     res.send([]);
-
-    return;
   }
 
   res.send(users);
