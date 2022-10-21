@@ -1,5 +1,12 @@
 'use strict';
 
+const {
+  getExpenseById, removeExpense, updateExpense, createExpense,
+  getExpenseByTime, getExpenseByUser, getExpensesByCat,
+} = require('./services/expenses');
+
+const { getById } = require('./services/users.js');
+
 function InitExpenseRoute(app, { users, expenses }) {
   app.post('/', (req, res) => {
     const {
@@ -11,7 +18,7 @@ function InitExpenseRoute(app, { users, expenses }) {
       note,
     } = req.body;
 
-    const foundUser = users.find((user) => user.id === +userId);
+    const foundUser = getById(users, userId);
 
     if (!foundUser) {
       res.sendStatus(400);
@@ -19,17 +26,9 @@ function InitExpenseRoute(app, { users, expenses }) {
       return;
     };
 
-    const newExpenses = {
-      id: Math.random(),
-      userId,
-      spentAt,
-      title,
-      amount,
-      category,
-      note,
-    };
+    const newExpenses = createExpense(expenses, userId,
+      spentAt, title, amount, category, note);
 
-    expenses.push(newExpenses);
     res.statusCode = 201;
     res.send(newExpenses);
   });
@@ -50,15 +49,15 @@ function InitExpenseRoute(app, { users, expenses }) {
       return;
     }
 
-    const foundUser = users.find(user => user.id === id);
+    const foundUser = getById(users, id);
 
     if (foundUser) {
-      const expensesFilteredByUser = expenses
-        .filter(expense => expense.userId === id);
+      const expensesFilteredByUser = getExpenseByUser(expenses, id);
 
       if (category) {
-        const expensesFilteredByCat = expensesFilteredByUser
-          .filter(expense => expense.category === category);
+        const expensesFilteredByCat = getExpensesByCat(
+          expensesFilteredByUser, category
+        );
 
         res.send(expensesFilteredByCat);
 
@@ -71,8 +70,7 @@ function InitExpenseRoute(app, { users, expenses }) {
     }
 
     if (from && to) {
-      const expensesFilteredByDate = expenses.filter(
-        (expense) => expense.spentAt >= from && expense.spentAt <= to);
+      const expensesFilteredByDate = getExpenseByTime(expenses, from, to);
 
       res.send(expensesFilteredByDate);
 
@@ -91,7 +89,7 @@ function InitExpenseRoute(app, { users, expenses }) {
       return;
     };
 
-    const foundExpense = expenses.find(expense => expense.id === +id);
+    const foundExpense = getExpenseById(expenses, +id);
 
     if (!foundExpense) {
       res.sendStatus(404);
@@ -99,13 +97,18 @@ function InitExpenseRoute(app, { users, expenses }) {
       return;
     };
 
-    Object.assign(foundExpense, req.body);
+    const body = req.body;
+
+    updateExpense(expenses, +id,
+      body);
+
     res.send(foundExpense);
+    res.sendStatus(200);
   });
 
   app.get('/:id', (req, res) => {
     const { id } = req.params;
-    const foundExpense = expenses.find(expense => expense.id === +id);
+    const foundExpense = getExpenseById(expenses, +id);
 
     if (!foundExpense) {
       res.sendStatus(404);
@@ -119,16 +122,16 @@ function InitExpenseRoute(app, { users, expenses }) {
 
   app.delete('/:id', (req, res) => {
     const { id } = req.params;
-    const filteredExpenses = expenses.filter(expens => expens.id !== +id);
+    const foundExpense = getExpenseById(expenses, +id);
 
-    if (filteredExpenses.length === expenses.length) {
+    if (!foundExpense) {
       res.sendStatus(404);
 
       return;
     }
 
     // eslint-disable-next-line no-param-reassign
-    expenses = filteredExpenses;
+    expenses = removeExpense(expenses, +id);
     res.sendStatus(204);
   });
 }

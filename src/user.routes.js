@@ -1,16 +1,18 @@
 'use strict';
 
-function InitUserRoutes(app, { users }) {
-  app.get('/', (req, res) => {
-    res.send(users);
+const {
+  getById, createUser, removeUser, updateUser,
+} = require('./services/users.js');
 
-    res.statusCode = 200;
-  });
+const { getALLAppUsers } = require('./controllers/users');
+
+function InitUserRoutes(app, { users }) {
+  app.get('/', getALLAppUsers(users));
 
   app.get('/:id', (req, res) => {
     const { id } = req.params;
 
-    const foundUser = users.find((user) => user.id === +id);
+    const foundUser = getById(users, +id);
 
     if (!foundUser) {
       res.sendStatus(404);
@@ -25,16 +27,16 @@ function InitUserRoutes(app, { users }) {
   app.delete('/:id', (req, res) => {
     const { id } = req.params;
 
-    const filteredUsers = users.filter((user) => user.id !== +id);
+    const foundUser = getById(users, +id);
 
-    if (filteredUsers.length === users.length) {
+    if (!foundUser) {
       res.sendStatus(404);
 
       return;
     }
 
     // eslint-disable-next-line no-param-reassign
-    users = filteredUsers;
+    users = removeUser(users, +id);
     res.sendStatus(204);
   });
 
@@ -47,12 +49,7 @@ function InitUserRoutes(app, { users }) {
       return;
     }
 
-    const newUser = {
-      id: Math.random(),
-      name,
-    };
-
-    users.push(newUser);
+    const newUser = createUser(users, name);
 
     res.statusCode = 201;
     res.send(newUser);
@@ -61,7 +58,7 @@ function InitUserRoutes(app, { users }) {
   app.patch('/:id', (req, res) => {
     const { id } = req.params;
 
-    const foundUser = users.find((user) => user.id === +id);
+    const foundUser = getById(users, +id);
 
     if (!foundUser) {
       res.sendStatus(404);
@@ -71,7 +68,7 @@ function InitUserRoutes(app, { users }) {
 
     const { name } = req.body;
 
-    Object.assign(foundUser, { name });
+    updateUser(name, +id, users);
 
     res.send(foundUser);
     res.sendStatus(200);
