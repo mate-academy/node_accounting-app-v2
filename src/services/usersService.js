@@ -41,10 +41,15 @@ function updateUser(userId, name) {
   return user;
 }
 
+function deleteAll() {
+  users = [];
+}
+
 module.exports = {
   getUsers,
   getUserById,
   createNewUser,
   removeUser,
   updateUser,
+  deleteAll,
 };

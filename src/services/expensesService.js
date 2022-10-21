@@ -80,6 +80,10 @@ function filterExpensesById(expenseId) {
   return filteredExpenses;
 }
 
+function deleteAll() {
+  expensesData = [];
+}
+
 module.exports = {
   getExpenses,
   filterByTime,
@@ -89,4 +93,5 @@ module.exports = {
   updateExpense,
   removeExpense,
   filterExpensesById,
+  deleteAll,
 };

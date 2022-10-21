@@ -7,10 +7,16 @@ function createServer() {
   const { router: userRouter } = require('./routes/usersRoute');
   const { router: expenseRouter } = require('./routes/expensesRoute');
 
+  const userService = require('./services/usersService');
+  const expenseService = require('./services/expensesService');
+
   const app = express();
 
-  app.use('/users', userRouter);
-  app.use('/expenses', expenseRouter);
+  userService.deleteAll();
+  expenseService.deleteAll();
+
+  app.use('/users', express.json(), userRouter);
+  app.use('/expenses', express.json(), expenseRouter);
 
   return app;
 }
