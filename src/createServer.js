@@ -1,5 +1,14 @@
 'use strict';
 
+const { getUserById,
+  postUser,
+  deleteUser,
+  updateUser } = require('./services/users');
+const { postExpense,
+  getExpenseById,
+  getExpenses,
+  deleteExpense,
+  updateExpense } = require('./services/expenses');
 const express = require('express');
 
 function createServer() {
@@ -7,26 +16,22 @@ function createServer() {
 
   // let users = [{
   //   id: 1,
-  //   name: 'pastich',
+  //   name: 'computer',
   // }];
 
-  let users = [];
+  // let users = [];
 
   // const expenses = [{
-  //   userId: 1, category: 'pasta',
+  //   userId: 1, category: 'computer5',
   // }, {
   //   userId: 100, category: 'oldich',
   // }];
 
   let expenses = [];
+  let users = [];
 
   app.post('/users', express.json(), (req, res) => {
     const { name } = req.body;
-
-    const user = {
-      id: users.length + 1,
-      name,
-    };
 
     if (!name) {
       res.sendStatus(400);
@@ -34,19 +39,21 @@ function createServer() {
       return;
     }
 
-    users.push(user);
+    const user = postUser(name, users);
+
     res.statusCode = 201;
     res.send(user);
   });
 
   app.get('/users', (req, res) => {
     res.statusCode = 200;
+
     res.send(users);
   });
 
   app.get('/users/:userId', (req, res) => {
     const { userId } = req.params;
-    const user = users.find(folk => folk.id === +userId);
+    const user = getUserById(userId, users);
 
     if (!user) {
       res.sendStatus(404);
@@ -60,15 +67,15 @@ function createServer() {
 
   app.delete('/users/:userId', (req, res) => {
     const { userId } = req.params;
-    const newUsers = users.filter(folk => folk.id !== +userId);
+    const foundUser = getUserById(+userId, users);
 
-    if (users.length === newUsers.length) {
+    if (!foundUser) {
       res.sendStatus(404);
 
       return;
     }
 
-    users = newUsers;
+    users = deleteUser(userId, users);
 
     res.sendStatus(204);
   });
@@ -77,7 +84,7 @@ function createServer() {
     const { userId } = req.params;
     const { name } = req.body;
 
-    const foundUser = users.find(folk => folk.id === +userId);
+    const foundUser = getUserById(userId, users);
 
     if (!name) {
       res.sendStatus(400);
@@ -91,7 +98,7 @@ function createServer() {
       return;
     }
 
-    Object.assign(foundUser, { name });
+    updateUser(userId, name, users);
     res.send(foundUser);
   });
   // ////////
@@ -99,15 +106,11 @@ function createServer() {
   app.post('/expenses', express.json(), (req, res) => {
     const { userId } = req.body;
 
-    const user = users.find(folk => +userId === folk.id);
-    const expense = {
-      id: expenses.length + 1,
-      ...req.body,
-    };
+    const user = getUserById(+userId, users);
+    const expense = postExpense(req.body, expenses);
 
-    expenses.push(expense);
-
-    if (!user) {
+    if (user === null) {
+      // console.log(user);
       res.sendStatus(400);
 
       return;
@@ -120,34 +123,11 @@ function createServer() {
   app.get('/expenses', (req, res) => {
     const normalizedURL = new URL(req.url, `http://${req.headers.host}`);
 
-    const userId = normalizedURL.searchParams.get('userId');
-    const category = normalizedURL.searchParams.get('category');
-    const fromDate = normalizedURL.searchParams.get('from');
-    const toDate = normalizedURL.searchParams.get('to');
-    const numberFromDate = new Date(fromDate).getTime();
-    const numberToDate = new Date(toDate).getTime();
-    let copy = [ ...expenses ];
-
-    if (userId !== null) {
-      copy = copy.filter(expense => expense.userId === +userId);
-    }
-
-    if (category !== null) {
-      copy = copy.filter(expense => expense.category === category);
-    }
-
-    if (fromDate !== null && toDate !== null) {
-      copy = copy.filter(expense => {
-        const expenseDate = new Date(expense.spentAt).getTime();
-
-        return expenseDate < numberToDate && expenseDate > numberFromDate;
-      });
-    }
+    const copy = getExpenses(normalizedURL, expenses);
 
     res.statusCode = 200;
 
-    if (category !== null || userId !== null
-      || fromDate !== null || toDate !== null) {
+    if (normalizedURL.search) {
       res.send(copy);
     } else {
       res.send(expenses);
@@ -156,7 +136,7 @@ function createServer() {
 
   app.get('/expenses/:expenseId', (req, res) => {
     const { expenseId } = req.params;
-    const foundExpense = expenses.find(expense => expense.id === +expenseId);
+    const foundExpense = getExpenseById(+expenseId, expenses);
 
     if (!foundExpense) {
       res.sendStatus(404);
@@ -170,9 +150,9 @@ function createServer() {
 
   app.delete('/expenses/:expenseId', (req, res) => {
     const { expenseId } = req.params;
-    const newExpenses = expenses.filter(expense => expense.id !== +expenseId);
+    const newExpenses = deleteExpense(expenseId, expenses);
 
-    if (users.length === newExpenses.length) {
+    if (expenses.length === newExpenses.length) {
       res.sendStatus(404);
 
       return;
@@ -187,7 +167,7 @@ function createServer() {
     const { expenseId } = req.params;
     const { title } = req.body;
 
-    const foundExpense = expenses.find(expense => expense.id === +expenseId);
+    const foundExpense = getExpenseById(expenseId, expenses);
 
     if (!foundExpense) {
       res.sendStatus(404);
@@ -201,7 +181,7 @@ function createServer() {
       return;
     }
 
-    Object.assign(foundExpense, { title });
+    updateExpense(foundExpense, title);
     res.send(foundExpense);
   });
 
