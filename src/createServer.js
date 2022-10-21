@@ -1,154 +1,18 @@
 'use strict';
 
 const express = require('express');
-const expenseServise = require('./services/expenses.js');
 const userServise = require('./services/users.js');
+
+const expenseServise = require('./services/expenses.js');
+const expenseRouter = require('./routers/expenseRouter.js');
 
 function createServer() {
   const app = express();
 
+  app.use('/expenses', express.json(), expenseRouter);
   expenseServise.init();
+
   userServise.init();
-
-  app.post('/expenses', express.json(), (req, res) => {
-    const {
-      userId,
-      title,
-    } = req.body;
-
-    if (!title || !userServise.exist(userId)) {
-      res.sendStatus(400);
-
-      return;
-    }
-
-    const newExpense = {
-      ...req.body,
-      id: Math.floor(Math.random() * 10),
-    };
-
-    expenseServise.add(newExpense);
-
-    res.statusCode = 201;
-
-    res.send(newExpense);
-  });
-
-  app.get('/expenses', express.json(), (req, res) => {
-    const expenses = expenseServise.getAll();
-
-    const {
-      userId,
-      category,
-      from,
-      to,
-    } = req.query;
-
-    const id = Number(userId);
-
-    if (typeof id !== 'number') {
-      res.sendStatus(400);
-
-      return;
-    }
-
-    res.statusCode = 200;
-
-    if (!expenses.length) {
-      res.send([]);
-
-      return;
-    }
-
-    if (from && to) {
-      const userExpenses = expenseServise.filter(
-        expense => expense.spentAt > from && expense.spentAt < to
-      );
-
-      res.send(userExpenses);
-
-      return;
-    }
-
-    if (userServise.findById(id)) {
-      let userExpenses = expenseServise.filter(
-        expense => expense.userId === id
-      );
-
-      if (category) {
-        userExpenses = userExpenses.filter(
-          expense => expense.category === category
-        );
-      }
-
-      res.send(userExpenses);
-
-      return;
-    }
-
-    res.send(expenseServise.getAll());
-  });
-
-  app.get('/expenses/:id', express.json(), (req, res) => {
-    const expenseId = Number(req.params.id);
-
-    if (typeof expenseId !== 'number') {
-      res.sendStatus(400);
-
-      return;
-    }
-
-    const foundExpense = expenseServise.findById(expenseId);
-
-    if (!foundExpense) {
-      res.sendStatus(404);
-
-      return;
-    }
-
-    res.statusCode = 200;
-
-    res.send(foundExpense);
-  });
-
-  app.patch('/expenses/:id', express.json(), (req, res) => {
-    const expenseId = Number(req.params.id);
-
-    if (typeof expenseId !== 'number') {
-      res.sendStatus(400);
-
-      return;
-    }
-
-    const foundExpense = expenseServise.findById(expenseId);
-
-    if (!foundExpense) {
-      res.sendStatus(404);
-
-      return;
-    }
-
-    expenseServise.update(foundExpense, req.body);
-
-    res.statusCode = 200;
-
-    res.send(foundExpense);
-  });
-
-  app.delete('/expenses/:id', express.json(), (req, res) => {
-    const expenseId = Number(req.params.id);
-
-    const foundExpense = expenseServise.findById(expenseId);
-
-    if (!foundExpense) {
-      res.sendStatus(404);
-
-      return;
-    }
-
-    expenseServise.remove(expenseId);
-    res.sendStatus(204);
-  });
 
   app.post('/users', express.json(), (req, res) => {
     const { name } = req.body;
