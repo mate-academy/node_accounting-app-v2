@@ -48,6 +48,9 @@ describe('User', () => {
         .expect(200)
         .expect('Content-Type', /application\/json/);
 
+      // eslint-disable-next-line no-console
+      console.log(response.body);
+
       expect(response.body)
         .toEqual([]);
     });
