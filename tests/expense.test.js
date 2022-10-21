@@ -13,7 +13,7 @@ describe('Expense', () => {
   });
 
   describe('createExpense', () => {
-    it('should create a new expense', async() => {
+    it('should create a new expense', async () => {
       const { body: { id: userId } } = await api
         .post('/users')
         .send({
@@ -44,14 +44,14 @@ describe('Expense', () => {
         );
     });
 
-    it('should return 400 if name is not provided', async() => {
+    it('should return 400 if name is not provided', async () => {
       await api
         .post('/expenses')
         .send({})
         .expect(400);
     });
 
-    it('should return 400 if user not found', async() => {
+    it('should return 400 if user not found', async () => {
       const expenseData = {
         userId: 1,
         spentAt: '2022-10-19T11:01:43.462Z',
@@ -69,7 +69,7 @@ describe('Expense', () => {
   });
 
   describe('getExpenses', () => {
-    it('should return empty array if no expenses', async() => {
+    it('should return empty array if no expenses', async () => {
       const response = await api
         .get('/expenses')
         .expect(200)
@@ -79,7 +79,7 @@ describe('Expense', () => {
         .toEqual([]);
     });
 
-    it('should return all expenses', async() => {
+    it('should return all expenses', async () => {
       const { body: { id: userId } } = await api
         .post('/users')
         .send({
@@ -113,7 +113,7 @@ describe('Expense', () => {
         ]);
     });
 
-    it('should return all expenses for a user', async() => {
+    it('should return all expenses for a user', async () => {
       const { body: { id: userId } } = await api
         .post('/users')
         .send({
@@ -160,7 +160,7 @@ describe('Expense', () => {
         ]);
     });
 
-    it('should return all expenses between dates', async() => {
+    it('should return all expenses between dates', async () => {
       const { body: { id: userId } } = await api
         .post('/users')
         .send({
@@ -201,7 +201,7 @@ describe('Expense', () => {
         ]);
     });
 
-    it('should return all expenses by category', async() => {
+    it('should return all expenses by category', async () => {
       const { body: { id: userId } } = await api
         .post('/users')
         .send({
@@ -244,7 +244,7 @@ describe('Expense', () => {
   });
 
   describe('getExpense', () => {
-    it('should return expense', async() => {
+    it('should return expense', async () => {
       const { body: { id: userId } } = await api
         .post('/users')
         .send({
@@ -276,7 +276,7 @@ describe('Expense', () => {
         });
     });
 
-    it('should return 404 if expense not found', async() => {
+    it('should return 404 if expense not found', async () => {
       await api
         .get('/expenses/1')
         .expect(404);
@@ -284,7 +284,7 @@ describe('Expense', () => {
   });
 
   describe('updateExpense', () => {
-    it('should update expense', async() => {
+    it('should update expense', async () => {
       const { body: { id: userId } } = await api
         .post('/users')
         .send({
@@ -320,7 +320,7 @@ describe('Expense', () => {
         });
     });
 
-    it('should return 404 if expense not found', async() => {
+    it('should return 404 if expense not found', async () => {
       await api
         .patch('/expenses/1')
         .send({})
@@ -329,7 +329,7 @@ describe('Expense', () => {
   });
 
   describe('deleteExpense', () => {
-    it('should delete expense', async() => {
+    it('should delete expense', async () => {
       const { body: { id: userId } } = await api
         .post('/users')
         .send({
@@ -358,7 +358,7 @@ describe('Expense', () => {
         .expect(404);
     });
 
-    it('should return 404 if expense not found', async() => {
+    it('should return 404 if expense not found', async () => {
       await api
         .delete('/expenses/1')
         .expect(404);
