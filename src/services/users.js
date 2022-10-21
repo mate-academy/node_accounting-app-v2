@@ -1,5 +1,7 @@
 'use strict';
 
+let nextUserId = 1;
+
 function getUserById(userId, users) {
   const user = users.find(folk => folk.id === +userId);
 
@@ -8,7 +10,7 @@ function getUserById(userId, users) {
 
 function postUser(name, users) {
   const user = {
-    id: users.length + 1,
+    id: nextUserId++,
     name,
   };
 

@@ -1,8 +1,10 @@
 'use strict';
 
+let nextExpenseId = 1;
+
 function postExpense(body, expenses) {
   const expense = {
-    id: expenses.length + 1,
+    id: nextExpenseId++,
     ...body,
   };
 
