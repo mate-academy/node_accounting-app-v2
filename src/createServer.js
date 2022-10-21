@@ -1,189 +1,48 @@
 'use strict';
 
-const { getUserById,
-  postUser,
-  deleteUser,
-  updateUser } = require('./services/users');
-const { postExpense,
-  getExpenseById,
-  getExpenses,
-  deleteExpense,
-  updateExpense } = require('./services/expenses');
+const { controllerDeleteUser,
+  controllerGetAllUsers,
+  controllerGetUserById,
+  controllerPostUser,
+  controllerUpdateUser,
+  usersArray } = require('./controllers/users');
+const { controllerPostExpense,
+  controllerGetExpenses,
+  controllerGetExpenseById,
+  controllerDeleteExpense,
+  controllerPatchExpense,
+  expensesArray } = require('./controllers/expenses');
+
 const express = require('express');
 
 function createServer() {
   const app = express();
 
-  // let users = [{
-  //   id: 1,
-  //   name: 'computer',
-  // }];
+  app.post('/users', express.json(), controllerPostUser);
 
-  // let users = [];
+  app.get('/users', controllerGetAllUsers);
 
-  // const expenses = [{
-  //   userId: 1, category: 'computer5',
-  // }, {
-  //   userId: 100, category: 'oldich',
-  // }];
+  app.get('/users/:userId', controllerGetUserById);
 
-  let expenses = [];
-  let users = [];
+  app.delete('/users/:userId', controllerDeleteUser);
 
-  app.post('/users', express.json(), (req, res) => {
-    const { name } = req.body;
+  app.patch('/users/:userId', express.json(), controllerUpdateUser);
 
-    if (!name) {
-      res.sendStatus(400);
+  usersArray();
 
-      return;
-    }
-
-    const user = postUser(name, users);
-
-    res.statusCode = 201;
-    res.send(user);
-  });
-
-  app.get('/users', (req, res) => {
-    res.statusCode = 200;
-
-    res.send(users);
-  });
-
-  app.get('/users/:userId', (req, res) => {
-    const { userId } = req.params;
-    const user = getUserById(userId, users);
-
-    if (!user) {
-      res.sendStatus(404);
-
-      return;
-    }
-
-    res.statusCode = 200;
-    res.send(user);
-  });
-
-  app.delete('/users/:userId', (req, res) => {
-    const { userId } = req.params;
-    const foundUser = getUserById(+userId, users);
-
-    if (!foundUser) {
-      res.sendStatus(404);
-
-      return;
-    }
-
-    users = deleteUser(userId, users);
-
-    res.sendStatus(204);
-  });
-
-  app.patch('/users/:userId', express.json(), (req, res) => {
-    const { userId } = req.params;
-    const { name } = req.body;
-
-    const foundUser = getUserById(userId, users);
-
-    if (!name) {
-      res.sendStatus(400);
-
-      return;
-    }
-
-    if (!foundUser) {
-      res.sendStatus(404);
-
-      return;
-    }
-
-    updateUser(userId, name, users);
-    res.send(foundUser);
-  });
   // ////////
 
-  app.post('/expenses', express.json(), (req, res) => {
-    const { userId } = req.body;
+  app.post('/expenses', express.json(), controllerPostExpense);
 
-    const user = getUserById(+userId, users);
-    const expense = postExpense(req.body, expenses);
+  app.get('/expenses', controllerGetExpenses);
 
-    if (user === null) {
-      // console.log(user);
-      res.sendStatus(400);
+  app.get('/expenses/:expenseId', controllerGetExpenseById);
 
-      return;
-    }
+  app.delete('/expenses/:expenseId', controllerDeleteExpense);
 
-    res.statusCode = 201;
-    res.send(expense);
-  });
+  app.patch('/expenses/:expenseId', express.json(), controllerPatchExpense);
 
-  app.get('/expenses', (req, res) => {
-    const normalizedURL = new URL(req.url, `http://${req.headers.host}`);
-
-    const copy = getExpenses(normalizedURL, expenses);
-
-    res.statusCode = 200;
-
-    if (normalizedURL.search) {
-      res.send(copy);
-    } else {
-      res.send(expenses);
-    }
-  });
-
-  app.get('/expenses/:expenseId', (req, res) => {
-    const { expenseId } = req.params;
-    const foundExpense = getExpenseById(+expenseId, expenses);
-
-    if (!foundExpense) {
-      res.sendStatus(404);
-
-      return;
-    }
-
-    res.statusCode = 200;
-    res.send(foundExpense);
-  });
-
-  app.delete('/expenses/:expenseId', (req, res) => {
-    const { expenseId } = req.params;
-    const newExpenses = deleteExpense(expenseId, expenses);
-
-    if (expenses.length === newExpenses.length) {
-      res.sendStatus(404);
-
-      return;
-    }
-
-    expenses = newExpenses;
-
-    res.sendStatus(204);
-  });
-
-  app.patch('/expenses/:expenseId', express.json(), (req, res) => {
-    const { expenseId } = req.params;
-    const { title } = req.body;
-
-    const foundExpense = getExpenseById(expenseId, expenses);
-
-    if (!foundExpense) {
-      res.sendStatus(404);
-
-      return;
-    }
-
-    if (!title) {
-      res.sendStatus(400);
-
-      return;
-    }
-
-    updateExpense(foundExpense, title);
-    res.send(foundExpense);
-  });
+  expensesArray();
 
   return app;
 }
