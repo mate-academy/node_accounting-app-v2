@@ -150,8 +150,6 @@ function expensePoints(app, { users }, { expenses }) {
     const { id } = req.params;
     const deleteExpense = expenses.find(exp => exp.id === +id);
 
-    expenses.splice(expenses.indexOf(deleteExpense), 1);
-
     if (!deleteExpense) {
       res.sendStatus(404);
       res.send('Expense is not found');
@@ -159,7 +157,7 @@ function expensePoints(app, { users }, { expenses }) {
       return;
     }
 
-    expenses.splice(id, 1);
+    expenses.splice(expenses.indexOf(deleteExpense), 1);
 
     res
       .status(204)
