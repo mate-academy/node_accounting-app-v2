@@ -2,6 +2,8 @@
 
 const userServise = require('../services/users.js');
 
+let nextId = 0;
+
 function add(req, res) {
   const { name } = req.body;
 
@@ -12,7 +14,7 @@ function add(req, res) {
   }
 
   const newUser = {
-    id: Math.floor(Math.random() * 10),
+    id: nextId++,
     name,
   };
 

@@ -3,6 +3,8 @@
 const expenseServise = require('../services/expenses.js');
 const userServise = require('../services/users.js');
 
+let nextId = 0;
+
 function add(req, res) {
   const {
     userId,
@@ -17,7 +19,7 @@ function add(req, res) {
 
   const newExpense = {
     ...req.body,
-    id: Math.floor(Math.random() * 10),
+    id: nextId++,
   };
 
   expenseServise.add(newExpense);
