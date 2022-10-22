@@ -5,10 +5,13 @@ const cors = require('cors');
 
 function createServer() {
   let users = [];
-  const expences = [];
+  let expenses = [];
 
   let nextUserId = 1;
   let nextExpenceId = 1;
+
+  const findItem = (arr, value) => arr.find(item => item.id === +value);
+  const filteredById = (arr, value) => arr.filter(item => item.id !== +value);
 
   const app = express();
 
@@ -21,15 +24,15 @@ function createServer() {
       return;
     }
 
-    const user = {
+    const newUser = {
       id: nextUserId++,
       name,
     };
 
-    users.push(user);
+    users.push(newUser);
 
     res.statusCode = 201;
-    res.send(user);
+    res.send(newUser);
   });
 
   app.get('/users', express.json(), (req, res) => {
@@ -40,7 +43,7 @@ function createServer() {
   app.get('/users/:id', express.json(), (req, res) => {
     const { id } = req.params;
 
-    const foundUser = users.find(user => user.id === +id);
+    const foundUser = findItem(users, id);
 
     if (!foundUser) {
       res.sendStatus(404);
@@ -83,6 +86,121 @@ function createServer() {
     Object.assign(foundUser, { name });
 
     res.send(foundUser);
+  });
+
+  app.post('/expenses', express.json(), (req, res) => {
+    const {
+      userId,
+      spentAt,
+      title,
+      amount,
+      category,
+      note,
+    } = req.body;
+
+    if (!users.some(user => user.id === userId)) {
+      res.sendStatus(400);
+
+      return;
+    }
+
+    const newExpense = {
+      id: nextExpenceId++,
+      userId,
+      spentAt,
+      title,
+      amount,
+      category,
+      note,
+    };
+
+    expenses.push(newExpense);
+
+    res.statusCode = 201;
+    res.send(newExpense);
+  });
+
+  app.get('/expenses', express.json(), (req, res) => {
+    const {
+      userId,
+      category,
+      from,
+      to,
+    } = req.query;
+
+    const foundUser = findItem(users, userId);
+
+    if (foundUser) {
+      let userExpenses = expenses.filter(expense =>
+        expense.userId === +userId
+      );
+
+      if (category) {
+        userExpenses = userExpenses.filter(expense =>
+          expense.category === category
+        );
+      }
+
+      res.send(userExpenses);
+
+      return;
+    }
+
+    if (from && to) {
+      const expensesByDate = expenses.filter(expense =>
+        expense.spentAt >= from && expense.spentAt <= to);
+
+      res.send(expensesByDate);
+
+      return;
+    }
+
+    res.statusCode = 200;
+    res.send(expenses);
+  });
+
+  app.get('/expenses/:expenseId', express.json(), (req, res) => {
+    const { expenseId } = req.params;
+    const foundExpense = findItem(expenses, expenseId);
+
+    if (!foundExpense) {
+      res.sendStatus(404);
+
+      return;
+    }
+
+    res.send(foundExpense);
+  });
+
+  app.delete('/expenses/:expenseId', express.json(), (req, res) => {
+    const { expenseId } = req.params;
+    const filteredExpenses = filteredById(expenses, expenseId);
+
+    if (users.length === filteredExpenses.length) {
+      res.sendStatus(404);
+
+      return;
+    }
+
+    expenses = filteredExpenses;
+    res.sendStatus(204);
+  });
+
+  app.patch('/expenses/:expenseId', express.json(), (req, res) => {
+    const { expenseId } = req.params;
+    const findExpense = findItem(expenses, expenseId);
+
+    if (!findExpense) {
+      res.sendStatus(404);
+
+      return;
+    }
+
+    const { title } = req.body;
+
+    Object.assign(findExpense, { title });
+
+    res.send(findExpense);
   });
 
   return app;
