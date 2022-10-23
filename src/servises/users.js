@@ -34,7 +34,7 @@ function update(userId, name) {
 function remove(userId) {
   const filtered = users.filter(user => user.id !== +userId);
 
-  return filtered;
+  users = filtered;
 }
 
 function deleteAll() {

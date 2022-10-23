@@ -85,7 +85,7 @@ function updateExpense(
 function removeExpense(expenseId) {
   const filtered = expenses.filter(expense => expense.id !== +expenseId);
 
-  return filtered;
+  expenses = filtered;
 }
 
 function deleteAll() {
