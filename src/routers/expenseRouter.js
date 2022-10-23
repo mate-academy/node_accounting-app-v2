@@ -2,7 +2,7 @@
 
 const express = require('express');
 const router = express.Router();
-const expensesController = require('../controllers/expensesControllers');
+const expensesController = require('../controlers/expenseController');
 
 router.post('/', expensesController.post);
 

@@ -1,7 +1,7 @@
 'use strict';
 
-const expenseServise = require('../services/expenses.js');
-const userServise = require('../services/users.js');
+const expenseServise = require('../routers/expenseRouter');
+const userServise = require('../routers/userRouter');
 
 const post = (req, res) => {
   const {
