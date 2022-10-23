@@ -5,7 +5,9 @@ function usersRoute(route, initialUsers) {
   let availableUsers = initialUsers;
 
   route.get('/', (req, res) => {
-    res.send(availableUsers);
+    res
+      .status(200)
+      .send(availableUsers);
   });
 
   route.get('/:userId', (req, res) => {
