@@ -11,8 +11,7 @@ function userPoints(app, { users }) {
 
   app.get('/:userID', (req, res) => {
     const { userID } = req.params;
-    const foundUser = users[userID];
-    // const foundUser = users.find(user => user.id === +userID);
+    const foundUser = users.find(user => user.id === +userID);
 
     if (!userID) {
       res
@@ -36,8 +35,7 @@ function userPoints(app, { users }) {
 
   app.patch('/:userID', (req, res) => {
     const { userID } = req.params;
-    const foundUser = users[userID];
-    // const foundUser = users.find(user => user.id === +userID);
+    const foundUser = users.find(user => user.id === +userID);
 
     if (!userID) {
       res
@@ -76,8 +74,7 @@ function userPoints(app, { users }) {
       name,
     };
 
-    users[newUser.id] = newUser;
-    // users.push(newUser);
+    users.push(newUser);
 
     res
       .status(201)
@@ -86,8 +83,7 @@ function userPoints(app, { users }) {
 
   app.delete('/:userID', (req, res) => {
     const { userID } = req.params;
-    const deleteUser = users[userID];
-    // const deleteUser = users.find(user => user.id === +userID);
+    const deleteUser = users.find(user => user.id === +userID);
 
     if (!deleteUser) {
       res
@@ -97,8 +93,7 @@ function userPoints(app, { users }) {
       return;
     }
 
-    users.splice(userID, 1);
-    // users.splice(users.indexOf(deleteUser), 1);
+    users.splice(users.indexOf(deleteUser), 1);
 
     res
       .status(204)

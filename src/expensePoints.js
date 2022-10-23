@@ -120,7 +120,7 @@ function expensePoints(app, { users }, { expenses }) {
       note,
     } = req.body;
 
-    const foundUser = users[Number(userId)];
+    const foundUser = users.find(user => user.id === Number(userId));
 
     if (!foundUser) {
       res
