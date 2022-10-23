@@ -1,33 +1,43 @@
 'use strict';
 
-const expenses = [];
+let expenses = [];
 
-const init = () => {
-  expenses.length = 0;
+function init() {
+  expenses = [];
 };
 
-const getData = () => expenses;
-
-const add = (user) => {
-  expenses.push(user);
+function getAll() {
+  return expenses;
 };
 
-const getById = (userId) => expenses.find(({ id }) => id === userId) || null;
+function findById(id) {
+  const foundExpense = expenses.find(expense => expense.id === id);
 
-const remove = (userId) => expenses.filter(({ id }) => id !== userId);
+  return foundExpense || null;
+};
 
-const isIncludes = (userId) => expenses.some(({ id }) => id === userId);
+function add(expense) {
+  expenses.push(expense);
+};
 
-const update = (user, updateData) => {
-  Object.assign(user, updateData);
+function remove(id) {
+  expenses = expenses.filter(expense => expense.id !== id);
+};
+
+function update(expense, updateData) {
+  Object.assign(expense, updateData);
+};
+
+function filter(callback) {
+  return expenses.filter(callback);
 };
 
 module.exports = {
   init,
-  getData,
+  getAll,
   add,
-  getById,
   remove,
-  isIncludes,
+  findById,
   update,
+  filter,
 };

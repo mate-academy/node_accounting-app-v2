@@ -16,11 +16,11 @@ const getById = (userId) => users.find(({ id }) => id === userId) || null;
 
 const remove = (userId) => users.filter(({ id }) => id !== userId);
 
-const isIncludes = (userId) => users.some(({ id }) => id === userId);
-
 const update = (user, updateData) => {
   Object.assign(user, updateData);
 };
+
+const isIncludes = (userId) => users.some(({ id }) => id !== userId);
 
 module.exports = {
   init,
@@ -28,6 +28,6 @@ module.exports = {
   add,
   getById,
   remove,
-  isIncludes,
   update,
+  isIncludes,
 };
