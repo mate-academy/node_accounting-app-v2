@@ -1,21 +1,11 @@
 'use strict';
 
 const express = require('express');
+const { usersService } = require('./service/users.js');
+const { expensesService } = require('./service/expense.js');
 
 function createServer() {
   const app = express();
-
-  const getId = (arr, value) => {
-    return arr
-      .find(item => item.id === Number(value));
-  };
-
-  const filteredById = (arr, id) => (
-    arr.filter(item => item.id !== Number(id))
-  );
-
-  let expenses = [];
-  let users = [];
 
   app.post('/users', express.json(), (req, res) => {
     const { name } = req.body;
@@ -26,18 +16,15 @@ function createServer() {
       return;
     };
 
-    const newUser = {
-      id: Math.floor(Math.random() * 1000),
-      name,
-    };
-
-    users.push(newUser);
+    const newUser = usersService.create(name);
 
     res.statusCode = 201;
     res.send(newUser);
   });
 
   app.get('/users', express.json(), (req, res) => {
+    const users = usersService.getAll();
+
     if (!users.length) {
       res.send([]);
 
@@ -48,8 +35,15 @@ function createServer() {
   });
 
   app.get('/users/:userId', express.json(), (req, res) => {
-    const { userId } = req.params;
-    const foundUser = getId(users, userId);
+    const userId = +req.params.userId;
+
+    if (typeof userId !== 'number') {
+      res.sendStatus(400);
+
+      return;
+    }
+
+    const foundUser = usersService.getById(userId);
 
     if (!foundUser) {
       res.sendStatus(404);
@@ -62,8 +56,16 @@ function createServer() {
   });
 
   app.patch('/users/:userId', express.json(), (req, res) => {
-    const { userId } = req.params;
-    const foundUser = getId(users, userId);
+    const userId = +req.params.userId;
+    const { name } = req.body;
+
+    if (typeof userId !== 'number') {
+      res.sendStatus(400);
+
+      return;
+    }
+
+    const foundUser = usersService.getById(userId);
 
     if (!foundUser) {
       res.sendStatus(404);
@@ -71,54 +73,58 @@ function createServer() {
       return;
     }
 
-    const { name } = req.body;
-
-    Object.assign(foundUser, { name });
+    usersService.update({
+      id: userId,
+      name,
+    });
 
     res.send(foundUser);
   });
 
   app.delete('/users/:userId', express.json(), (req, res) => {
-    const { userId } = req.params;
-    const filteredUsers = filteredById(users, userId);
+    const userId = +req.params.userId;
 
-    if (users.length === filteredUsers.length) {
+    if (typeof userId !== 'number') {
+      res.sendStatus(400);
+
+      return;
+    }
+
+    const foundUser = usersService.getById(userId);
+
+    if (!foundUser) {
       res.sendStatus(404);
 
       return;
     }
 
-    users = filteredUsers;
+    usersService.remove(userId);
     res.sendStatus(204);
   });
+
+  usersService.init();
+
+  // ------------------------------------------------------
+  let nextExpenseId = 1;
 
   app.post('/expenses', express.json(), (req, res) => {
     const {
       userId,
-      spentAt,
       title,
-      amount,
-      category,
-      note,
     } = req.body;
 
-    if (!users.some(user => user.id === userId)) {
+    if (!usersService.getById(userId) || !title) {
       res.sendStatus(400);
 
       return;
     }
 
     const newExpense = {
-      id: Math.floor(Math.random() * 1000),
-      userId,
-      spentAt,
-      title,
-      amount,
-      category,
-      note,
+      ...req.body,
+      id: nextExpenseId++,
     };
 
-    expenses.push(newExpense);
+    expensesService.add(newExpense);
 
     res.statusCode = 201;
     res.send(newExpense);
@@ -132,9 +138,17 @@ function createServer() {
       to,
     } = req.query;
 
-    if (getId(users, userId)) {
+    const expenses = expensesService.getAll();
+
+    if (typeof +userId !== 'number') {
+      res.sendStatus(400);
+
+      return;
+    };
+
+    if (usersService.getById(+userId)) {
       let userExpenses = expenses.filter(
-        expense => expense.userId === Number(userId)
+        expense => expense.userId === +userId
       );
 
       if (category) {
@@ -161,8 +175,15 @@ function createServer() {
   });
 
   app.get('/expenses/:expenseId', express.json(), (req, res) => {
-    const { expenseId } = req.params;
-    const foundExpense = getId(expenses, expenseId);
+    const expenseId = +req.params.expenseId;
+
+    if (typeof expenseId !== 'number') {
+      res.sendStatus(400);
+
+      return;
+    }
+
+    const foundExpense = expensesService.findById(expenseId);
 
     if (!foundExpense) {
       res.sendStatus(404);
@@ -174,8 +195,16 @@ function createServer() {
   });
 
   app.patch('/expenses/:expenseId', express.json(), (req, res) => {
-    const { expenseId } = req.params;
-    const foundExpense = getId(expenses, expenseId);
+    const { title } = req.body;
+    const expenseId = +req.params.expenseId;
+
+    if (typeof expenseId !== 'number') {
+      res.sendStatus(400);
+
+      return;
+    }
+
+    const foundExpense = expensesService.findById(expenseId);
 
     if (!foundExpense) {
       res.sendStatus(404);
@@ -183,26 +212,28 @@ function createServer() {
       return;
     }
 
-    const { title } = req.body;
+    const newExpense = expensesService.update(title, foundExpense);
 
-    Object.assign(foundExpense, { title });
-
-    res.send(foundExpense);
+    res.send(newExpense);
   });
 
   app.delete('/expenses/:expenseId', express.json(), (req, res) => {
-    const { expenseId } = req.params;
-    const filteredExpenses = filteredById(expenses, expenseId);
+    const expenseId = +req.params.expenseId;
 
-    if (users.length === filteredExpenses.length) {
+    const foundExpense = expensesService.findById(expenseId);
+
+    if (!foundExpense) {
       res.sendStatus(404);
 
       return;
     }
 
-    expenses = filteredExpenses;
+    expensesService.remove(+expenseId);
+
     res.sendStatus(204);
   });
+
+  expensesService.init();
 
   return app;
 }
