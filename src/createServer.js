@@ -2,27 +2,22 @@
 
 const express = require('express');
 const bodyParser = require('body-parser');
-const usersRoutes = require('./routes/users.js');
+const usersRoutes = require('./routes/usersRouters.js');
+const expensesRoutes = require('./routes/expensesRouters.js');
+const usersControllers = require('./controllers/usersControllers.js');
+const expensesControllers = require('./controllers/expensesControllers.js');
 
 function createServer() {
   const app = express();
 
-  app.use(bodyParser.json());
+  app.use('/', bodyParser.json(), usersRoutes);
+  usersControllers.init();
 
-  app.use('/users', usersRoutes);
-
-  app.get('/', (req, res) => {
-    res.send('Hello from Homepage');
-  });
-
-  app.listen(2500, () => {
-    console.log(`http://localhost:2500`);
-  });
+  app.use('/', bodyParser.json(), expensesRoutes);
+  expensesControllers.init();
 
   return app;
 }
-
-createServer();
 
 module.exports = {
   createServer,

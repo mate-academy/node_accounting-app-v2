@@ -2,6 +2,10 @@
 
 let users = [];
 
+const init = () => {
+  users = [];
+};
+
 const getUsers = (req, res) => {
   res.send(users);
 };
@@ -72,10 +76,21 @@ const updateUser = (req, res) => {
   res.send(targetUser);
 };
 
+const isUserExist = (id) => {
+  return users.some(user => user.id === id);
+};
+
+const findUser = (id) => {
+  return users.find(user => user.id === id);
+};
+
 module.exports = {
+  init,
   getUsers,
   createUser,
   getUser,
   deleteUser,
   updateUser,
+  isUserExist,
+  findUser,
 };
