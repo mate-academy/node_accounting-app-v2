@@ -42,7 +42,7 @@ function exist(id) {
   users = users.some(user => +user.id === id);
 }
 
-module.exports.usersService = {
+module.exports.userService = {
   getAll,
   getById,
   create,

@@ -28,7 +28,7 @@ function remove(id) {
   expenses = expenses.filter(expense => expense.id !== id);
 };
 
-module.exports.expensesService = {
+module.exports.expenseService = {
   getAll,
   add,
   init,
