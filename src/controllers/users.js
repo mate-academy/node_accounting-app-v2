@@ -1,6 +1,6 @@
 'use strict';
 
-const userServise = require('../servises/users');
+const userServise = require('../servises/users.js');
 
 function getAll(req, res) {
   const users = userServise.getAll();
@@ -14,7 +14,7 @@ function getOne(req, res) {
   const foundUser = userServise.getById(+userId);
 
   if (!foundUser) {
-    res.send(404);
+    res.sendStatus(404);
 
     return;
   }
@@ -26,7 +26,7 @@ function createUser(req, res) {
   const { name } = req.body;
 
   if (typeof name !== 'string') {
-    res.send(400);
+    res.sendStatus(400);
 
     return;
   }
@@ -39,7 +39,7 @@ function createUser(req, res) {
 
 function updateUser(req, res) {
   const { userId } = req.params;
-  const foundUser = userServise.getById(userId);
+  const foundUser = userServise.getById(+userId);
   const { name } = req.body;
 
   if (!foundUser) {
@@ -54,9 +54,9 @@ function updateUser(req, res) {
     return;
   }
 
-  userServise.update(userId, name);
+  const updated = userServise.update(+userId, name);
 
-  res.send(foundUser);
+  res.send(updated);
 }
 
 function deleteUser(req, res) {
@@ -64,7 +64,7 @@ function deleteUser(req, res) {
   const foundUser = userServise.getById(+userId);
 
   if (!foundUser) {
-    res.send(404);
+    res.sendStatus(404);
 
     return;
   }

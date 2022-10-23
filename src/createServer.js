@@ -2,10 +2,10 @@
 
 const express = require('express');
 const cors = require('cors');
-const { router: expenseRouter } = require('./routes/expenses');
-const { router: userRouter } = require('./routes/users');
-const usersServise = require('./servises/users');
-const expensesServise = require('./servises/expenses');
+const { router: expenseRouter } = require('./routes/expenses.js');
+const { router: userRouter } = require('./routes/users.js');
+const usersServise = require('./servises/users.js');
+const expensesServise = require('./servises/expenses.js');
 
 function createServer() {
   const app = express();

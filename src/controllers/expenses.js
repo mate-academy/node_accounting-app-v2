@@ -1,7 +1,7 @@
 'use strict';
 
-const expenseServise = require('../servises/expenses');
-const userServise = require('../servises/users');
+const expenseServise = require('../servises/expenses.js');
+const userServise = require('../servises/users.js');
 
 function getAll(req, res) {
   const expenses = expenseServise.getExpenses(req.query);
@@ -23,7 +23,7 @@ function getOne(req, res) {
   res.send(foundExpense);
 }
 
-function checkDate(
+function properDate(
   spentAt,
   title,
   amount,
@@ -47,7 +47,7 @@ function createExpense(req, res) {
     note,
   } = req.body;
 
-  if (!userServise.getById(userId) || !checkDate(
+  if (!userServise.getById(userId) || !properDate(
     spentAt,
     title,
     amount,
@@ -79,7 +79,7 @@ function updateExpense(req, res) {
   const foundExpense = expenseServise.getExpenseById(+expenseId);
 
   if (!foundExpense) {
-    res.send(404);
+    res.sendStatus(404);
 
     return;
   }
@@ -92,7 +92,7 @@ function updateExpense(req, res) {
     note,
   } = req.body;
 
-  if (!checkDate(
+  if (!properDate(
     spentAt,
     title,
     amount,
@@ -126,7 +126,7 @@ function deleteExpense(req, res) {
     return;
   }
 
-  expenseServise.removeExpense(expenseId);
+  expenseServise.removeExpense(+expenseId);
 
   res.sendStatus(204);
 }

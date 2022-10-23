@@ -33,7 +33,7 @@ function getExpenses({ userId, category, from, to }) {
 };
 
 function getExpenseById(expenseId) {
-  const neededExpense = expenses.find(expense => expense.id === expenseId);
+  const neededExpense = expenses.find(expense => expense.id === +expenseId);
 
   return neededExpense || null;
 }
@@ -61,10 +61,6 @@ function createExpense(
   return newExpense;
 }
 
-function removeExpense(expenseId) {
-  expenses.filter(expense => expense.id !== expenseId);
-}
-
 function updateExpense(
   expenseId,
   spentAt,
@@ -73,7 +69,7 @@ function updateExpense(
   category,
   note
 ) {
-  const expense = getExpenseById(expenseId);
+  const expense = getExpenseById(+expenseId);
 
   Object.assign(expense, {
     spentAt: spentAt || expense.spentAt,
@@ -84,6 +80,12 @@ function updateExpense(
   });
 
   return expense;
+}
+
+function removeExpense(expenseId) {
+  const filtered = expenses.filter(expense => expense.id !== +expenseId);
+
+  return filtered;
 }
 
 function deleteAll() {

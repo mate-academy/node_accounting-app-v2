@@ -7,7 +7,7 @@ function getAll() {
 }
 
 function getById(userId) {
-  const findUser = users.find(user => user.id === userId);
+  const findUser = users.find(user => user.id === +userId);
 
   return findUser || null;
 }
@@ -24,7 +24,7 @@ function create(name) {
 }
 
 function update(userId, name) {
-  const user = getById(userId);
+  const user = getById(+userId);
 
   Object.assign(user, { name });
 
@@ -32,7 +32,9 @@ function update(userId, name) {
 }
 
 function remove(userId) {
-  users.filter(user => user.id !== userId);
+  const filtered = users.filter(user => user.id !== +userId);
+
+  return filtered;
 }
 
 function deleteAll() {
