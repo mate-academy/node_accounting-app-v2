@@ -6,13 +6,20 @@ const userServise = require('../servises/users.js');
 function getAll(req, res) {
   const expenses = expenseServise.getExpenses(req.query);
 
-  res.send(expenses);
+  res.status(200)
+    .send(expenses);
 }
 
 function getOne(req, res) {
   const { expenseId } = req.params;
 
   const foundExpense = expenseServise.getExpenseById(+expenseId);
+
+  if (!expenseId) {
+    res.sendStatus(400);
+
+    return;
+  }
 
   if (!foundExpense) {
     res.sendStatus(404);

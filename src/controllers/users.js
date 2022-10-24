@@ -5,13 +5,20 @@ const userServise = require('../servises/users.js');
 function getAll(req, res) {
   const users = userServise.getAll();
 
-  res.send(users);
+  res.status(200)
+    .send(users);
 }
 
 function getOne(req, res) {
   const { userId } = req.params;
 
   const foundUser = userServise.getById(+userId);
+
+  if (!userId) {
+    res.sendStatus(400);
+
+    return;
+  }
 
   if (!foundUser) {
     res.sendStatus(404);
@@ -33,8 +40,8 @@ function createUser(req, res) {
 
   const newUser = userServise.create(name);
 
-  res.statusCode = 201;
-  res.send(newUser);
+  res.status(201)
+    .send(newUser);
 }
 
 function updateUser(req, res) {
