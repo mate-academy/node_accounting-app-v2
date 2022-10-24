@@ -4,7 +4,9 @@
 let users = [];
 
 function uniqueID() {
-  return Math.floor(Math.random() * Date.now());
+  return users.length
+    ? [...users.sort((a, b) => b.id - a.id)][0].id + 1
+    : 1;
 }
 
 function getAll() {
