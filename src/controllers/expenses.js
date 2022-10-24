@@ -6,6 +6,7 @@ const userService = require('../services/users.js');
 function getAll(req, res) {
   const expenses = expenseService.getAll(req.query);
 
+  res.statusCode = 201;
   res.send(expenses);
 }
 
@@ -13,12 +14,15 @@ function getOne(req, res) {
   const { expenseId } = req.params;
   const foundExpense = expenseService.getById(+expenseId);
 
-  if (!foundExpense) {
-    res.send(404);
-
-    return;
+  if (!expenseId) {
+    res.sendStatus(400);
   }
 
+  if (!foundExpense) {
+    res.sendStatus(404);
+  }
+
+  res.statusCode = 201;
   res.send(foundExpense);
 }
 
@@ -55,8 +59,6 @@ function addExpense(req, res) {
   )
   ) {
     res.sendStatus(400);
-
-    return;
   }
 
   const newExpense = expenseService.create(
@@ -76,10 +78,12 @@ function updateExpense(req, res) {
   const { expenseId } = req.params;
   const foundExpense = expenseService.getById(+expenseId);
 
-  if (!foundExpense) {
-    res.send(404);
+  if (!expenseId) {
+    res.sendStatus(400);
+  }
 
-    return;
+  if (!foundExpense) {
+    res.sendStatus(404);
   }
 
   const {
@@ -99,8 +103,6 @@ function updateExpense(req, res) {
   )
   ) {
     res.sendStatus(400);
-
-    return;
   }
 
   const updatedExpense = expenseService.update(
@@ -119,10 +121,12 @@ function removeExpense(req, res) {
   const { expenseId } = req.params;
   const foundExpense = expenseService.getById(+expenseId);
 
-  if (!foundExpense) {
-    res.send(404);
+  if (!expenseId) {
+    res.sendStatus(400);
+  }
 
-    return;
+  if (!foundExpense) {
+    res.sendStatus(404);
   }
 
   expenseService.remove(+expenseId);

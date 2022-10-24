@@ -5,6 +5,7 @@ const userService = require('../services/users.js');
 function getAll(req, res) {
   const users = userService.getAll();
 
+  res.statusCode = 200;
   res.send(users);
 }
 
@@ -12,12 +13,17 @@ function getOne(req, res) {
   const { userId } = req.params;
   const foundUser = userService.getById(+userId);
 
+  if (!userId) {
+    res.sendStatus(400);
+  }
+
   if (!foundUser) {
     res.send(404);
 
     return;
   }
 
+  res.statusCode = 200;
   res.send(foundUser);
 }
 
@@ -40,18 +46,18 @@ function updateUser(req, res) {
   const { userId } = req.params;
   const foundUser = userService.getById(+userId);
 
-  if (!foundUser) {
-    res.send(404);
+  if (!userId) {
+    res.sendStatus(400);
+  }
 
-    return;
+  if (!foundUser) {
+    res.sendStatus(404);
   }
 
   const { name } = req.body;
 
   if (typeof name !== 'string') {
     res.sendStatus(400);
-
-    return;
   }
 
   const updatedUser = userService.update(+userId, name);
@@ -62,6 +68,10 @@ function updateUser(req, res) {
 function removeUser(req, res) {
   const { userId } = req.params;
   const foundUser = userService.getById(+userId);
+
+  if (!userId) {
+    res.sendStatus(400);
+  }
 
   if (!foundUser) {
     res.send(404);
