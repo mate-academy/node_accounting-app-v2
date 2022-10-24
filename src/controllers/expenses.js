@@ -9,7 +9,7 @@ const { getUserById } = require('../services/users');
 const { allUsers } = require('../controllers/users');
 let expenses = [];
 
-const expensesArray = () => {
+const clearExpensesArray = () => {
   expenses = [];
 };
 const controllerPostExpense = (req, res) => {
@@ -99,5 +99,5 @@ module.exports = {
   controllerGetExpenseById,
   controllerDeleteExpense,
   controllerPatchExpense,
-  expensesArray,
+  clearExpensesArray,
 };

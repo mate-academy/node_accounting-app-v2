@@ -7,7 +7,7 @@ const { getUserById,
 
 let users = [];
 
-const usersArray = () => {
+const clearUsersArray = () => {
   users = [];
 };
 
@@ -93,6 +93,6 @@ module.exports = {
   controllerGetUserById,
   controllerPostUser,
   controllerUpdateUser,
-  usersArray,
+  clearUsersArray,
   allUsers,
 };

@@ -1,7 +1,7 @@
 'use strict';
 
-const { usersArray } = require('./controllers/users');
-const { expensesArray } = require('./controllers/expenses');
+const { clearUsersArray } = require('./controllers/users');
+const { clearExpensesArray } = require('./controllers/expenses');
 const { usersRouter } = require('./routes/users');
 const { expensesRouter } = require('./routes/expenses');
 
@@ -10,13 +10,11 @@ const express = require('express');
 function createServer() {
   const app = express();
 
+  clearUsersArray();
+  clearExpensesArray();
   app.use('/users', express.json(), usersRouter);
 
-  usersArray();
-
   app.use('/expenses', express.json(), expensesRouter);
-
-  expensesArray();
 
   return app;
 }
