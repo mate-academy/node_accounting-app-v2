@@ -1,4 +1,5 @@
 'use strict';
+/* eslint-disable */
 
 const supertest = require('supertest');
 const { createServer } = require('../src/createServer');
