@@ -11,14 +11,14 @@ const {
   getExpenceById,
 } = require('../controllers/expensesService.js');
 
-router.post('/expenses', createExpence);
+router.post('/', createExpence);
 
-router.get('/expenses', getAllExpensesByParams);
+router.get('/', getAllExpensesByParams);
 
-router.get('/expenses/:id', getExpenceById);
+router.get('/:id', getExpenceById);
 
-router.patch('/expenses/:id', updateExpense);
+router.patch('/:id', updateExpense);
 
-router.delete('/expenses/:id', deleteExpense);
+router.delete('/:id', deleteExpense);
 
 module.exports = router;

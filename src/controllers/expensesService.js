@@ -8,6 +8,13 @@ const init = () => {
   expenses = [];
 };
 
+function foundExpensebyId(id) {
+  const numberId = Number(id);
+  const foundExpenses = expenses.find(expense => expense.id === numberId);
+
+  return foundExpenses;
+};
+
 const createExpence = (req, res) => {
   const {
     userId,
@@ -18,7 +25,9 @@ const createExpence = (req, res) => {
     note,
   } = req.body;
 
-  if (!title || !userService.exist(userId)) {
+  if (!title
+    || !userService.exist(userId)
+    || !amount) {
     res.sendStatus(400);
 
     return;
@@ -49,16 +58,9 @@ const getAllExpensesByParams = (req, res) => {
 
   const numberId = Number(userId);
 
-  if (!expenses.length) {
-    res.statusCode = 200;
-    res.send([]);
-
-    return;
-  }
-
   res.statusCode = 200;
 
-  if (userService.findUser(numberId)) {
+  if (userService.findUserById(numberId)) {
     let userExpenses = expenses.filter(expense => expense.userId === numberId);
 
     if (category) {
@@ -86,31 +88,30 @@ const getExpenceById = (req, res) => {
   const { id } = req.params;
   const numberId = Number(id);
 
-  const foundExpense = expenses.find(expense => expense.id === numberId);
+  const foundExpenses = foundExpensebyId(numberId);
 
-  if (!foundExpense) {
+  if (!foundExpenses) {
     res.sendStatus(404);
 
     return;
   }
 
   res.statusCode = 200;
-  res.send(foundExpense);
+  res.send(foundExpenses);
 };
 
 const updateExpense = (req, res) => {
   const { id } = req.params;
-  const numberId = Number(id);
 
-  const foundExpense = expenses.find(expense => expense.id === numberId);
+  const foundExpenses = foundExpensebyId(id);
 
-  if (!foundExpense) {
+  if (!foundExpenses) {
     res.sendStatus(404);
 
     return;
   }
 
-  const updatedExpense = Object.assign(foundExpense, req.body);
+  const updatedExpense = Object.assign(foundExpenses, req.body);
 
   res.statusCode = 200;
   res.send(updatedExpense);
@@ -118,17 +119,16 @@ const updateExpense = (req, res) => {
 
 const deleteExpense = (req, res) => {
   const { id } = req.params;
-  const numberId = Number(id);
 
-  const foundExpense = expenses.find(expense => expense.id === numberId);
+  const foundExpenses = foundExpensebyId(id);
 
-  if (!foundExpense) {
+  if (!foundExpenses) {
     res.sendStatus(404);
 
     return;
   }
 
-  expenses = expenses.filter(expense => expense.id !== numberId);
+  expenses = expenses.filter(expense => expense.id !== +id);
   res.sendStatus(204);
 };
 

@@ -10,14 +10,14 @@ const {
   updateUser,
 } = require('../controllers/userService.js');
 
-router.post('/users', createUser);
+router.post('/', createUser);
 
-router.get('/users', getAllUsers);
+router.get('/', getAllUsers);
 
-router.get('/users/:id', getUserById);
+router.get('/:id', getUserById);
 
-router.delete('/users/:id', deleteUser);
+router.delete('/:id', deleteUser);
 
-router.patch('/users/:id', updateUser);
+router.patch('/:id', updateUser);
 
 module.exports = router;

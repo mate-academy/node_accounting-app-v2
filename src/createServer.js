@@ -11,10 +11,10 @@ function createServer() {
   const app = express();
 
   app.use(bodyParser.json());
-  app.use('/', bodyParser.json(), userRoutes);
+  app.use('/users', bodyParser.json(), userRoutes);
   userService.init();
 
-  app.use('/', bodyParser.json(), expensesRoutes);
+  app.use('/expenses', bodyParser.json(), expensesRoutes);
   expensesService.init();
 
   return app;

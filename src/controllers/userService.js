@@ -7,11 +7,20 @@ const init = () => {
   users = [];
 };
 
+function findUserById(id) {
+  const numberId = Number(id);
+  const foundUser = users.find((user) => user.id === numberId);
+
+  return foundUser;
+}
+
 const createUser = (req, res) => {
   const { name } = req.body;
 
   if (!name) {
     res.sendStatus(400);
+
+    return;
   }
 
   const createdUser = {
@@ -25,24 +34,16 @@ const createUser = (req, res) => {
 };
 
 const getAllUsers = (req, res) => {
-  if (!users) {
-    res.statusCode = 200;
-    res.send([]);
-
-    return;
-  }
-
   res.statusCode = 200;
   res.send(users);
 };
 
 const getUserById = (req, res) => {
   const { id } = req.params;
-  const numberId = Number(id);
 
-  const foundUser = users.find((user) => user.id === numberId);
+  const foundUsers = findUserById(id);
 
-  if (!foundUser) {
+  if (!foundUsers) {
     res.sendStatus(404);
 
     return;
@@ -50,45 +51,47 @@ const getUserById = (req, res) => {
 
   res.statusCode = 200;
 
-  res.send(foundUser);
+  res.send(foundUsers);
 };
 
 const deleteUser = (req, res) => {
   const { id } = req.params;
-  const numberId = Number(id);
 
-  const foundUser = users.find(user => user.id === numberId);
+  const foundUsers = findUserById(id);
 
-  if (!foundUser) {
+  if (!foundUsers) {
     res.sendStatus(404);
 
     return;
   }
 
-  users = users.filter(user => user.id !== numberId);
+  users = users.filter(user => user.id !== +id);
   res.sendStatus(204);
 };
 
 const updateUser = (req, res) => {
   const { id } = req.params;
-  const numberId = Number(id);
   const { name } = req.body;
+  let validationError = false;
+  const foundUsers = findUserById(id);
 
-  const foundUser = users.find(user => user.id === numberId);
+  if (!name) {
+    validationError = true;
+    res.sendStatus(400);
+    validationError = true;
+  }
 
-  if (!foundUser) {
+  if (!foundUsers) {
     res.sendStatus(404);
 
     return;
   }
 
-  foundUser.name = name;
-  res.statusCode = 200;
-  res.send(foundUser);
-};
-
-function findUser(id) {
-  return users.find(user => user.id === id);
+  if (!validationError) {
+    foundUsers.name = name;
+    res.statusCode = 200;
+    res.send(foundUsers);
+  }
 };
 
 const exist = (id) => {
@@ -102,6 +105,6 @@ module.exports = {
   getUserById,
   deleteUser,
   updateUser,
-  findUser,
+  findUserById,
   exist,
 };
