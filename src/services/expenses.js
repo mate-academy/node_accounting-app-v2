@@ -6,12 +6,6 @@ function getExpenseById(expenses, id) {
   return foundExpense || null;
 }
 
-function removeExpense(expenses, id) {
-  const newExpenses = expenses.filter((expense) => expense.id !== id);
-
-  return newExpenses;
-}
-
 function updateExpense(expenses, id, body) {
   const foundExpense = getExpenseById(expenses, id);
 
@@ -64,7 +58,6 @@ function getExpenseByTime(expenses, from, to) {
 
 module.exports = {
   getExpenseById,
-  removeExpense,
   updateExpense,
   createExpense,
   getExpenseByUser,

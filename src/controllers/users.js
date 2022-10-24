@@ -9,8 +9,7 @@ const {
 
 function getALLAppUsers(users) {
   function getAllUsers(req, res) {
-    // eslint-disable-next-line no-param-reassign
-    users = getAll(users);
+    getAll(users);
 
     res.send(users);
 
@@ -62,8 +61,48 @@ function patchOneUser(users) {
   return patchUser;
 }
 
+function deleteOneUser(users) {
+  function deleteUser(req, res) {
+    const { id } = req.params;
+
+    const foundUser = getById(users, +id);
+
+    if (!foundUser) {
+      res.sendStatus(404);
+
+      return;
+    }
+
+    users.splice(users.indexOf(users));
+    res.sendStatus(204);
+  }
+
+  return deleteUser;
+}
+
+function getOneUser(users) {
+  function getUser(req, res) {
+    const { id } = req.params;
+
+    const foundUser = getById(users, +id);
+
+    if (!foundUser) {
+      res.sendStatus(404);
+
+      return;
+    }
+
+    res.send(foundUser);
+    res.sendStatus(200);
+  }
+
+  return getUser;
+}
+
 module.exports = {
   getALLAppUsers,
   postOneUser,
   patchOneUser,
+  deleteOneUser,
+  getOneUser,
 };

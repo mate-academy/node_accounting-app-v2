@@ -15,16 +15,14 @@ function createServer() {
 
   const app = express();
 
-  app.use(express.json());
-
   const userRouter = express.Router();
   const expenseRouter = express.Router();
 
   InitUserRoutes(userRouter, storage);
   InitExpenseRoute(expenseRouter, storage);
 
-  app.use('/users', userRouter);
-  app.use('/expenses', expenseRouter);
+  app.use('/users', express.json(), userRouter);
+  app.use('/expenses', express.json(), expenseRouter);
 
   return app;
 }

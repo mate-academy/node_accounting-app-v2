@@ -92,7 +92,7 @@ function postOneExpense(expenses, users) {
 }
 
 function patchOneExpense(expenses) {
-  function patchExpense(req, res) {
+  async function patchExpense(req, res) {
     const { id } = req.params;
 
     if (typeof +id !== 'number') {
@@ -121,8 +121,46 @@ function patchOneExpense(expenses) {
   return patchExpense;
 }
 
+function deleteOneExpense(expenses) {
+  function deleteExpense(req, res) {
+    const { id } = req.params;
+    const foundExpense = getExpenseById(expenses, +id);
+
+    if (!foundExpense) {
+      res.sendStatus(404);
+
+      return;
+    }
+
+    expenses.splice(expenses.indexOf(foundExpense), 1);
+    res.sendStatus(204);
+  }
+
+  return deleteExpense;
+}
+
+function getOneExpense(expenses) {
+  function getExpense(req, res) {
+    const { id } = req.params;
+    const foundExpense = getExpenseById(expenses, +id);
+
+    if (!foundExpense) {
+      res.sendStatus(404);
+
+      return;
+    }
+
+    res.statusCode = 200;
+    res.send(foundExpense);
+  }
+
+  return getExpense;
+}
+
 module.exports = {
   getAllExpenses,
   postOneExpense,
   patchOneExpense,
+  deleteOneExpense,
+  getOneExpense,
 };
