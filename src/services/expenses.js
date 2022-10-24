@@ -22,8 +22,10 @@ function remove(id) {
   expenses = expenses.filter(expense => expense.id !== id);
 }
 
-function update(expense, updateData) {
-  Object.assign(expense, updateData);
+function update(expenseId, updateData) {
+  const expenseToUdpate = expenses.find(expense => expense.id === expenseId);
+
+  Object.assign(expenseToUdpate, updateData);
 }
 
 function filter(callback) {

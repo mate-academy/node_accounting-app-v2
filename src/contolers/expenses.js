@@ -123,7 +123,7 @@ function update(req, res) {
     return;
   }
 
-  expenseServise.update(foundExpense, req.body);
+  expenseServise.update(foundExpense.id, req.body);
 
   res.statusCode = 200;
 
