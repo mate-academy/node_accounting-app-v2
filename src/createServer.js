@@ -1,13 +1,23 @@
 'use strict';
 
-// const express = require('express');
+const express = require('express');
+const bodyParser = require('body-parser');
+const userRoutes = require('./routes/users.js');
+const expensesRoutes = require('./routes/expenses.js');
+const userService = require('./controllers/userService.js');
+const expensesService = require('./controllers/expensesService.js');
 
 function createServer() {
-  // Use express to create a server
-  // Add a routes to the server
-  // Return the server (express app)
+  const app = express();
+
+  app.use(bodyParser.json());
+  app.use('/users', bodyParser.json(), userRoutes);
+  userService.init();
+
+  app.use('/expenses', bodyParser.json(), expensesRoutes);
+  expensesService.init();
+
+  return app;
 }
 
-module.exports = {
-  createServer,
-};
+module.exports = { createServer };
