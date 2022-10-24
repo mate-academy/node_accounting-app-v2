@@ -1,7 +1,10 @@
 'use strict';
 
 const {
-  getAll, getById, removeUser,
+  getAll,
+  createUser,
+  getById,
+  updateUser,
 } = require('../services/users.js');
 
 function getALLAppUsers(users) {
@@ -17,29 +20,27 @@ function getALLAppUsers(users) {
   return getAllUsers;
 }
 
-function getOneUser(users) {
-  const newUs = users;
+function postOneUser(users) {
+  function postUser(req, res) {
+    const { name } = req.body;
 
-  function getUserById(req, res) {
-    const { id } = req.params;
-
-    const foundUser = getById(newUs, +id);
-
-    if (!foundUser) {
-      res.sendStatus(404);
+    if (!name) {
+      res.sendStatus(400);
 
       return;
     }
 
-    res.send(foundUser);
-    res.sendStatus(200);
+    const newUser = createUser(users, name);
+
+    res.statusCode = 201;
+    res.send(newUser);
   }
 
-  return getUserById;
+  return postUser;
 }
 
-function removeAppUser(users) {
-  function removeThisUser(req, res) {
+function patchOneUser(users) {
+  function patchUser(req, res) {
     const { id } = req.params;
 
     const foundUser = getById(users, +id);
@@ -50,16 +51,19 @@ function removeAppUser(users) {
       return;
     }
 
-    // eslint-disable-next-line no-param-reassign
-    users = removeUser(users, +id);
-    res.sendStatus(204);
+    const { name } = req.body;
+
+    updateUser(name, +id, users);
+
+    res.send(foundUser);
+    res.sendStatus(200);
   }
 
-  return removeThisUser;
+  return patchUser;
 }
 
 module.exports = {
   getALLAppUsers,
-  getOneUser,
-  removeAppUser,
+  postOneUser,
+  patchOneUser,
 };
