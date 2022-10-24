@@ -26,8 +26,10 @@ function remove(id) {
   users = users.filter(user => user.id !== id);
 }
 
-function update(user, updateData) {
-  Object.assign(user, updateData);
+function update(userId, updateData) {
+  const userToUpdate = users.find(user => user.id === userId);
+
+  Object.assign(userToUpdate, updateData);
 }
 
 module.exports = {

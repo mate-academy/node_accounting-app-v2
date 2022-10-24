@@ -71,7 +71,7 @@ function update(req, res) {
     return;
   }
 
-  userServise.update(foundUser, { ...req.body });
+  userServise.update(foundUser.id, { ...req.body });
 
   res.statusCode = 200;
 
