@@ -17,7 +17,7 @@ const post = (req, res) => {
 
   const newExpense = {
     ...req.body,
-    id: Math.floor(Date.now() * Math.random()),
+    id: Math.floor(Math.random()),
   };
 
   expenseServise.add(newExpense);
@@ -34,7 +34,7 @@ const get = (req, res) => {
     to,
   } = req.query;
 
-  if (typeof +userId !== 'number') {
+  if (typeof userId !== 'number') {
     res.sendStatus(400);
 
     return;
@@ -44,17 +44,15 @@ const get = (req, res) => {
     res.send([]);
   };
 
-  const userIdExpensed = userServise.findById(+userId);
+  const userIdExpensed = userServise.findById(userId);
 
   if (userIdExpensed) {
-    let userExpenses = expenseServise.filter(
-      expense => expense.userId === +userId
-    );
+    let userExpenses = expenseServise
+      .filter((expense) => expense.userId === userId);
 
     if (category) {
-      userExpenses = userExpenses.filter(
-        expense => expense.category === category
-      );
+      userExpenses = userExpenses
+        .filter((expense) => expense.category === category);
     }
 
     res.send(userExpenses);
@@ -63,8 +61,8 @@ const get = (req, res) => {
   }
 
   if (from || to) {
-    const expensesBetweenDate = expenses.filter(
-      (expense) => expense.spentAt >= from && expense.spentAt <= to);
+    const expensesBetweenDate = expenses
+      .filter((expense) => expense.spentAt >= from && expense.spentAt <= to);
 
     res.send(expensesBetweenDate);
 
@@ -99,13 +97,13 @@ const getId = (req, res) => {
 const patch = (req, res) => {
   const { id } = req.params;
 
-  if (typeof +id !== 'number') {
+  if (typeof id !== 'number') {
     res.sendStatus(400);
 
     return;
   }
 
-  const foundExpense = expenseServise.findById(+id);
+  const foundExpense = expenseServise.findById(id);
 
   if (!foundExpense) {
     res.sendStatus(404);
@@ -120,7 +118,7 @@ const patch = (req, res) => {
 const deleteExpense = (req, res) => {
   const { id } = req.params;
 
-  const foundExpense = expenseServise.findById(+id);
+  const foundExpense = expenseServise.findById(id);
 
   if (!foundExpense) {
     res.sendStatus(404);
@@ -139,143 +137,3 @@ module.exports = {
   patch,
   deleteExpense,
 };
-
-// 'use strict';
-
-// const { getById } = require('../service/users');
-
-// const {
-//   getExpenseByCategory, getExpenseById, getExpenseByUser,
-//   getExpenseByTime, createExpense, removeExpense, updateExpense,
-// } = require('../service/expenses');
-
-// function InitExpenseRoute(app, { users, expenses }) {
-//   app.post('/', (req, res) => {
-//     const {
-//       userId,
-//       spentAt,
-//       title,
-//       category,
-//       amount,
-//       note,
-//     } = req.body;
-
-//     const foundUser = getById(users, userId);
-
-//     if (!foundUser) {
-//       res.sendStatus(400);
-
-//       return;
-//     }
-
-//     const newExpenses = createExpense(
-//       expenses, userId, spentAt, title, category, amount, note);
-
-//     res.statusCode = 201;
-//     res.send(newExpenses);
-//   });
-
-//   app.get('/', (req, res) => {
-//     const {
-//       userId,
-//       category,
-//       from,
-//       to,
-//     } = req.query;
-
-//     const id = userId;
-
-//     if (typeof id !== 'number') {
-//       res.sendStatus(400);
-
-//       return;
-//     }
-
-//     const foundUser = getById(users, id);
-
-//     if (foundUser) {
-//       const expensesFilteredByUser = getExpenseByUser(expenses, id);
-
-//       if (category) {
-//         const expensesFilteredByCategory = getExpenseByCategory(
-//           expensesFilteredByUser, category);
-
-//         res.send(expensesFilteredByCategory);
-
-//         return;
-//       }
-
-//       res.send(expensesFilteredByUser);
-
-//       return;
-//     }
-
-//     if (from && to) {
-//       const expensesFilteredByDate = getExpenseByTime(expenses, from, to);
-
-//       res.send(expensesFilteredByDate);
-
-//       return;
-//     }
-
-//     res.send(expenses);
-//   });
-
-//   app.patch('/:id', (req, res) => {
-//     const { id } = req.params;
-
-//     if (typeof id !== 'number') {
-//       res.sendStatus(400);
-
-//       return;
-//     };
-
-//     const foundExpense = getExpenseById(expenses, id);
-
-//     if (!foundExpense) {
-//       res.sendStatus(404);
-
-//       return;
-//     };
-
-//     const body = req.body;
-
-//     updateExpense(expenses, id, body);
-
-//     res.send(foundExpense);
-//     res.sendStatus(200);
-//   });
-
-//   app.get('/:id', (req, res) => {
-//     const { id } = req.params;
-//     const foundExpense = getExpenseById(expenses, id);
-
-//     if (!foundExpense) {
-//       res.sendStatus(404);
-
-//       return;
-//     }
-
-//     res.statusCode = 200;
-//     res.send(foundExpense);
-//   });
-
-//   app.delete('/:id', (req, res) => {
-//     const { id } = req.params;
-//     const foundExpense = getExpenseById(expenses, id);
-
-//     if (!foundExpense) {
-//       res.sendStatus(404);
-
-//       return;
-//     }
-
-//     // eslint-disable-next-line no-param-reassign
-//     expenses = removeExpense(expenses, id);
-//     res.sendStatus(204);
-//   });
-// };
-
-// module.exports = {
-//   InitExpenseRoute,
-// };
