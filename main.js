@@ -2,8 +2,9 @@
 
 const { createServer } = require('./src/createServer');
 
-createServer()
-  .listen(3000, () => {
-    // eslint-disable-next-line no-console
-    console.log('Server is running on localhost:3000');
-  });
+const PORT = 3000;
+
+createServer().listen(PORT, () => {
+  // eslint-disable-next-line no-console
+  console.log(`Server is running on http://localhost:${3000}`);
+});
