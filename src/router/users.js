@@ -4,7 +4,7 @@
 const express = require('express');
 
 const {
-  init,
+  initUsers,
   getAll,
   getUserById,
   createUser,
@@ -16,7 +16,7 @@ const router = express.Router();
 
 function createUsers(app) {
   app.use('/users', router);
-  init();
+  initUsers();
 
   router.get('/', (req, res) => {
     const users = getAll();

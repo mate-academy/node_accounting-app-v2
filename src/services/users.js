@@ -11,7 +11,7 @@ function getAll() {
   return users;
 }
 
-function init() {
+function initUsers() {
   users = [];
 }
 
@@ -49,7 +49,7 @@ function updateUser({ id, name }) {
 }
 
 module.exports = {
-  init,
+  initUsers,
   getAll,
   getUserById,
   createUser,
