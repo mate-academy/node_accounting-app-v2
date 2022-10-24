@@ -59,12 +59,8 @@ function removeExpense(expenseId) {
     .filter(expense => expense.id !== Number(expenseId));
 };
 
-function updateUser({ id, expensesKey }) {
-  const expense = getExpenseById(id);
-
+function updateExpense(expense, expensesKey) {
   Object.assign(expense, expensesKey);
-
-  return expense;
 };
 
 module.exports = {
@@ -72,7 +68,7 @@ module.exports = {
   getExpenseById,
   createExprense,
   removeExpense,
-  updateUser,
+  updateExpense,
   init,
   getExpenseByCategory,
   getExpenseByUser,

@@ -92,7 +92,7 @@ const update = (req, res) => {
     return;
   }
 
-  Object.assign(foundExpense, req.body);
+  expenseService.updateExpense(foundExpense, req.body);
 
   res.send(foundExpense);
 };
