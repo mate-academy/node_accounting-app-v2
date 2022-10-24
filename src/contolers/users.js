@@ -29,12 +29,6 @@ function getAll(req, res) {
 
   res.statusCode = 200;
 
-  if (!users) {
-    res.send([]);
-
-    return;
-  }
-
   res.send(users);
 };
 
