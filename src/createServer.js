@@ -219,10 +219,6 @@ function createServer() {
     res.statusCode = 200;
   });
 
-  // Use express to create a server
-  // Add a routes to the server
-  // Return the server (express app)
-
   return app;
 }
 
