@@ -29,6 +29,8 @@ const get = (req, res) => {
 
   if (users.length === 0) {
     res.send([]);
+
+    return;
   }
 
   res.send(users);
