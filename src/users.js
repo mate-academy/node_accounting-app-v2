@@ -27,8 +27,9 @@ function usersRoute(route, initialUsers) {
       return;
     }
 
-    res.statusCode(200);
-    res.send(askingUser);
+    res
+      .status(200)
+      .send(askingUser);
   });
 
   route.post('/', (req, res) => {
@@ -47,8 +48,9 @@ function usersRoute(route, initialUsers) {
 
     availableUsers.push(newUser);
 
-    res.statusCode(201);
-    res.send(newUser);
+    res
+      .status(201)
+      .send(newUser);
   });
 
   route.delete('/:userId', (req, res) => {
@@ -80,8 +82,10 @@ function usersRoute(route, initialUsers) {
     }
 
     Object.assign(askingUser, { name });
-    res.statusCode(200);
-    res.send(askingUser);
+
+    res
+      .status(200)
+      .send(askingUser);
   });
 }
 

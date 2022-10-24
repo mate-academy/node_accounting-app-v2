@@ -65,22 +65,33 @@ function expensesRoute(route, initialUsers, initialExpenses) {
       return;
     }
 
-    const filteredExpenses = availableExpenses
-      .filter(expense => (
-        userId ? expensesRoute.userId === +userId : expense
-      ))
-      .filter(expense => (
-        category ? expense.category === category : expense
-      ))
-      .filter(expense => (
-        from ? new Date(expense.spentAt) > new Date(from) : expense
-      ))
-      .filter(expense => (
-        to ? new Date(expense.spentAt) < new Date(to) : expense
+    let filteredExpenses = availableExpenses;
+
+    if (userId) {
+      filteredExpenses = filteredExpenses.filter(expense => (
+        expense.userId === +userId
       ));
+    }
+
+    if (category) {
+      filteredExpenses = filteredExpenses.filter(expense => (
+        expense.category === category
+      ));
+    }
+
+    if (from) {
+      filteredExpenses = filteredExpenses.filter(expense => (
+        new Date(expense.spentAt) > new Date(from)
+      ));
+    }
+
+    if (to) {
+      filteredExpenses = filteredExpenses.filter(expense => (
+        new Date(expense.spentAt) < new Date(to)));
+    }
 
     res
-      .statusCode(200)
+      .status(200)
       .send(filteredExpenses);
   });
 
@@ -97,7 +108,7 @@ function expensesRoute(route, initialUsers, initialExpenses) {
 
     foundExpense
       ? res
-        .statusCode(200)
+        .status(200)
         .send(foundExpense)
       : res.sendStatus(404);
   });
@@ -133,9 +144,7 @@ function expensesRoute(route, initialUsers, initialExpenses) {
       || (category && typeof category !== 'string')
       || (note && typeof note !== 'string')
     ) {
-      res
-        .status(400)
-        .send('Bad request');
+      res.sendStatus(400);
 
       return;
     }
@@ -143,9 +152,11 @@ function expensesRoute(route, initialUsers, initialExpenses) {
     const foundExpense = availableExpenses.find(({ id }) => +expenseId === id);
 
     foundExpense
-      ? res.send(
-        Object.assign(foundExpense, req.body)
-      )
+      ? res
+        .status(200)
+        .send(
+          Object.assign(foundExpense, req.body)
+        )
       : res.sendStatus(404);
   });
 }
