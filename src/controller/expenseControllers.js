@@ -17,7 +17,7 @@ const post = (req, res) => {
 
   const newExpense = {
     ...req.body,
-    id: Math.floor(Math.random()),
+    id: Math.floor(Date.now() * Math.random()),
   };
 
   expenseServise.add(newExpense);
@@ -34,7 +34,7 @@ const get = (req, res) => {
     to,
   } = req.query;
 
-  if (typeof userId !== 'number') {
+  if (typeof +userId !== 'number') {
     res.sendStatus(400);
 
     return;
@@ -44,15 +44,17 @@ const get = (req, res) => {
     res.send([]);
   };
 
-  const userIdExpensed = userServise.findById(userId);
+  const userIdExpensed = userServise.findById(+userId);
 
   if (userIdExpensed) {
-    let userExpenses = expenseServise
-      .filter((expense) => expense.userId === userId);
+    let userExpenses = expenseServise.filter(
+      expense => expense.userId === +userId
+    );
 
     if (category) {
-      userExpenses = userExpenses
-        .filter((expense) => expense.category === category);
+      userExpenses = userExpenses.filter(
+        expense => expense.category === category
+      );
     }
 
     res.send(userExpenses);
@@ -61,8 +63,8 @@ const get = (req, res) => {
   }
 
   if (from || to) {
-    const expensesBetweenDate = expenses
-      .filter((expense) => expense.spentAt >= from && expense.spentAt <= to);
+    const expensesBetweenDate = expenses.filter(
+      (expense) => expense.spentAt >= from && expense.spentAt <= to);
 
     res.send(expensesBetweenDate);
 
@@ -97,13 +99,13 @@ const getId = (req, res) => {
 const patch = (req, res) => {
   const { id } = req.params;
 
-  if (typeof id !== 'number') {
+  if (typeof +id !== 'number') {
     res.sendStatus(400);
 
     return;
   }
 
-  const foundExpense = expenseServise.findById(id);
+  const foundExpense = expenseServise.findById(+id);
 
   if (!foundExpense) {
     res.sendStatus(404);
@@ -118,7 +120,7 @@ const patch = (req, res) => {
 const deleteExpense = (req, res) => {
   const { id } = req.params;
 
-  const foundExpense = expenseServise.findById(id);
+  const foundExpense = expenseServise.findById(+id);
 
   if (!foundExpense) {
     res.sendStatus(404);

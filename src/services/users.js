@@ -10,29 +10,34 @@ function getAll() {
   return users;
 };
 
-function getUserById(id) {
-  const foundUser = users.find((user) => user.id === id);
+function findById(id) {
+  const foundUser = users.find(user => user.id === id);
 
   return foundUser || null;
 };
 
-function existUser(id) {
-  return users.some((user) => user.id === id);
+function exist(id) {
+  return users.some(user => user.id === id);
 };
 
-function removeUser(id) {
+function add(expense) {
+  users.push(expense);
+};
+
+function remove(id) {
   users = users.filter(user => user.id !== id);
 };
 
-function updateUser(user, updatedData) {
+function update(user, updatedData) {
   Object.assign(user, updatedData);
 };
 
 module.exports = {
   init,
   getAll,
-  getUserById,
-  existUser,
-  removeUser,
-  updateUser,
+  add,
+  remove,
+  findById,
+  update,
+  exist,
 };
