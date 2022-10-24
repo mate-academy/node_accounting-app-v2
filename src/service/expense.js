@@ -20,9 +20,26 @@ function findById(id) {
   return foundExpense || null;
 };
 
+function findUserExpenses(id, category) {
+  let userExpenses = expenses
+    .filter(expense => expense.userId === Number(id));
+
+  if (category) {
+    userExpenses = expenses
+      .filter(expense => expense.category === category);
+  }
+
+  return userExpenses;
+}
+
+function filteredFromTo(from, to) {
+  return expenses.filter(
+    (expense) => expense.spentAt >= from && expense.spentAt <= to);
+};
+
 function update(title, expense) {
   return Object.assign(expense, { title });
-}
+};
 
 function remove(id) {
   expenses = expenses.filter(expense => expense.id !== id);
@@ -35,4 +52,6 @@ module.exports.expenseService = {
   findById,
   update,
   remove,
+  findUserExpenses,
+  filteredFromTo,
 };

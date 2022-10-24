@@ -45,15 +45,7 @@ const getAll = (req, res) => {
   };
 
   if (userService.getById(+userId)) {
-    let userExpenses = expenses.filter(
-      expense => expense.userId === +userId
-    );
-
-    if (category) {
-      userExpenses = userExpenses.filter(
-        expense => expense.category === category
-      );
-    }
+    const userExpenses = expenseService.findUserExpenses(userId, category);
 
     res.send(userExpenses);
 
@@ -61,8 +53,7 @@ const getAll = (req, res) => {
   }
 
   if (from && to) {
-    const expensesBetweenDate = expenses.filter(
-      (expense) => expense.spentAt >= from && expense.spentAt <= to);
+    const expensesBetweenDate = expenseService.filteredFromTo(from, to);
 
     res.send(expensesBetweenDate);
 
