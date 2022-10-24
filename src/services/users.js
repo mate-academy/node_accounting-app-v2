@@ -11,21 +11,24 @@ function getAll() {
 };
 
 function findById(id) {
-  const foundUser = users.find(user => user.id === id);
+  const foundUser = users
+    .find((user) => user.id === id);
 
   return foundUser || null;
 };
 
 function exist(id) {
-  return users.some(user => user.id === id);
+  return users
+    .some((user) => user.id === id);
+};
+
+function remove(id) {
+  users = users
+    .filter((user) => user.id !== id);
 };
 
 function add(expense) {
   users.push(expense);
-};
-
-function remove(id) {
-  users = users.filter(user => user.id !== id);
 };
 
 function update(user, updatedData) {

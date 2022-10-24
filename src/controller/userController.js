@@ -12,7 +12,7 @@ const post = (req, res) => {
   }
 
   const newUser = {
-    id: Math.floor(Date.now() * Math.random()),
+    id: Math.floor(Math.random()),
     name,
   };
 

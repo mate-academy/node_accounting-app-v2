@@ -17,7 +17,7 @@ const post = (req, res) => {
 
   const newExpense = {
     ...req.body,
-    id: Math.floor(Date.now() * Math.random()),
+    id: Math.floor(Math.random()),
   };
 
   expenseServise.add(newExpense);
@@ -63,8 +63,8 @@ const get = (req, res) => {
   }
 
   if (from || to) {
-    const expensesBetweenDate = expenses.filter(
-      (expense) => expense.spentAt >= from && expense.spentAt <= to);
+    const expensesBetweenDate = expenses
+      .filter((expense) => expense.spentAt >= from && expense.spentAt <= to);
 
     res.send(expensesBetweenDate);
 
