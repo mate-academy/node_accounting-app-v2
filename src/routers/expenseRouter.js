@@ -17,4 +17,3 @@ router.patch('/:id', expenseContoller.update);
 router.delete('/:id', expenseContoller.remove);
 
 module.exports = router;
-
