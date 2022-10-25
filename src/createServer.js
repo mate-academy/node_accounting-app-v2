@@ -14,6 +14,7 @@ function createServer() {
   app.use('/expenses', express.json(), expenseRouter);
   expenseServise.init();
 
+
   app.use('/users', express.json(), userRouter);
   userServise.init();
 

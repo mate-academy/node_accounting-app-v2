@@ -18,6 +18,7 @@ function add(expense) {
   expenses.push(expense);
 }
 
+
 function remove(id) {
   expenses = expenses.filter(expense => expense.id !== id);
 }
