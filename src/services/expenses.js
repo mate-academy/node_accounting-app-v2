@@ -2,7 +2,17 @@
 
 let nextExpenseId = 1;
 
-function postExpense(body, expenses) {
+let expenses = [];
+
+const getExpensesData = () => {
+  return expenses;
+};
+
+const clearExpensesArray = () => {
+  expenses = [];
+};
+
+function postExpense(body) {
   const expense = {
     id: nextExpenseId++,
     ...body,
@@ -13,24 +23,24 @@ function postExpense(body, expenses) {
   return expense;
 }
 
-function getExpenses(normalizedURL, expenses) {
-  const userId = normalizedURL.searchParams.get('userId');
-  const category = normalizedURL.searchParams.get('category');
-  const fromDate = normalizedURL.searchParams.get('from');
-  const toDate = normalizedURL.searchParams.get('to');
+function getExpenses(query) {
+  const userId = query.userId;
+  const category = query.category;
+  const fromDate = query.from;
+  const toDate = query.to;
   const numberFromDate = new Date(fromDate).getTime();
   const numberToDate = new Date(toDate).getTime();
   let copy = [ ...expenses ];
 
-  if (userId !== null) {
+  if (userId) {
     copy = copy.filter(expense => expense.userId === +userId);
   }
 
-  if (category !== null) {
+  if (category) {
     copy = copy.filter(expense => expense.category === category);
   }
 
-  if (fromDate !== null && toDate !== null) {
+  if (fromDate && toDate) {
     copy = copy.filter(expense => {
       const expenseDate = new Date(expense.spentAt).getTime();
 
@@ -41,14 +51,18 @@ function getExpenses(normalizedURL, expenses) {
   return copy;
 }
 
-function getExpenseById(expenseId, expenses) {
+function getExpenseById(expenseId) {
   const foundExpense = expenses.find(expense => expense.id === +expenseId);
 
   return foundExpense || null;
 }
 
-function deleteExpense(expenseId, expenses) {
-  return expenses.filter(expense => expense.id !== +expenseId);
+function deleteExpense(expenseId) {
+  const newExpenses = expenses.filter(expense => expense.id !== +expenseId);
+
+  expenses = newExpenses;
+
+  return newExpenses;
 }
 
 function updateExpense(foundExpense, title) {
@@ -56,5 +70,11 @@ function updateExpense(foundExpense, title) {
 }
 
 module.exports = {
-  postExpense, getExpenseById, getExpenses, deleteExpense, updateExpense,
+  postExpense,
+  getExpenseById,
+  getExpenses,
+  deleteExpense,
+  updateExpense,
+  getExpensesData,
+  clearExpensesArray,
 };

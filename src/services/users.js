@@ -2,13 +2,23 @@
 
 let nextUserId = 1;
 
-function getUserById(userId, users) {
+let users = [];
+
+const getUserData = () => {
+  return users;
+};
+
+const clearUsersArray = () => {
+  users = [];
+};
+
+function getUserById(userId) {
   const user = users.find(folk => folk.id === +userId);
 
   return user || null;
 }
 
-function postUser(name, users) {
+function postUser(name) {
   const user = {
     id: nextUserId++,
     name,
@@ -19,11 +29,13 @@ function postUser(name, users) {
   return user;
 }
 
-function deleteUser(userId, users) {
-  return users.filter(folk => folk.id !== +userId);
+function deleteUser(userId) {
+  const newUsers = users.filter(folk => folk.id !== +userId);
+
+  users = newUsers;
 }
 
-function updateUser(userId, name, users) {
+function updateUser(userId, name) {
   const foundUser = getUserById(+userId, users);
 
   Object.assign(foundUser, { name });
@@ -32,5 +44,5 @@ function updateUser(userId, name, users) {
 }
 
 module.exports = {
-  getUserById, postUser, deleteUser, updateUser,
+  getUserById, postUser, deleteUser, updateUser, getUserData, clearUsersArray,
 };

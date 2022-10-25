@@ -1,21 +1,22 @@
 'use strict';
 
-const { getUserById,
+const {
+  getUserById,
   postUser,
   deleteUser,
-  updateUser } = require('../services/users');
-
-let users = [];
-
-const clearUsersArray = () => {
-  users = [];
-};
+  updateUser,
+  getUserData,
+} = require('../services/users');
 
 const allUsers = () => {
+  const users = getUserData();
+
   return users;
 };
 
 const controllerGetAllUsers = (req, res) => {
+  const users = getUserData();
+
   res.statusCode = 200;
 
   res.send(users);
@@ -30,7 +31,7 @@ const controllerPostUser = (req, res) => {
     return;
   }
 
-  const user = postUser(name, users);
+  const user = postUser(name);
 
   res.statusCode = 201;
   res.send(user);
@@ -38,7 +39,7 @@ const controllerPostUser = (req, res) => {
 
 const controllerGetUserById = (req, res) => {
   const { userId } = req.params;
-  const user = getUserById(userId, users);
+  const user = getUserById(userId);
 
   if (!user) {
     res.sendStatus(404);
@@ -52,7 +53,7 @@ const controllerGetUserById = (req, res) => {
 
 const controllerDeleteUser = (req, res) => {
   const { userId } = req.params;
-  const foundUser = getUserById(+userId, users);
+  const foundUser = getUserById(+userId);
 
   if (!foundUser) {
     res.sendStatus(404);
@@ -60,7 +61,7 @@ const controllerDeleteUser = (req, res) => {
     return;
   }
 
-  users = deleteUser(userId, users);
+  deleteUser(userId);
 
   res.sendStatus(204);
 };
@@ -69,7 +70,7 @@ const controllerUpdateUser = (req, res) => {
   const { userId } = req.params;
   const { name } = req.body;
 
-  const foundUser = getUserById(userId, users);
+  const foundUser = getUserById(userId);
 
   if (!name) {
     res.sendStatus(400);
@@ -83,7 +84,7 @@ const controllerUpdateUser = (req, res) => {
     return;
   }
 
-  updateUser(userId, name, users);
+  updateUser(userId, name);
   res.send(foundUser);
 };
 
@@ -93,6 +94,5 @@ module.exports = {
   controllerGetUserById,
   controllerPostUser,
   controllerUpdateUser,
-  clearUsersArray,
   allUsers,
 };

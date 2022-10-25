@@ -1,24 +1,23 @@
 'use strict';
 
-const { postExpense,
+const {
+  postExpense,
   getExpenseById,
   getExpenses,
   deleteExpense,
-  updateExpense } = require('../services/expenses');
+  updateExpense,
+  getExpensesData,
+} = require('../services/expenses');
 const { getUserById } = require('../services/users');
 const { allUsers } = require('../controllers/users');
-let expenses = [];
 
-const clearExpensesArray = () => {
-  expenses = [];
-};
 const controllerPostExpense = (req, res) => {
   const { userId } = req.body;
 
   const user = getUserById(+userId, allUsers());
-  const expense = postExpense(req.body, expenses);
+  const expense = postExpense(req.body);
 
-  if (user === null) {
+  if (!user) {
     res.sendStatus(400);
 
     return;
@@ -29,22 +28,20 @@ const controllerPostExpense = (req, res) => {
 };
 
 const controllerGetExpenses = (req, res) => {
-  const normalizedURL = new URL(req.url, `http://${req.headers.host}`);
-
-  const copy = getExpenses(normalizedURL, expenses);
+  const copy = getExpenses(req.query);
 
   res.statusCode = 200;
 
-  if (normalizedURL.search) {
+  if (Object.keys(req.query).length > 0) {
     res.send(copy);
   } else {
-    res.send(expenses);
+    res.send(getExpensesData());
   }
 };
 
 const controllerGetExpenseById = (req, res) => {
   const { expenseId } = req.params;
-  const foundExpense = getExpenseById(+expenseId, expenses);
+  const foundExpense = getExpenseById(+expenseId);
 
   if (!foundExpense) {
     res.sendStatus(404);
@@ -58,15 +55,14 @@ const controllerGetExpenseById = (req, res) => {
 
 const controllerDeleteExpense = (req, res) => {
   const { expenseId } = req.params;
-  const newExpenses = deleteExpense(expenseId, expenses);
+  const expenses = getExpensesData();
+  const newExpenses = deleteExpense(expenseId);
 
   if (expenses.length === newExpenses.length) {
     res.sendStatus(404);
 
     return;
   }
-
-  expenses = newExpenses;
 
   res.sendStatus(204);
 };
@@ -75,7 +71,7 @@ const controllerPatchExpense = (req, res) => {
   const { expenseId } = req.params;
   const { title } = req.body;
 
-  const foundExpense = getExpenseById(expenseId, expenses);
+  const foundExpense = getExpenseById(expenseId);
 
   if (!foundExpense) {
     res.sendStatus(404);
@@ -90,6 +86,7 @@ const controllerPatchExpense = (req, res) => {
   }
 
   updateExpense(foundExpense, title);
+  res.statusCode = 200;
   res.send(foundExpense);
 };
 
@@ -99,5 +96,4 @@ module.exports = {
   controllerGetExpenseById,
   controllerDeleteExpense,
   controllerPatchExpense,
-  clearExpensesArray,
 };

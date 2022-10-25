@@ -1,7 +1,7 @@
 'use strict';
 
-const { clearUsersArray } = require('./controllers/users');
-const { clearExpensesArray } = require('./controllers/expenses');
+const { clearUsersArray } = require('./services/users');
+const { clearExpensesArray } = require('./services/expenses');
 const { usersRouter } = require('./routes/users');
 const { expensesRouter } = require('./routes/expenses');
 
