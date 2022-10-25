@@ -1,9 +1,9 @@
 'use strict';
 
-const { expenseController } = { ...require('./controllers/expenses') };
-const { userController } = { ...require('./controllers/users.js') };
-const { usersRouter } = { ...require('./routes/users.js') };
-const { expensesRouter } = { ...require('./routes/expenses.js') };
+const expenseController = require('./controllers/expenses');
+const userController = require('./controllers/users.js');
+const usersRouter = require('./routes/users.js');
+const expensesRouter = require('./routes/expenses.js');
 const cors = require('cors');
 const express = require('express');
 

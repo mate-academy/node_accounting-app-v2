@@ -1,14 +1,12 @@
 'use strict';
 
-const { expensesServices } = { ...require('../services/expenses.js') };
-const { userServices } = { ...require('../services/users') };
+const expensesServices = require('../services/expenses.js');
+const userServices = require('../services/users');
 
-const expenseController = {
-  getAll: (req, res) => {
-    const userId = req.query.userId;
-    const category = req.query.category;
-    const from = req.query.from;
-    const to = req.query.to;
+class ExpenseController {
+  getAll(req, res) {
+    const { userId, category, from, to } = req.query;
+
     let vizibleExpenses = expensesServices.getAll();
 
     if (userId) {
@@ -26,9 +24,11 @@ const expenseController = {
         .filter(expense => expense.spentAt >= from && expense.spentAt <= to);
     }
 
+    res.statusCode = 200;
     res.send(vizibleExpenses);
-  },
-  getOne: (req, res) => {
+  }
+
+  getOne(req, res) {
     const id = req.params.expenseId;
     const findExpense = expensesServices.getOne(id);
 
@@ -40,10 +40,18 @@ const expenseController = {
 
     res.statusCode = 200;
     res.send(findExpense);
-  },
-  create: (req, res) => {
+  }
+
+  create(req, res) {
     const body = req.body;
     const { userId } = body;
+
+    if (!userServices.getOne(userId)) {
+      res.sendStatus(400);
+
+      return;
+    }
+
     const newExpense = expensesServices.create(body);
 
     if (!newExpense) {
@@ -52,16 +60,10 @@ const expenseController = {
       return;
     }
 
-    if (!userServices.getOne(userId)) {
-      res.sendStatus(400);
-
-      return;
-    }
-
     res.statusCode = 201;
     res.send(newExpense);
-  },
-  remove: (req, res) => {
+  }
+  remove(req, res) {
     const id = req.params.expenseId;
 
     const filteredExpenses = expensesServices.remove(id);
@@ -74,8 +76,8 @@ const expenseController = {
 
     res.statusCode = 204;
     res.send(filteredExpenses);
-  },
-  update: (req, res) => {
+  }
+  update(req, res) {
     const expenseId = req.params.expenseId;
     const findExpense = expensesServices.getOne(expenseId);
 
@@ -92,10 +94,12 @@ const expenseController = {
     });
 
     res.send(findExpense);
-  },
-  reset: expensesServices.reset,
+  }
+  reset() {
+    expensesServices.reset();
+  }
 };
 
-module.exports = {
-  expenseController,
-};
+const expenseController = new ExpenseController();
+
+module.exports = expenseController;

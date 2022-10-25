@@ -1,6 +1,6 @@
 'use strict';
 
-const { userController } = { ...require('../controllers/users') };
+const userController = require('../controllers/users');
 
 const express = require('express');
 
@@ -16,6 +16,4 @@ usersRouter.delete('/users/:userId', userController.remove);
 
 usersRouter.patch('/users/:userId', express.json(), userController.update);
 
-module.exports = {
-  usersRouter,
-};
+module.exports = usersRouter;

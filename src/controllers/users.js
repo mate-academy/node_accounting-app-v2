@@ -1,14 +1,16 @@
 'use strict';
 
-const { userServices } = { ...require('../services/users') };
+const userServices = require('../services/users');
 
-const userController = {
-  getAll: (req, res) => {
+class UserController {
+  getAll(req, res) {
     const users = userServices.getAll();
 
+    res.statusCode = 200;
     res.send(users);
-  },
-  getOne: (req, res) => {
+  }
+
+  getOne(req, res) {
     const userId = req.params.userId;
     const findUser = userServices.getOne(userId);
 
@@ -16,9 +18,11 @@ const userController = {
       res.sendStatus(404);
     }
 
+    res.statusCode = 200;
     res.send(findUser);
-  },
-  create: (req, res) => {
+  }
+
+  create(req, res) {
     const { name } = req.body;
 
     if (!name) {
@@ -31,8 +35,9 @@ const userController = {
 
     res.statusCode = 201;
     res.send(newUser);
-  },
-  remove: (req, res) => {
+  }
+
+  remove(req, res) {
     const id = req.params.userId;
 
     const filteredUsers = userServices.remove(id);
@@ -45,9 +50,10 @@ const userController = {
 
     res.statusCode = 204;
     res.send(filteredUsers);
-  },
-  update: (req, res) => {
-    const userId = req.params.userId;
+  }
+
+  update(req, res) {
+    const { userId } = req.params;
     const findUser = userServices.getOne(userId);
 
     if (!findUser) {
@@ -61,10 +67,13 @@ const userController = {
     Object.assign(findUser, { name });
 
     res.send(findUser);
-  },
-  reset: userServices.reset,
+  }
+
+  reset() {
+    userServices.reset();
+  }
 };
 
-module.exports = {
-  userController,
-};
+const userController = new UserController();
+
+module.exports = userController;

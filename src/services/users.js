@@ -1,37 +1,20 @@
 'use strict';
 
-let newUserId = 1;
-let users = [];
+const Services = require('../services/Services');
 
-const userServices = {
-  getAll: () => users,
-  getOne: (userId) => users.find(user => user.id === +userId),
-  create: (name) => {
-    const newUser = {
-      id: newUserId++,
+class UserServices extends Services {
+  create(name) {
+    const newItem = {
+      id: this.newItemId++,
       name,
     };
 
-    users.push(newUser);
+    this.arrOfItems.push(newItem);
 
-    return newUser;
-  },
-  remove: (id) => {
-    const filteredUsers = users.filter(user => user.id !== +id);
+    return newItem;
+  }
+}
 
-    if (filteredUsers.length === users.length) {
-      return null;
-    }
+const userServices = new UserServices();
 
-    users = filteredUsers;
-
-    return filteredUsers;
-  },
-  reset: () => {
-    users = [];
-  },
-};
-
-module.exports = {
-  userServices,
-};
+module.exports = userServices;
