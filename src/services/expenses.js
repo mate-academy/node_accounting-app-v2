@@ -24,12 +24,9 @@ function postExpense(body) {
 }
 
 function getExpenses(query) {
-  const userId = query.userId;
-  const category = query.category;
-  const fromDate = query.from;
-  const toDate = query.to;
-  const numberFromDate = new Date(fromDate).getTime();
-  const numberToDate = new Date(toDate).getTime();
+  const { userId, category, from, to } = query;
+  const numberFromDate = new Date(from).getTime();
+  const numberToDate = new Date(to).getTime();
   let copy = [ ...expenses ];
 
   if (userId) {
@@ -40,7 +37,7 @@ function getExpenses(query) {
     copy = copy.filter(expense => expense.category === category);
   }
 
-  if (fromDate && toDate) {
+  if (from && to) {
     copy = copy.filter(expense => {
       const expenseDate = new Date(expense.spentAt).getTime();
 
