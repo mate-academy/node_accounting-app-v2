@@ -22,12 +22,6 @@ function getAllExpenses(expenses, users) {
 
     const id = +userId;
 
-    if (typeof id !== 'number') {
-      res.sendStatus(400);
-
-      return;
-    }
-
     const foundUser = getById(users, id);
 
     if (foundUser) {
@@ -94,12 +88,6 @@ function postOneExpense(expenses, users) {
 function patchOneExpense(expenses) {
   async function patchExpense(req, res) {
     const { id } = req.params;
-
-    if (typeof +id !== 'number') {
-      res.sendStatus(400);
-
-      return;
-    };
 
     const foundExpense = getExpenseById(expenses, +id);
 

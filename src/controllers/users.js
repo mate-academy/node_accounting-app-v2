@@ -73,7 +73,7 @@ function deleteOneUser(users) {
       return;
     }
 
-    users.splice(users.indexOf(users));
+    users.splice(users.indexOf(foundUser), 1);
     res.sendStatus(204);
   }
 

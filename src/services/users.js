@@ -1,5 +1,7 @@
 'use strict';
 
+let userId = 0;
+
 function getAll(users) {
   return users;
 }
@@ -12,19 +14,13 @@ function getById(users, id) {
 
 function createUser(users, name) {
   const newUser = {
-    id: Math.random(),
+    id: userId++,
     name,
   };
 
   users.push(newUser);
 
   return newUser;
-}
-
-function removeUser(users, id) {
-  const newUsers = users.filter((user) => user.id !== id);
-
-  return newUsers;
 }
 
 function updateUser(name, id, users) {
@@ -43,6 +39,5 @@ module.exports = {
   getAll,
   getById,
   createUser,
-  removeUser,
   updateUser,
 };
