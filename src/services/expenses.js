@@ -3,9 +3,7 @@
 let expenses = [];
 
 function uniqueID() {
-  return expenses.length
-    ? [...expenses.sort((a, b) => b.id - a.id)][0].id + 1
-    : 1;
+  return Math.floor(Math.random() * Date.now());
 }
 
 function getAllExpenses() {

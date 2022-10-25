@@ -1,4 +1,3 @@
-/* eslint-disable no-shadow */
 'use strict';
 
 const {
@@ -46,9 +45,8 @@ const getOne = (req, res) => {
 
 const getMany = (req, res) => {
   const expenses = getAllExpenses();
-  const query = req.query;
 
-  const { userId, category, to, from } = query;
+  const { userId, category, to, from } = req.query;
 
   if (from && to) {
     const foundExpensesByDate = expenses.filter(
@@ -64,8 +62,8 @@ const getMany = (req, res) => {
   if (category) {
     const foundExpensesByCategory = expenses.filter(
       (expense) =>
-        expense.userId === +query.userId
-        && expense.category === query.category
+        expense.userId === +userId
+        && expense.category === category
     );
 
     res.send(foundExpensesByCategory);

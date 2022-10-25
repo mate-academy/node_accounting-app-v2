@@ -1,12 +1,9 @@
-/* eslint-disable no-shadow */
 'use strict';
 
 let users = [];
 
 function uniqueID() {
-  return users.length
-    ? [...users.sort((a, b) => b.id - a.id)][0].id + 1
-    : 1;
+  return Math.floor(Math.random() * Date.now());
 }
 
 function getAll() {
