@@ -167,19 +167,6 @@ function createServer() {
     res.status(200).json(Object.values(expenses));
   });
 
-  /*
-  app.get('/expenses/:id', (req, res) => {
-    const { id } = req.params;
-    const expense = expenses[id];
-
-    if (!expense) {
-      return res.status(404).send('Expense not found');
-    }
-
-    res.status(200).json(expense);
-  });
-  */
-
   app.patch('/expenses/:id', (req, res) => {
     const { id } = req.params;
     const expense = expenses[id];
