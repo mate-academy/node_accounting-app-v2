@@ -3,6 +3,10 @@
 let expenses = [];
 let nextExpensessId = 1;
 
+function init() {
+  expenses = [];
+}
+
 const findById = (itemsArray, id) => {
   return itemsArray.find(item => item.id === +id);
 };
@@ -10,10 +14,6 @@ const findById = (itemsArray, id) => {
 const filterById = (itemsArray, value) => {
   return itemsArray.filter(item => item.id !== +value);
 };
-
-function initExpenses() {
-  expenses = [];
-}
 
 function getAllExpenses() {
   return expenses;
@@ -64,5 +64,5 @@ module.exports = {
   updateExpenses,
   removeExpenses,
   createNewExpense,
-  initExpenses,
+  init,
 };

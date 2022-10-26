@@ -3,6 +3,10 @@
 let users = [];
 let nextUserId = 1;
 
+function init() {
+  users = [];
+}
+
 const findById = (itemsArray, id) => {
   return itemsArray.find(item => item.id === +id);
 };
@@ -14,10 +18,6 @@ const filterById = (itemsArray, value) => {
 function getAll() {
   return users;
 };
-
-function initUsers() {
-  users = [];
-}
 
 function getUserById(userId) {
   const foundUser = findById(users, userId);
@@ -54,5 +54,5 @@ module.exports = {
   createUser,
   removeUser,
   updateUser,
-  initUsers,
+  init,
 };
