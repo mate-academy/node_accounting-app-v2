@@ -1,6 +1,7 @@
 'use strict';
 
 const {
+  takeExpenses,
   getAllExpenses,
   filterByData,
   filterByCategory,
@@ -11,19 +12,13 @@ const {
   updateExpense,
 } = require('../services/expenses.js');
 const userService = require('../services/users.js');
-const { allUsers } = require('../controllers/users.js');
-
-let expenses = [];
-
-const clearExpensesArray = () => {
-  expenses = [];
-};
+const { takeUsers } = require('../services/users.js');
 
 const getExpenses = (req, res) => {
   const { userId, category, to, from } = req.query;
 
   if (from && to) {
-    const foundExpensesByDate = filterByData(from, to, expenses);
+    const foundExpensesByDate = filterByData(from, to);
 
     res.send(foundExpensesByDate);
     res.statusCode = 200;
@@ -32,7 +27,7 @@ const getExpenses = (req, res) => {
   }
 
   if (category) {
-    const foundByCategory = filterByCategory(userId, category, expenses);
+    const foundByCategory = filterByCategory(userId, category);
 
     res.send(foundByCategory);
     res.statusCode = 200;
@@ -41,7 +36,7 @@ const getExpenses = (req, res) => {
   }
 
   if (userId) {
-    const foundExpensesByUserId = filterById(userId, expenses);
+    const foundExpensesByUserId = filterById(userId);
 
     res.send(foundExpensesByUserId);
     res.statusCode = 200;
@@ -51,7 +46,7 @@ const getExpenses = (req, res) => {
 
   res.statusCode = 200;
 
-  res.send(getAllExpenses(expenses));
+  res.send(getAllExpenses());
 };
 
 const getOneExpense = (req, res) => {
@@ -63,7 +58,7 @@ const getOneExpense = (req, res) => {
     return;
   }
 
-  const foundExpense = getExpenseById(expenseId, expenses);
+  const foundExpense = getExpenseById(expenseId);
 
   if (!foundExpense) {
     res.sendStatus(404);
@@ -79,9 +74,9 @@ const getOneExpense = (req, res) => {
 const addExpense = (req, res) => {
   const { userId } = req.body;
 
-  const newExpense = createExpense(req.body, expenses);
+  const newExpense = createExpense(req.body);
 
-  const foundUser = userService.getUserById(userId, allUsers());
+  const foundUser = userService.getUserById(userId, takeUsers());
 
   if (!foundUser) {
     res.sendStatus(400);
@@ -97,7 +92,8 @@ const addExpense = (req, res) => {
 const remove = (req, res) => {
   const { expenseId } = req.params;
 
-  const newExpenses = removeExpense(expenseId, expenses);
+  const expenses = takeExpenses();
+  const newExpenses = removeExpense(expenseId);
 
   if (expenses.length === newExpenses.length) {
     res.sendStatus(404);
@@ -105,7 +101,7 @@ const remove = (req, res) => {
     return;
   }
 
-  expenses = newExpenses;
+  // removeExpense(expenseId);
 
   res.sendStatus(204);
 };
@@ -114,7 +110,7 @@ const update = (req, res) => {
   const { expenseId } = req.params;
   const { title } = req.body;
 
-  const foundExpense = getExpenseById(expenseId, expenses);
+  const foundExpense = getExpenseById(expenseId);
 
   if (!foundExpense) {
     res.sendStatus(404);
@@ -134,7 +130,6 @@ const update = (req, res) => {
 };
 
 module.exports = {
-  clearExpensesArray,
   getExpenses,
   getOneExpense,
   addExpense,

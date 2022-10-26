@@ -2,11 +2,21 @@
 
 let nextExpenseId = 1;
 
-function getAllExpenses(expenses) {
+let expenses = [];
+
+function takeExpenses() {
+  return expenses;
+};
+
+function clearExpensesArray() {
+  expenses = [];
+};
+
+function getAllExpenses() {
   return expenses;
 }
 
-function filterByData(from, to, expenses) {
+function filterByData(from, to) {
   const foundExpense = expenses.filter(
     (expense) => expense.spentAt > from
       && expense.spentAt < to
@@ -15,7 +25,7 @@ function filterByData(from, to, expenses) {
   return foundExpense;
 }
 
-function filterByCategory(userId, category, expenses) {
+function filterByCategory(userId, category) {
   const foundExpense = expenses.filter(
     (expense) => expense.userId === +userId
       && expense.category === category
@@ -24,7 +34,7 @@ function filterByCategory(userId, category, expenses) {
   return foundExpense;
 }
 
-function filterById(userId, expenses) {
+function filterById(userId) {
   const foundExpense = expenses.filter(
     (expense) => expense.userId === +userId
   );
@@ -32,13 +42,13 @@ function filterById(userId, expenses) {
   return foundExpense;
 }
 
-function getExpenseById(expenseId, expenses) {
+function getExpenseById(expenseId) {
   const foundExpense = expenses.find(expense => expense.id === +expenseId);
 
   return foundExpense || null;
 }
 
-function createExpense(body, expenses) {
+function createExpense(body) {
   const newExpense = {
     id: nextExpenseId++,
     ...body,
@@ -49,8 +59,12 @@ function createExpense(body, expenses) {
   return newExpense;
 }
 
-function removeExpense(expenseId, expenses) {
-  return expenses.filter(expense => expense.id !== +expenseId);
+function removeExpense(expenseId) {
+  const newExpenses = expenses.filter(expense => expense.id !== +expenseId);
+
+  expenses = newExpenses;
+
+  return newExpenses;
 }
 
 function updateExpense(foundExpense, title) {
@@ -58,6 +72,8 @@ function updateExpense(foundExpense, title) {
 }
 
 module.exports = {
+  takeExpenses,
+  clearExpensesArray,
   getAllExpenses,
   filterByData,
   filterByCategory,

@@ -2,8 +2,8 @@
 
 const express = require('express');
 const cors = require('cors');
-const { cleanUsersArray } = require('./controllers/users');
-const { clearExpensesArray } = require('./controllers/expenses');
+const { cleanUsersArray } = require('./services/users');
+const { clearExpensesArray } = require('./services/expenses');
 const { usersRouter } = require('./routes/users.js');
 const { expensesRouter } = require('./routes/expenses.js');
 
