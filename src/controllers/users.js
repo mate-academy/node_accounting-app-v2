@@ -1,11 +1,11 @@
 'use strict';
 
 const {
-  createUser,
   getUsers,
   getUser,
   removeUser,
-  updateOneUser,
+  createUser,
+  updateUser,
 } = require('../services/users');
 
 function get(req, res) {
@@ -76,7 +76,7 @@ function update(req, res) {
     return;
   }
 
-  updateOneUser(foundUser, { ...req.body });
+  updateUser(foundUser, { ...req.body });
 
   res.statusCode = 200;
 

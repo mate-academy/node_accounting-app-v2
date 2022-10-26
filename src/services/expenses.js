@@ -1,30 +1,43 @@
 'use strict';
 
-// eslint-disable-next-line prefer-const
 let expenses = [];
-let id = 1;
 
 function initExpenses() {
   expenses = [];
 }
 
-function getAll() {
+function filter(cb) {
+  return expenses.filter(cb);
+}
+
+function getExpense(id) {
+  return expenses.find(expense => expense.id === id);
+}
+
+function getExpenses() {
   return expenses;
 }
 
-function create(name) {
-  const newExpense = {
-    id: id++,
-    name,
-  };
+function createExpense(expense) {
+  expenses.push(expense);
+}
 
-  expenses.push(expenses);
+function removeExpense(id) {
+  expenses = expenses.filter(expense => expense.id !== id);
+}
 
-  return newExpense;
+function updateExpense(expenseId, updateData) {
+  const expenseToUdpate = expenses.find(expense => expense.id === expenseId);
+
+  Object.assign(expenseToUdpate, updateData);
 }
 
 module.exports = {
-  create,
   initExpenses,
-  getAll,
+  getExpense,
+  getExpenses,
+  createExpense,
+  removeExpense,
+  updateExpense,
+  filter,
 };

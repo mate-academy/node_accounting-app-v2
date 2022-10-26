@@ -1,6 +1,5 @@
 'use strict';
 
-// eslint-disable-next-line prefer-const
 let users = [];
 let id = 1;
 
@@ -8,14 +7,18 @@ function initUsers() {
   users = [];
 }
 
-function getUsers() {
-  return users;
+function exist(userId) {
+  return users.some(user => user.id === userId);
 }
 
 function getUser(userId) {
   const foundUser = users.find(user => user.id === +userId);
 
   return foundUser;
+}
+
+function getUsers() {
+  return users;
 }
 
 function createUser(name) {
@@ -35,15 +38,16 @@ function removeUser(userId) {
   users = users.filter((user) => user.id !== userId);
 }
 
-function updateOneUser(user, updateData) {
+function updateUser(user, updateData) {
   Object.assign(user, updateData);
 }
 
 module.exports = {
   createUser,
-  updateOneUser,
+  updateUser,
   initUsers,
   getUsers,
   removeUser,
   getUser,
+  exist,
 };

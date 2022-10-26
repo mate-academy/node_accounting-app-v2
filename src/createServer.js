@@ -14,11 +14,11 @@ function createServer() {
 
   app.use(cors());
 
-  app.use('/users', express.json(), usersRoutes);
-  initUsers();
-
   app.use('/expenses', express.json(), expensesRoutes);
   initExpenses();
+
+  app.use('/users', express.json(), usersRoutes);
+  initUsers();
 
   return app;
 }
