@@ -2,22 +2,42 @@
 
 let expenses = [];
 
+const newId = () => (
+  expenses.length
+    ? [...expenses.sort((a, b) => b.id - a.id)][0].id + 1
+    : 1
+);
+
+const filterByUserId = (userId) => (
+  expenses
+    .filter(expense => expense.userId === +userId)
+);
+
+const filterByCategoty = (category, filterExpenses) => (
+  filterExpenses
+    .filter(expense => expense.category === category)
+);
+
+const filterByDate = (from, to) => (
+  expenses
+    .filter(expense => expense.spentAt > from && expense.spentAt < to)
+);
+
 const getAll = (from, to, category, userId) => {
+  let filterExpenses;
+
   if (userId) {
-    let filterExpenses = expenses
-      .filter(expense => expense.userId === +userId);
+    filterExpenses = filterByUserId(userId);
 
     if (category) {
-      filterExpenses = filterExpenses
-        .filter(expense => expense.category === category);
+      filterExpenses = filterByCategoty(category, filterExpenses);
     }
 
     expenses = filterExpenses;
   }
 
   if (from && to) {
-    const filterExpenses = expenses
-      .filter(expense => expense.spentAt > from && expense.spentAt < to);
+    filterExpenses = filterByDate(from, to);
 
     expenses = filterExpenses;
   }
@@ -39,9 +59,7 @@ const create = (title, amount, category, note, userId, spentAt) => {
     category,
     note,
     userId,
-    id: expenses.length
-      ? [...expenses.sort((a, b) => b.id - a.id)][0].id + 1
-      : 1,
+    id: newId(),
     spentAt,
   };
 

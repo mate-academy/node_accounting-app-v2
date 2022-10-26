@@ -2,6 +2,12 @@
 
 let users = [];
 
+const newId = () => (
+  users.length
+    ? [...users.sort((a, b) => b.id - a.id)][0].id + 1
+    : 1
+);
+
 const getAll = () => {
   return users;
 };
@@ -14,7 +20,7 @@ const getById = (userId) => {
 
 const create = (name) => {
   const newUser = {
-    id: users.length ? [...users.sort((a, b) => b.id - a.id)][0].id + 1 : 1,
+    id: newId(),
     name,
   };
 
