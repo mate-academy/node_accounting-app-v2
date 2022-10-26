@@ -53,7 +53,7 @@ function expensesRouter(router, initialExpenses, initialUsers) {
       res.sendStatus(400);
     }
 
-    const newId = expenses.length ? expenses[expenses.length - 1].id + 1 : 1;
+    const newId = new Date() * Math.random();
 
     const newExpence = {
       id: newId,

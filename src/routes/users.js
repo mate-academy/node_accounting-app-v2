@@ -24,7 +24,7 @@ function usersRouter(router, initialUsers) {
 
   router.post('/', express.json(), (req, res) => {
     const { name } = req.body;
-    const newId = users.length ? users[users.length - 1].id + 1 : 1;
+    const newId = new Date() * Math.random();
 
     const newUser = {
       id: newId,
@@ -46,7 +46,7 @@ function usersRouter(router, initialUsers) {
   router.delete('/:userId', (req, res) => {
     const { userId } = req.params;
 
-    const filteredUsers = [...users].filter(user => user.id !== +userId);
+    const filteredUsers = users.filter(user => user.id !== +userId);
 
     if (filteredUsers.length === users.length) {
       res.sendStatus(404);
