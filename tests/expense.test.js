@@ -1,4 +1,5 @@
 'use strict';
+/* eslint-disable max-len */
 
 const supertest = require('supertest');
 const { createServer } = require('../src/createServer');
