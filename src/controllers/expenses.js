@@ -28,12 +28,32 @@ const controllerPostExpense = (req, res) => {
 };
 
 const controllerGetExpenses = (req, res) => {
-  const copy = getExpenses(req.query);
+  const { userId, category, from, to } = req.query;
+  const numberFromDate = new Date(from).getTime();
+  const numberToDate = new Date(to).getTime();
+  const expenses = getExpenses();
+  let filtredExpenses = [];
+
+  if (userId) {
+    filtredExpenses = expenses.filter(expense => expense.userId === +userId);
+  }
+
+  if (category) {
+    filtredExpenses = expenses.filter(expense => expense.category === category);
+  }
+
+  if (from && to) {
+    filtredExpenses = expenses.filter(expense => {
+      const expenseDate = new Date(expense.spentAt).getTime();
+
+      return expenseDate < numberToDate && expenseDate > numberFromDate;
+    });
+  }
 
   res.statusCode = 200;
 
   if (Object.keys(req.query).length > 0) {
-    res.send(copy);
+    res.send(filtredExpenses);
   } else {
     res.send(getExpensesData());
   }
@@ -85,7 +105,12 @@ const controllerPatchExpense = (req, res) => {
     return;
   }
 
-  updateExpense(foundExpense, title);
+  try {
+    updateExpense(foundExpense, title);
+  } catch (_) {
+    req.sendStatus(409);
+  }
+
   res.statusCode = 200;
   res.send(foundExpense);
 };

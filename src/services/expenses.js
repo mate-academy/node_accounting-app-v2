@@ -23,29 +23,8 @@ function postExpense(body) {
   return expense;
 }
 
-function getExpenses(query) {
-  const { userId, category, from, to } = query;
-  const numberFromDate = new Date(from).getTime();
-  const numberToDate = new Date(to).getTime();
-  let copy = [ ...expenses ];
-
-  if (userId) {
-    copy = copy.filter(expense => expense.userId === +userId);
-  }
-
-  if (category) {
-    copy = copy.filter(expense => expense.category === category);
-  }
-
-  if (from && to) {
-    copy = copy.filter(expense => {
-      const expenseDate = new Date(expense.spentAt).getTime();
-
-      return expenseDate < numberToDate && expenseDate > numberFromDate;
-    });
-  }
-
-  return copy;
+function getExpenses() {
+  return expenses;
 }
 
 function getExpenseById(expenseId) {

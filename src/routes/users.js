@@ -1,10 +1,12 @@
 'use strict';
 
-const { controllerDeleteUser,
+const {
+  controllerDeleteUser,
   controllerGetAllUsers,
   controllerGetUserById,
   controllerPostUser,
-  controllerUpdateUser } = require('../controllers/users');
+  controllerUpdateUser,
+} = require('../controllers/users');
 
 const express = require('express');
 

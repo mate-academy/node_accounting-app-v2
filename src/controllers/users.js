@@ -61,7 +61,13 @@ const controllerDeleteUser = (req, res) => {
     return;
   }
 
-  deleteUser(userId);
+  try {
+    deleteUser(userId);
+  } catch (_) {
+    res.sendStatus(409);
+
+    return;
+  }
 
   res.sendStatus(204);
 };
@@ -84,7 +90,14 @@ const controllerUpdateUser = (req, res) => {
     return;
   }
 
-  updateUser(userId, name);
+  try {
+    updateUser(userId, name);
+  } catch (_) {
+    res.sendStatus(409);
+
+    return;
+  }
+
   res.send(foundUser);
 };
 

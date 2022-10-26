@@ -1,10 +1,12 @@
 'use strict';
 
-const { controllerPostExpense,
+const {
+  controllerPostExpense,
   controllerGetExpenses,
   controllerGetExpenseById,
   controllerDeleteExpense,
-  controllerPatchExpense } = require('../controllers/expenses');
+  controllerPatchExpense,
+} = require('../controllers/expenses');
 
 const express = require('express');
 
