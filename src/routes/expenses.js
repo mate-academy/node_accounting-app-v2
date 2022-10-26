@@ -15,16 +15,17 @@ function expenseRoute(router, initialUsers, initialExpenses) {
       note,
     } = req.body;
 
-    if (
-      isNaN(+userId)
-      || !users.some(user => user.id === userId)
-      || isNaN(+userId)
-      || isNaN(Date.parse(spentAt))
-      || typeof title !== 'string'
-      || isNaN(+amount)
-      || typeof category !== 'string'
-      || typeof note !== 'string'
-    ) {
+    const dateIsInvalid
+      = isNaN(+userId)
+        || !users.some(user => user.id === userId)
+        || isNaN(+userId)
+        || isNaN(Date.parse(spentAt))
+        || typeof title !== 'string'
+        || isNaN(+amount)
+        || typeof category !== 'string'
+        || typeof note !== 'string';
+
+    if (dateIsInvalid) {
       res.sendStatus(400);
 
       return;
@@ -53,12 +54,13 @@ function expenseRoute(router, initialUsers, initialExpenses) {
       to,
     } = req.query;
 
-    if (
-      (userId && isNaN(+userId))
-      || (from && isNaN(Date.parse(from)))
-      || (to && isNaN(Date.parse(to)))
-      || (category && typeof category !== 'string')
-    ) {
+    const dateIsInvalid
+      = (userId && isNaN(+userId))
+        || (from && isNaN(Date.parse(from)))
+        || (to && isNaN(Date.parse(to)))
+        || (category && typeof category !== 'string');
+
+    if (dateIsInvalid) {
       res.sendStatus(400);
 
       return;
@@ -97,6 +99,13 @@ function expenseRoute(router, initialUsers, initialExpenses) {
 
   router.delete('/:expenseId', (req, res) => {
     const { expenseId } = req.params;
+
+    if (isNaN(+expenseId)) {
+      res.sendStatus(400);
+
+      return;
+    }
+
     const filteredExpenses = expenses.filter(({ id }) => +expenseId !== id);
     const isExpenseFound = expenses.length !== filteredExpenses.length;
 
@@ -115,14 +124,15 @@ function expenseRoute(router, initialUsers, initialExpenses) {
       note,
     } = req.body;
 
-    if (
-      isNaN(+expenseId)
+    const dateIsInvalid
+    = isNaN(+expenseId)
       || (spentAt && isNaN(Date.parse(spentAt)))
       || (title && typeof title !== 'string')
       || (amount && isNaN(+amount))
       || (category && typeof category !== 'string')
-      || (note && typeof note !== 'string')
-    ) {
+      || (note && typeof note !== 'string');
+
+    if (dateIsInvalid) {
       res.sendStatus(400);
 
       return;
