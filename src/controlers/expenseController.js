@@ -3,13 +3,13 @@
 const expenseServise = require('../functions/expense');
 const userServise = require('../functions/users');
 
-const post = (req, res) => {
+const postExpense = (req, res) => {
   const {
     userId,
     title,
   } = req.body;
 
-  if (!title || !userServise.exist(userId)) {
+  if (!title || !userServise.isIncludes(userId)) {
     res.sendStatus(400);
 
     return;
@@ -20,12 +20,12 @@ const post = (req, res) => {
     id: Math.floor(Date.now() * Math.random()),
   };
 
-  expenseServise.add(newExpense);
+  expenseServise.addExpense(newExpense);
   res.statusCode = 201;
   res.send(newExpense);
 };
 
-const get = (req, res) => {
+const getExpense = (req, res) => {
   const expenses = expenseServise.getAllExpense();
   const {
     userId,
@@ -44,7 +44,7 @@ const get = (req, res) => {
     res.send([]);
   };
 
-  const userIdExpensed = userServise.findById(+userId);
+  const userIdExpensed = userServise.findUserById(Number(userId));
 
   if (userIdExpensed) {
     let userExpenses = expenseServise.filter(
@@ -74,7 +74,7 @@ const get = (req, res) => {
   res.send(expenseServise.getAllExpense());
 };
 
-const getId = (req, res) => {
+const getExpenseId = (req, res) => {
   const expenseId = Number(req.params.id);
 
   if (typeof expenseId !== 'number') {
@@ -83,7 +83,7 @@ const getId = (req, res) => {
     return;
   }
 
-  const foundExpense = expenseServise.findById(expenseId);
+  const foundExpense = expenseServise.findExpenseById(expenseId);
 
   if (!foundExpense) {
     res.sendStatus(404);
@@ -96,7 +96,7 @@ const getId = (req, res) => {
   res.send(foundExpense);
 };
 
-const patch = (req, res) => {
+const patchExpense = (req, res) => {
   const { id } = req.params;
 
   if (typeof +id !== 'number') {
@@ -105,7 +105,7 @@ const patch = (req, res) => {
     return;
   }
 
-  const foundExpense = expenseServise.findById(+id);
+  const foundExpense = expenseServise.findExpenseById(Number(id));
 
   if (!foundExpense) {
     res.sendStatus(404);
@@ -113,14 +113,14 @@ const patch = (req, res) => {
     return;
   }
 
-  expenseServise.update(foundExpense, req.body);
+  expenseServise.updateExpense(foundExpense, req.body);
   res.send(foundExpense);
 };
 
-const deleteExpense = (req, res) => {
+const deleteOneExpense = (req, res) => {
   const { id } = req.params;
 
-  const foundExpense = expenseServise.findById(+id);
+  const foundExpense = expenseServise.findExpenseById(Number(id));
 
   if (!foundExpense) {
     res.sendStatus(404);
@@ -128,14 +128,14 @@ const deleteExpense = (req, res) => {
     return;
   };
 
-  expenseServise.remove(+id);
+  expenseServise.removeExpense(Number(id));
   res.sendStatus(204);
 };
 
 module.exports = {
-  post,
-  get,
-  getId,
-  patch,
-  deleteExpense,
+  postExpense,
+  getExpense,
+  getExpenseId,
+  patchExpense,
+  deleteOneExpense,
 };

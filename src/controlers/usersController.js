@@ -16,14 +16,14 @@ const post = (req, res) => {
     name,
   };
 
-  functions.add(newUser);
+  functions.addUser(newUser);
 
   res.statusCode = 201;
   res.send(newUser);
 };
 
 const get = (req, res) => {
-  const users = functions.getData();
+  const users = functions.getAllUsers();
 
   res.statusCode = 200;
 
@@ -38,7 +38,7 @@ const get = (req, res) => {
 
 const getId = (req, res) => {
   const { id } = req.params;
-  const user = functions.getById(+id);
+  const user = functions.findUserById(Number(id));
 
   if (!user) {
     res.sendStatus(404);
@@ -57,7 +57,7 @@ const getId = (req, res) => {
 
 const patch = (req, res) => {
   const { id } = req.params;
-  const user = functions.getById(+id);
+  const user = functions.findUserById(Number(id));
 
   if (!user) {
     res.sendStatus(404);
@@ -75,9 +75,9 @@ const patch = (req, res) => {
   res.send(user);
 };
 
-const deleteItem = (req, res) => {
+const deleteOneUser = (req, res) => {
   const { id } = req.params;
-  const user = functions.getById(+id);
+  const user = functions.findUserById(Number(id));
 
   if (!user) {
     res.sendStatus(404);
@@ -94,5 +94,5 @@ module.exports = {
   get,
   getId,
   patch,
-  deleteItem,
+  deleteOneUser,
 };

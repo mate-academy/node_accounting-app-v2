@@ -2,7 +2,7 @@
 
 let expenses = [];
 
-function init() {
+function initExpenses() {
   expenses = [];
 };
 
@@ -10,34 +10,29 @@ function getAllExpense() {
   return expenses;
 };
 
-function findById(id) {
+function findExpenseById(id) {
   const foundExpense = expenses.find(expense => expense.id === id);
 
   return foundExpense || null;
 };
 
-function add(expense) {
+function addExpense(expense) {
   expenses.push(expense);
 };
 
-function remove(id) {
+function removeExpense(id) {
   expenses = expenses.filter(expense => expense.id !== id);
 };
 
-function update(expense, updateData) {
+function updateExpense(expense, updateData) {
   Object.assign(expense, updateData);
 };
 
-function filter(callback) {
-  return expenses.filter(callback);
-};
-
 module.exports = {
-  init,
+  initExpenses,
   getAllExpense,
-  add,
-  remove,
-  findById,
-  update,
-  filter,
+  addExpense,
+  removeExpense,
+  findExpenseById,
+  updateExpense,
 };

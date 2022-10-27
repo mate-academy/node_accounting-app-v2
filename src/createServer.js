@@ -10,10 +10,10 @@ function createServer() {
   const app = express();
 
   app.use('/expenses', express.json(), expenseRouter);
-  expenseFunctions.init();
+  expenseFunctions.initExpenses();
 
   app.use('/users', express.json(), userRouter);
-  userFunctions.init();
+  userFunctions.initUser();
 
   return app;
 }
