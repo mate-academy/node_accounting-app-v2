@@ -26,7 +26,7 @@ const post = (req, res) => {
 };
 
 const get = (req, res) => {
-  const expenses = expenseServise.getAll();
+  const expenses = expenseServise.getAllExpense();
   const {
     userId,
     category,
@@ -71,7 +71,7 @@ const get = (req, res) => {
     return;
   }
 
-  res.send(expenseServise.getAll());
+  res.send(expenseServise.getAllExpense());
 };
 
 const getId = (req, res) => {

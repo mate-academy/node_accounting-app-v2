@@ -6,7 +6,7 @@ function init() {
   expenses = [];
 };
 
-function getAll() {
+function getAllExpense() {
   return expenses;
 };
 
@@ -34,7 +34,7 @@ function filter(callback) {
 
 module.exports = {
   init,
-  getAll,
+  getAllExpense,
   add,
   remove,
   findById,
