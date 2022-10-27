@@ -54,7 +54,13 @@ const remove = (req, res) => {
     return;
   }
 
-  removeUser(userId);
+  try {
+    removeUser(userId);
+  } catch (error) {
+    res.sendStatus(400);
+
+    return;
+  }
 
   res.sendStatus(204);
 };
@@ -77,10 +83,16 @@ const update = (req, res) => {
     return;
   }
 
-  updateUser(
-    userId,
-    name,
-  );
+  try {
+    updateUser(
+      userId,
+      name,
+    );
+  } catch (error) {
+    res.sendStatus(400);
+
+    return;
+  }
 
   res.send(foundUser);
 };

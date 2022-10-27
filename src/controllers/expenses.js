@@ -101,7 +101,13 @@ const remove = (req, res) => {
     return;
   }
 
-  // removeExpense(expenseId);
+  try {
+    removeExpense(expenseId);
+  } catch (error) {
+    res.sendStatus(400);
+
+    return;
+  }
 
   res.sendStatus(204);
 };
@@ -124,7 +130,13 @@ const update = (req, res) => {
     return;
   }
 
-  updateExpense(foundExpense, title);
+  try {
+    updateExpense(foundExpense, title);
+  } catch (error) {
+    res.sendStatus(400);
+
+    return;
+  }
 
   res.send(foundExpense);
 };

@@ -1,8 +1,10 @@
 'use strict';
 
-let nextUserId = 1;
-
 let users = [];
+
+function uniqueID() {
+  return Math.floor(Math.random() * Date.now());
+}
 
 function cleanUsersArray() {
   users = [];
@@ -20,7 +22,7 @@ function getUserById(userId) {
 
 function createUser(name) {
   const newUser = {
-    id: nextUserId++,
+    id: uniqueID(),
     name,
   };
 

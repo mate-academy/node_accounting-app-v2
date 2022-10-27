@@ -1,8 +1,10 @@
 'use strict';
 
-let nextExpenseId = 1;
-
 let expenses = [];
+
+function uniqueID() {
+  return Math.floor(Math.random() * Date.now());
+}
 
 function takeExpenses() {
   return expenses;
@@ -50,7 +52,7 @@ function getExpenseById(expenseId) {
 
 function createExpense(body) {
   const newExpense = {
-    id: nextExpenseId++,
+    id: uniqueID(),
     ...body,
   };
 
