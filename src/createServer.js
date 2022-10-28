@@ -1,13 +1,19 @@
-'use strict';
+/* eslint-disable no-console */
+import express from 'express';
+import cors from 'cors';
+import { router as usersRouter } from './routes/usersRoutes.js';
+import { router as expencesRouter } from './routes/expensesRoutes.js';
 
-// const express = require('express');
+export function createServer() {
+  const app = express();
 
-function createServer() {
-  // Use express to create a server
-  // Add a routes to the server
-  // Return the server (express app)
+  app.use(cors());
+  app.use('/users', express.json(), usersRouter);
+  app.use('/expenses', express.json(), expencesRouter);
+
+  app.get('/', (req, res) => {
+    res.sendStatus(404);
+  });
+
+  return app;
 }
-
-module.exports = {
-  createServer,
-};
