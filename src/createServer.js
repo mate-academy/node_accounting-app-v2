@@ -20,6 +20,12 @@ function createServer() {
 
     const findUser = users.find((user) => user.id === +id);
 
+    if (!id) {
+      res.sendStatus(400);
+
+      return;
+    }
+
     if (!findUser) {
       res.sendStatus(404);
 
@@ -105,6 +111,8 @@ function createServer() {
 
       return;
     }
+
+    res.statusCode = 200;
 
     if (userId) {
       const findUser = expenses.filter(expense => expense.userId === +userId);
