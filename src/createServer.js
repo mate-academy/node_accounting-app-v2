@@ -11,6 +11,7 @@ function createServer() {
   app.use(express.json());
 
   app.get('/users', (req, res) => {
+    res.statusCode = 200;
     res.send(users);
   });
 
@@ -43,6 +44,7 @@ function createServer() {
     };
 
     users.push(newUser);
+    res.statusCode = 201;
     res.send(newUser);
   });
 
