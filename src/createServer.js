@@ -5,26 +5,61 @@ const express = require('express');
 const app = express();
 
 function createServer() {
-  // const users = [];
-  const users = [
+  const users = [];
+
+  // const users = [
+  //   {
+  //     id: 1667341222327,
+  //     name: 'Petro',
+  //   },
+  //   {
+  //     id: 1667341225825,
+  //     name: 'Nik',
+  //   },
+  //   {
+  //     id: 1667341228571,
+  //     name: 'Tol',
+  //   },
+  // ];
+  // const expenses = [];
+  const expenses = [
     {
-      id: 1667341222327,
-      name: 'Petro',
+      id: 11,
+      userId: 1667341222327,
+      spentAt: '2022-10-19T11:01:43.462Z',
+      title: 'Buy a new laptop',
+      amount: 999,
+      category: 'Electronics',
+      note: 'I need a new laptop',
     },
     {
-      id: 1667341225825,
-      name: 'Lion',
+      id: 12,
+      userId: 1667341222327,
+      spentAt: '2022-10-23T11:01:43.462Z',
+      title: 'Buy a new car',
+      amount: 111999,
+      category: 'Transport',
+      note: 'I need a new car',
     },
     {
-      id: 1667341228571,
-      name: 'Frank',
+      id: 21,
+      userId: 1667341225825,
+      spentAt: '2022-10-24T11:01:43.462Z',
+      title: 'Buy a new plain',
+      amount: 11199933,
+      category: 'Transport',
+      note: 'I need a new plain',
     },
   ];
-  const expenses = [];
+
+  function convertToSec(str) {
+    const dateS = new Date(str).getTime();
+
+    return Math.trunc(dateS / 1000);
+  }
 
   app.get('/users', (req, res) => {
-    res.setHeader('Content-Type', 'application/json');
-    res.setStatus = 200;
+    res.statusCode = 200;
     res.send(users);
   });
 
@@ -38,8 +73,7 @@ function createServer() {
       user.id = new Date().getTime();
       user.name = req.body.name;
       users.push(user);
-      res.setHeader('Content-Type', 'application/json');
-      res.setStatus = 201;
+      res.statusCode = 201;
       res.send(user);
 
       return;
@@ -55,7 +89,6 @@ function createServer() {
 
     if (!userId) {
       res.statusCode = 400;
-      res.send('Bad request');
 
       return;
     }
@@ -66,7 +99,6 @@ function createServer() {
 
       return;
     }
-    res.setHeader('Content-Type', 'application/json');
     res.statusCode = 200;
     res.send(foundUser);
   });
@@ -84,6 +116,7 @@ function createServer() {
 
     users.splice(foundIndex, 1);
     res.statusCode = 204;
+    res.send('No Content');
   });
 
   app.patch('/users/:userId', express.json(), (req, res) => {
@@ -91,13 +124,15 @@ function createServer() {
     const foundIndex = users.findIndex((person) => person.id === +userId);
 
     if (!req.body.name) {
-      res.sendStatus(400);
+      res.statusCode = 400;
+      res.send('Bad Reques');
 
       return;
     }
 
     if (foundIndex === -1) {
-      res.sendStatus(404);
+      res.statusCode = 404;
+      res.send('Not Found');
 
       return;
     }
@@ -107,22 +142,62 @@ function createServer() {
   });
 
   app.get('/expenses', (req, res) => {
-    if (req.userId && req.categories && req.from && req.to) {
-      const currentExpenses = expenses
-        .filter((item) => item.userId === req.userId)
-        .filter((el) => (
-          req.categories.includes(el.category)
-        && req.from <= el.spentAt
-        && req.to >= el.spentAt));
+    const strUrl = req.originalUrl;
+    const arrParams = strUrl.match(/\w+=[\w\-:.]+/g);
+
+    if (expenses.length === 0) {
+      res.statusCode = 200;
+      res.send([]);
+
+      return;
+    }
+
+    if (!arrParams) {
+      res.statusCode = 200;
+      res.send(expenses);
+
+      return;
+    }
+
+    const arrKeyValue = arrParams.map((el) => el.split('='));
+
+    if (arrKeyValue[0][0] === 'userId' && arrKeyValue.length === 1) {
+      const arrAllExpenses = expenses
+        .filter((ex) => ex.userId === +arrKeyValue[0][1]);
 
       res.statusCode = 200;
-      res.send(currentExpenses);
+      res.send(arrAllExpenses);
+
+      return;
+    }
+
+    if (arrKeyValue[0][0] === 'from' && arrKeyValue[1][0] === 'to') {
+      const arrAllExpenses = expenses
+        .filter((ex) => (convertToSec(ex.spentAt) >= convertToSec(arrKeyValue[0][1]))
+        && (convertToSec(ex.spentAt) <= convertToSec(arrKeyValue[1][1])));
+
+      res.statusCode = 200;
+      res.send(arrAllExpenses);
+
+      return;
+    }
+
+    if (arrKeyValue[0][0] === 'userId' && arrKeyValue[1][0] === 'category') {
+      const arrAllExpenses = expenses
+        .filter((ex) => ex.userId === +arrKeyValue[0][1]
+            && ex.category === arrKeyValue[1][1]);
+
+      res.statusCode = 200;
+      res.send(arrAllExpenses);
     }
   });
 
   app.post('/expenses', express.json(), (req, res) => {
-    if (!req.body) {
-      res.sendStatus(400);
+    const foundIndex = users.find((person) => person.id === +req.body.userId);
+
+    if (!req.body.userId || !foundIndex) {
+      res.statusCode = 400;
+      res.send('Bad Request');
 
       return;
     };
@@ -138,7 +213,6 @@ function createServer() {
     };
 
     expenses.push(expense);
-    res.setHeader('Content-Type', 'application/json');
     res.statusCode = 201;
     res.send(expense);
   });
@@ -147,17 +221,20 @@ function createServer() {
     const { expenseId } = req.params;
     const foundExpense = expenses.find((ex) => ex.id === +expenseId);
 
-    if (!req.id) {
-      res.sendStatus(400);
+    if (!expenseId) {
+      res.statusCode = 400;
+      res.send('Bad Request');
 
       return;
     }
 
     if (!foundExpense) {
-      res.sendStatus(404);
+      res.statusCode = 404;
+      res.send('Not found');
 
       return;
     }
+
     res.send(foundExpense);
   });
 
@@ -166,32 +243,36 @@ function createServer() {
     const foundIndex = expenses.findIndex((ex) => ex.id === +expenseId);
 
     if (foundIndex === -1) {
-      res.sendStatus(404);
+      res.statusCode = 404;
+      res.send('Not found');
 
       return;
     }
 
     expenses.splice(foundIndex, 1);
-    res.sendStatus(204);
+    res.statusCode = 204;
+    res.send('No Content');
   });
 
-  app.patch('/expenses/:expenseId', (req, res) => {
+  app.patch('/expenses/:expenseId', express.json(), (req, res) => {
     const { expenseId } = req.params;
     const foundIndex = expenses.findIndex((ex) => ex.id === +expenseId);
 
-    if (!req.id) {
-      res.sendStatus(400);
+    if (!req.body) {
+      res.statusCode = 400;
+      res.send('Bad Request');
 
       return;
     }
 
     if (foundIndex === -1) {
-      res.sendStatus(404);
+      res.statusCode = 404;
+      res.send('Not Found');
 
       return;
     }
 
-    res.send(Object.assign(users[foundIndex], req.body));
+    res.send(Object.assign(expenses[foundIndex], req.body));
   });
 
   return app;
@@ -200,3 +281,10 @@ function createServer() {
 module.exports = {
   createServer,
 };
+// if (expenses.length === 0) {
+//   res.statusCode = 200;
+//   res.send([]);
+//   res.send('Ok');
+
+//   return;
+// };
