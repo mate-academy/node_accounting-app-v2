@@ -8,7 +8,7 @@ const path = require('path');
 const usersDataBasePath = path.join(__dirname, '..', 'data', 'users.json');
 
 // Array for tests only; user.json file could store all the data permanently.
-let usersArr1 = [];
+// let usersArr1 = [];
 
 // Function to get the data from the array/json/db:
 const getUsersFromDB = () => {
@@ -17,7 +17,7 @@ const getUsersFromDB = () => {
   // Return this from this func but NOT usersArr to use .json as DB.
   return JSON.parse(data);
   // Not this:
-   usersArr1;
+  // usersArr1;
 }
 
 // Function to write the data into the array/json/db:
@@ -25,12 +25,14 @@ const writeUsersToDB = (newData) => {
   fs.writeFileSync(usersDataBasePath, JSON.stringify(newData, null, 2));
   // TODO:
   // Remove this line to use .json as DB.
-  usersArr1 = newData;
+  // usersArr1 = newData;
 }
 // Functions names below describes well what does it do :)
 function getAllUsers(request, response) {
   try {
     const jsonData = getUsersFromDB();
+
+    console.log(jsonData);
 
     response.statusCode = 200;
     response.json(jsonData);

@@ -8,7 +8,7 @@ function createServer() {
   // Paths:
   const publicDirPath = path.join(__dirname, 'public');
   // Port:
-  const PORT = process.env.PORT || 8000;
+  const PORT = process.env.PORT || 5000;
   // App setup:
   const app = express();
   const usersController = require('./usersAPI/users-controller');

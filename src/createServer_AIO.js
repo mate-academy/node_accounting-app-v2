@@ -13,7 +13,7 @@ function createServer() {
   const usersDataBasePath = path.join(__dirname, 'data', 'users.json');
   const expensesDataBasePath = path.join(__dirname, 'data', 'expenses.json');
   // Port:
-  const PORT = process.env.PORT || 8000;
+  const PORT = process.env.PORT || 5000;
   // App setup:
   const app = express();
 
@@ -102,6 +102,7 @@ function createServer() {
 
   // POST ONE:
   app.post('/users', (req, res) => {
+    console.log('users POST')
     try {
       const jsonData = getUsersFromDB();
       const newData = req.body;
@@ -177,12 +178,14 @@ function createServer() {
   // ======= EXPENSES API:
   // GET ALL:
   app.get('/expenses', (request, response) => {
+    console.log('expenses GET ALL')
     try {
       const jsonData = getExpensesFromDB();
       const url = new URL(request.url, `${request.protocol}://${request.hostname}`)
       const params = {};
       let responseData = jsonData;
 
+      console.log(params)
       url.searchParams.forEach((val, key) => params[key] = val);
 
       if (Object.keys(params).length === 0) {
@@ -190,7 +193,6 @@ function createServer() {
 
         return;
       }
-      console.log(params)
 
       if (params.userId) {
         responseData = responseData.filter(item => item.userId === +params.userId);
@@ -219,6 +221,7 @@ function createServer() {
 
   // GET ONE:
   app.get('/expenses/:userID', (request, response) => {
+    console.log('expenses GET ONE')
     const { userID } = request.params;
 
     try {
@@ -240,17 +243,20 @@ function createServer() {
 
   // POST\Create ONE:
   app.post('/expenses', (req, res) => {
+    console.log('expenses POST')
     try {
       const allUsers = getUsersFromDB();
       const jsonData = getExpensesFromDB();
       const newData = req.body;
       const currentUser = allUsers.find(user => user.id === newData.userId);
 
+
       if (!newData.title || !currentUser) {
         res.sendStatus(400);
 
         return;
       }
+      console.log(currentUser, newData.title)
 
       newData.id = jsonData.length + 1;
       jsonData.push(newData);
@@ -314,13 +320,15 @@ function createServer() {
     }
   });
 
-  return app.listen(PORT, () => {
-    console.log('Server is running on port: ' + PORT);
-  });
+  // app.listen(PORT, () => {
+  //   console.log('Server is running on port: ' + PORT);
+  // });
+
+  return app;
 }
 
 // Server init:
-createServer();
+// createServer();
 
 module.exports = {
   createServer,
