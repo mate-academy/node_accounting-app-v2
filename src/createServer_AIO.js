@@ -13,48 +13,52 @@ function createServer() {
   const usersDataBasePath = path.join(__dirname, 'data', 'users.json');
   const expensesDataBasePath = path.join(__dirname, 'data', 'expenses.json');
   // Port:
-  const PORT = process.env.PORT || 5000;
+  // const PORT = process.env.PORT || 5000;
   // App setup:
   const app = express();
 
   // Array for tests only; user.json file could store all the data permanently.
-  let usersArr = [];
-  let expensesArr = [];
+  let usersArrAIO = [];
+  let expensesArrAIO = [];
 
   // Function to get the data from the array/json/db:
   const getUsersFromDB = () => {
     const data = fs.readFileSync(usersDataBasePath).toString();
+
     // TODO:
     // Return this from this func but NOT usersArr to use .json as DB.
     JSON.parse(data);
+
     // Not this:
-    return usersArr;
-  }
+    return usersArrAIO;
+  };
 
   // Function to write the data into the array/json/db:
   const writeUsersToDB = (newData) => {
     fs.writeFileSync(usersDataBasePath, JSON.stringify(newData, null, 2));
     // TODO:
     // Remove this line to use .json as DB.
-    usersArr = newData;
-  }
+    usersArrAIO = newData;
+  };
 
   // Function to get the data from the array/json/db:
   const getExpensesFromDB = () => {
     const data = fs.readFileSync(expensesDataBasePath).toString();
+
     // TODO:
     // Return this from this func but NOT expensesArr to use .json as DB.
     JSON.parse(data);
-    return expensesArr;
-  }
+
+    return expensesArrAIO;
+  };
 
   // Function to write the data into the array/json/db:
   const writeExpensesToDB = (newData) => {
     fs.writeFileSync(expensesDataBasePath, JSON.stringify(newData, null, 2));
     // TODO:
     // Remove this line to use .json as DB.
-    expensesArr = newData;
-  }
+    expensesArrAIO = newData;
+  };
 
   // Middleware:
   app.use(express.json());
@@ -64,7 +68,7 @@ function createServer() {
     const indexHTMLPath = path.join(publicDirPath, 'index.html');
 
     res.end(fs.readFileSync(indexHTMLPath));
-  })
+  });
 
   // ======= USERS API:
   // GET ALL:
@@ -102,7 +106,6 @@ function createServer() {
 
   // POST ONE:
   app.post('/users', (req, res) => {
-    console.log('users POST')
     try {
       const jsonData = getUsersFromDB();
       const newData = req.body;
@@ -116,7 +119,7 @@ function createServer() {
       newData.id = jsonData.length + 1;
       jsonData.push(newData);
 
-      writeUsersToDB(jsonData)
+      writeUsersToDB(jsonData);
 
       res.statusCode = 201;
       res.json(newData);
@@ -143,7 +146,7 @@ function createServer() {
 
       jsonData[currentUserIndex].name = newName;
 
-      writeUsersToDB(jsonData)
+      writeUsersToDB(jsonData);
 
       res.statusCode = 200;
       res.json(jsonData[currentUserIndex]);
@@ -167,7 +170,7 @@ function createServer() {
 
       const newData = jsonData.filter(item => item.id !== +userID);
 
-      writeUsersToDB(newData)
+      writeUsersToDB(newData);
 
       res.sendStatus(204);
     } catch (e) {
@@ -178,37 +181,27 @@ function createServer() {
   // ======= EXPENSES API:
   // GET ALL:
   app.get('/expenses', (request, response) => {
-    console.log('expenses GET ALL')
     try {
       const jsonData = getExpensesFromDB();
-      const url = new URL(request.url, `${request.protocol}://${request.hostname}`)
-      const params = {};
+      const params = request.query;
       let responseData = jsonData;
 
-      console.log(params)
-      url.searchParams.forEach((val, key) => params[key] = val);
-
-      if (Object.keys(params).length === 0) {
-        response.json(jsonData);
-
-        return;
-      }
-
       if (params.userId) {
-        responseData = responseData.filter(item => item.userId === +params.userId);
+        responseData = responseData
+          .filter(item => item.userId === +params.userId);
       }
 
       if (params.category) {
-        responseData = responseData.filter(item => item.category === params.category);
+        responseData = responseData
+          .filter(item => item.category === params.category);
       }
 
       if (params.from && params.to) {
-        console.log(params)
-
         responseData = responseData.filter(item => {
           const itemDate = new Date(item.spentAt);
 
-          return itemDate >= new Date(params.from) && itemDate <= new Date(params.to);
+          return itemDate >= new Date(params.from)
+            && itemDate <= new Date(params.to);
         });
       }
 
@@ -221,7 +214,6 @@ function createServer() {
 
   // GET ONE:
   app.get('/expenses/:userID', (request, response) => {
-    console.log('expenses GET ONE')
     const { userID } = request.params;
 
     try {
@@ -239,29 +231,26 @@ function createServer() {
     } catch (e) {
       response.sendStatus(500);
     }
-  })
+  });
 
   // POST\Create ONE:
   app.post('/expenses', (req, res) => {
-    console.log('expenses POST')
     try {
       const allUsers = getUsersFromDB();
       const jsonData = getExpensesFromDB();
       const newData = req.body;
       const currentUser = allUsers.find(user => user.id === newData.userId);
 
-
       if (!newData.title || !currentUser) {
         res.sendStatus(400);
 
         return;
       }
-      console.log(currentUser, newData.title)
 
       newData.id = jsonData.length + 1;
       jsonData.push(newData);
 
-      writeExpensesToDB(jsonData)
+      writeExpensesToDB(jsonData);
 
       res.statusCode = 201;
       res.json(newData);
@@ -276,7 +265,8 @@ function createServer() {
 
     try {
       const jsonData = getExpensesFromDB();
-      const currentExpenseIndex = jsonData.findIndex(item => item.id === +expenseId);
+      const currentExpenseIndex = jsonData
+        .findIndex(item => item.id === +expenseId);
       const currentExpense = jsonData.find(item => item.id === +expenseId);
       const newData = req.body;
 
@@ -286,9 +276,11 @@ function createServer() {
         return;
       }
 
-      jsonData[currentExpenseIndex] = {...currentExpense ,...newData, id: +expenseId};
+      jsonData[currentExpenseIndex] = {
+        ...currentExpense, ...newData, id: +expenseId,
+      };
 
-      writeExpensesToDB(jsonData)
+      writeExpensesToDB(jsonData);
 
       res.statusCode = 200;
       res.json(jsonData[currentExpenseIndex]);
@@ -312,7 +304,7 @@ function createServer() {
 
       const newData = jsonData.filter(item => item.id !== +expenseId);
 
-      writeExpensesToDB(newData)
+      writeExpensesToDB(newData);
 
       res.sendStatus(204);
     } catch (e) {
@@ -320,15 +312,11 @@ function createServer() {
     }
   });
 
-  // app.listen(PORT, () => {
-  //   console.log('Server is running on port: ' + PORT);
-  // });
-
   return app;
 }
 
 // Server init:
-// createServer();
+// createServer().listen(PORT);
 
 module.exports = {
   createServer,

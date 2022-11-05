@@ -6,15 +6,6 @@
     "amount": 999,
     "category": "Electronics",
     "note": "I need a new laptop",
-    "id": 1
-  },
-  {
-    "userId": 1,
-    "spentAt": "2022-10-20T11:01:43.462Z",
-    "title": "Buy a new laptop",
-    "amount": 999,
-    "category": "Electronics",
-    "note": "I need a new laptop",
     "id": 2
   }
 ]

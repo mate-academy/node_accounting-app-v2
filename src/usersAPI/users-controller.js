@@ -8,31 +8,32 @@ const path = require('path');
 const usersDataBasePath = path.join(__dirname, '..', 'data', 'users.json');
 
 // Array for tests only; user.json file could store all the data permanently.
-// let usersArr1 = [];
+let usersArr = [];
 
 // Function to get the data from the array/json/db:
 const getUsersFromDB = () => {
   const data = fs.readFileSync(usersDataBasePath).toString();
+
   // TODO:
   // Return this from this func but NOT usersArr to use .json as DB.
-  return JSON.parse(data);
+  JSON.parse(data);
+
   // Not this:
-  // usersArr1;
-}
+  return usersArr;
+};
 
 // Function to write the data into the array/json/db:
 const writeUsersToDB = (newData) => {
   fs.writeFileSync(usersDataBasePath, JSON.stringify(newData, null, 2));
   // TODO:
   // Remove this line to use .json as DB.
-  // usersArr1 = newData;
-}
+  usersArr = newData;
+};
+
 // Functions names below describes well what does it do :)
 function getAllUsers(request, response) {
   try {
     const jsonData = getUsersFromDB();
-
-    console.log(jsonData);
 
     response.statusCode = 200;
     response.json(jsonData);
@@ -75,7 +76,7 @@ function createOneUser(req, res) {
     newData.id = jsonData.length + 1;
     jsonData.push(newData);
 
-    writeUsersToDB(jsonData)
+    writeUsersToDB(jsonData);
 
     res.statusCode = 201;
     res.json(newData);
@@ -101,7 +102,7 @@ function updateUser(req, res) {
 
     jsonData[currentUserIndex].name = newName;
 
-    writeUsersToDB(jsonData)
+    writeUsersToDB(jsonData);
 
     res.statusCode = 200;
     res.json(jsonData[currentUserIndex]);
@@ -124,7 +125,7 @@ function deleteUser(req, res) {
 
     const newData = jsonData.filter(item => item.id !== +userID);
 
-    writeUsersToDB(newData)
+    writeUsersToDB(newData);
 
     res.sendStatus(204);
   } catch (e) {
@@ -139,4 +140,4 @@ module.exports = {
   updateUser,
   deleteUser,
   getUsersFromDB,
-}
+};

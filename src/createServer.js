@@ -8,7 +8,7 @@ function createServer() {
   // Paths:
   const publicDirPath = path.join(__dirname, 'public');
   // Port:
-  const PORT = process.env.PORT || 5000;
+  // const PORT = process.env.PORT || 5000;
   // App setup:
   const app = express();
   const usersController = require('./usersAPI/users-controller');
@@ -22,7 +22,7 @@ function createServer() {
     const indexHTMLPath = path.join(publicDirPath, 'index.html');
 
     res.end(fs.readFileSync(indexHTMLPath));
-  })
+  });
 
   // ======= USERS API:
   // GET ALL:
@@ -45,7 +45,7 @@ function createServer() {
   app.get('/expenses', expensesController.getAllExpenses);
 
   // GET ONE:
-  app.get('/expenses/:userID', expensesController.getOneExpense)
+  app.get('/expenses/:userID', expensesController.getOneExpense);
 
   // POST ONE:
   app.post('/expenses', expensesController.createExpense);
@@ -56,13 +56,11 @@ function createServer() {
   // DELETE ONE:
   app.delete('/expenses/:expenseId', expensesController.deleteExpense);
 
-  return app.listen(PORT, () => {
-    console.log('Server is running on port: ' + PORT);
-  });
+  return app;
 }
 
 // Server init:
-createServer();
+// createServer().listen(PORT);
 
 module.exports = {
   createServer,

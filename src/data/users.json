@@ -1,34 +1,10 @@
 [
   {
-    "name": "John Doe",
+    "name": "Greg",
+    "id": 1
+  },
+  {
+    "name": "John",
     "id": 2
-  },
-  {
-    "name": "Jane Doe",
-    "id": 3
-  },
-  {
-    "name": "John Doe",
-    "id": 4
-  },
-  {
-    "name": "John Doe",
-    "id": 4
-  },
-  {
-    "name": "John Doe",
-    "id": 5
-  },
-  {
-    "name": "Jane Doe",
-    "id": 6
-  },
-  {
-    "name": "John Doe",
-    "id": 7
-  },
-  {
-    "name": "Jane Doe",
-    "id": 8
   }
 ]

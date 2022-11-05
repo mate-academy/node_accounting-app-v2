@@ -1,62 +1,63 @@
 'use strict';
 
+// Imports:
 const fs = require('fs');
 const path = require('path');
-const { getUsersFromDB } = require('../usersAPI/users-controller')
+const { getUsersFromDB } = require('../usersAPI/users-controller');
 
-const expensesDataBasePath = path.join(__dirname, '..', 'data', 'expenses.json');
+// Path:
+const expensesDataBasePath = path.join(
+  __dirname, '..', 'data', 'expenses.json'
+);
 
-// Array for tests only; expenses.json file could store all the data permanently.
+// - Array for tests only; expenses.json file
+// |-- could store all the data permanently.
 let expensesArr = [];
 
 // Function to get the data from the array/json/db:
 const getExpensesFromDB = () => {
   const data = fs.readFileSync(expensesDataBasePath).toString();
+
   // TODO:
   // Return this from this func but NOT expensesArr to use .json as DB.
-  return JSON.parse(data);
-   expensesArr;
-}
+  JSON.parse(data);
+
+  return expensesArr;
+};
 
 // Function to write the data into the array/json/db:
 const writeExpensesToDB = (newData) => {
   fs.writeFileSync(expensesDataBasePath, JSON.stringify(newData, null, 2));
+
   // TODO:
   // Remove this line to use .json as DB.
   expensesArr = newData;
-}
+};
 
 const getAllExpenses = (request, response) => {
   try {
     const jsonData = getExpensesFromDB();
-    const url = new URL(request.url, `${request.protocol}://${request.hostname}`)
-    const params = {};
+    const params = request.query;
     let responseData = jsonData;
 
-    url.searchParams.forEach((val, key) => params[key] = val);
-
-    if (Object.keys(params).length === 0) {
-      response.json(jsonData);
-
-      return;
-    }
-    console.log(params)
-
     if (params.userId) {
-      responseData = responseData.filter(item => item.userId === +params.userId);
+      responseData = responseData.filter(
+        item => item.userId === +params.userId
+      );
     }
 
     if (params.category) {
-      responseData = responseData.filter(item => item.category === params.category);
+      responseData = responseData.filter(
+        item => item.category === params.category
+      );
     }
 
     if (params.from && params.to) {
-      console.log(params)
-
       responseData = responseData.filter(item => {
         const itemDate = new Date(item.spentAt);
 
-        return itemDate >= new Date(params.from) && itemDate <= new Date(params.to);
+        return itemDate >= new Date(params.from)
+          && itemDate <= new Date(params.to);
       });
     }
 
@@ -65,14 +66,16 @@ const getAllExpenses = (request, response) => {
   } catch (e) {
     response.sendStatus(500);
   }
-}
+};
 
 const getOneExpense = (request, response) => {
   const { userID } = request.params;
 
   try {
     const jsonData = getExpensesFromDB();
-    const targetExpense = jsonData.find(item => item.id === +userID);
+    const targetExpense = jsonData.find(
+      item => item.id === +userID
+    );
 
     if (!targetExpense) {
       response.sendStatus(404);
@@ -85,7 +88,7 @@ const getOneExpense = (request, response) => {
   } catch (e) {
     response.sendStatus(500);
   }
-}
+};
 
 const createExpense = (req, res) => {
   try {
@@ -103,21 +106,22 @@ const createExpense = (req, res) => {
     newData.id = jsonData.length + 1;
     jsonData.push(newData);
 
-    writeExpensesToDB(jsonData)
+    writeExpensesToDB(jsonData);
 
     res.statusCode = 201;
     res.json(newData);
   } catch (e) {
     res.sendStatus(500);
   }
-}
+};
 
 const updateExpense = (req, res) => {
   const { expenseId } = req.params;
 
   try {
     const jsonData = getExpensesFromDB();
-    const currentExpenseIndex = jsonData.findIndex(item => item.id === +expenseId);
+    const currentExpenseIndex = jsonData
+      .findIndex(item => item.id === +expenseId);
     const currentExpense = jsonData.find(item => item.id === +expenseId);
     const newData = req.body;
 
@@ -127,16 +131,18 @@ const updateExpense = (req, res) => {
       return;
     }
 
-    jsonData[currentExpenseIndex] = {...currentExpense ,...newData, id: +expenseId};
+    jsonData[currentExpenseIndex] = {
+      ...currentExpense, ...newData, id: +expenseId,
+    };
 
-    writeExpensesToDB(jsonData)
+    writeExpensesToDB(jsonData);
 
     res.statusCode = 200;
     res.json(jsonData[currentExpenseIndex]);
   } catch (e) {
     res.sendStatus(500);
   }
-}
+};
 
 const deleteExpense = (req, res) => {
   const { expenseId } = req.params;
@@ -152,13 +158,13 @@ const deleteExpense = (req, res) => {
 
     const newData = jsonData.filter(item => item.id !== +expenseId);
 
-    writeExpensesToDB(newData)
+    writeExpensesToDB(newData);
 
     res.sendStatus(204);
   } catch (e) {
     res.sendStatus(500);
   }
-}
+};
 
 module.exports = {
   getAllExpenses,
@@ -166,4 +172,4 @@ module.exports = {
   createExpense,
   updateExpense,
   deleteExpense,
-}
+};
