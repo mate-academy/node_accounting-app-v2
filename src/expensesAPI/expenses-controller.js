@@ -121,8 +121,9 @@ const deleteExpense = (req, res) => {
 
   try {
     const jsonData = getExpensesFromDB();
+    const itemToDelete = jsonData.find(item => item.id === +expenseId);
 
-    if (!jsonData.find(item => item.id === +expenseId)) {
+    if (!itemToDelete) {
       res.sendStatus(404);
 
       return;
