@@ -7,7 +7,9 @@ module.exports = {
     expect: 'readonly',
   },
   rules: {
-    'no-proto': 0
+    'no-proto': 0,
+    "no-param-reassign": 0
+
   },
   plugins: ['jest']
 };
