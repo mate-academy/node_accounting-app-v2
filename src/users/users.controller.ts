@@ -4,14 +4,16 @@ import User from "./users.interface";
 import validationMiddleware from "../middleware/validation.middleware";
 import CreateUserDto from "./users.dto";
 import UserNotFoundException from "../exceptions/UserNotFoundException";
+import DbInstance from "../db/db.instance";
 
 class UserController {
   public path = "/users";
   public router = Router();
-  private users = [];
+  private users;
 
   constructor() {
     this.initializeRoutes();
+    this.users = new DbInstance();
   }
 
   private initializeRoutes() {
@@ -35,7 +37,7 @@ class UserController {
     _request: express.Request,
     response: express.Response
   ) => {
-    response.send(this.users);
+    response.send(this.users.getAll());
   };
 
   private createUser = (
@@ -43,8 +45,7 @@ class UserController {
     response: express.Response
   ) => {
     const user: User = request.body;
-    this.users.push(user);
-    response.send(user);
+    response.send(this.users.createNew(user));
   };
 
   private getUserById = (
@@ -53,12 +54,12 @@ class UserController {
     next: express.NextFunction
   ) => {
     const id = request.params.id;
-    const userIndex = this.users.findIndex((user) => user.id === Number(id));
-    if (userIndex > -1) {
-      response.send(this.users[userIndex]);
-    } else {
-      next(new UserNotFoundException(id));
+    const user = this.users.getById(Number(id));
+    if (user) {
+      response.send(user);
+      return;
     }
+    next(new UserNotFoundException(id));
   };
 
   private editUser = (
@@ -66,21 +67,15 @@ class UserController {
     response: express.Response,
     next: express.NextFunction
   ) => {
-    const updateuser: Partial<User> = request.body;
+    const updateUser: Partial<User> = request.body;
     const id = request.params.id;
-    const userIndex = this.users.findIndex((user) => user.id === Number(id));
-    if (userIndex > -1) {
-      const newuser = {
-        ...this.users[userIndex],
-        ...updateuser,
-      };
-      this.users[userIndex] = {
-        ...newuser,
-      };
-      response.send(newuser);
-    } else {
-      next(new UserNotFoundException(id));
+    const updatedUser = this.users.editById(Number(id), updateUser);
+    if (updatedUser) {
+      response.send(updatedUser);
+      return;
     }
+
+    next(new UserNotFoundException(id));
   };
 
   private deleteUser = (
@@ -89,13 +84,13 @@ class UserController {
     next: express.NextFunction
   ) => {
     const id = request.params.id;
-    const userIndex = this.users.findIndex((user) => user.id === Number(id));
-    if (userIndex > -1) {
-      this.users.splice(userIndex, 1);
+    const isUserDeleted = this.users.deleteById(Number(id));
+    if (isUserDeleted) {
       response.send(200);
-    } else {
-      next(new UserNotFoundException(id));
+      return;
     }
+
+    next(new UserNotFoundException(id));
   };
 }
 

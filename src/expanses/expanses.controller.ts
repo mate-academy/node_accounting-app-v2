@@ -3,15 +3,17 @@ import * as express from "express";
 import validationMiddleware from "../middleware/validation.middleware";
 import CreateExpanseDto from "./expanses.dto";
 import Expanse from "./expanses.interface";
+import DbInstance from "db/db.instance";
 
 class ExpansesController {
   public path = "/expanses";
   public router = express.Router();
 
-  private expanses: Expanse[] = [];
+  private expanses;
 
   constructor() {
     this.initializeRoutes();
+    this.expanses = new DbInstance();
   }
 
   public initializeRoutes() {
@@ -31,10 +33,10 @@ class ExpansesController {
   }
 
   private getAllExpanses = (
-    request: express.Request,
+    _request: express.Request,
     response: express.Response
   ) => {
-    response.send(this.expanses);
+    response.send(this.expanses.getAll());
   };
 
   private createExpanse = (
@@ -42,8 +44,8 @@ class ExpansesController {
     response: express.Response
   ) => {
     const expanse: Expanse = request.body;
-    this.expanses.push(expanse);
-    response.send(expanse);
+
+    response.send(this.expanses.createNew(expanse));
   };
 
   private getExpanseById = (
@@ -52,14 +54,13 @@ class ExpansesController {
     next: express.NextFunction
   ) => {
     const id = request.params.id;
-    const expanseIndex = this.expanses.findIndex(
-      (expanse) => expanse.id === Number(id)
-    );
-    if (expanseIndex > -1) {
-      response.send(this.expanses[expanseIndex]);
-    } else {
-      next(new ExpanseNotFoundException(id));
+    const expanse = this.expanses.getById(Number(id));
+    if (expanse) {
+      response.send(expanse);
+      return;
     }
+
+    next(new ExpanseNotFoundException(id));
   };
 
   private editExpanse = (
@@ -69,21 +70,13 @@ class ExpansesController {
   ) => {
     const updateExpanse: Partial<Expanse> = request.body;
     const id = request.params.id;
-    const expanseIndex = this.expanses.findIndex(
-      (expanse) => expanse.id === Number(id)
-    );
-    if (expanseIndex > -1) {
-      const newExpanse = {
-        ...this.expanses[expanseIndex],
-        ...updateExpanse,
-      };
-      this.expanses[expanseIndex] = {
-        ...newExpanse,
-      };
+    const newExpanse = this.expanses.editById(Number(id));
+    if (newExpanse) {
       response.send(newExpanse);
-    } else {
-      next(new ExpanseNotFoundException(id));
+      return;
     }
+
+    next(new ExpanseNotFoundException(id));
   };
 
   private deleteExpanse = (
@@ -92,15 +85,13 @@ class ExpansesController {
     next: express.NextFunction
   ) => {
     const id = request.params.id;
-    const expanseIndex = this.expanses.findIndex(
-      (expanse) => expanse.id === Number(id)
-    );
-    if (expanseIndex > -1) {
-      this.expanses.splice(expanseIndex, 1);
+    const isExpanseDeleted = this.expanses.deleteById(Number(id));
+    if (isExpanseDeleted) {
       response.send(200);
-    } else {
-      next(new ExpanseNotFoundException(id));
+      return;
     }
+
+    next(new ExpanseNotFoundException(id));
   };
 }
 

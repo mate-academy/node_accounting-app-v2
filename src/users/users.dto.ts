@@ -1,10 +1,9 @@
-import { IsNumber, IsString } from "class-validator";
+import { Expose } from "class-transformer";
+import { IsString } from "class-validator";
 
 class CreateUserDto {
-  @IsNumber()
-  id: number;
-
   @IsString()
+  @Expose()
   name: string;
 }
 
