@@ -7,9 +7,11 @@ function validationMiddleware(
   type: any,
   skipMissingProperties = false
 ): RequestHandler {
-  return (req, res, next) => {
+  return (req, _res, next) => {
     validate(plainToClass(type, req.body), {
       skipMissingProperties,
+      whitelist: true,
+      forbidNonWhitelisted: true,
     }).then((errors: ValidationError[]) => {
       if (errors.length > 0) {
         const message = errors
