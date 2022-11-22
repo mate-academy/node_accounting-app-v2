@@ -14,10 +14,7 @@ router.delete('/expenses/:expenseId', expenseControllers.deleteExpense);
 
 router.post('/expenses', express.json(), expenseControllers.createNewExpense);
 
-router.patch(
-  '/expenses/:expenseId',
-  express.json(),
-  expenseControllers.updateExpense
-);
+// eslint-disable-next-line
+router.patch('/expenses/:expenseId', express.json(), expenseControllers.updateExpense);
 
 module.exports.expressRouter = router;
