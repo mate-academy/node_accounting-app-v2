@@ -16,29 +16,29 @@ class Expenses {
   getFiltered(searchParams) {
     const { userId, category, from, to } = searchParams;
 
-    let filteredExpenses = this.expenses;
+    const filteredExpenses = this.expenses.filter(
+      expense => {
+        if (userId && expense.userId !== +userId) {
+          return false;
+        }
 
-    if (userId) {
-      filteredExpenses = filteredExpenses.filter(
-        expense => expense.userId === +userId
-      );
-    }
+        if (category && expense.category !== category) {
+          return false;
+        }
 
-    if (category) {
-      filteredExpenses = filteredExpenses.filter(
-        expense => expense.category === category
-      );
-    }
+        const fromDate = new Date(from);
+        const toDate = new Date(to);
 
-    if (from && to) {
-      const fromDate = new Date(from);
-      const toDate = new Date(to);
+        if ((from && to)
+          && (new Date(expense.spentAt) < fromDate
+          || new Date(expense.spentAt) > toDate)
+        ) {
+          return false;
+        }
 
-      filteredExpenses = filteredExpenses.filter(
-        expense => new Date(expense.spentAt) >= fromDate
-          && new Date(expense.spentAt) <= toDate
-      );
-    }
+        return true;
+      }
+    );
 
     return filteredExpenses;
   }

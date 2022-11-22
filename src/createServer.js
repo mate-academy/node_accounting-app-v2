@@ -11,6 +11,8 @@ function createServer() {
   const expenses = new Expenses();
   const users = new Users();
 
+  app.use(express.json());
+
   app.get('/users', (req, res) => {
     res.send(users.getAll());
   });
@@ -29,7 +31,7 @@ function createServer() {
     res.send(user);
   });
 
-  app.post('/users', express.json(), (req, res) => {
+  app.post('/users', (req, res) => {
     const { name } = req.body;
 
     if (!name) {
@@ -57,7 +59,7 @@ function createServer() {
     res.sendStatus(204);
   });
 
-  app.patch('/users/:userId', express.json(), (req, res) => {
+  app.patch('/users/:userId', (req, res) => {
     const { userId } = req.params;
     const { name } = req.body;
 
@@ -107,7 +109,7 @@ function createServer() {
     res.send(expense);
   });
 
-  app.post('/expenses', express.json(), (req, res) => {
+  app.post('/expenses', (req, res) => {
     const {
       userId,
       spentAt,
@@ -154,7 +156,7 @@ function createServer() {
     res.sendStatus(204);
   });
 
-  app.patch('/expenses/:expenseId', express.json(), (req, res) => {
+  app.patch('/expenses/:expenseId', (req, res) => {
     const { expenseId } = req.params;
     const expenseBody = req.body;
 
