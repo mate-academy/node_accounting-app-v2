@@ -22,35 +22,36 @@ function createServer() {
   //   },
   // ];
   // const expenses = [];
-  const expenses = [
-    {
-      id: 11,
-      userId: 1667341222327,
-      spentAt: '2022-10-19T11:01:43.462Z',
-      title: 'Buy a new laptop',
-      amount: 999,
-      category: 'Electronics',
-      note: 'I need a new laptop',
-    },
-    {
-      id: 12,
-      userId: 1667341222327,
-      spentAt: '2022-10-23T11:01:43.462Z',
-      title: 'Buy a new car',
-      amount: 111999,
-      category: 'Transport',
-      note: 'I need a new car',
-    },
-    {
-      id: 21,
-      userId: 1667341225825,
-      spentAt: '2022-10-24T11:01:43.462Z',
-      title: 'Buy a new plain',
-      amount: 11199933,
-      category: 'Transport',
-      note: 'I need a new plain',
-    },
-  ];
+  const expenses = [];
+  // const expenses = [
+  //   {
+  //     id: 11,
+  //     userId: 1667341222327,
+  //     spentAt: '2022-10-19T11:01:43.462Z',
+  //     title: 'Buy a new laptop',
+  //     amount: 999,
+  //     category: 'Electronics',
+  //     note: 'I need a new laptop',
+  //   },
+  //   {
+  //     id: 12,
+  //     userId: 1667341222327,
+  //     spentAt: '2022-10-23T11:01:43.462Z',
+  //     title: 'Buy a new car',
+  //     amount: 111999,
+  //     category: 'Transport',
+  //     note: 'I need a new car',
+  //   },
+  //   {
+  //     id: 21,
+  //     userId: 1667341225825,
+  //     spentAt: '2022-10-24T11:01:43.462Z',
+  //     title: 'Buy a new plain',
+  //     amount: 11199933,
+  //     category: 'Transport',
+  //     note: 'I need a new plain',
+  //   },
+  // ];
 
   function convertToSec(str) {
     const dateS = new Date(str).getTime();
@@ -173,7 +174,8 @@ function createServer() {
 
     if (arrKeyValue[0][0] === 'from' && arrKeyValue[1][0] === 'to') {
       const arrAllExpenses = expenses
-        .filter((ex) => (convertToSec(ex.spentAt) >= convertToSec(arrKeyValue[0][1]))
+        .filter((ex) => (convertToSec(ex.spentAt)
+        >= convertToSec(arrKeyValue[0][1]))
         && (convertToSec(ex.spentAt) <= convertToSec(arrKeyValue[1][1])));
 
       res.statusCode = 200;
