@@ -10,8 +10,11 @@ class Users {
   }
 
   create(name) {
+    const maxId = Math.max(...this.data.map(user => user.id));
+    const id = (this.data.length > 0) ? maxId + 1 : 1;
+
     const newUser = {
-      id: this.data.length + 1,
+      id,
       name,
     };
 

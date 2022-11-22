@@ -51,8 +51,11 @@ class Expenses {
     category,
     note,
   ) {
+    const maxId = Math.max(...this.expenses.map(expense => expense.id));
+    const id = (this.expenses.length > 0) ? maxId + 1 : 1;
+
     const newExpense = {
-      id: this.expenses.length + 1,
+      id,
       userId: +userId,
       spentAt,
       title,
