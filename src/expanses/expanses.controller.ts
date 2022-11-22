@@ -3,15 +3,17 @@ import * as express from "express";
 import validationMiddleware from "../middleware/validation.middleware";
 import CreateExpanseDto from "./expanses.dto";
 import Expanse from "./expanses.interface";
-import DbInstance from "db/db.instance";
+import DbInstance from "../db/db.instance";
+import Controller from "../interfaces/controller.interface";
 
-class ExpansesController {
+class ExpansesController extends Controller {
   public path = "/expanses";
   public router = express.Router();
 
-  private expanses;
+  private expanses: DbInstance;
 
   constructor() {
+    super();
     this.initializeRoutes();
     this.expanses = new DbInstance();
   }
@@ -27,7 +29,7 @@ class ExpansesController {
     this.router.patch(
       `${this.path}/:id`,
       validationMiddleware(CreateExpanseDto, true),
-      this.editExpanse
+      this.updateExpanse
     );
     this.router.delete(`${this.path}/:id`, this.deleteExpanse);
   }
@@ -36,16 +38,16 @@ class ExpansesController {
     _request: express.Request,
     response: express.Response
   ) => {
-    response.send(this.expanses.getAll());
+    response.send(this.expanses.getAll<Expanse>());
   };
 
   private createExpanse = (
     request: express.Request,
     response: express.Response
   ) => {
-    const expanse: Expanse = request.body;
+    const expanse: CreateExpanseDto = request.body;
 
-    response.send(this.expanses.createNew(expanse));
+    response.send(this.expanses.create<Expanse>(expanse));
   };
 
   private getExpanseById = (
@@ -63,14 +65,14 @@ class ExpansesController {
     next(new ExpanseNotFoundException(id));
   };
 
-  private editExpanse = (
+  private updateExpanse = (
     request: express.Request,
     response: express.Response,
     next: express.NextFunction
   ) => {
     const updateExpanse: Partial<Expanse> = request.body;
     const id = request.params.id;
-    const newExpanse = this.expanses.editById(Number(id));
+    const newExpanse = this.expanses.editById(Number(id), updateExpanse);
     if (newExpanse) {
       response.send(newExpanse);
       return;

@@ -5,18 +5,20 @@ import validationMiddleware from "../middleware/validation.middleware";
 import CreateUserDto from "./users.dto";
 import UserNotFoundException from "../exceptions/UserNotFoundException";
 import DbInstance from "../db/db.instance";
+import Controller from "../interfaces/controller.interface";
 
-class UserController {
+class UserController extends Controller {
   public path = "/users";
   public router = Router();
-  private users;
+  private users: DbInstance;
 
   constructor() {
+    super();
     this.initializeRoutes();
     this.users = new DbInstance();
   }
 
-  private initializeRoutes() {
+  initializeRoutes() {
     this.router.get(this.path, this.getAllUsers);
     this.router.get(`${this.path}/:id`, this.getUserById);
 
@@ -28,7 +30,7 @@ class UserController {
     this.router.patch(
       `${this.path}/:id`,
       validationMiddleware(CreateUserDto, true),
-      this.editUser
+      this.updateUser
     );
     this.router.delete(`${this.path}/:id`, this.deleteUser);
   }
@@ -37,15 +39,15 @@ class UserController {
     _request: express.Request,
     response: express.Response
   ) => {
-    response.send(this.users.getAll());
+    response.send(this.users.getAll<User>());
   };
 
   private createUser = (
     request: express.Request,
     response: express.Response
   ) => {
-    const user: User = request.body;
-    response.send(this.users.createNew(user));
+    const user: CreateUserDto = request.body;
+    response.send(this.users.create<User>(user));
   };
 
   private getUserById = (
@@ -54,7 +56,7 @@ class UserController {
     next: express.NextFunction
   ) => {
     const id = request.params.id;
-    const user = this.users.getById(Number(id));
+    const user = this.users.getById<User>(Number(id));
     if (user) {
       response.send(user);
       return;
@@ -62,14 +64,14 @@ class UserController {
     next(new UserNotFoundException(id));
   };
 
-  private editUser = (
+  private updateUser = (
     request: express.Request,
     response: express.Response,
     next: express.NextFunction
   ) => {
-    const updateUser: Partial<User> = request.body;
+    const updatePayload: Partial<User> = request.body;
     const id = request.params.id;
-    const updatedUser = this.users.editById(Number(id), updateUser);
+    const updatedUser = this.users.editById(Number(id), updatePayload);
     if (updatedUser) {
       response.send(updatedUser);
       return;

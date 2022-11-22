@@ -7,16 +7,15 @@ class DbInstance {
     this.idCounter = 0;
   }
 
-  private getItemIndex(id: number): number {
-    const index = this.items.findIndex((item) => item.id === id);
-    return index;
+  private getIndex(id: number): number {
+    return this.items.findIndex((item) => item.id === id);
   }
 
-  public getAll() {
+  public getAll<T>(): T[] {
     return this.items;
   }
 
-  public createNew<T>(payload: T) {
+  public create<T>(payload: Partial<T>) {
     const id = this.idCounter;
     this.idCounter += 1;
 
@@ -25,17 +24,17 @@ class DbInstance {
       ...payload,
     };
     this.items.push(newItem);
-    return newItem;
+    return newItem as T ;
   }
 
   public getById<T>(id: number): T | null {
-    const item = this.items[this.getItemIndex(id)];
+    const item = this.items[this.getIndex(id)];
 
     return item || null;
   }
 
-  public deleteById(id: number) {
-    const index = this.getItemIndex(id);
+  public deleteById(id: number): boolean {
+    const index = this.getIndex(id);
     if (index > -1) {
       this.items.splice(index, 1);
       return true;
@@ -43,8 +42,8 @@ class DbInstance {
     return false;
   }
 
-  public editById<T>(id: number, payload: T) {
-    const index = this.getItemIndex(id);
+  public editById<T>(id: number, payload: Partial<T>) {
+    const index = this.getIndex(id);
     if (index > -1) {
       const updatedItem = {
         ...this.items[index],
@@ -52,7 +51,7 @@ class DbInstance {
       };
       this.items[index] = updatedItem;
 
-      return updatedItem;
+      return updatedItem as T;
     }
 
     return null;

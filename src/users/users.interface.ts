@@ -1,6 +1,7 @@
-interface User {
+import CreateUserDto from "./users.dto";
+
+interface User extends CreateUserDto {
   id: number;
-  name: string;
 }
 
 export default User;

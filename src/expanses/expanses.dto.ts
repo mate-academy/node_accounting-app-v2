@@ -2,9 +2,6 @@ import { IsNumber, IsString } from "class-validator";
 
 class CreateExpanseDto {
   @IsNumber()
-  public id: number;
-
-  @IsNumber()
   userId: number;
 
   @IsString()
