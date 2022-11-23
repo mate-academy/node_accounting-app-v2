@@ -14,26 +14,28 @@ function getById(expenseId) {
 
 function getFiltered(searchParams) {
   const { userId, from, to, category } = searchParams;
-  let filteredExpenses;
 
-  if (userId) {
-    filteredExpenses = expenses.filter(e => e.userId === +userId);
-  }
+  const filteredExpenses = expenses.filter(expense => {
+    if (userId && expense.userId !== +userId) {
+      return false;
+    }
 
-  if (category) {
-    filteredExpenses = filteredExpenses.filter(e => e.category === category);
-  }
+    if (category && expense.category !== category) {
+      return false;
+    }
 
-  if (from && to) {
-    const fromDate = new Date(from);
-    const toDate = new Date(to);
+    if (from && to) {
+      const fromDate = new Date(from);
+      const toDate = new Date(to);
+      const spentAtDate = new Date(expense.spentAt);
 
-    filteredExpenses = expenses.filter(e => {
-      const spentAtDate = new Date(e.spentAt);
+      if (spentAtDate < fromDate || spentAtDate > toDate) {
+        return false;
+      }
+    }
 
-      return spentAtDate >= fromDate && spentAtDate <= toDate;
-    });
-  }
+    return true;
+  });
 
   return filteredExpenses;
 }
@@ -42,6 +44,7 @@ function create(userId, spentAt, title, amount, category, note) {
   const maxId = expenses.length
     ? Math.max(...expenses.map(expense => expense.id))
     : 0;
+
   const newExpense = {
     id: maxId + 1,
     userId: +userId,

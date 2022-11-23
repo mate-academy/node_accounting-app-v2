@@ -33,6 +33,7 @@ const getOne = (req, res) => {
 };
 
 const add = (req, res) => {
+
   const {
     userId,
     spentAt,
