@@ -1,16 +1,6 @@
 'use strict';
 
-let expenses = [
-  {
-    id: 0,
-    userId: 1,
-    spentAt: '2022-11-21T13:35:39.907Z',
-    title: 'Phone',
-    amount: 0,
-    category: 'Electronics',
-    note: 'Buy new phone',
-  },
-];
+let expenses = [];
 
 function getAllExpenses(userId, from, to, category) {
   const filtredExpenses = expenses.filter(expense => (

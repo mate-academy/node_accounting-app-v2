@@ -1,11 +1,6 @@
 'use strict';
 
-let users = [
-  {
-    id: 0,
-    name: 'Petro',
-  },
-];
+let users = [];
 
 function getAllUsers() {
   return users;
