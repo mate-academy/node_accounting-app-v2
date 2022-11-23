@@ -1,6 +1,6 @@
 'use strict';
 
-const { getOneUser } = require('../services/users');
+const { getUserById } = require('../services/users');
 
 const {
   getFilteredExpenses,
@@ -22,11 +22,10 @@ const getAllExpenses = (req, res) => {
 };
 
 const createExpense = (req, res) => {
-  const foundedUser = getOneUser(req.body.userId);
+  const foundedUser = getUserById(+req.body.userId);
 
   if (!foundedUser) {
     res.sendStatus(400);
-    res.end();
 
     return;
   }

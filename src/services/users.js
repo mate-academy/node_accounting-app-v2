@@ -21,7 +21,7 @@ const addUser = (name) => {
   return newUser;
 };
 
-const getOneUser = (userId) => {
+const getUserById = (userId) => {
   return users.find(user => user.id === userId);
 };
 
@@ -30,7 +30,7 @@ const deleteUser = (userId) => {
 };
 
 const changeUser = (userId, name) => {
-  const foundedUser = getOneUser(userId);
+  const foundedUser = getUserById(+userId);
 
   Object.assign(foundedUser, { name });
 
@@ -39,7 +39,7 @@ const changeUser = (userId, name) => {
 
 module.exports = {
   getAllUsers,
-  getOneUser,
+  getUserById,
   addUser,
   deleteUser,
   changeUser,

@@ -2,7 +2,7 @@
 
 const {
   getAllUsers,
-  getOneUser,
+  getUserById,
   addUser,
   deleteUser,
   changeUser,
@@ -28,7 +28,7 @@ const createUser = (req, res) => {
 const getUser = (req, res) => {
   const { userId } = req.params;
 
-  const foundedUser = getOneUser(+userId);
+  const foundedUser = getUserById(+userId);
 
   if (!foundedUser) {
     res.sendStatus(404);
@@ -42,7 +42,7 @@ const getUser = (req, res) => {
 const removeUser = (req, res) => {
   const { userId } = req.params;
 
-  const foundedUser = getOneUser(+userId);
+  const foundedUser = getUserById(+userId);
 
   if (!foundedUser) {
     res.sendStatus(404);
@@ -64,7 +64,7 @@ const modifyUser = (req, res) => {
     return;
   }
 
-  let user = getOneUser(+userId);
+  let user = getUserById(+userId);
 
   if (!user) {
     res.sendStatus(404);

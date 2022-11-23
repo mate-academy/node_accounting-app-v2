@@ -11,12 +11,25 @@ const getFilteredExpenses = (searchParams) => {
   } = searchParams;
 
   return expenses
-    .filter(expense => userId ? expense.userId === +userId : true)
-    .filter(expense =>
-      category ? category === expense.category : true)
-    .filter(expense =>
-      from ? new Date(expense.spentAt) >= new Date(from) : true)
-    .filter(expense => to ? new Date(expense.spentAt) <= new Date(to) : true);
+    .filter(expense => {
+      if (userId && expense.userId !== +userId) {
+        return;
+      }
+
+      if (category && category !== expense.category) {
+        return;
+      }
+
+      if (from && new Date(expense.spentAt) < new Date(from)) {
+        return;
+      }
+
+      if (to && new Date(expense.spentAt) > new Date(to)) {
+        return;
+      }
+
+      return true;
+    });
 };
 
 const getExpenses = () => {
@@ -47,7 +60,7 @@ const deleteExpense = (expenseId) => {
 };
 
 const changeExpense = (expenseId, expenseData) => {
-  const foundedExpense = getOneExpense(expenseId);
+  const foundedExpense = getOneExpense(+expenseId);
 
   Object.assign(foundedExpense, expenseData);
 
