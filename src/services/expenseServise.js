@@ -19,29 +19,26 @@ class ExpenseService {
   getFiltered(searchParams) {
     const { userId, category, from, to } = searchParams;
 
-    const filteredExpenses = this.expenses.filter(
-      expense => {
-        if (userId && expense.userId !== +userId) {
-          return false;
-        }
-
-        if (category && expense.category !== category) {
-          return false;
-        }
-
-        const fromDate = new Date(from);
-        const toDate = new Date(to);
-
-        if ((from && to)
-          && (new Date(expense.spentAt) < fromDate
-          || new Date(expense.spentAt) > toDate)
-        ) {
-          return false;
-        }
-
-        return true;
+    const filteredExpenses = this.expenses.filter(expense => {
+      if (userId && expense.userId !== +userId) {
+        return false;
       }
-    );
+
+      if (category && expense.category !== category) {
+        return false;
+      }
+
+      const spentAtDate = new Date(expense.spentAt);
+
+      const checkDate
+        = spentAtDate < new Date(from) || spentAtDate > new Date(to);
+
+      if ((from && to) && checkDate) {
+        return false;
+      }
+
+      return true;
+    });
 
     return filteredExpenses;
   }
