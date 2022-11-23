@@ -1,7 +1,5 @@
 'use strict';
 
-const { v4: uuid } = require('uuid');
-
 let users = [];
 
 const getAll = () => users;
@@ -11,8 +9,12 @@ const getById = (userId) => {
 };
 
 const create = (name) => {
+  const maxId = users.length
+    ? Math.max(...users.map(user => user.id))
+    : 0;
+
   const newUser = {
-    id: uuid(),
+    id: maxId + 1,
     name,
   };
 

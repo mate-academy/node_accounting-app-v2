@@ -33,10 +33,9 @@ const addExpense = (req, res) => {
     title,
     amount,
     category,
-    note,
   } = req.body;
 
-  const hasBody = userId && spentAt && title && amount && category && note;
+  const hasBody = userId && spentAt && title && amount && category;
 
   if (!hasBody) {
     res.sendStatus(400);
@@ -74,7 +73,7 @@ const updateExpense = (req, res) => {
     note,
   } = req.body;
 
-  const hasBody = spentAt && title && amount && category && note;
+  const hasBody = spentAt && title && amount && category;
 
   if (!expenseId || !hasBody) {
     res.sendStatus(400);

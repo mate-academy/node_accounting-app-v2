@@ -1,7 +1,5 @@
 'use strict';
 
-const { v4: uuid } = require('uuid');
-
 let expenses = [];
 
 const getAll = () => expenses;
@@ -18,14 +16,18 @@ const create = ({
   category,
   note,
 }) => {
+  const maxId = expenses.length
+    ? Math.max(...expenses.map(expense => expense.id))
+    : 0;
+
   const newExpense = {
-    id: uuid(),
+    id: maxId + 1,
     userId: +userId,
     spentAt,
     title,
     amount,
     category,
-    note,
+    note: note || '',
   };
 
   expenses.push(newExpense);
