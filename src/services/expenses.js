@@ -44,7 +44,7 @@ function create(userId, spentAt, title, amount, category, note) {
     : 0;
   const newExpense = {
     id: maxId + 1,
-    userId,
+    userId: +userId,
     spentAt,
     title,
     amount,
@@ -58,7 +58,7 @@ function create(userId, spentAt, title, amount, category, note) {
 }
 
 function remove(expenseId) {
-  expenses = expenses.filter(expense => expense.id !== expenseId);
+  expenses = expenses.filter(expense => expense.id !== +expenseId);
 }
 
 function update(expense, expenseBody) {
