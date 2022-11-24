@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 'use strict';
 
 const supertest = require('supertest');
@@ -53,7 +54,7 @@ describe('Expense', () => {
 
     it('should return 400 if user not found', async() => {
       const expenseData = {
-        userId: 1,
+        userId: 5,
         spentAt: '2022-10-19T11:01:43.462Z',
         title: 'Buy a new laptop',
         amount: 999,
