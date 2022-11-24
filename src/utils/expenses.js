@@ -14,7 +14,7 @@ const isValidData = (data) => {
 
   const foundUser = getUserById(userId);
 
-  if (
+  return !(
     !foundUser
     || typeof spentAt !== 'string'
     || typeof title !== 'string'
@@ -25,11 +25,7 @@ const isValidData = (data) => {
     || !category.length
     || !note.length
     || typeof amount !== 'number'
-  ) {
-    return false;
-  }
-
-  return true;
+  );
 };
 
 module.exports = { isValidData };

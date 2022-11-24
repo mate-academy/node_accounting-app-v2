@@ -13,7 +13,6 @@ const getUserById = (req, res) => {
   const foundUser = usersServices.getUserById(userId);
 
   if (typeof +userId !== 'number'
-    || !Number.isInteger(+userId)
     || +userId <= 0
   ) {
     res.sendStatus(400);
@@ -50,7 +49,6 @@ const removeUser = (req, res) => {
   const foundUser = usersServices.getUserById(userId);
 
   if (typeof +userId !== 'number'
-    || !Number.isInteger(+userId)
     || userId <= 0
   ) {
     res.sendStatus(400);

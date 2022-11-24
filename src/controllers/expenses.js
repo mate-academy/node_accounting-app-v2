@@ -14,7 +14,6 @@ const getExpenseById = (req, res) => {
   const foundExpense = expensesServices.getExpenseById(expenseId);
 
   if (typeof +expenseId !== 'number'
-    || !Number.isInteger(+expenseId)
     || +expenseId <= 0
   ) {
     res.sendStatus(400);
@@ -51,7 +50,6 @@ const removeExpense = (req, res) => {
   const foundExpense = expensesServices.getExpenseById(expenseId);
 
   if (typeof +expenseId !== 'number'
-    || !Number.isInteger(+expenseId)
     || expenseId <= 0
   ) {
     res.sendStatus(400);
