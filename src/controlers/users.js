@@ -1,6 +1,7 @@
 'use strict';
 
 const userServices = require('../sevices/users');
+const { isUserExists } = require('../utils/userValidation');
 
 const getUsers = (req, res) => {
   const users = userServices.getAll();
@@ -39,9 +40,9 @@ const createUser = (req, res) => {
 
 const removeUser = (req, res) => {
   const { userId } = req.params;
-  const foundUser = userServices.getUserById(userId);
+  const isUser = isUserExists(userId);
 
-  if (!foundUser) {
+  if (!isUser) {
     res.sendStatus(404);
 
     return;

@@ -1,6 +1,8 @@
 'use strict';
 
 const expensesControler = require('../sevices/expenses');
+const { validation } = require('../utils/expensesValidation');
+const { isUserExists } = require('../utils/userValidation');
 
 const getExpenses = (req, res) => {
   const expenses = expensesControler.getExpenses();
@@ -24,11 +26,9 @@ const getExpenseById = (req, res) => {
 
 const createExpense = (req, res) => {
   const data = req.body;
+  const isUser = isUserExists(data.userId);
 
-  const keys = Object.keys(data);
-  const values = Object.values(data);
-
-  if (keys.some(field => !field) || values.some(field => !field)) {
+  if (isUser || validation(data)) {
     res.sendStatus(400);
 
     return;
@@ -42,9 +42,9 @@ const createExpense = (req, res) => {
 
 const removeExpense = (req, res) => {
   const { expenseId } = req.params;
-  const foundUser = expensesControler.getExpenseById(expenseId);
+  const foundExpense = expensesControler.getExpenseById(expenseId);
 
-  if (!foundUser) {
+  if (!foundExpense) {
     res.sendStatus(404);
 
     return;
@@ -54,9 +54,26 @@ const removeExpense = (req, res) => {
   res.sendStatus(204);
 };
 
+const updateExpense = (req, res) => {
+  const { expenseId } = req.params;
+  const newData = req.body;
+
+  const foundExpense = expensesControler.getExpenseById(expenseId);
+
+  if (!foundExpense || validation(newData)) {
+    res.sendStatus(400);
+
+    return;
+  }
+
+  expensesControler.updateExpense(expenseId, newData);
+  res.sendStatus(200);
+};
+
 module.exports = {
   getExpenses,
   createExpense,
   getExpenseById,
   removeExpense,
+  updateExpense,
 };

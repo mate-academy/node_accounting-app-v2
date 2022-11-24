@@ -3,10 +3,10 @@
 let expenses = [
   {
     'id': 1,
-    'userId': 0,
+    'userId': 1,
     'spentAt': '2022-11-22T22:45:19.627Z',
     'title': 'Skis',
-    'amount': 0,
+    'amount': 2,
     'category': 'Sport',
     'note': 'string',
   },
@@ -38,9 +38,18 @@ const removeExpense = (expenseId) => {
   expenses = expenses.filter(expense => expense.id !== +expenseId);
 };
 
+const updateExpense = (expenseId, data) => {
+  const foundExpense = getExpenseById(expenseId);
+
+  Object.assign(foundExpense, data);
+
+  return foundExpense;
+};
+
 module.exports = {
   getExpenses,
   createExpense,
   getExpenseById,
   removeExpense,
+  updateExpense,
 };

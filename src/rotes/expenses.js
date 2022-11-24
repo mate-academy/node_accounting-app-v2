@@ -9,13 +9,14 @@ const {
   createExpense,
   getExpenseById,
   removeExpense,
+  updateExpense,
 } = require('../controlers/expenses');
 
 router.get('/', getExpenses);
 router.get('/:expenseId', getExpenseById);
 router.post('/', createExpense);
 router.delete('/:expenseId', removeExpense);
-// router.patch('/:userId', updateUser);
+router.patch('/:expenseId', updateExpense);
 
 module.exports = {
   router,
