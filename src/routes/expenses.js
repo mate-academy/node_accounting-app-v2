@@ -2,19 +2,25 @@
 
 const express = require('express');
 
-const expenseControllers = require('../controllers/expense');
+const {
+  getAllExpensesController,
+  getExpenseController,
+  deleteExpenseController,
+  createNewExpenseController,
+  updateExpenseController,
+} = require('../controllers/expense');
 
 const router = express.Router();
 
-router.get('/expenses', express.json(), expenseControllers.getAllExpenses);
+router.get('/', getAllExpensesController);
 
-router.get('/expenses/:expenseId', expenseControllers.getExpense);
+router.get('/expenses/:expenseId', getExpenseController);
 
-router.delete('/expenses/:expenseId', expenseControllers.deleteExpense);
+router.delete('/expenses/:expenseId', deleteExpenseController);
 
-router.post('/expenses', express.json(), expenseControllers.createNewExpense);
+router.post('/', createNewExpenseController);
 
 // eslint-disable-next-line
-router.patch('/expenses/:expenseId', express.json(), expenseControllers.updateExpense);
+router.patch('/expenses/:expenseId', updateExpenseController);
 
 module.exports.expressRouter = router;

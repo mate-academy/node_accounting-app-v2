@@ -1,8 +1,14 @@
 'use strict';
 
-const expenseServices = require('../services/expenses');
+const {
+  getAllExpenses,
+  getExpense,
+  deleteExpense,
+  createNewExpense,
+  updateExpense,
+} = require('../services/expenses');
 
-const getAllExpenses = (req, res) => {
+const getAllExpensesController = (req, res) => {
   const { userId, category, from, to } = req.query;
 
   if (!category || !userId || !from || !to) {
@@ -11,7 +17,7 @@ const getAllExpenses = (req, res) => {
     return;
   }
 
-  const findExpenses = expenseServices.getAllExpenses(
+  const findExpenses = getAllExpenses(
     userId,
     from,
     to,
@@ -27,22 +33,22 @@ const getAllExpenses = (req, res) => {
   res.send(findExpenses);
 };
 
-const getExpense = (req, res) => {
+const getExpenseController = (req, res) => {
   const { expenseId } = req.params;
 
-  if (!expenseServices.getExpense(expenseId)) {
+  if (!getExpense(expenseId)) {
     res.sendStatus(404);
 
     return;
   }
 
-  res.send(expenseServices.getExpense(expenseId));
+  res.send(getExpense(expenseId));
 };
 
-const deleteExpense = (req, res) => {
+const deleteExpenseController = (req, res) => {
   const { expenseId } = req.params;
 
-  const status = expenseServices.deleteExpense(expenseId);
+  const status = deleteExpense(expenseId);
 
   if (!status) {
     res.sendStatus(404);
@@ -51,7 +57,7 @@ const deleteExpense = (req, res) => {
   res.sendStatus(204);
 };
 
-const createNewExpense = (req, res) => {
+const createNewExpenseController = (req, res) => {
   const { userId, spentAt, title, amount, category, note } = req.body;
 
   if (!userId
@@ -65,7 +71,7 @@ const createNewExpense = (req, res) => {
     return;
   }
 
-  const newExpense = expenseServices.createNewExpense(
+  const newExpense = createNewExpense(
     userId,
     spentAt,
     title,
@@ -78,7 +84,7 @@ const createNewExpense = (req, res) => {
   res.send(newExpense);
 };
 
-const updateExpense = (req, res) => {
+const updateExpenseController = (req, res) => {
   const { expenseId } = req.params;
   const { spentAt, title, amount, category, note } = req.body;
 
@@ -88,7 +94,7 @@ const updateExpense = (req, res) => {
     return;
   }
 
-  const status = expenseServices.updateExpense(
+  const status = updateExpense(
     expenseId,
     spentAt,
     title,
@@ -106,8 +112,10 @@ const updateExpense = (req, res) => {
   res.send(status);
 };
 
-module.exports.getAllExpenses = getAllExpenses;
-module.exports.getExpense = getExpense;
-module.exports.deleteExpense = deleteExpense;
-module.exports.createNewExpense = createNewExpense;
-module.exports.updateExpense = updateExpense;
+module.exports = {
+  getAllExpensesController,
+  getExpenseController,
+  deleteExpenseController,
+  createNewExpenseController,
+  updateExpenseController,
+};

@@ -8,10 +8,9 @@ const app = express();
 
 function createServer() {
   return (
-
-    app.use(userRouter),
-
-    app.use(expressRouter)
+    app.use(express.json()),
+    app.use('/users', userRouter),
+    app.use('/expenses', expressRouter)
   );
   // Use express to create a server
   // Add a routes to the server

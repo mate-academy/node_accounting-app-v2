@@ -1,24 +1,30 @@
 'use strict';
 
-const userServices = require('../services/users');
+const {
+  getAllUsers,
+  getUser,
+  createNewUser,
+  deleteUser,
+  updateUser,
+} = require('../services/users');
 
-const getAll = (req, res) => {
-  res.send(userServices.getAllUsers());
+const getAllController = (req, res) => {
+  res.send(getAllUsers());
 };
 
-const getUser = (req, res) => {
+const getUserController = (req, res) => {
   const { todoId } = req.params;
 
-  if (!userServices.getUser(todoId)) {
+  if (!getUser(todoId)) {
     res.sendStatus(404);
 
     return;
   }
 
-  res.send(userServices.getUser(todoId));
+  res.send(getUser(todoId));
 };
 
-const createNewUser = (req, res) => {
+const createNewUserController = (req, res) => {
   const { name } = req.body;
 
   if (!name) {
@@ -27,16 +33,16 @@ const createNewUser = (req, res) => {
     return;
   }
 
-  const newUser = userServices.createNewUser(name);
+  const newUser = createNewUser(name);
 
   res.statusCode = 201;
   res.send(newUser);
 };
 
-const deleteUser = (req, res) => {
+const deleteUserController = (req, res) => {
   const { userId } = req.params;
 
-  const status = userServices.deleteUser(userId);
+  const status = deleteUser(userId);
 
   if (status) {
     res.sendStatus(204);
@@ -45,7 +51,7 @@ const deleteUser = (req, res) => {
   }
 };
 
-const updateUser = (req, res) => {
+const updateUserController = (req, res) => {
   const { userId } = req.params;
   const { name } = req.body;
 
@@ -55,7 +61,7 @@ const updateUser = (req, res) => {
     return;
   }
 
-  const status = userServices.updateUser(userId, name);
+  const status = updateUser(userId, name);
 
   if (status) {
     res.send(status);
@@ -64,8 +70,10 @@ const updateUser = (req, res) => {
   }
 };
 
-module.exports.getAll = getAll;
-module.exports.getUser = getUser;
-module.exports.createNewUser = createNewUser;
-module.exports.deleteUser = deleteUser;
-module.exports.updateUser = updateUser;
+module.exports = {
+  getAllController,
+  getUserController,
+  createNewUserController,
+  deleteUserController,
+  updateUserController,
+};

@@ -1,5 +1,7 @@
 'use strict';
 
+const getId = require('../utils').getId;
+
 let expenses = [];
 
 function getAllExpenses(userId, from, to, category) {
@@ -37,9 +39,7 @@ function createNewExpense(userId, spentAt, title, amount, category, note) {
   let newId = 0;
 
   if (expenses.length) {
-    newId = [...expenses].sort(
-      (expenseA, expenseB) => expenseB.id - expenseA.id
-    )[0].id + 1;
+    newId = getId(expenses);
   }
 
   const newExpense = {
@@ -73,8 +73,10 @@ function updateExpense(expenseId, spentAt, title, amount, category, note) {
   return findExpenses;
 }
 
-module.exports.getAllExpenses = getAllExpenses;
-module.exports.getExpense = getExpense;
-module.exports.deleteExpense = deleteExpense;
-module.exports.createNewExpense = createNewExpense;
-module.exports.updateExpense = updateExpense;
+module.exports = {
+  getAllExpenses,
+  getExpense,
+  deleteExpense,
+  createNewExpense,
+  updateExpense,
+};

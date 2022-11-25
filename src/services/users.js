@@ -1,5 +1,7 @@
 'use strict';
 
+const getId = require('../utils').getId;
+
 let users = [];
 
 function getAllUsers() {
@@ -14,9 +16,7 @@ function createNewUser(name) {
   let newId = 0;
 
   if (users.length) {
-    newId = [...users].sort(
-      (userA, userB) => userB.id - userA.id
-    )[0].id + 1;
+    newId = getId(users);
   }
 
   const newUser = {
@@ -53,8 +53,10 @@ function updateUser(userId, name) {
   return null;
 }
 
-module.exports.getAllUsers = getAllUsers;
-module.exports.getUser = getUser;
-module.exports.createNewUser = createNewUser;
-module.exports.deleteUser = deleteUser;
-module.exports.updateUser = updateUser;
+module.exports = {
+  getAllUsers,
+  getUser,
+  createNewUser,
+  deleteUser,
+  updateUser,
+};
