@@ -31,7 +31,14 @@ class UserService {
   }
 
   remove(userId) {
-    this.users = this.users.filter(user => user.id !== userId);
+    const filteredUsers = this.users
+      .filter(user => user.id !== +userId);
+
+    const isDeletedUser = this.users.length !== filteredUsers.length;
+
+    this.users = filteredUsers;
+
+    return isDeletedUser;
   }
 
   update({ id, name }) {

@@ -10,10 +10,10 @@ class ExpenseService {
   }
 
   getById(expenseId) {
-    const foundExpense = this.expenses
-      .find(expense => expense.id === expenseId);
+    const expense = this.expenses
+      .find(oneExpense => oneExpense.id === expenseId);
 
-    return foundExpense || null;
+    return expense || null;
   }
 
   getFiltered(searchParams) {
@@ -28,12 +28,9 @@ class ExpenseService {
         return false;
       }
 
-      const spentAtDate = new Date(expense.spentAt);
+      const checkDate = expense.spentAt < from || expense.spentAt > to;
 
-      const checkDate
-        = spentAtDate < new Date(from) || spentAtDate > new Date(to);
-
-      if ((from && to) && checkDate) {
+      if (from && to && checkDate) {
         return false;
       }
 
@@ -52,17 +49,17 @@ class ExpenseService {
     note
   ) {
     const newExpenseId = this.expenses.length
-      ? Math.max(...this.expenses.map(expense => +expense.id))
-      : 0;
+      ? Math.max(...this.expenses.map(expense => +expense.id)) + 1
+      : 1;
 
     const newExpense = {
-      id: newExpenseId + 1,
+      id: newExpenseId,
       userId: +userId,
       spentAt,
       title,
       amount,
       category,
-      note: note || '',
+      note,
     };
 
     this.expenses.push(newExpense);
@@ -71,7 +68,14 @@ class ExpenseService {
   }
 
   remove(expenseId) {
-    this.expenses = this.expenses.filter(expense => expense.id !== +expenseId);
+    const filteredExpenses = this.expenses
+      .filter(expense => expense.id !== +expenseId);
+
+    const isDeletedExpence = this.expenses.length !== filteredExpenses.length;
+
+    this.expenses = filteredExpenses;
+
+    return isDeletedExpence;
   }
 
   update({

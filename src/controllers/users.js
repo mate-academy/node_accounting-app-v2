@@ -11,15 +11,21 @@ const getAll = (req, res) => {
 
 const getOne = (req, res) => {
   const { userId } = req.params;
-  const foundUser = userService.getUserById(+userId);
+  const user = userService.getUserById(+userId);
 
-  if (!foundUser) {
+  if (!user) {
     res.sendStatus(404);
 
     return;
   }
 
-  res.send(foundUser);
+  if (isNaN(userId)) {
+    res.sendStatus(400);
+
+    return;
+  }
+
+  res.send(user);
 };
 
 const add = (req, res) => {
@@ -39,15 +45,14 @@ const add = (req, res) => {
 
 const remove = (req, res) => {
   const { userId } = req.params;
-  const foundUser = userService.getUserById(+userId);
+  const deletedUser = userService.remove(+userId);
 
-  if (!foundUser || !userId) {
+  if (!deletedUser) {
     res.sendStatus(404);
 
     return;
   }
 
-  userService.remove(+userId);
   res.sendStatus(204);
 };
 

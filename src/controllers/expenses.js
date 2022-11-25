@@ -21,21 +21,21 @@ const getAll = (req, res) => {
 const getOne = (req, res) => {
   const { expenseId } = req.params;
 
-  if (!expenseId) {
+  if (!expenseId || isNaN(expenseId)) {
     res.sendStatus(400);
 
     return;
   }
 
-  const foundExpense = expenseServise.getById(+expenseId);
+  const expense = expenseServise.getById(+expenseId);
 
-  if (!foundExpense) {
+  if (!expense) {
     res.sendStatus(404);
 
     return;
   }
 
-  res.send(foundExpense);
+  res.send(expense);
 };
 
 const add = (req, res) => {
@@ -72,29 +72,22 @@ const add = (req, res) => {
 
 const remove = (req, res) => {
   const { expenseId } = req.params;
-  const foundExpense = expenseServise.getById(+expenseId);
+  const hasDeleted = expenseServise.remove(+expenseId);
 
-  if (!expenseId) {
-    res.sendStatus(400);
-
-    return;
-  }
-
-  if (!foundExpense) {
+  if (!hasDeleted) {
     res.sendStatus(404);
 
     return;
   }
 
-  expenseServise.remove(+expenseId);
   res.sendStatus(204);
 };
 
 const update = (req, res) => {
   const { expenseId } = req.params;
-  const foundExpense = expenseServise.getById(+expenseId);
+  const expense = expenseServise.getById(+expenseId);
 
-  if (!foundExpense) {
+  if (!expense) {
     res.sendStatus(404);
 
     return;
@@ -110,11 +103,12 @@ const update = (req, res) => {
 
   const isEverythingCorrect
   = spentAt
-    && title
-    && amount
-    && category;
+    || title
+    || amount
+    || category
+    || note;
 
-  if (!isEverythingCorrect) {
+  if (!isEverythingCorrect || isNaN(expenseId)) {
     res.sendStatus(400);
 
     return;
@@ -129,7 +123,7 @@ const update = (req, res) => {
     note,
   });
 
-  res.send(foundExpense);
+  res.send(expense);
 };
 
 module.exports = {
