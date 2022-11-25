@@ -25,7 +25,7 @@ const addOne = (req, res) => {
   const { name } = req.body;
 
   if (!name) {
-    res.sendStatus(422);
+    res.sendStatus(400);
 
     return;
   }
@@ -46,7 +46,7 @@ const deleteOne = (req, res) => {
     return;
   }
 
-  usersService.deleteUser(userId);
+  usersService.deleteUser(+userId);
   res.sendStatus(204);
 };
 
@@ -62,13 +62,13 @@ const updateOne = (req, res) => {
     return;
   }
 
-  if (!name) {
+  if (typeof name !== 'string') {
     res.sendStatus(422);
 
     return;
   }
 
-  const updatedUser = usersService.updateUser(userId, name);
+  const updatedUser = usersService.updateUser(+userId, name);
 
   res.send(updatedUser);
 };

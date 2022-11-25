@@ -12,7 +12,7 @@ const getUserById = (userId) => {
 
 const addUser = (name) => {
   const maxId = Math.max(...users.map(user => user.id));
-  const id = users.length ? maxId + 1 : 0;
+  const id = users.length ? maxId + 1 : 1;
 
   const newUser = {
     id,
