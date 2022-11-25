@@ -73,7 +73,7 @@ const updateExpense = (req, res) => {
   const data = req.body;
   const foundExpense = expensesServices.getExpenseById(expenseId);
 
-  if (typeof +expenseId !== 'number' || !Number.isInteger(expenseId)) {
+  if (typeof +expenseId !== 'number' || !Number.isInteger(+expenseId)) {
     res.sendStatus(400);
 
     return;
