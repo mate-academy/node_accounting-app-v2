@@ -1,6 +1,7 @@
 'use strict';
 
 const expensesServices = require('./expensesServices');
+const userServices = require('../Users/usersServices');
 
 const getAllExpenses = (req, res) => {
   res.send(expensesServices.getAll());
@@ -36,8 +37,9 @@ const addExpense = (req, res) => {
   } = req.body;
 
   const hasBody = userId && spentAt && title && amount && category;
+  const foundUser = userServices.getById(userId);
 
-  if (!hasBody) {
+  if (!hasBody || !foundUser) {
     res.sendStatus(400);
 
     return;
@@ -73,7 +75,7 @@ const updateExpense = (req, res) => {
     note,
   } = req.body;
 
-  const hasBody = spentAt && title && amount && category;
+  const hasBody = spentAt || title || amount || category;
 
   if (!expenseId || !hasBody) {
     res.sendStatus(400);

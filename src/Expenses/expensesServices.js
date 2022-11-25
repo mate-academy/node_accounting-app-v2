@@ -5,7 +5,9 @@ let expenses = [];
 const getAll = () => expenses;
 
 const getById = (expenseId) => {
-  return expenses.find(expense => expense.id === +expenseId);
+  const foundExpense = expenses.find(expense => expense.id === +expenseId);
+
+  return foundExpense || null;
 };
 
 const create = ({
@@ -50,11 +52,11 @@ const update = ({
   const expense = getById(id);
 
   Object.assign(expense, {
-    spentAt,
-    title,
-    amount,
-    category,
-    note,
+    spentAt: spentAt || expense.spentAt,
+    title: title || expense.title,
+    amount: amount || expense.amount,
+    category: category || expense.category,
+    note: note || expense.note,
   });
 
   return expense;

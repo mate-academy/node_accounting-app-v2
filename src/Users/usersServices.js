@@ -5,7 +5,9 @@ let users = [];
 const getAll = () => users;
 
 const getById = (userId) => {
-  return users.find(user => user.id === +userId);
+  const foundUser = users.find(user => user.id === +userId);
+
+  return foundUser || null;
 };
 
 const create = (name) => {
