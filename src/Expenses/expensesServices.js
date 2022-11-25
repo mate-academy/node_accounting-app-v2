@@ -10,6 +10,34 @@ const getById = (expenseId) => {
   return foundExpense || null;
 };
 
+const getFiltered = (query) => {
+  const { userId, category, from, to } = query;
+
+  const filteredExpenses = expenses.filter(expense => {
+    if (userId && expense.userId !== +userId) {
+      return false;
+    }
+
+    if (category && expense.category !== category) {
+      return false;
+    }
+
+    const fromDate = new Date(from);
+    const toDate = new Date(to);
+
+    if ((from && to)
+      && (new Date(expense.spentAt) < fromDate
+      || new Date(expense.spentAt) > toDate)
+    ) {
+      return false;
+    }
+
+    return true;
+  });
+
+  return filteredExpenses;
+};
+
 const create = ({
   userId,
   spentAt,
@@ -65,6 +93,7 @@ const update = ({
 module.exports = {
   getAll,
   getById,
+  getFiltered,
   create,
   remove,
   update,

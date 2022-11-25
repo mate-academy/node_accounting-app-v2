@@ -4,7 +4,15 @@ const expensesServices = require('./expensesServices');
 const userServices = require('../Users/usersServices');
 
 const getAllExpenses = (req, res) => {
-  res.send(expensesServices.getAll());
+  const query = req.query;
+
+  if (!query) {
+    res.send(expensesServices.getAll());
+
+    return;
+  }
+
+  res.send(expensesServices.getFiltered(query));
 };
 
 const getOneExpense = (req, res) => {

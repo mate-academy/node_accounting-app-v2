@@ -116,7 +116,7 @@ describe('Expense', () => {
           {
             'amount': 999,
             'category': 'Electronics',
-            'id': expenseId - 1,
+            'id': 1,
             'note': 'I need a new laptop',
             'spentAt': '2022-10-19T11:01:43.462Z',
             'title': 'Buy a new laptop',
@@ -214,9 +214,52 @@ describe('Expense', () => {
         .expect('Content-Type', /application\/json/);
 
       expect(response.body)
+        // .toEqual([
+        //   {
+        //     id: expenseId,
+        //     ...expenseData,
+        //   },
+        // ]);
         .toEqual([
           {
-            id: expenseId,
+            'amount': 999,
+            'category': 'Electronics',
+            'id': 1,
+            'note': 'I need a new laptop',
+            'spentAt': '2022-10-19T11:01:43.462Z',
+            'title': 'Buy a new laptop',
+            'userId': 1,
+          },
+          {
+            'amount': 999,
+            'category': 'Electronics',
+            'id': 2,
+            'note': 'I need a new laptop',
+            'spentAt': '2022-10-19T11:01:43.462Z',
+            'title': 'Buy a new laptop',
+            'userId': 2,
+          },
+          {
+            'amount': 999,
+            'category': 'Electronics',
+            'id': 3,
+            'note': 'I need a new laptop',
+            'spentAt': '2022-10-19T11:01:43.462Z',
+            'title': 'Buy a new laptop',
+            'userId': 3,
+          },
+          {
+            'amount': 999,
+            'category': 'Electronics',
+            'id': 4,
+            'note': 'I need a new laptop',
+            'spentAt': '2022-10-19T11:01:43.462Z',
+            'title': 'Buy a new laptop',
+            'userId': 4,
+          },
+          {
+            'id': expenseId,
+            'userId': 5,
             ...expenseData,
           },
         ]);
