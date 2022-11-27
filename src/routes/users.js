@@ -14,12 +14,12 @@ const router = express.Router();
 
 router.get('/', getAllController);
 
-router.get('/users/:todoId', getUserController);
+router.get('/:todoId', getUserController);
 
 router.post('/', createNewUserController);
 
-router.delete('/users/:userId', deleteUserController);
+router.delete('/:userId', deleteUserController);
 
-router.patch('/users/:userId', updateUserController);
+router.patch('/:userId', updateUserController);
 
 module.exports.userRouter = router;

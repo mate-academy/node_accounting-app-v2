@@ -2,7 +2,17 @@
 
 const getId = require('../utils').getId;
 
-let expenses = [];
+let expenses = [
+  {
+    id: 1,
+    userId: 0,
+    spentAt: '2022-11-27T17:49:52.129Z',
+    title: 'phone',
+    amount: 1,
+    category: 'buy phone',
+    note: 'buy new phone',
+  },
+];
 
 function getAllExpenses(userId, from, to, category) {
   const filtredExpenses = expenses.filter(expense => (

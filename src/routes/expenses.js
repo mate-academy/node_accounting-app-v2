@@ -14,13 +14,13 @@ const router = express.Router();
 
 router.get('/', getAllExpensesController);
 
-router.get('/expenses/:expenseId', getExpenseController);
+router.get('/:expenseId', getExpenseController);
 
-router.delete('/expenses/:expenseId', deleteExpenseController);
+router.delete('/:expenseId', deleteExpenseController);
 
 router.post('/', createNewExpenseController);
 
 // eslint-disable-next-line
-router.patch('/expenses/:expenseId', updateExpenseController);
+router.patch('/:expenseId', updateExpenseController);
 
 module.exports.expressRouter = router;
