@@ -2,19 +2,9 @@
 
 const getId = require('../utils').getId;
 
-let expenses = [
-  {
-    id: 1,
-    userId: 0,
-    spentAt: '2022-11-27T17:49:52.129Z',
-    title: 'phone',
-    amount: 1,
-    category: 'buy phone',
-    note: 'buy new phone',
-  },
-];
+let expenses = [];
 
-function getAllExpenses(userId, from, to, category) {
+async function getAllExpenses(userId, from, to, category) {
   const filtredExpenses = expenses.filter(expense => (
     expense.userId === Number(userId)
     && category.includes(expense.category)
