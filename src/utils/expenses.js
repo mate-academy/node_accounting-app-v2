@@ -20,8 +20,9 @@ const isValidData = (data, method) => {
 
   return isValidStringField(spentAt)
     && isValidStringField(title)
+    && isValidStringField(category)
     && isValidNumericField(amount)
-    && isValidStringField(category);
+    && isValidNumericField(amount);
 };
 
 const isValidStringField = (field) => {

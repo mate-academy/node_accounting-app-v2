@@ -78,7 +78,9 @@ const updateExpense = (req, res) => {
     return;
   }
 
-  if (!isValidData(data, req.method)) {
+  const foundUser = getUserById(data.userId);
+
+  if (!isValidData(data, req.method) || !foundUser) {
     res.sendStatus(400);
 
     return;
