@@ -1,7 +1,7 @@
 'use strict';
 
 const expensesServices = require('../services/expenses');
-const { getUserById } = require('../services/users');
+const { getUserById } = require('./users');
 const { isValidData } = require('../utils/expenses');
 
 const getAllExpenses = (req, res) => {
