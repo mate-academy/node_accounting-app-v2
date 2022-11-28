@@ -25,8 +25,8 @@ const removeExpense = (expenseId) => {
   expenses = expenses.filter(({ id }) => id !== +expenseId);
 };
 
-const updateExpense = (userId, data) => {
-  const foundExpense = getExpenseById(+userId);
+const updateExpense = (expenseId, data) => {
+  const foundExpense = getExpenseById(+expenseId);
 
   Object.assign(foundExpense, data);
 

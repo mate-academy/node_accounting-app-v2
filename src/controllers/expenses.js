@@ -1,6 +1,7 @@
 'use strict';
 
 const expensesServices = require('../services/expenses');
+const { getUserById } = require('../services/users');
 const { isValidData } = require('../utils/expenses');
 
 const getAllExpenses = (req, res) => {
@@ -11,15 +12,14 @@ const getAllExpenses = (req, res) => {
 
 const getExpenseById = (req, res) => {
   const { expenseId } = req.params;
-  const foundExpense = expensesServices.getExpenseById(expenseId);
 
-  if (typeof +expenseId !== 'number'
-    || +expenseId <= 0
-  ) {
+  if (isNaN(parseInt(expenseId))) {
     res.sendStatus(400);
 
     return;
   }
+
+  const foundExpense = expensesServices.getExpenseById(expenseId);
 
   if (!foundExpense) {
     res.sendStatus(404);
@@ -32,8 +32,9 @@ const getExpenseById = (req, res) => {
 
 const createExpense = (req, res) => {
   const data = req.body;
+  const foundUser = getUserById(data.userId);
 
-  if (!isValidData(data)) {
+  if (!isValidData(data, req.method) || !foundUser) {
     res.sendStatus(400);
 
     return;
@@ -47,15 +48,14 @@ const createExpense = (req, res) => {
 
 const removeExpense = (req, res) => {
   const { expenseId } = req.params;
-  const foundExpense = expensesServices.getExpenseById(expenseId);
 
-  if (typeof +expenseId !== 'number'
-    || expenseId <= 0
-  ) {
+  if (isNaN(parseInt(expenseId))) {
     res.sendStatus(400);
 
     return;
   }
+
+  const foundExpense = expensesServices.getExpenseById(expenseId);
 
   if (!foundExpense) {
     res.sendStatus(404);
@@ -71,19 +71,20 @@ const removeExpense = (req, res) => {
 const updateExpense = (req, res) => {
   const { expenseId } = req.params;
   const data = req.body;
+
+  if (isNaN(parseInt(+expenseId))) {
+    res.sendStatus(400);
+
+    return;
+  }
+
+  if (!isValidData(data, req.method)) {
+    res.sendStatus(400);
+
+    return;
+  }
+
   const foundExpense = expensesServices.getExpenseById(expenseId);
-
-  if (typeof +expenseId !== 'number' || !Number.isInteger(+expenseId)) {
-    res.sendStatus(400);
-
-    return;
-  }
-
-  if (!isValidData(data)) {
-    res.sendStatus(400);
-
-    return;
-  }
 
   if (!foundExpense) {
     res.sendStatus(404);
@@ -91,9 +92,9 @@ const updateExpense = (req, res) => {
     return;
   }
 
-  expensesServices.updateExpense(expenseId, data);
+  const updatedExpense = expensesServices.updateExpense(expenseId, data);
 
-  res.send(foundExpense);
+  res.send(updatedExpense);
 };
 
 module.exports = {

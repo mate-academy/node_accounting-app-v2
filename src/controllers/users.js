@@ -10,15 +10,14 @@ const getAllUsers = (req, res) => {
 
 const getUserById = (req, res) => {
   const { userId } = req.params;
-  const foundUser = usersServices.getUserById(userId);
 
-  if (typeof +userId !== 'number'
-    || +userId <= 0
-  ) {
+  if (isNaN(parseInt(userId))) {
     res.sendStatus(400);
 
     return;
   }
+
+  const foundUser = usersServices.getUserById(userId);
 
   if (!foundUser) {
     res.sendStatus(404);
@@ -46,15 +45,14 @@ const createUser = (req, res) => {
 
 const removeUser = (req, res) => {
   const { userId } = req.params;
-  const foundUser = usersServices.getUserById(userId);
 
-  if (typeof +userId !== 'number'
-    || userId <= 0
-  ) {
+  if (isNaN(parseInt(userId))) {
     res.sendStatus(400);
 
     return;
   }
+
+  const foundUser = usersServices.getUserById(userId);
 
   if (!foundUser) {
     res.sendStatus(404);
@@ -70,9 +68,8 @@ const removeUser = (req, res) => {
 const updateUser = (req, res) => {
   const { userId } = req.params;
   const { name } = req.body;
-  const foundUser = usersServices.getUserById(userId);
 
-  if (typeof +userId !== 'number' || Number.isInteger(userId)) {
+  if (isNaN(parseInt(userId))) {
     res.sendStatus(400);
 
     return;
@@ -84,15 +81,17 @@ const updateUser = (req, res) => {
     return;
   }
 
+  const foundUser = usersServices.getUserById(userId);
+
   if (!foundUser) {
     res.sendStatus(404);
 
     return;
   }
 
-  usersServices.updateUser(userId, name);
+  const upadetedUser = usersServices.updateUser(userId, name);
 
-  res.send(foundUser);
+  res.send(upadetedUser);
 };
 
 module.exports = {
