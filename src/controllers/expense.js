@@ -9,26 +9,7 @@ const {
 } = require('../services/expenses');
 
 const getAllExpensesController = (req, res) => {
-  const { userId, category, from, to } = req.query;
-
-  if (!category || !userId || !from || !to) {
-    res.sendStatus(422);
-
-    return;
-  }
-
-  const findExpenses = getAllExpenses(
-    userId,
-    from,
-    to,
-    category
-  );
-
-  if (!findExpenses.length) {
-    res.sendStatus(404);
-
-    return;
-  }
+  const findExpenses = getAllExpenses(req.query);
 
   res.send(findExpenses);
 };
@@ -36,21 +17,23 @@ const getAllExpensesController = (req, res) => {
 const getExpenseController = (req, res) => {
   const { expenseId } = req.params;
 
-  if (!getExpense(expenseId)) {
+  const result = getExpense(expenseId);
+
+  if (!result) {
     res.sendStatus(404);
 
     return;
   }
 
-  res.send(getExpense(expenseId));
+  res.send(result);
 };
 
 const deleteExpenseController = (req, res) => {
   const { expenseId } = req.params;
 
-  const status = deleteExpense(expenseId);
+  const wasRemoved = deleteExpense(expenseId);
 
-  if (!status) {
+  if (!wasRemoved) {
     res.sendStatus(404);
   }
 
@@ -71,14 +54,7 @@ const createNewExpenseController = (req, res) => {
     return;
   }
 
-  const newExpense = createNewExpense(
-    userId,
-    spentAt,
-    title,
-    amount,
-    category,
-    note
-  );
+  const newExpense = createNewExpense(req.body);
 
   res.statusCode = 201;
   res.send(newExpense);
@@ -94,22 +70,15 @@ const updateExpenseController = (req, res) => {
     return;
   }
 
-  const status = updateExpense(
-    expenseId,
-    spentAt,
-    title,
-    amount,
-    category,
-    note
-  );
+  const wasUpdated = updateExpense(expenseId, req.body);
 
-  if (!status) {
+  if (!wasUpdated) {
     res.sendStatus(404);
 
     return;
   }
 
-  res.send(status);
+  res.send(wasUpdated);
 };
 
 module.exports = {

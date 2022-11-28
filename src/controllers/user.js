@@ -15,13 +15,15 @@ const getAllController = (req, res) => {
 const getUserController = (req, res) => {
   const { todoId } = req.params;
 
-  if (!getUser(todoId)) {
+  const result = getUser(todoId);
+
+  if (!result) {
     res.sendStatus(404);
 
     return;
   }
 
-  res.send(getUser(todoId));
+  res.send(result);
 };
 
 const createNewUserController = (req, res) => {
@@ -42,13 +44,15 @@ const createNewUserController = (req, res) => {
 const deleteUserController = (req, res) => {
   const { userId } = req.params;
 
-  const status = deleteUser(userId);
+  const wasRemoved = deleteUser(userId);
 
-  if (status) {
-    res.sendStatus(204);
-  } else {
+  if (!wasRemoved) {
     res.sendStatus(404);
+
+    return;
   }
+
+  res.sendStatus(204);
 };
 
 const updateUserController = (req, res) => {
@@ -61,13 +65,15 @@ const updateUserController = (req, res) => {
     return;
   }
 
-  const status = updateUser(userId, name);
+  const wasUpdated = updateUser(userId, name);
 
-  if (status) {
-    res.send(status);
-  } else {
+  if (!wasUpdated) {
     res.sendStatus(404);
+
+    return;
   }
+
+  res.send(wasUpdated);
 };
 
 module.exports = {

@@ -20,7 +20,6 @@ router.delete('/:expenseId', deleteExpenseController);
 
 router.post('/', createNewExpenseController);
 
-// eslint-disable-next-line
 router.patch('/:expenseId', updateExpenseController);
 
 module.exports.expressRouter = router;

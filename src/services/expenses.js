@@ -4,13 +4,27 @@ const getId = require('../utils').getId;
 
 let expenses = [];
 
-async function getAllExpenses(userId, from, to, category) {
-  const filtredExpenses = expenses.filter(expense => (
-    expense.userId === Number(userId)
-    && category.includes(expense.category)
-    && Date.parse(expense.spentAt) > Date.parse(from)
-    && Date.parse(expense.spentAt) < Date.parse(to)
-  ));
+function getAllExpenses(params) {
+  const { userId, from, to, category } = params;
+  const filtredExpenses = expenses.filter(expense => {
+    if (userId && expense.userId !== Number(userId)) {
+      return false;
+    }
+
+    if (category && !category.includes(expense.category)) {
+      return false;
+    }
+
+    if (from && Date.parse(expense.spentAt) <= Date.parse(from)) {
+      return false;
+    }
+
+    if (to && Date.parse(expense.spentAt) >= Date.parse(to)) {
+      return false;
+    }
+
+    return true;
+  });
 
   return filtredExpenses;
 }
@@ -35,7 +49,7 @@ function getExpense(expenseId) {
   );
 }
 
-function createNewExpense(userId, spentAt, title, amount, category, note) {
+function createNewExpense(newValue) {
   let newId = 0;
 
   if (expenses.length) {
@@ -44,12 +58,7 @@ function createNewExpense(userId, spentAt, title, amount, category, note) {
 
   const newExpense = {
     id: newId,
-    userId,
-    spentAt,
-    title,
-    amount,
-    category,
-    note,
+    ...newValue,
   };
 
   expenses.push(newExpense);
@@ -57,7 +66,9 @@ function createNewExpense(userId, spentAt, title, amount, category, note) {
   return newExpense;
 }
 
-function updateExpense(expenseId, spentAt, title, amount, category, note) {
+function updateExpense(expenseId, updatingValue) {
+  const { spentAt, title, amount, category, note } = updatingValue;
+
   const findExpenses = expenses.find(expense => (
     expense.id === Number(expenseId)
   ));
