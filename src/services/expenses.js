@@ -1,15 +1,16 @@
 'use strict';
 
-class ExpensesService {
-  constructor() {
-    this.expenses = [];
-  }
+let expenses = [];
 
+class ExpensesService {
+  setInitialExpenses() {
+    expenses = [];
+  }
   createExpense({
     userId, spentAt, title, amount, category, note,
   }) {
-    const expenseId = this.expenses.length
-      ? Math.max(...this.expenses.map(expense => expense.id)) + 1
+    const expenseId = expenses.length
+      ? Math.max(...expenses.map(expense => expense.id)) + 1
       : 1;
     const newExpense = {
       id: expenseId,
@@ -21,40 +22,39 @@ class ExpensesService {
       note,
     };
 
-    this.expenses.push(newExpense);
+    expenses.push(newExpense);
 
     return newExpense;
   }
 
   getAll() {
-    return this.expenses;
+    return expenses;
   }
 
   getOne(expenceId) {
-    const expenseData = this.expenses
+    const expenseData = expenses
       .find(expense => expense.id === +expenceId) || null;
 
     return expenseData;
   }
 
   removeOne(expenseId) {
-    const expencesData = this.expenses
+    const expencesData = expenses
       .filter(expense => expense.id !== +expenseId);
-    const hasDeleted = this.expenses.length !== expencesData.length;
+    const hasDeleted = expenses.length !== expencesData.length;
 
-    this.expenses = expencesData;
+    expenses = expencesData;
 
     return hasDeleted;
   }
 
-  modifyExpence(
-    expenceId,
+  modifyExpence(expenceId, {
     spentAt,
     title,
     amount,
     category,
-    note
-  ) {
+    note,
+  }) {
     const expenseData = this.getOne(expenceId);
 
     if (expenseData) {

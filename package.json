@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node main.js",
     "dev": "nodemon main.js",
-    "test:only": "mocha",
+    "test:only": "mocha --recursive",
     "test": "npm run lint && npm run test:only",
     "test:watch": "mocha --watch",
     "lint": "eslint .",
@@ -16,6 +16,7 @@
   "license": "GPL-3.0",
   "devDependencies": {
     "@mate-academy/eslint-config": "*",
+    "@types/cors": "^2.8.12",
     "eslint": "^5.16.0",
     "eslint-plugin-jest": "^22.4.1",
     "eslint-plugin-node": "^8.0.1",
@@ -25,6 +26,8 @@
     "supertest": "^6.3.0"
   },
   "dependencies": {
-    "express": "^4.18.2"
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "knex": "^2.3.0"
   }
 }

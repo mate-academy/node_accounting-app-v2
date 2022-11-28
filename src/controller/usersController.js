@@ -3,8 +3,8 @@
 const { UsersService } = require('../services/users');
 
 class UsersController extends UsersService {
-  constructor(users) {
-    super(users);
+  constructor() {
+    super();
 
     this.createUser = this.createUser.bind(this);
     this.postUser = this.postUser.bind(this);
@@ -29,8 +29,6 @@ class UsersController extends UsersService {
     }
 
     const user = super.createUser(name);
-
-    this.users.push(user);
 
     res.statusCode = 201;
     res.json(user);

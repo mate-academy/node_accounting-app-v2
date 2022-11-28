@@ -4,8 +4,8 @@ const { ExpensesService } = require('../services/expenses');
 const { usersController } = require('./usersController');
 
 class ExpensesController extends ExpensesService {
-  constructor(expenses) {
-    super(expenses);
+  constructor() {
+    super();
 
     this.postExpense = this.postExpense.bind(this);
     this.createExpense = this.createExpense.bind(this);
@@ -103,7 +103,7 @@ class ExpensesController extends ExpensesService {
   getExpense(req, res) {
     const { expenseId } = req.params;
 
-    if (isNaN(expenseId)) {
+    if (isNaN(+expenseId)) {
       res.statusCode = 400;
       res.json({ error: 'required parameter is not valid, expected number' });
 
@@ -148,35 +148,30 @@ class ExpensesController extends ExpensesService {
       ? 'required parameter is not passed'
       : 'required parameter is not valid, expected number';
 
-    if (!isValid || isNaN(expenseId)) {
-      res.status(400);
-      res.json({ error });
+    const expense = super.getOne(expenseId);
 
-      return;
-    }
-
-    const data = super.modifyExpence(
-      expenseId,
-      spentAt,
-      title,
-      amount,
-      category,
-      note
-    );
-
-    if (!data) {
+    if (!expense) {
       res.statusCode = 404;
       res.json({ error: 'expected entity doesn\'t exist' });
 
       return;
     }
 
+    if (!isValid) {
+      res.status(400);
+      res.json({ error });
+
+      return;
+    }
+
+    const data = super.modifyExpence(expenseId, req.body);
+
     res.statusCode = 200;
     res.json(data);
   };
 }
 
-const expensesController = new ExpensesController([]);
+const expensesController = new ExpensesController();
 
 module.exports = {
   expensesController,
