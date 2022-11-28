@@ -9,38 +9,41 @@ class Expenses {
     return this.expenses;
   }
 
-  getExpense(expenseId) {
+  getExpenseById(expenseId) {
     return this.expenses.find(expense => expense.id === +expenseId);
   }
 
-  filterExpenses(filterParams) {
-    const { userId, category, from, to } = filterParams;
+  filterExpenses(searchParams) {
+    const { userId, category, from, to } = searchParams;
 
-    const filteredExpenses = this.expenses.filter(expense => {
-      if (userId && expense.userId !== +userId) {
-        return false;
+    const filteredExpenses = this.expenses.filter(
+      expense => {
+        if (userId && expense.userId !== +userId) {
+          return false;
+        }
+
+        if (category && expense.category !== category) {
+          return false;
+        }
+
+        const fromDate = new Date(from);
+        const toDate = new Date(to);
+
+        if ((from && to)
+          && (new Date(expense.spentAt) < fromDate
+          || new Date(expense.spentAt) > toDate)
+        ) {
+          return false;
+        }
+
+        return true;
       }
-
-      if (category && expense.category !== category) {
-        return false;
-      }
-
-      const fromDate = new Date(from);
-      const toDate = new Date(to);
-
-      if ((from && to)
-      && (new Date(expense.spentAt) < fromDate
-      || new Date(expense.spentAt) > toDate)) {
-        return false;
-      }
-
-      return true;
-    });
+    );
 
     return filteredExpenses;
   }
 
-  create(
+  createExpense(
     userId,
     spentAt,
     title,
@@ -52,7 +55,7 @@ class Expenses {
     const newId = (this.expenses.length > 0) ? maxId + 1 : 1;
 
     const newExpense = {
-      newId,
+      id: newId,
       userId: +userId,
       spentAt,
       title,
@@ -66,16 +69,16 @@ class Expenses {
     return newExpense;
   }
 
-  removeExpense(expenseId) {
+  deleteExpense(expenseId) {
     this.expenses = this.expenses.filter(expense => expense.id !== +expenseId);
   }
 
   updateExpense(expenseId, expenseBody) {
-    const toUpdate = this.getExpense(expenseId);
+    const foundExpense = this.getExpenseById(expenseId);
 
-    Object.assign(toUpdate, expenseBody);
+    Object.assign(foundExpense, expenseBody);
 
-    return toUpdate;
+    return foundExpense;
   }
 };
 

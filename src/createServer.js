@@ -1,30 +1,30 @@
 'use strict';
 
+// const express = require('express');
 const express = require('express');
 
-// const { Expenses } = require('./services/expenses');
-const { User } = require('./services/users');
+const { Expenses } = require('./services/Expenses.js');
+const { Users } = require('./services/Users.js');
 
 function createServer() {
   // Use express to create a server
   // Add a routes to the server
   // Return the server (express app)
-
   const app = express();
 
-  // const expenses = new Expenses();
-  const user = new User();
+  const expenses = new Expenses();
+  const users = new Users();
 
   app.use(express.json());
 
   app.get('/users', (req, res) => {
-    res.send(user.getUsers());
+    res.send(users.getUsers());
   });
 
   app.get('/users/:userId', (req, res) => {
     const { userId } = req.params;
 
-    const foundUser = user.getUser(userId);
+    const foundUser = users.getUserById(userId);
 
     if (!foundUser) {
       res.sendStatus(404);
@@ -39,27 +39,27 @@ function createServer() {
     const { name } = req.body;
 
     if (!name) {
-      res.sendStatus(404);
+      res.sendStatus(400);
 
       return;
     }
 
-    res.statusCode(201);
-    res.send(user.createUser(name));
+    res.statusCode = 201;
+    res.send(users.createUser(name));
   });
 
   app.delete('/users/:userId', (req, res) => {
     const { userId } = req.params;
 
-    const userToRemove = user.getUser(userId);
+    const foundUser = users.getUserById(userId);
 
-    if (!userToRemove) {
-      res.statusCode(404);
+    if (!foundUser) {
+      res.sendStatus(404);
 
       return;
     }
 
-    user.removeUser(userId);
+    users.deleteUser(userId);
     res.sendStatus(204);
   });
 
@@ -67,7 +67,7 @@ function createServer() {
     const { userId } = req.params;
     const { name } = req.body;
 
-    const foundUser = user.getUser(userId);
+    const foundUser = users.getUserById(userId);
 
     if (!foundUser) {
       res.sendStatus(404);
@@ -81,15 +81,109 @@ function createServer() {
       return;
     }
 
-    const updatedUser = user.updateUser(userId, name);
+    const updatedUser = users.updateUser(userId, name);
 
-    res.statusCode(200);
+    res.statusCode = 200;
     res.send(updatedUser);
   });
 
   app.get('/expenses', (req, res) => {
+    const searchParams = req.query;
 
+    if (!searchParams) {
+      res.send(expenses.getExpenses());
+
+      return;
+    }
+
+    res.send(expenses.filterExpenses(searchParams));
   });
+
+  app.get('/expenses/:expenseId', (req, res) => {
+    const { expenseId } = req.params;
+
+    const foundExpense = expenses.getExpenseById(expenseId);
+
+    if (!foundExpense) {
+      res.sendStatus(404);
+
+      return;
+    }
+
+    res.send(foundExpense);
+  });
+
+  app.post('/expenses', (req, res) => {
+    const {
+      userId,
+      spentAt,
+      title,
+      amount,
+      category,
+      note,
+    } = req.body;
+
+    const foundUser = users.getUserById(userId);
+
+    const verifyData = foundUser && spentAt && title && amount && category;
+
+    if (!verifyData) {
+      res.sendStatus(400);
+
+      return;
+    }
+
+    res.statusCode = 201;
+
+    res.send(expenses.createExpense(
+      userId,
+      spentAt,
+      title,
+      amount,
+      category,
+      note
+    ));
+  });
+
+  app.delete('/expenses/:expenseId', (req, res) => {
+    const { expenseId } = req.params;
+
+    const foundExpense = expenses.getExpenseById(expenseId);
+
+    if (!foundExpense) {
+      res.sendStatus(404);
+
+      return;
+    }
+
+    expenses.deleteExpense(expenseId);
+    res.sendStatus(204);
+  });
+
+  app.patch('/expenses/:expenseId', (req, res) => {
+    const { expenseId } = req.params;
+    const body = req.body;
+
+    const foundExpense = expenses.getExpenseById(expenseId);
+
+    if (!foundExpense) {
+      res.sendStatus(404);
+
+      return;
+    }
+
+    if (!body) {
+      res.sendStatus(400);
+
+      return;
+    }
+
+    const updatedExpense = expenses.updateExpense(expenseId, body);
+
+    res.statusCode = 200;
+    res.send(updatedExpense);
+  });
+
   return app;
 }
 

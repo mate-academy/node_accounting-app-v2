@@ -1,6 +1,6 @@
 'use strict';
 
-class User {
+class Users {
   constructor() {
     this.data = [];
   }
@@ -14,7 +14,7 @@ class User {
     const newId = (this.data.length > 0) ? maxId + 1 : 1;
 
     const newUser = {
-      newId,
+      id: newId,
       name,
     };
 
@@ -23,21 +23,21 @@ class User {
     return newUser;
   }
 
-  getUser(userId) {
+  getUserById(userId) {
     return this.data.find(user => user.id === +userId);
   }
 
-  removeUser(userId) {
+  deleteUser(userId) {
     this.data = this.data.filter(user => user.id !== +userId);
   }
 
   updateUser(userId, name) {
-    const toUpdate = this.getOne(userId);
+    const foundUser = this.getUserById(userId);
 
-    Object.assign(toUpdate, { name });
+    Object.assign(foundUser, { name });
 
-    return toUpdate;
+    return foundUser;
   }
-}
+};
 
-exports.User = User;
+exports.Users = Users;
