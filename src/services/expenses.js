@@ -42,21 +42,11 @@ const deleteExpenseById = (expenseId) => {
 
 const updateExpenseById = (
   expenseId,
-  spentAt,
-  title,
-  amount,
-  category,
-  note,
+  dataToUpdate,
 ) => {
   const foundExpense = getExpenseById(expenseId);
 
-  Object.assign(foundExpense, {
-    spentAt,
-    title,
-    amount,
-    category,
-    note,
-  });
+  Object.assign(foundExpense, dataToUpdate);
 
   return foundExpense;
 };

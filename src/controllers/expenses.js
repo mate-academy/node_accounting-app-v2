@@ -44,10 +44,10 @@ const addNewExpense = (req, res) => {
   }
 
   const newExpense = expensesService.addNewExpense(
-    Number(userId),
+    userId,
     spentAt,
     title,
-    Number(amount),
+    amount,
     category,
     note,
   );
@@ -99,11 +99,13 @@ const updateExpenseById = (req, res) => {
 
   const foundExpense = expensesService.updateExpenseById(
     Number(expenseId),
-    spentAt,
-    title,
-    Number(amount),
-    category,
-    note,
+    {
+      spentAt,
+      title,
+      amount,
+      category,
+      note,
+    },
   );
 
   res.send(foundExpense);
