@@ -12,15 +12,15 @@ function createServer() {
   const userController = new UserController();
   const expensesController = new ExpensesController();
 
-  app.post('/users', userController.add.bind(userController));
+  app.post('/users', userController.add);
 
-  app.get('/users', userController.getAll.bind(userController));
+  app.get('/users', userController.getAll);
 
-  app.get('/users/:id', userController.getOne.bind(userController));
+  app.get('/users/:id', userController.getOne);
 
-  app.patch('/users/:id', userController.change.bind(userController));
+  app.patch('/users/:id', userController.change);
 
-  app.delete('/users/:id', userController.remove.bind(userController));
+  app.delete('/users/:id', userController.remove);
 
   app.post('/expenses', (req, res) => {
     const { userId } = req.body;
@@ -38,15 +38,13 @@ function createServer() {
     res.send(newExpense);
   });
 
-  app.get('/expenses', expensesController.getAll.bind(expensesController));
+  app.get('/expenses', expensesController.getAll);
 
-  app.get('/expenses/:id', expensesController.getOne.bind(expensesController));
+  app.get('/expenses/:id', expensesController.getOne);
 
-  app.patch('/expenses/:id',
-    expensesController.change.bind(expensesController));
+  app.patch('/expenses/:id', expensesController.change);
 
-  app.delete('/expenses/:id',
-    expensesController.remove.bind(expensesController));
+  app.delete('/expenses/:id', expensesController.remove);
 
   return app;
 }

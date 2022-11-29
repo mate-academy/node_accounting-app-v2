@@ -5,77 +5,79 @@ const { Users } = require('../services/users.js');
 class UserController {
   constructor() {
     this.usersService = new Users();
-  }
 
-  getAll(req, res) {
-    const users = this.usersService.getAll();
+    this.getAll = (req, res) => {
+      const users = this.usersService.getAll();
 
-    res.send(users);
-  };
+      res.send(users);
+    };
 
-  getOne(req, res) {
-    const { id } = req.params;
-    const foundUser = this.usersService.getUserById(id);
+    this.getOne = (req, res) => {
+      const { id } = req.params;
+      const foundUser = this.usersService.getUserById(id);
 
-    if (!foundUser) {
-      res.sendStatus(404);
+      if (!foundUser) {
+        res.sendStatus(404);
 
-      return;
-    }
+        return;
+      }
 
-    res.send(foundUser);
-  }
+      res.send(foundUser);
 
-  add(req, res) {
-    const { name } = req.body;
+      return foundUser || null;
+    };
 
-    if (!name) {
-      res.sendStatus(400);
+    this.add = (req, res) => {
+      const { name } = req.body;
 
-      return;
-    }
+      if (!name) {
+        res.sendStatus(400);
 
-    const newUser = this.usersService.create(name);
+        return;
+      }
 
-    res.status(201);
-    res.send(newUser);
-  }
+      const newUser = this.usersService.create(name);
 
-  change(req, res) {
-    const { id } = req.params;
-    const foundUser = this.usersService.getUserById(id);
+      res.status(201);
+      res.send(newUser);
+    };
 
-    if (!foundUser) {
-      res.sendStatus(404);
+    this.change = (req, res) => {
+      const { id } = req.params;
+      const foundUser = this.usersService.getUserById(id);
 
-      return;
-    }
+      if (!foundUser) {
+        res.sendStatus(404);
 
-    const { name } = req.body;
+        return;
+      }
 
-    if (typeof name !== 'string') {
-      res.sendStatus(422);
+      const { name } = req.body;
 
-      return;
-    }
+      if (typeof name !== 'string') {
+        res.sendStatus(422);
 
-    this.usersService.update(id, name);
+        return;
+      }
 
-    res.send(foundUser);
-  }
+      this.usersService.update(id, name);
 
-  remove(req, res) {
-    const { id } = req.params;
-    const foundUser = this.usersService.getUserById(id);
+      res.send(foundUser);
+    };
 
-    if (!foundUser) {
-      res.sendStatus(404);
+    this.remove = (req, res) => {
+      const { id } = req.params;
+      const foundUser = this.usersService.getUserById(id);
 
-      return;
-    }
+      if (!foundUser) {
+        res.sendStatus(404);
 
-    this.usersService.remove(id);
-    res.sendStatus(204);
+        return;
+      }
+
+      this.usersService.remove(id);
+      res.sendStatus(204);
+    };
   }
 }
 

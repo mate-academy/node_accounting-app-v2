@@ -6,8 +6,7 @@ class Expenses {
   }
 
   create(data) {
-    const maxId = Math.max(...this.expenses.map(user => user.id));
-    const id = (this.expenses.length > 0) ? maxId + 1 : 1;
+    const id = Math.max(0, ...this.expenses.map(user => user.id)) + 1;
 
     const newExpense = {
       id,
@@ -19,7 +18,7 @@ class Expenses {
     return newExpense;
   }
 
-  getAll(userId, category, from, to) {
+  getAll(userId, categories, from, to) {
     const filteredExpenses = this.expenses.filter(expense => {
       const { spentAt } = expense;
 
@@ -32,7 +31,9 @@ class Expenses {
         return false;
       }
 
-      if (category && expense.category !== category) {
+      if (categories.length
+        && categories.every(category => category !== expense.category)
+      ) {
         return false;
       }
 

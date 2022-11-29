@@ -5,72 +5,73 @@ const { Expenses } = require('../services/expenses');
 class ExpensesController {
   constructor() {
     this.expensesService = new Expenses();
-  }
 
-  getAll(req, res) {
-    const normalizedURL = new URL(req.url, `http://${req.headers.host}`);
+    this.getAll = (req, res) => {
+      const normalizedURL = new URL(req.url, `http://${req.headers.host}`);
 
-    const {
-      userId,
-      category,
-      from,
-      to,
-    } = Object.fromEntries(normalizedURL.searchParams);
+      const {
+        userId,
+        from,
+        to,
+      } = Object.fromEntries(normalizedURL.searchParams);
 
-    const filteredExpenses = this.expensesService
-      .getAll(userId, category, from, to);
+      const categories = normalizedURL.searchParams.getAll('category');
 
-    res.send(filteredExpenses);
-  }
+      const filteredExpenses = this.expensesService
+        .getAll(userId, categories, from, to);
 
-  getOne(req, res) {
-    const { id } = req.params;
-    const foundExpense = this.expensesService.getById(id);
+      res.send(filteredExpenses);
+    };
 
-    if (!foundExpense) {
-      res.sendStatus(404);
+    this.getOne = (req, res) => {
+      const { id } = req.params;
+      const foundExpense = this.expensesService.getById(id);
 
-      return;
-    }
+      if (!foundExpense) {
+        res.sendStatus(404);
 
-    res.send(foundExpense);
-  }
+        return;
+      }
 
-  change(req, res) {
-    const { id } = req.params;
-    const foundExpense = this.expensesService.getById(id);
+      res.send(foundExpense);
+    };
 
-    if (!foundExpense) {
-      res.sendStatus(404);
+    this.change = (req, res) => {
+      const { id } = req.params;
+      const foundExpense = this.expensesService.getById(id);
 
-      return;
-    }
+      if (!foundExpense) {
+        res.sendStatus(404);
 
-    const { title } = req.body;
+        return;
+      }
 
-    if (typeof title !== 'string') {
-      res.sendStatus(422);
+      const { title } = req.body;
 
-      return;
-    }
+      if (typeof title !== 'string') {
+        res.sendStatus(422);
 
-    this.expensesService.update(id, title);
+        return;
+      }
 
-    res.send(foundExpense);
-  }
+      this.expensesService.update(id, title);
 
-  remove(req, res) {
-    const { id } = req.params;
-    const foundExpense = this.expensesService.getById(id);
+      res.send(foundExpense);
+    };
 
-    if (!foundExpense) {
-      res.sendStatus(404);
+    this.remove = (req, res) => {
+      const { id } = req.params;
+      const foundExpense = this.expensesService.getById(id);
 
-      return;
-    }
+      if (!foundExpense) {
+        res.sendStatus(404);
 
-    this.expensesService.remove(id);
-    res.sendStatus(204);
+        return;
+      }
+
+      this.expensesService.remove(id);
+      res.sendStatus(204);
+    };
   }
 }
 
