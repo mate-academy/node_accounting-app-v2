@@ -1,41 +1,42 @@
 'use strict';
 
-let users = [];
-
 class UsersService {
+  constructor() {
+    this.users = [];
+  }
   setInitialUsers() {
-    users = [];
+    this.users = [];
   }
   createUser(name) {
-    const userId = users.length
-      ? Math.max(...users.map(user => user.id)) + 1
+    const userId = this.users.length
+      ? Math.max(...this.users.map(user => user.id)) + 1
       : 1;
     const newUser = {
       id: userId,
       name,
     };
 
-    users.push(newUser);
+    this.users.push(newUser);
 
     return newUser;
   }
 
   getAll() {
-    return users;
+    return this.users;
   }
 
   getOne(userId) {
-    const userData = users
+    const userData = this.users
       .find(user => user.id === +userId) || null;
 
     return userData;
   }
 
   removeOne(userId) {
-    const userData = users.filter(user => user.id !== +userId);
-    const hasDeleted = users.length !== userData.length;
+    const userData = this.users.filter(user => user.id !== +userId);
+    const hasDeleted = this.users.length !== userData.length;
 
-    users = userData;
+    this.users = userData;
 
     return hasDeleted;
   }
@@ -51,4 +52,6 @@ class UsersService {
   }
 }
 
-module.exports = { UsersService };
+const usersService = new UsersService();
+
+module.exports = { usersService };

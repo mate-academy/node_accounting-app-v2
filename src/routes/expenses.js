@@ -5,14 +5,14 @@ const {
 } = require('../controller/expensesController');
 
 const express = require('express');
+const { expensesService } = require('../services/expenses');
 
 // #region expensesRouter
 const expensesRouter = express.Router();
 
 function expences(app) {
   app.use('/expenses', expensesRouter);
-  expensesController.setInitialExpenses();
-  expensesRouter.use(express.json());
+  expensesService.setInitialExpenses();
   expensesRouter.get('/', expensesController.getExpenses);
   expensesRouter.get('/:expenseId', expensesController.getExpense);
   expensesRouter.post('/', expensesController.postExpense);

@@ -1,44 +1,30 @@
 'use strict';
 
-const { ExpensesService } = require('../services/expenses');
-const { usersController } = require('./usersController');
+const { expensesService } = require('../services/expenses');
+const { usersService } = require('../services/users');
 
-class ExpensesController extends ExpensesService {
-  constructor() {
-    super();
-
-    this.postExpense = this.postExpense.bind(this);
-    this.createExpense = this.createExpense.bind(this);
-    this.getExpenses = this.getExpenses.bind(this);
-    this.getAll = this.getAll.bind(this);
-    this.getExpense = this.getExpense.bind(this);
-    this.getOne = this.getOne.bind(this);
-    this.removeExpense = this.removeExpense.bind(this);
-    this.removeOne = this.removeOne.bind(this);
-    this.patchExpense = this.patchExpense.bind(this);
-    this.modifyExpence = this.modifyExpence.bind(this);
-  }
-
+class ExpensesController {
   postExpense(req, res) {
-    const { userId, spentAt, title, amount, category, note } = req.body;
+    const {
+      userId, spentAt, title, amount, category, note,
+    } = req.body;
 
-    const users = usersController.getAll();
-    const hasUser = users.find(user => +userId === user.id);
+    const hasUser = usersService.getOne(+userId);
 
     const isValid = hasUser && spentAt && title && amount && category && note;
 
-    const error = hasUser
-      ? 'required parameters is not passed'
-      : 'user does\'nt exist';
-
     if (!isValid) {
+      const error = hasUser
+        ? 'one or more required parameters is not passed'
+        : 'user does\'nt exist';
+
       res.status(400);
       res.json({ error });
 
       return;
     }
 
-    const expense = super.createExpense({
+    const expense = expensesService.createExpense({
       userId, spentAt, title, amount, category, note,
     });
 
@@ -47,54 +33,7 @@ class ExpensesController extends ExpensesService {
   }
 
   getExpenses(req, res) {
-    const expenses = super.getAll();
-
-    const { userId, category, to, from } = req.query;
-
-    if (from && to) {
-      const expensesByDate = expenses.filter(
-        (expense) => expense.spentAt > from && expense.spentAt < to
-      );
-
-      res.statusCode = 200;
-      res.json(expensesByDate);
-
-      return;
-    }
-
-    if (userId && category) {
-      const expensesByCategoryAndUser = expenses.filter(
-        (expense) => (expense.category === category
-          && expense.userId === +userId
-        ));
-
-      res.statusCode = 200;
-      res.json(expensesByCategoryAndUser);
-
-      return;
-    }
-
-    if (userId) {
-      const expensesByUser = expenses.filter(
-        (expense) => expense.userId === +userId
-      );
-
-      res.statusCode = 200;
-      res.json(expensesByUser);
-
-      return;
-    }
-
-    if (category) {
-      const expensesByCategory = expenses.filter(
-        (expense) => expense.category === category
-      );
-
-      res.statusCode = 200;
-      res.json(expensesByCategory);
-
-      return;
-    }
+    const expenses = expensesService.getAll(req.query);
 
     res.statusCode = 200;
     res.json(expenses);
@@ -105,12 +44,12 @@ class ExpensesController extends ExpensesService {
 
     if (isNaN(+expenseId)) {
       res.statusCode = 400;
-      res.json({ error: 'required parameter is not valid, expected number' });
+      res.json({ error: 'request parameter is not valid, expected number' });
 
       return;
     }
 
-    const expenseData = super.getOne(expenseId);
+    const expenseData = expensesService.getOne(expenseId);
 
     if (!expenseData) {
       res.statusCode = 404;
@@ -126,7 +65,7 @@ class ExpensesController extends ExpensesService {
   removeExpense(req, res) {
     const { expenseId } = req.params;
 
-    const hasDeleted = super.removeOne(expenseId);
+    const hasDeleted = expensesService.removeOne(expenseId);
 
     if (!hasDeleted) {
       res.statusCode = 404;
@@ -145,10 +84,10 @@ class ExpensesController extends ExpensesService {
     const isValid = spentAt || title || amount || category || note;
 
     const error = !isValid
-      ? 'required parameter is not passed'
-      : 'required parameter is not valid, expected number';
+      ? 'at least one parameter should be passed'
+      : 'request parameter is not valid, expected number';
 
-    const expense = super.getOne(expenseId);
+    const expense = expensesService.getOne(expenseId);
 
     if (!expense) {
       res.statusCode = 404;
@@ -164,7 +103,7 @@ class ExpensesController extends ExpensesService {
       return;
     }
 
-    const data = super.modifyExpence(expenseId, req.body);
+    const data = expensesService.modifyExpence(expenseId, req.body);
 
     res.statusCode = 200;
     res.json(data);
