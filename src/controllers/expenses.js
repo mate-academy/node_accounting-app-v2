@@ -34,14 +34,9 @@ const add = (req, res) => {
   const newExpense = req.body;
   const { userId, spentAt, title, amount, category } = newExpense;
   const foundUser = getUserById(userId);
+  const check = !title || !spentAt || !amount || !category || !foundUser;
 
-  if (
-    !title
-    || !spentAt
-    || !amount
-    || !category
-    || !foundUser
-  ) {
+  if (check) {
     res.sendStatus(400);
 
     return;

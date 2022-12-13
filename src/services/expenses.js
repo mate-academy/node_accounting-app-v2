@@ -9,29 +9,25 @@ function init() {
 }
 
 function getAll(userId, category, from, to) {
-  let foundExpenses = expenses;
+  return expenses.filter(expense => {
+    if (userId && expense.userId !== +userId) {
+      return false;
+    }
 
-  if (userId) {
-    foundExpenses = foundExpenses
-      .filter(expense => expense.userId === +userId);
-  }
+    if (category && !category.includes(expense.category)) {
+      return false;
+    }
 
-  if (category) {
-    foundExpenses = foundExpenses
-      .filter(expense => category.includes(expense.category));
-  }
+    if (from && Date.parse(expense.spentAt) < Date.parse(from)) {
+      return false;
+    }
 
-  if (from) {
-    foundExpenses = foundExpenses
-      .filter(expense => Date.parse(expense.spentAt) >= Date.parse(from));
-  }
+    if (to && Date.parse(expense.spentAt) > Date.parse(to)) {
+      return false;
+    }
 
-  if (to) {
-    foundExpenses = foundExpenses
-      .filter(expense => Date.parse(expense.spentAt) <= Date.parse(to));
-  }
-
-  return foundExpenses;
+    return true;
+  });
 }
 
 function getById(expenseId) {
