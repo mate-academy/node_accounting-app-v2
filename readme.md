@@ -39,9 +39,9 @@ You should create, set up and return an express app from `createServer` function
 You might create additional files and might not, but no one can guarantee approve by mentor 😉.
 
 ## How to work
-`npm run dev` - to start server with auto-restart on code change.
-`npm start` - just starts the server.
-`npm run test:watch` - **[Recommended]** runs tests in watch mode (rerun them automatically on change).
-`npm test` - runs ESLint and tests once.
-`npm run lint` - runs ESLint.
-`npm run lint:fix` - runs ESLint and fix fixable errors.
+- `npm run dev` - to start server with auto-restart on code change.
+- `npm start` - just starts the server.
+- `npm run test:watch` - **[Recommended]** runs tests in watch mode (rerun them automatically on change).
+- `npm test` - runs ESLint and tests once.
+- `npm run lint` - runs ESLint.
+- `npm run lint:fix` - runs ESLint and fix fixable errors.
