@@ -95,7 +95,7 @@ function createServer() {
 
     // here
     if (userId) {
-      expenses = expenses.filter(expense => expense.userId === +userId);
+      expenses = [expenses.find(expense => expense.userId === +userId)];
     }
 
     if (from && to) {
