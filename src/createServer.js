@@ -99,12 +99,6 @@ function createServer() {
   let expenses = [];
 
   server.get('/expenses', (req, res) => {
-    if (Object.keys(req.query).length === 0) {
-      res.send(expenses);
-
-      return;
-    }
-
     const { userId, category, from, to } = req.query;
     let filteredExpenses = expenses;
 
