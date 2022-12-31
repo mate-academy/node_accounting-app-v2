@@ -1,14 +1,18 @@
 'use strict';
 
 const express = require('express');
+const usersService = require('./services/users');
+const expensesService = require('./services/expenses');
 
 function createServer() {
   const app = express();
 
-  let users = [];
-  let expenses = [];
+  usersService.init();
+  expensesService.init();
 
   app.get('/users', express.json(), (req, res) => {
+    const users = usersService.getAll();
+
     res.send(users);
   });
 
@@ -21,12 +25,7 @@ function createServer() {
       return;
     };
 
-    const newUser = {
-      id: Math.floor(Math.random()),
-      name,
-    };
-
-    users.push(newUser);
+    const newUser = usersService.addOne(name);
 
     res.statusCode = 201;
     res.send(newUser);
@@ -35,7 +34,7 @@ function createServer() {
   app.get('/users/:userId', express.json(), (req, res) => {
     const { userId } = req.params;
 
-    const foundUser = users.find(user => user.id === +userId);
+    const foundUser = usersService.getOne(userId);
 
     if (!foundUser) {
       res.sendStatus(404);
@@ -50,8 +49,7 @@ function createServer() {
   app.delete('/users/:userId', express.json(), (req, res) => {
     const { userId } = req.params;
 
-    const foundUser = users.find(user => user.id === +userId);
-    const filteredUsers = users.filter(user => user.id !== +userId);
+    const foundUser = usersService.getOne(userId);
 
     if (!foundUser) {
       res.sendStatus(404);
@@ -59,8 +57,7 @@ function createServer() {
       return;
     }
 
-    users = filteredUsers;
-
+    usersService.deleteOne(userId);
     res.sendStatus(204);
   });
 
@@ -68,7 +65,7 @@ function createServer() {
     const { userId } = req.params;
     const { name } = req.body;
 
-    const foundUser = users.find(user => user.id === +userId);
+    const foundUser = usersService.getOne(userId);
 
     if (!foundUser) {
       res.sendStatus(404);
@@ -76,39 +73,16 @@ function createServer() {
       return;
     }
 
-    const updatedUser = {
-      ...foundUser,
-      name,
-    };
+    const updatedUser = usersService.updateOne(userId, name);
 
     res.send(updatedUser);
   });
 
-  // problem is here
   app.get('/expenses', express.json(), (req, res) => {
-    const {
-      userId,
-      category,
-      from,
-      to,
-    } = req.query;
+    const { userId, category, from, to } = req.query;
+    const foundExpenses = expensesService.getAll(userId, category, from, to);
 
-    // here
-    if (userId) {
-      expenses = [expenses.find(expense => expense.userId === +userId)];
-    }
-
-    if (from && to) {
-      expenses = expenses.filter(
-        expense => expense.spentAt >= from && expense.spentAt <= to,
-      );
-    }
-
-    if (category) {
-      expenses = expenses.filter(expense => expense.category === category);
-    }
-
-    res.send(expenses);
+    res.send(foundExpenses);
   });
 
   app.post('/expenses', express.json(), (req, res) => {
@@ -121,7 +95,7 @@ function createServer() {
       note,
     } = req.body;
 
-    const foundUser = users.find(user => user.id === +userId);
+    const foundUser = usersService.getOne(userId);
 
     if (!foundUser) {
       res.sendStatus(400);
@@ -129,17 +103,14 @@ function createServer() {
       return;
     }
 
-    const newExpense = {
-      id: Math.floor(Math.random()),
+    const newExpense = expensesService.addOne(
       userId,
       spentAt,
       title,
       amount,
       category,
       note,
-    };
-
-    expenses.push(newExpense);
+    );
 
     res.statusCode = 201;
     res.send(newExpense);
@@ -148,7 +119,7 @@ function createServer() {
   app.get('/expenses/:expenseId', express.json(), (req, res) => {
     const { expenseId } = req.params;
 
-    const foundExpense = expenses.find(expense => expense.id === +expenseId);
+    const foundExpense = expensesService.getOne(expenseId);
 
     if (!foundExpense) {
       res.sendStatus(404);
@@ -162,10 +133,7 @@ function createServer() {
   app.delete('/expenses/:expenseId', express.json(), (req, res) => {
     const { expenseId } = req.params;
 
-    const foundExpense = expenses.find(expense => expense.id === +expenseId);
-    const filteredExpenses = expenses.filter(
-      expense => expense.id !== +expenseId
-    );
+    const foundExpense = expensesService.getOne(expenseId);
 
     if (!foundExpense) {
       res.sendStatus(404);
@@ -173,8 +141,7 @@ function createServer() {
       return;
     }
 
-    expenses = filteredExpenses;
-
+    expensesService.deleteOne(expenseId);
     res.sendStatus(204);
   });
 
@@ -182,7 +149,7 @@ function createServer() {
     const { expenseId } = req.params;
     const { title } = req.body;
 
-    let foundExpense = expenses.find(expense => expense.id === +expenseId);
+    let foundExpense = expensesService.getOne(expenseId);
 
     if (!foundExpense) {
       res.sendStatus(404);
@@ -190,10 +157,7 @@ function createServer() {
       return;
     }
 
-    foundExpense = {
-      ...foundExpense,
-      title,
-    };
+    foundExpense = expensesService.updateOne(expenseId, title);
 
     res.send(foundExpense);
   });
