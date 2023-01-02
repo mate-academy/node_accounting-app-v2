@@ -12,24 +12,11 @@ function createServer() {
 
   app.use(cors());
   app.use(bodyParser.json());
-  app.use(userRouter);
-  app.use(expensesRouter);
-
-  // app.get('/expenses', expensesController.getAll);
-  // app.post('/expenses', express.json(), expensesController.addOne);
-  // app.get('/expenses/:expenseId', expensesController.getOne);
-  // app.delete('/expenses/:expenseId', expensesController.deleteOne);
-
-  // app.patch(
-  //   '/expenses/:expenseId', express.json(), expensesController.updateOne
-  // );
-
-  // app.listen(3000);
+  app.use('/users', express.json(), userRouter);
+  app.use('/expenses', express.json(), expensesRouter);
 
   return app;
 }
-
-// createServer();
 
 module.exports = {
   createServer,

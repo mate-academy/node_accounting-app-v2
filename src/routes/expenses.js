@@ -4,13 +4,13 @@ const express = require('express');
 const expensesController = require('../controller/expenses');
 const router = express.Router();
 
-router.get('/expenses', expensesController.getAll);
-router.post('/expenses', express.json(), expensesController.addOne);
-router.get('/expenses/:expenseId', expensesController.getOne);
-router.delete('/expenses/:expenseId', expensesController.deleteOne);
+router.get('/', expensesController.getAll);
+router.post('/', expensesController.addOne);
+router.get('/:expenseId', expensesController.getOne);
+router.delete('/:expenseId', expensesController.deleteOne);
 
 router.patch(
-  '/expenses/:expenseId', express.json(), expensesController.updateOne
+  '/:expenseId', expensesController.updateOne
 );
 
 module.exports = { router };
