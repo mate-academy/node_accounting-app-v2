@@ -1,6 +1,4 @@
-import { Expense } from '../types/expense';
-
-let expenses: Expense[] = [{
+let expenses = [{
   id: 1,
   userId: 2,
   spentAt: 'dsfkjghkdjf',
@@ -23,15 +21,15 @@ export function getAll() {
   return expenses;
 }
 
-export function findExpenseById(expenseId: number) {
+export function findExpenseById(expenseId) {
   const foundExpense = expenses
     .find(expense => expense.id === Number(expenseId));
 
   return foundExpense || null;
 }
 
-export function addOne(body: Omit<Expense, 'id'>) {
-  const maxID: number = Math.max(...expenses.map(expense => expense.id));
+export function addOne(body) {
+  const maxID = Math.max(...expenses.map(expense => expense.id));
   const newExpense = {
     id: maxID > 0 ? (maxID + 1) : 1,
     ...body,
@@ -42,16 +40,16 @@ export function addOne(body: Omit<Expense, 'id'>) {
   return newExpense;
 }
 
-export function updateOne(expenseId: number, body: Partial<Expense[]>) {
-  const foundExpense: Expense | null = findExpenseById(expenseId);
+export function updateOne(expenseId, body) {
+  const foundExpense = findExpenseById(expenseId);
 
   Object.assign(foundExpense, ...body);
 
   return foundExpense;
 }
 
-export function deleteOne(expenseId: number) {
-  const filteredExpenses: Expense[] = expenses
+export function deleteOne(expenseId) {
+  const filteredExpenses = expenses
     .filter(expense => expense.id !== Number(expenseId));
 
   expenses = filteredExpenses;

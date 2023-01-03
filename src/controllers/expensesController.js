@@ -1,19 +1,16 @@
-import {Request, Response} from 'express';
-
 import * as usersService from '../services/users';
 import * as expensesService from '../services/expenses';
-import { Expense } from '../types/expense';
 
-export const getAll = (req: Request, res: Response) => {
-  const expenses: Expense[] = expensesService.getAll();
+export const getAll = (req, res) => {
+  const expenses = expensesService.getAll();
 
   return expenses;
 };
 
-export const findOne = (req: Request, res: Response) => {
+export const findOne = (req, res) => {
   const { expenseId } = req.params;
 
-  const foundExpense: Expense | null = expensesService.findExpenseById(Number(expenseId));
+  const foundExpense = expensesService.findExpenseById(Number(expenseId));
 
   if (!foundExpense) {
     res.sendStatus(404);
@@ -24,7 +21,7 @@ export const findOne = (req: Request, res: Response) => {
   res.send(foundExpense);
 };
 
-export const addOne = (req: Request, res: Response) => {
+export const addOne = (req, res) => {
   const { userId, spentAt, title, amount, category, note } = req.body;
   const foundUser = usersService.findUserById(userId);
 
@@ -47,7 +44,7 @@ export const addOne = (req: Request, res: Response) => {
   res.send(newExpense);
 };
 
-export const updateOne = (req: Request, res: Response) => {
+export const updateOne = (req, res) => {
   const { expenseId } = req.params;
   const foundExpense = expensesService.findExpenseById(Number(expenseId));
 
@@ -62,7 +59,7 @@ export const updateOne = (req: Request, res: Response) => {
   res.send(updatedExpense);
 };
 
-export const deleteOne = (req: Request, res: Response) => {
+export const deleteOne = (req, res) => {
   const { expenseId } = req.params;
   const foundExpense = expensesService.findExpenseById(Number(expenseId));
 
