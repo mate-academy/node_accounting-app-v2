@@ -7,7 +7,7 @@ const getAll = (req, res) => {
   const expenses = expensesService.getAll();
   const { userId, from, to, category } = req.query;
 
-  if (!Object.keys(req.query).length) {
+  if (!Object.keys(req.query).length > 0) {
     res.send(expenses);
 
     return;
