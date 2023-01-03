@@ -1,17 +1,19 @@
-import * as usersService from '../services/users';
+'use strict';
 
-export const getAll = (req, res) => {
+const { usersService } = require('../services/users');
+
+const getAll = (req, res) => {
   const users = usersService.getAll();
 
   res.send(users);
 };
 
-export const findOne = (req, res) => {
+const findOne = (req, res) => {
   const { userId } = req.params;
-  const foundUser = usersService.findUserById(Number(userId));
+  const foundUser = usersService.findUserById(userId);
 
   if (!foundUser) {
-    res.sendStatus(400);
+    res.sendStatus(404);
 
     return;
   }
@@ -19,7 +21,7 @@ export const findOne = (req, res) => {
   res.send(foundUser);
 };
 
-export const addOne = (req, res) => {
+const addOne = (req, res) => {
   const { name } = req.body;
 
   if (!name) {
@@ -28,20 +30,26 @@ export const addOne = (req, res) => {
     return;
   }
 
+  if (typeof name !== 'string') {
+    res.sendStatus(400);
+
+    return;
+  }
+
   const newUser = usersService.addOne(name);
 
-  res.statusCode(201);
+  res.statusCode = 201;
   res.send(newUser);
 };
 
-export const updateOne = (req, res) => {
+const updateOne = (req, res) => {
   const { userId } = req.params;
   const { name } = req.body;
 
-  const foundUser = usersService.findUserById(Number(userId));
+  const foundUser = usersService.findUserById(userId);
 
   if (!foundUser) {
-    res.sendStatus(400);
+    res.sendStatus(404);
 
     return;
   }
@@ -57,13 +65,13 @@ export const updateOne = (req, res) => {
   res.send(updatedUser);
 };
 
-export const deleteOne = (req, res) => {
+const deleteOne = (req, res) => {
   const { userId } = req.params;
 
-  const foundUser = usersService.findUserById(Number(userId));
+  const foundUser = usersService.findUserById(userId);
 
   if (!foundUser) {
-    res.sendStatus(400);
+    res.sendStatus(404);
 
     return;
   }
@@ -71,4 +79,12 @@ export const deleteOne = (req, res) => {
   usersService.deleteOne(userId);
 
   res.sendStatus(204);
+};
+
+module.exports.usersController = {
+  getAll,
+  findOne,
+  addOne,
+  updateOne,
+  deleteOne,
 };

@@ -1,23 +1,18 @@
-let users = [{
-  id: 1,
-  name: 'John',
-},
-{
-  id: 2,
-  name: 'Mark',
-}];
+'use strict';
 
-export function getAll() {
+let users = [];
+
+function getAll() {
   return users;
 }
 
-export function findUserById(userId) {
-  const foundUser = users.find(user => user.id === userId);
+function findUserById(userId) {
+  const foundUser = users.find(user => user.id === Number(userId));
 
   return foundUser || null;
 }
 
-export function addOne(name) {
+function addOne(name) {
   const maxID = Math.max(...users.map(user => user.id));
   const newUser = {
     id: maxID > 0 ? maxID + 1 : 1,
@@ -29,7 +24,7 @@ export function addOne(name) {
   return newUser;
 }
 
-export function updateOne(userId, name) {
+function updateOne(userId, name) {
   const foundUser = findUserById(userId);
 
   Object.assign(foundUser, { name });
@@ -37,8 +32,16 @@ export function updateOne(userId, name) {
   return foundUser;
 }
 
-export function deleteOne(userId) {
-  const filteredUsers = users.filter(user => user.id !== userId);
+function deleteOne(userId) {
+  const filteredUsers = users.filter(user => user.id !== Number(userId));
 
   users = filteredUsers;
 }
+
+module.exports.usersService = {
+  getAll,
+  findUserById,
+  addOne,
+  updateOne,
+  deleteOne,
+};

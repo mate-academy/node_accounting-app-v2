@@ -1,13 +1,15 @@
-import * as usersService from '../services/users';
-import * as expensesService from '../services/expenses';
+'use strict';
 
-export const getAll = (req, res) => {
+const { usersService } = require('../services/users');
+const { expensesService } = require('../services/expenses');
+
+const getAll = (req, res) => {
   const expenses = expensesService.getAll();
 
-  return expenses;
+  res.send(expenses);
 };
 
-export const findOne = (req, res) => {
+const findOne = (req, res) => {
   const { expenseId } = req.params;
 
   const foundExpense = expensesService.findExpenseById(Number(expenseId));
@@ -20,12 +22,11 @@ export const findOne = (req, res) => {
 
   res.send(foundExpense);
 };
-
-export const addOne = (req, res) => {
+const addOne = (req, res) => {
   const { userId, spentAt, title, amount, category, note } = req.body;
   const foundUser = usersService.findUserById(userId);
 
-  if (!foundUser || Object.keys(req.body).length < 6) {
+  if (!foundUser) {
     res.sendStatus(400);
 
     return;
@@ -33,7 +34,8 @@ export const addOne = (req, res) => {
 
   if (typeof userId !== 'number' || typeof spentAt !== 'string'
     || typeof title !== 'string' || typeof amount !== 'number'
-    || typeof category !== 'string' || typeof note !== 'string') {
+    || typeof category !== 'string' || typeof note !== 'string'
+    || Object.keys(req.body).length < 6) {
     res.sendStatus(400);
 
     return;
@@ -41,11 +43,20 @@ export const addOne = (req, res) => {
 
   const newExpense = expensesService.addOne(req.body);
 
+  res.statusCode = 201;
   res.send(newExpense);
 };
 
-export const updateOne = (req, res) => {
+const updateOne = (req, res) => {
   const { expenseId } = req.params;
+  const newParams = req.body;
+
+  if (!expenseId || !newParams) {
+    res.sendStatus(400);
+
+    return;
+  }
+
   const foundExpense = expensesService.findExpenseById(Number(expenseId));
 
   if (!foundExpense) {
@@ -54,14 +65,14 @@ export const updateOne = (req, res) => {
     return;
   }
 
-  const updatedExpense = expensesService.updateOne(expenseId, req.body);
+  const updatedExpense = expensesService.updateOne(foundExpense, newParams);
 
   res.send(updatedExpense);
 };
 
-export const deleteOne = (req, res) => {
+const deleteOne = (req, res) => {
   const { expenseId } = req.params;
-  const foundExpense = expensesService.findExpenseById(Number(expenseId));
+  const foundExpense = expensesService.findExpenseById(expenseId);
 
   if (!foundExpense) {
     res.sendStatus(404);
@@ -72,4 +83,12 @@ export const deleteOne = (req, res) => {
   expensesService.deleteOne(expenseId);
 
   res.sendStatus(204);
+};
+
+module.exports.expensesController = {
+  getAll,
+  findOne,
+  addOne,
+  updateOne,
+  deleteOne,
 };
