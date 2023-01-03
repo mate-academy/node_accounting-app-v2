@@ -6,6 +6,18 @@ function init() {
   expenses = [];
 }
 
+function getNewId() {
+  if (!expenses.length) {
+    return 1;
+  }
+
+  const maxId = expenses.reduce((prev, expense) => (
+    Math.max(prev, expense.id)
+  ), 0);
+
+  return maxId + 1;
+}
+
 function getAll(userId, category, from, to) {
   let filteredExpenses = [...expenses];
 
@@ -52,7 +64,7 @@ function create(expenseDetails) {
     amount,
     category,
     note,
-    id: expenses.length + 1,
+    id: getNewId(),
   };
 
   expenses.push(newExpense);

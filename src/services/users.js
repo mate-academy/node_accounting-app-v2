@@ -6,6 +6,18 @@ function init() {
   users = [];
 }
 
+function getNewId() {
+  if (!users.length) {
+    return 1;
+  }
+
+  const maxId = users.reduce((prev, user) => (
+    Math.max(prev, user.id)
+  ), 0);
+
+  return maxId + 1;
+}
+
 function getAll() {
   return users;
 }
@@ -19,7 +31,7 @@ function getById(userId) {
 function create(name) {
   const newUser = {
     name,
-    id: users.length + 1,
+    id: getNewId(),
   };
 
   users.push(newUser);
