@@ -11,9 +11,9 @@ const getAllUsers = () => {
 };
 
 const getUserById = (userId) => {
-  const findedUser = users.find(user => user.id === Number(userId));
+  const foundUser = users.find(user => user.id === Number(userId));
 
-  return findedUser || null;
+  return foundUser || null;
 };
 
 const addUser = (name) => {
@@ -42,8 +42,8 @@ const deleteUser = (userId) => {
   users = users.filter(user => user.id !== Number(userId));
 };
 
-const updateUser = (findedUser, name) => {
-  return Object.assign(findedUser, { name });
+const updateUser = (foundUser, name) => {
+  return Object.assign(foundUser, { name });
 };
 
 module.exports = {

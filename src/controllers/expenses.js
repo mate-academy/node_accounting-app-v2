@@ -15,23 +15,23 @@ const getAllExpenses = (req, res) => {
 const getExpensesById = (req, res) => {
   const { expenseId } = req.params;
 
-  const findedExpense = expensesService.getExpensesById(expenseId);
+  const foundExpense = expensesService.getExpensesById(expenseId);
 
-  if (!findedExpense) {
+  if (!foundExpense) {
     res.sendStatus(404);
 
     return;
   }
 
-  res.send(findedExpense);
+  res.send(foundExpense);
 };
 
 const addExpense = (req, res) => {
   const { userId, spentAt, title, amount, category, note } = req.body;
 
-  const findedUser = usersService.getUserById(userId);
+  const foundUser = usersService.getUserById(userId);
 
-  if (!title || !findedUser) {
+  if (!title || !foundUser) {
     res.sendStatus(400);
 
     return;
@@ -48,9 +48,9 @@ const addExpense = (req, res) => {
 const deleteExpense = (req, res) => {
   const { expenseId } = req.params;
 
-  const findedExpense = expensesService.getExpensesById(expenseId);
+  const foundExpense = expensesService.getExpensesById(expenseId);
 
-  if (!findedExpense) {
+  if (!foundExpense) {
     res.sendStatus(404);
 
     return;
@@ -64,9 +64,9 @@ const deleteExpense = (req, res) => {
 const updateExpense = (req, res) => {
   const { expenseId } = req.params;
 
-  const findedExpense = expensesService.getExpensesById(expenseId);
+  const foundExpense = expensesService.getExpensesById(expenseId);
 
-  if (!findedExpense) {
+  if (!foundExpense) {
     res.sendStatus(404);
 
     return;
@@ -75,7 +75,7 @@ const updateExpense = (req, res) => {
   const { spentAt, title, amount, category, note } = req.body;
 
   const updatedExpense = expensesService
-    .updateExpense(findedExpense, spentAt, title, amount, category, note);
+    .updateExpense(foundExpense, spentAt, title, amount, category, note);
 
   res.send(updatedExpense);
 };

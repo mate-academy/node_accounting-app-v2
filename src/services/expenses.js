@@ -33,10 +33,10 @@ const getAllExpenses = (userId, category, from, to) => {
 };
 
 const getExpensesById = (expenseId) => {
-  const findedExpense = expenses
+  const foundExpense = expenses
     .find(expense => expense.id === Number(expenseId));
 
-  return findedExpense || null;
+  return foundExpense || null;
 };
 
 const addExpense = (userId, spentAt, title, amount, category, note) => {
@@ -77,7 +77,7 @@ const deleteExpense = (expenseId) => {
 };
 
 const updateExpense = (
-  findedExpense,
+  foundExpense,
   spentAt,
   title,
   amount,
@@ -85,26 +85,26 @@ const updateExpense = (
   note,
 ) => {
   if (spentAt) {
-    Object.assign(findedExpense, { spentAt });
+    Object.assign(foundExpense, { spentAt });
   }
 
   if (title) {
-    Object.assign(findedExpense, { title });
+    Object.assign(foundExpense, { title });
   }
 
   if (amount) {
-    Object.assign(findedExpense, { amount });
+    Object.assign(foundExpense, { amount });
   }
 
   if (category) {
-    Object.assign(findedExpense, { category });
+    Object.assign(foundExpense, { category });
   }
 
   if (note) {
-    Object.assign(findedExpense, { note });
+    Object.assign(foundExpense, { note });
   }
 
-  return findedExpense;
+  return foundExpense;
 };
 
 module.exports = {
