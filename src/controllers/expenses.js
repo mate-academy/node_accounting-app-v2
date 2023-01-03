@@ -74,7 +74,7 @@ const update = (req, res) => {
     return;
   };
 
-  const updatedExpense = expensesService.updateOne(expenseId, newData);
+  const updatedExpense = expensesService.updateOne(foundExpense, newData);
 
   res.send(updatedExpense);
 };

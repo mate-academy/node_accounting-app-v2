@@ -53,12 +53,10 @@ function deleteOne(expenseId) {
   expenses = expenses.filter(expanse => expanse.id !== Number(expenseId));
 }
 
-function updateOne(expenseId, newData) {
-  const expense = getById(expenseId);
+function updateOne(expenseToUpdate, newData) {
+  Object.assign(expenseToUpdate, newData);
 
-  Object.assign(expense, newData);
-
-  return expense;
+  return expenseToUpdate;
 }
 
 module.exports = {
