@@ -1,6 +1,6 @@
 'use strict';
 
-const usersService = require('./usersServices');
+const usersService = require('../services/users');
 
 const getAllUsers = (req, res) => {
   const users = usersService.getAllUsers();
