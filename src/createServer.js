@@ -2,11 +2,11 @@
 
 const express = require('express');
 
-const { router: usersRouter } = require('./routes/users');
-const { router: expensesRouter } = require('./routes/expenses');
+const { router: usersRouter } = require('./users/usersRouter');
+const { router: expensesRouter } = require('./expenses/expensesRouter');
 
-const { resetExpenses } = require('./services/expenses');
-const { resetUsers } = require('./services/users');
+const { resetExpenses } = require('./expenses/expensesServices');
+const { resetUsers } = require('./users/usersServices');
 
 function createServer() {
   const app = express();
