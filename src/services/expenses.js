@@ -7,27 +7,26 @@ function init() {
 }
 
 function getAll(userId, category, from, to) {
-  // eslint-disable-next-line no-console
-  console.log(userId, category, from, to);
+  let filteredExpenses = [...expenses];
+
+  if (category) {
+    filteredExpenses = filteredExpenses.filter(expense =>
+      (expense.category === category));
+  }
 
   if (userId) {
-    const filteredExpenses = expenses.filter(expense =>
-      (expense.userId === userId));
+    filteredExpenses = filteredExpenses.filter(expense =>
+      (expense.userId === +userId));
 
     return filteredExpenses;
   }
 
-  if (category) {
-    return expenses.filter(expense =>
-      (expense.category === category));
-  }
-
   if (from && to) {
-    return expenses.filter(expense =>
+    filteredExpenses = filteredExpenses.filter(expense =>
       (expense.spentAt >= from && expense.spentAt <= to));
   }
 
-  return expenses;
+  return filteredExpenses;
 }
 
 function getById(expenseId) {
@@ -36,7 +35,7 @@ function getById(expenseId) {
   return foundExpense || null;
 }
 
-function create(args) {
+function create(expenseDetails) {
   const {
     userId,
     spentAt,
@@ -44,7 +43,7 @@ function create(args) {
     amount,
     category,
     note,
-  } = args;
+  } = expenseDetails;
 
   const newExpense = {
     userId,
@@ -68,9 +67,7 @@ function remove(expenseId) {
 function update({ title, id }) {
   const expense = getById(id);
 
-  Object.assign(expense, {
-    title,
-  });
+  Object.assign(expense, { title });
 
   return expense;
 }
