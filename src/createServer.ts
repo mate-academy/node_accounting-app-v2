@@ -9,9 +9,9 @@ export function createServer() {
 
   app.use(cors());
 
-  app.use(usersRouter);
+  app.use('/users/', express.json(), usersRouter);
 
-  app.use(expensesRouter);
+  app.use('/expenses', express.json(), expensesRouter);
 
   return app;
 }

@@ -11,7 +11,7 @@ export const getAll = (req: Request, res: Response) => {
 
 export const findOne = (req: Request, res: Response) => {
   const { userId } = req.params;
-  const foundUser = usersService.findUserById(Number(userId));
+  const foundUser: User | null = usersService.findUserById(Number(userId));
 
   if (!foundUser) {
     res.sendStatus(400);
@@ -31,7 +31,7 @@ export const addOne = (req: Request, res: Response) => {
     return;
   }
 
-  const newUser = usersService.addOne(name);
+  const newUser: User = usersService.addOne(name);
 
   res.statusCode(201);
   res.send(newUser);
@@ -41,7 +41,7 @@ export const updateOne = (req: Request, res: Response) => {
   const { userId } = req.params;
   const { name } = req.body;
 
-  const foundUser = usersService.findUserById(Number(userId));
+  const foundUser: User | null = usersService.findUserById(Number(userId));
 
   if (!foundUser) {
     res.sendStatus(400);
@@ -55,7 +55,7 @@ export const updateOne = (req: Request, res: Response) => {
     return;
   }
 
-  const updatedUser = usersService.updateOne(userId, name);
+  const updatedUser: User | null = usersService.updateOne(userId, name);
 
   res.send(updatedUser);
 };
@@ -63,7 +63,7 @@ export const updateOne = (req: Request, res: Response) => {
 export const deleteOne = (req: Request, res: Response) => {
   const { userId } = req.params;
 
-  const foundUser = usersService.findUserById(Number(userId));
+  const foundUser: User | null = usersService.findUserById(Number(userId));
 
   if (!foundUser) {
     res.sendStatus(400);

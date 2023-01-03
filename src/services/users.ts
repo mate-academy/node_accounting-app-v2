@@ -1,6 +1,13 @@
 import { User } from "../types/user";
 
-let users: User[] = [];
+let users: User[] = [{
+  id: 1,
+  name: 'John',
+},
+{
+  id: 2,
+  name: 'Mark',
+}];
 
 export function getAll() {
   return users;
@@ -27,7 +34,9 @@ export function addOne(name: string) {
 export function updateOne(userId: number, name: string) {
   const foundUser: User | null = findUserById(userId);
 
-  return Object.assign(foundUser?, { name });
+  Object.assign(foundUser, { name });
+
+  return foundUser;
 }
 
 export function deleteOne(userId) {

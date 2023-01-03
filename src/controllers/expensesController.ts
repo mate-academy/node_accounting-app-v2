@@ -1,11 +1,11 @@
 import {Request, Response} from 'express';
 
-import * as usersServices from '../services/users';
-import * as expensesServices from '../services/expenses';
+import * as usersService from '../services/users';
+import * as expensesService from '../services/expenses';
 import { Expense } from '../types/expense';
 
 export const getAll = (req: Request, res: Response) => {
-  const expenses: Expense[] = expensesServices.getAll();
+  const expenses: Expense[] = expensesService.getAll();
 
   return expenses;
 };
@@ -13,7 +13,7 @@ export const getAll = (req: Request, res: Response) => {
 export const findOne = (req: Request, res: Response) => {
   const { expenseId } = req.params;
 
-  const foundExpense: Expense = expensesServices.findExpenseById(Number(expenseId));
+  const foundExpense: Expense | null = expensesService.findExpenseById(Number(expenseId));
 
   if (!foundExpense) {
     res.sendStatus(404);
@@ -26,9 +26,9 @@ export const findOne = (req: Request, res: Response) => {
 
 export const addOne = (req: Request, res: Response) => {
   const { userId, spentAt, title, amount, category, note } = req.body;
-  const foundUser = usersServices.findUserById(userId);
+  const foundUser = usersService.findUserById(userId);
 
-  if (!foundUser || Object.keys(req.body) < 6) {
+  if (!foundUser || Object.keys(req.body).length < 6) {
     res.sendStatus(400);
 
     return;
@@ -42,14 +42,14 @@ export const addOne = (req: Request, res: Response) => {
     return;
   }
 
-  const newExpense = expensesServices.addOne(req.body);
+  const newExpense = expensesService.addOne(req.body);
 
   res.send(newExpense);
 };
 
 export const updateOne = (req: Request, res: Response) => {
   const { expenseId } = req.params;
-  const foundExpense = expensesServices.findExpenseById(Number(expenseId));
+  const foundExpense = expensesService.findExpenseById(Number(expenseId));
 
   if (!foundExpense) {
     res.sendStatus(404);
@@ -57,14 +57,14 @@ export const updateOne = (req: Request, res: Response) => {
     return;
   }
 
-  const updatedExpense = expensesServices.updateOne(expenseId, req.body);
+  const updatedExpense = expensesService.updateOne(expenseId, req.body);
 
   res.send(updatedExpense);
 };
 
 export const deleteOne = (req: Request, res: Response) => {
   const { expenseId } = req.params;
-  const foundExpense = expensesServices.findExpenseById(Number(expenseId));
+  const foundExpense = expensesService.findExpenseById(Number(expenseId));
 
   if (!foundExpense) {
     res.sendStatus(404);
@@ -72,7 +72,7 @@ export const deleteOne = (req: Request, res: Response) => {
     return;
   }
 
-  expensesServices.deleteOne(expenseId);
+  expensesService.deleteOne(expenseId);
 
   res.sendStatus(204);
 };

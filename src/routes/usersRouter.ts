@@ -3,12 +3,12 @@ import * as usersController from '../controllers/usersController';
 
 export const usersRouter = express.Router();
 
-usersRouter.get('/users', usersController.getAll);
+usersRouter.get('/', usersController.getAll);
 
-usersRouter.get('/users/:userId', usersController.findOne);
+usersRouter.get('/:userId', usersController.findOne);
 
-usersRouter.post('/users', express.json(), usersController.addOne);
+usersRouter.post('/', usersController.addOne);
 
-usersRouter.patch('/users/:userId', express.json(), usersController.updateOne);
+usersRouter.patch('/:userId', usersController.updateOne);
 
-usersRouter.delete('/users/:userId', usersController.deleteOne);
+usersRouter.delete('/:userId', usersController.deleteOne);
