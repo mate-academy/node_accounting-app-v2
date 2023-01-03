@@ -7,7 +7,14 @@ const cors = require('cors');
 const { router: usersRouter } = require('./routes/users');
 const { router: expensesRouter } = require('./routes/expenses');
 
+const { clearExpenses } = require('./services/expenses');
+const { clearUsers } = require('./services/users');
+
 function createServer() {
+  clearUsers();
+
+  clearExpenses();
+
   const app = express();
 
   app.use(cors());
@@ -15,11 +22,9 @@ function createServer() {
   app.use('/users', usersRouter);
   app.use('/expenses', expensesRouter);
 
-  // app.get('/', (req, res) => {
-  //   res.sendStatus(200);
-  // });
-
   return app;
 }
 
-module.exports = { createServer };
+module.exports = {
+  createServer,
+};

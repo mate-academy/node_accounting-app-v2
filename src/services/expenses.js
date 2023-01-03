@@ -2,8 +2,19 @@
 
 let expenses = [];
 
-function getAll() {
-  return expenses;
+function clearExpenses() {
+  expenses = [];
+}
+
+function getAll(userId, categories, from, to, category) {
+  const serchExpenses = expenses.filter(expense => (
+    (userId ? expense.userId === +userId : true)
+    && (categories ? expense.category === categories : true)
+    && (from ? Date.parse(expense.spentAt) >= Date.parse(from) : true)
+    && (to ? Date.parse(expense.spentAt) <= Date.parse(to) : true))
+  );
+
+  return serchExpenses;
 }
 
 function findExpenseById(expenseId) {
@@ -16,7 +27,7 @@ function findExpenseById(expenseId) {
 function addExpense(expenseData) {
   const maxID = expenses.length
     ? Math.max(...expenses.map(expense => expense.id))
-    : 0;
+    : -1;
 
   const newExpense = {
     id: maxID + 1,
@@ -35,7 +46,7 @@ function patchExpense(foundExpense, expenseData) {
 }
 
 function deleteExpenseById(expenseId) {
-  expenses = expenses.filter(expense => expense.id !== Number(expenseId));
+  expenses = expenses.filter(expense => expense.id !== +expenseId);
 }
 
 module.exports = {
@@ -44,4 +55,5 @@ module.exports = {
   addExpense,
   deleteExpenseById,
   patchExpense,
+  clearExpenses,
 };

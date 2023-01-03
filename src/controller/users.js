@@ -26,7 +26,7 @@ const addOne = (req, res) => {
   const { name } = req.body;
 
   if (!name) {
-    res.sendStatus(422);
+    res.sendStatus(400);
 
     return;
   };
@@ -55,9 +55,9 @@ const patchOne = (req, res) => {
     return;
   };
 
-  const newUser = userService.patchUser(foundUser, name);
+  const newUser = userService.patchUser(userId, name);
 
-  res.statusCode = 201;
+  res.statusCode = 200;
   res.send(newUser);
 };
 

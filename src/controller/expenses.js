@@ -4,7 +4,16 @@ const expenseService = require('../services/expenses');
 const userService = require('../services/users');
 
 const getAll = (req, res) => {
-  const expenses = expenseService.getAll();
+  // const { userId, categories, from, to } = req.query;
+
+  const {
+    userId,
+    category,
+    from,
+    to,
+  } = req.query;
+
+  const expenses = expenseService.getAll(userId, category, from, to);
 
   res.send(expenses);
 };
@@ -15,7 +24,7 @@ const findOne = (req, res) => {
   const foundExpense = expenseService.findExpenseById(Number(expenseId));
 
   if (!foundExpense) {
-    res.sendStatus(400);
+    res.sendStatus(404);
 
     return;
   }
@@ -45,7 +54,6 @@ const addOne = (req, res) => {
 };
 
 const patchOne = (req, res) => {
-  const { userId, spentAt, title, amount, category } = req.body;
   const { expenseId } = req.params;
 
   const foundExpense = expenseService.findExpenseById(Number(expenseId));
@@ -56,21 +64,9 @@ const patchOne = (req, res) => {
     return;
   }
 
-  if (
-    !userService.findUserById(userId)
-    || isNaN(Date.parse(spentAt))
-    || !title
-    || (amount < 0)
-    || !category
-  ) {
-    res.sendStatus(400);
-
-    return;
-  };
-
   const newExpense = expenseService.patchExpense(foundExpense, req.body);
 
-  res.statusCode = 201;
+  res.statusCode = 200;
   res.send(newExpense);
 };
 
@@ -85,7 +81,7 @@ const deleteOne = (req, res) => {
     return;
   }
 
-  expenseService.deleteExpenseById(Number(expenseId));
+  expenseService.deleteExpenseById(expenseId);
 
   res.sendStatus(204);
 };

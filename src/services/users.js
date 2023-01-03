@@ -2,12 +2,16 @@
 
 let users = [];
 
+function clearUsers() {
+  users = [];
+}
+
 function getAll() {
   return users;
 }
 
 function findUserById(userId) {
-  const foundUser = users.find(user => user.id === Number(userId));
+  const foundUser = users.find(user => user.id === +userId);
 
   return foundUser || null;
 }
@@ -15,7 +19,7 @@ function findUserById(userId) {
 function addUser(name) {
   const maxID = users.length
     ? Math.max(...users.map(user => user.id))
-    : 0;
+    : -1;
 
   const newUser = {
     id: maxID + 1,
@@ -27,10 +31,12 @@ function addUser(name) {
   return newUser;
 }
 
-function patchUser(foundUser, name) {
-  foundUser.name = name;
+function patchUser(userId, name) {
+  const foundUser = findUserById(userId);
 
-  return foundUser;
+  const updateUser = Object.assign(foundUser, { name });
+
+  return updateUser;
 }
 
 function deleteUserById(userId) {
@@ -43,4 +49,5 @@ module.exports = {
   addUser,
   deleteUserById,
   patchUser,
+  clearUsers,
 };
