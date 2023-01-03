@@ -2,6 +2,10 @@
 
 let users = [];
 
+const clearAll = () => {
+  users = [];
+};
+
 const getAll = () => users;
 
 const getById = (userId) => {
@@ -38,6 +42,7 @@ const updateOne = (userId, name) => {
 };
 
 module.exports = {
+  clearAll,
   getAll,
   getById,
   addOne,

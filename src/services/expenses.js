@@ -2,6 +2,10 @@
 
 let expenses = [];
 
+const clearAll = () => {
+  expenses = [];
+};
+
 const getAll = (query, url) => {
   let filteredExpenses = expenses;
 
@@ -62,6 +66,7 @@ const updateOne = (foundExpense, newParams) => {
 };
 
 module.exports = {
+  clearAll,
   getAll,
   addOne,
   getOne,

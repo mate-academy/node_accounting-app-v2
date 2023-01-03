@@ -11,12 +11,6 @@ const getAll = (req, res) => {
 const getOne = (req, res) => {
   const { userId } = req.params;
 
-  if (!userId) {
-    res.sendStatus(400);
-
-    return;
-  }
-
   const foundUser = usersService.getById(userId);
 
   if (!foundUser) {
@@ -33,12 +27,6 @@ const addOne = (req, res) => {
 
   if (!name) {
     res.sendStatus(400);
-
-    return;
-  }
-
-  if (typeof name !== 'string') {
-    res.sendStatus(422);
 
     return;
   }
