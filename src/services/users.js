@@ -2,6 +2,10 @@
 
 let users = [];
 
+function reset() {
+  users = [];
+}
+
 function getAll() {
   return users;
 }
@@ -38,6 +42,7 @@ function updateOne(userId, name) {
 }
 
 module.exports.usersService = {
+  reset,
   getAll,
   getOne,
   addOne,

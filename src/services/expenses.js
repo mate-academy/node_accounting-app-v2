@@ -2,6 +2,10 @@
 
 let expenses = [];
 
+function reset() {
+  expenses = [];
+}
+
 function getAll() {
   return expenses;
 }
@@ -65,6 +69,7 @@ function updateOne(expenseId, body) {
 }
 
 module.exports.expensesService = {
+  reset,
   getAll,
   getAllWithQuery,
   getOne,

@@ -6,7 +6,13 @@ const cors = require('cors');
 const usersRoute = require('./routes/usersRoute');
 const expensesRoute = require('./routes/expensesRoute');
 
+const { usersService } = require('./services/users');
+const { expensesService } = require('./services/expenses');
+
 function createServer() {
+  usersService.reset();
+  expensesService.reset();
+
   const app = express();
 
   app.use(cors());
