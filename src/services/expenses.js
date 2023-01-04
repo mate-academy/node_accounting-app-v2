@@ -2,8 +2,35 @@
 
 let expenses = [];
 
-function getAll() {
-  return expenses;
+function getAll(
+  userId = null,
+  category = null,
+  from = null,
+  to = null
+) {
+  let visibleExpenses = expenses;
+
+  if (userId) {
+    visibleExpenses = visibleExpenses
+      .filter(expense => expense.userId === Number(userId));
+  }
+
+  if (category) {
+    visibleExpenses = visibleExpenses
+      .filter(expense => expense.category === category);
+  }
+
+  if (from) {
+    visibleExpenses = visibleExpenses
+      .filter(expense => expense.spentAt > from);
+  }
+
+  if (to) {
+    visibleExpenses = visibleExpenses
+      .filter(expense => expense.spentAt < to);
+  }
+
+  return visibleExpenses;
 }
 
 function findExpenseById(expenseId) {

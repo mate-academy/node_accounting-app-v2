@@ -4,7 +4,8 @@ const { usersService } = require('../services/users');
 const { expensesService } = require('../services/expenses');
 
 const getAll = (req, res) => {
-  const expenses = expensesService.getAll();
+  const { userId, category, from, to } = req.query;
+  const expenses = expensesService.getAll(userId, category, from, to);
 
   res.send(expenses);
 };
