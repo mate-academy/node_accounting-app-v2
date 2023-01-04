@@ -39,32 +39,20 @@ const getExpensesById = (expenseId) => {
   return foundExpense || null;
 };
 
-const addExpense = (userId, spentAt, title, amount, category, note) => {
-  let newExpense = {};
+const addExpense = (reqBody) => {
+  const { userId, spentAt, title, amount, category, note } = reqBody;
 
-  if (!expenses.length) {
-    newExpense = {
-      id: 0,
-      userId,
-      spentAt,
-      title,
-      amount,
-      category,
-      note,
-    };
-  } else {
-    const maxId = Math.max(...expenses.map(expense => expense.id));
+  const maxId = Math.max(...expenses.map(expense => expense.id));
 
-    newExpense = {
-      id: maxId + 1,
-      userId,
-      spentAt,
-      title,
-      amount,
-      category,
-      note,
-    };
-  }
+  const newExpense = {
+    id: expenses.length ? maxId + 1 : 0,
+    userId,
+    spentAt,
+    title,
+    amount,
+    category,
+    note,
+  };
 
   expenses.push(newExpense);
 
@@ -76,35 +64,8 @@ const deleteExpense = (expenseId) => {
     .filter(expense => expense.id !== Number(expenseId));
 };
 
-const updateExpense = (
-  foundExpense,
-  spentAt,
-  title,
-  amount,
-  category,
-  note,
-) => {
-  if (spentAt) {
-    Object.assign(foundExpense, { spentAt });
-  }
-
-  if (title) {
-    Object.assign(foundExpense, { title });
-  }
-
-  if (amount) {
-    Object.assign(foundExpense, { amount });
-  }
-
-  if (category) {
-    Object.assign(foundExpense, { category });
-  }
-
-  if (note) {
-    Object.assign(foundExpense, { note });
-  }
-
-  return foundExpense;
+const updateExpense = (foundExpense, reqBody) => {
+  return Object.assign(foundExpense, reqBody);
 };
 
 module.exports = {

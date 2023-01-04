@@ -17,21 +17,12 @@ const getUserById = (userId) => {
 };
 
 const addUser = (name) => {
-  let newUser = {};
+  const maxId = Math.max(...users.map(user => user.id));
 
-  if (!users.length) {
-    newUser = {
-      id: 0,
-      name,
-    };
-  } else {
-    const maxId = Math.max(...users.map(user => user.id));
-
-    newUser = {
-      id: maxId + 1,
-      name,
-    };
-  }
+  const newUser = {
+    id: users.length ? maxId + 1 : 0,
+    name,
+  };
 
   users.push(newUser);
 

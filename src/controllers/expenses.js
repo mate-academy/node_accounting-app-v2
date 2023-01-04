@@ -31,14 +31,13 @@ const addExpense = (req, res) => {
 
   const foundUser = usersService.getUserById(userId);
 
-  if (!title || !foundUser) {
+  if (!title || !foundUser || !amount || !spentAt || !category || !note) {
     res.sendStatus(400);
 
     return;
   }
 
-  const newExpense = expensesService
-    .addExpense(userId, spentAt, title, amount, category, note);
+  const newExpense = expensesService.addExpense(req.body);
 
   res.statusCode = 201;
 
@@ -72,10 +71,8 @@ const updateExpense = (req, res) => {
     return;
   }
 
-  const { spentAt, title, amount, category, note } = req.body;
-
   const updatedExpense = expensesService
-    .updateExpense(foundExpense, spentAt, title, amount, category, note);
+    .updateExpense(foundExpense, req.body);
 
   res.send(updatedExpense);
 };
