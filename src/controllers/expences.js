@@ -27,14 +27,9 @@ export const getFromUser = (req, res) => {
 
   const userExists = services.getUserById(userId);
 
-  if (!userExists) {
-    res.sendStatus(404);
-    return;
-  }
-
   const selectedExpenses = services.getExpencesByUserId(userId);
 
-  if (!selectedExpenses.length) {
+  if (!selectedExpenses.length || !userExists) {
     res.sendStatus(404);
     return;
   }
@@ -59,7 +54,9 @@ export const add = (req, res) => {
     return;
   }
 
-  if (!spentAt || !title || !amount || !category) {
+  const notValidData = !spentAt || !title || !amount || !category;
+
+  if (notValidData) {
     res.sendStatus(400);
     return;
   }
@@ -82,7 +79,6 @@ export const remove = (req, res) => {
 
   const foundExpense = services.getExpenceById(expenceId);
 
-
   if (!foundExpense) {
     res.sendStatus(404);
     return;
@@ -97,11 +93,6 @@ export const update = (req, res) => {
 
   const foundExpense = services.getExpenceById(expenceId)
 
-  if (!foundExpense) {
-    res.sendStatus(404)
-    return;
-  }
-
   const {
     spentAt,
     title,
@@ -110,14 +101,14 @@ export const update = (req, res) => {
     note
   } = req.body;
 
-  if (typeof spentAt !== 'string'
-    || typeof title !== 'string'
+  const notValidData = [ spentAt, title, category, note ]
+    .some(string => typeof string !== 'string')
     || typeof amount !== 'number'
-    || typeof category !== 'string'
-    || typeof note !== 'string') {
-    console.log('this is he')
+    || !foundExpense;
+
+  if (notValidData) {
     res.sendStatus(404)
-    return
+    return;
   }
 
   services.amendExpense({

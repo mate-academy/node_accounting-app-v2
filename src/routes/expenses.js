@@ -3,7 +3,6 @@
 import * as expensesController from '../controllers/expences.js';
 import express from 'express';
 
-
 export const router = express.Router();
 
 router.get('/', expensesController.getAll);
