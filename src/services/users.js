@@ -1,53 +1,93 @@
+/* eslint-disable no-console */
+/* eslint-disable max-len */
 'use strict';
 
-let users = [];
+const { User } = require('../models/user');
 
-function runUsers() {
-  users = [];
+async function getAll() {
+  const foundUsers = await User.findAll();
+
+  console.log('test');
+  console.log(foundUsers);
+
+  return foundUsers;
 }
 
-function getAll() {
-  return users;
-};
+// const users = ['sdfa'];
 
-function addOne(name) {
-  const maxId = Math.max(...users.map(user => user.id));
+// function runUsers() {
+//   users = [];
+// }
 
-  const newUser = {
-    id: maxId > 0 ? maxId + 1 : 1,
-    name,
-  };
+// function getAll() {
+//   return users;
+// };
 
-  users.push(newUser);
+// function addOne(name) {
+//   const maxId = Math.max(...users.map(user => user.id));
 
-  return newUser;
-};
+//   const newUser = {
+//     id: maxId > 0 ? maxId + 1 : 1,
+//     name,
+//   };
 
-function getOne(userId) {
-  const foundUser = users.find(user => user.id === Number(userId));
+//   users.push(newUser);
 
-  return foundUser || null;
-};
+//   return newUser;
+// };
 
-function deleteOne(userId) {
-  const filteredUsers = users.filter(user => user.id !== Number(userId));
+// function getOne(userId) {
+//   const foundUser = users.find(user => user.id === Number(userId));
 
-  users = filteredUsers;
-};
+//   return foundUser || null;
+// };
 
-function updateOne(userId, name) {
-  const foundUser = getOne(userId);
+// function deleteOne(userId) {
+//   const filteredUsers = users.filter(user => user.id !== Number(userId));
 
-  Object.assign(foundUser, { name });
+//   users = filteredUsers;
+// };
 
-  return foundUser;
-};
+// function updateOne(userId, name) {
+//   const foundUser = getOne(userId);
+
+//   Object.assign(foundUser, { name });
+
+//   return foundUser;
+// };
 
 module.exports = {
-  runUsers,
+  // runUsers,
   getAll,
-  addOne,
-  getOne,
-  deleteOne,
-  updateOne,
+  // addOne,
+  // getOne,
+  // deleteOne,
+  // updateOne,
 };
+
+// export async function findGoodById(goodId: number) {
+//   const foundGoods = await Good.findAll();
+
+//   const foundGood = foundGoods.find(good => good.dataValues.id === Number(goodId));
+
+//   return foundGood || null;
+// }
+
+// export async function addGood(name: string, colorId: number) {
+//   const newGood = {
+//     name,
+//     colorId,
+//   };
+
+//   await Good.create(newGood);
+
+//   return newGood;
+// }
+
+// export async function deleteGoodById(goodId: string) {
+//   await Good.destroy({
+//     where: {
+//       id: goodId,
+//     }
+//   });
+// }
