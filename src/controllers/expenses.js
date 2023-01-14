@@ -4,34 +4,13 @@ const expensesServices = require('../services/expennses');
 const userServices = require('../services/users');
 
 const getAll = (req, res) => {
-  const partsUrl = req.url.split('?');
-  const urlParams = new URLSearchParams(partsUrl[1]);
-
-  const userId = urlParams.get('userId');
-  const category = urlParams.get('category');
-  const from = urlParams.get('from');
-  const to = urlParams.get('to');
-
-  let expenses = expensesServices.getAllExpenses();
-
-  if (userId) {
-    expenses = expenses.filter(el => el.userId === +userId);
-  }
-
-  if (category) {
-    expenses = expenses.filter(el => el.category === category);
-  }
-
-  if (from && to) {
-    expenses = expenses.filter(el => el.spentAt > from && el.spentAt < to);
-  }
+  const expenses = expensesServices.getAllExpenses(req.url);
 
   res.send(expenses);
 };
 
 const getOne = (req, res) => {
-  const { id } = req.params;
-  const expense = expensesServices.getExpense(+id);
+  const expense = expensesServices.getExpense(+req.params.id);
 
   if (!expense) {
     res.sendStatus(404);
