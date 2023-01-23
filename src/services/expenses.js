@@ -2,14 +2,41 @@
 
 let expenses = [];
 
-const getAllExpenses = () => {
+const init = () => {
+  expenses = [];
+};
+
+const getAllExpenses = (userId, category, from, to) => {
+  if (category) {
+    const filteredExpenses = expenses
+      .filter(expense => expense.category === category);
+
+    return filteredExpenses;
+  }
+
+  if (from && to) {
+    const filteredExpenses = expenses
+      .filter(expense =>
+        expense.spentAt >= from && expense.spentAt <= to,
+      );
+
+    return filteredExpenses;
+  }
+
+  if (userId) {
+    const filteredExpenses = expenses
+      .filter(expense => expense.userId === Number(userId));
+
+    return filteredExpenses;
+  }
+
   return expenses;
 };
 
 const getExpenseById = (expenseId) => {
-  const foundUser = expenses.find(expense => expense.id === expenseId);
+  const foundExpense = expenses.find(expense => expense.id === expenseId);
 
-  return foundUser || null;
+  return foundExpense || null;
 };
 
 const addNewExpense = (
@@ -52,6 +79,7 @@ const updateExpenseById = (
 };
 
 module.exports = {
+  init,
   getAllExpenses,
   getExpenseById,
   addNewExpense,

@@ -2,6 +2,10 @@
 
 let users = [];
 
+const init = () => {
+  users = [];
+};
+
 const getAllUsers = () => {
   return users;
 };
@@ -37,6 +41,7 @@ const updateUserById = (userId, name) => {
 };
 
 module.exports = {
+  init,
   getAllUsers,
   getUserById,
   addNewUser,

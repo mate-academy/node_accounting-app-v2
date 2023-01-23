@@ -1,9 +1,17 @@
 'use strict';
 
 const expensesService = require('../services/expenses');
+const usersService = require('../services/users');
 
 const getAllExpenses = (req, res) => {
-  const expenses = expensesService.getAllExpenses();
+  const {
+    userId,
+    category,
+    from,
+    to,
+  } = req.query;
+
+  const expenses = expensesService.getAllExpenses(userId, category, from, to);
 
   res.send(expenses);
 };
@@ -30,6 +38,14 @@ const addNewExpense = (req, res) => {
     category,
     note,
   } = req.body;
+
+  const foundUser = usersService.getUserById(userId);
+
+  if (!foundUser) {
+    res.sendStatus(400);
+
+    return;
+  }
 
   if (typeof userId !== 'number'
     || typeof spentAt !== 'string'
@@ -70,14 +86,9 @@ const deleteExpenseById = (req, res) => {
 };
 
 const updateExpenseById = (req, res) => {
-  const {
-    spentAt,
-    title,
-    amount,
-    category,
-    note,
-  } = req.body;
+  const { title } = req.body;
   const { expenseId } = req.params;
+
   const expenseToUpdate = expensesService.getExpenseById(Number(expenseId));
 
   if (!expenseToUpdate) {
@@ -86,12 +97,7 @@ const updateExpenseById = (req, res) => {
     return;
   }
 
-  if (typeof spentAt !== 'string'
-  || typeof title !== 'string'
-  || typeof amount !== 'number'
-  || typeof category !== 'string'
-  || typeof note !== 'string'
-  ) {
+  if (typeof title !== 'string') {
     res.sendStatus(400);
 
     return;
@@ -99,13 +105,7 @@ const updateExpenseById = (req, res) => {
 
   const foundExpense = expensesService.updateExpenseById(
     Number(expenseId),
-    {
-      spentAt,
-      title,
-      amount,
-      category,
-      note,
-    },
+    { title }
   );
 
   res.send(foundExpense);

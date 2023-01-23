@@ -8,7 +8,7 @@ expensesRouter.get('/', expensesController.getAllExpenses);
 expensesRouter.get('/:expenseId', expensesController.getExpenseById);
 expensesRouter.post('/', expensesController.addNewExpense);
 expensesRouter.delete('/:expenseId', expensesController.deleteExpenseById);
-expensesRouter.put('/:expenseId', expensesController.updateExpenseById);
+expensesRouter.patch('/:expenseId', expensesController.updateExpenseById);
 
 module.exports = {
   expensesRouter,
