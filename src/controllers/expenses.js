@@ -1,9 +1,13 @@
 'use strict';
 
 const expenseService = require('../services/expenses');
+const userService = require('../services/users');
 
 const getAll = (req, res) => {
-  const { userId, category, from, to } = req.params;
+  const {
+    userId, category, from, to,
+  } = req.query;
+
   const expenses = expenseService.getAll(userId, category, from, to);
 
   res.send(expenses);
@@ -23,21 +27,37 @@ const getOne = (req, res) => {
 };
 
 const add = (req, res) => {
-  const { ...expense } = req.body;
+  const {
+    userId,
+    spentAt,
+    title,
+    amount,
+    category,
+    note,
+  } = req.body;
 
-  if (!expense) {
-    res.sendStatus(422);
+  const foundUser = userService.getById(userId);
 
-    return;
-  }
-
-  if (typeof expense !== 'object') {
+  if (!foundUser) {
     res.sendStatus(400);
 
     return;
   }
 
-  const newExpense = expenseService.create(expense);
+  if (!userId || !title) {
+    res.sendStatus(400);
+
+    return;
+  }
+
+  const newExpense = expenseService.create({
+    userId,
+    spentAt,
+    title,
+    amount,
+    category,
+    note,
+  });
 
   res.statusCode = 201;
   res.send(newExpense);
@@ -45,30 +65,6 @@ const add = (req, res) => {
 
 const remove = (req, res) => {
   const { expenseId } = req.params;
-
-  if (!expenseId) {
-    res.sendStatus(422);
-
-    return;
-  }
-
-  const foundUser = expenseService.getById(expenseId);
-
-  if (!foundUser) {
-    res.sendStatus(404);
-
-    return;
-  }
-
-  expenseService.remove(expenseId);
-
-  res.sendStatus(204);
-};
-
-const update = (req, res) => {
-  const { expenseId } = req.params;
-  const { ...expense } = req.body;
-
   const foundExpense = expenseService.getById(expenseId);
 
   if (!foundExpense) {
@@ -77,15 +73,33 @@ const update = (req, res) => {
     return;
   }
 
-  if (typeof expense !== 'object') {
+  expenseService.remove(expenseId);
+  res.sendStatus(204);
+};
+
+const update = (req, res) => {
+  const { expenseId } = req.params;
+  const foundExpense = expenseService.getById(expenseId);
+
+  if (!foundExpense) {
+    res.sendStatus(404);
+
+    return;
+  }
+
+  const { title } = req.body;
+
+  if (typeof title !== 'string') {
     res.sendStatus(400);
 
     return;
   }
 
-  const newExpense = expenseService.update(expenseId, expense);
-
-  res.send(newExpense);
+  expenseService.update({
+    title,
+    id: expenseId,
+  });
+  res.send(foundExpense);
 };
 
 module.exports = {

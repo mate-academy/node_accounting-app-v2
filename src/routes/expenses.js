@@ -6,7 +6,7 @@ const expenseController = require('../controllers/expenses');
 const router = express.Router();
 
 router.get('/', expenseController.getAll);
-router.get('/:userId.:categories.:from.:to', expenseController.getOne);
+router.get('/:expenseId', expenseController.getOne);
 
 router.post('/', expenseController.add);
 

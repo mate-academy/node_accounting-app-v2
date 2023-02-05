@@ -11,28 +11,27 @@ function getNewId() {
 }
 
 function getAll(userId, category, from, to) {
-  let processedExpenses = [...expenses];
-
-  if (userId) {
-    processedExpenses = processedExpenses.filter(
-      expense => expense.id === +userId
-    );
-  }
+  let filteredExpenses = [...expenses];
 
   if (category) {
-    processedExpenses = processedExpenses.filter(
-      expense => expense.category === category
-    );
+    filteredExpenses = filteredExpenses.filter(expense =>
+      (expense.category === category));
+  }
+
+  if (userId) {
+    filteredExpenses = filteredExpenses.filter(expense =>
+      (expense.userId === +userId));
+
+    return filteredExpenses;
   }
 
   if (from && to) {
-    processedExpenses = processedExpenses.filter(
-      expense => (expense.spentAt >= from && expense.spentAt <= to)
-    );
+    filteredExpenses = filteredExpenses.filter(expense =>
+      (expense.spentAt >= from && expense.spentAt <= to));
   }
 
-  return processedExpenses;
-};
+  return filteredExpenses;
+}
 
 function getById(expenseId) {
   const foundExpense = expenses.find(expense => expense.id === +expenseId);
@@ -55,12 +54,12 @@ function remove(expenseId) {
   expenses = expenses.filter(expense => expense.id !== +expenseId);
 }
 
-function update(expenseId, expense) {
-  const updateExpense = getById(expenseId);
+function update({ title, id }) {
+  const expense = getById(id);
 
-  Object.assign(updateExpense, expense);
+  Object.assign(expense, { title });
 
-  return updateExpense;
+  return expense;
 }
 
 function reset() {
