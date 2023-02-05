@@ -63,10 +63,15 @@ function update(expenseId, expense) {
   return updateExpense;
 }
 
+function reset() {
+  expenses = [];
+}
+
 module.exports = {
   getAll,
   getById,
   create,
   remove,
   update,
+  reset,
 };

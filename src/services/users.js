@@ -43,10 +43,15 @@ function update(userId, name) {
   return user;
 }
 
+function reset() {
+  users = [];
+}
+
 module.exports = {
   getAll,
   getById,
   create,
   remove,
   update,
+  reset,
 };
