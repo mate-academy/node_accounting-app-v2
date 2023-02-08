@@ -2,24 +2,7 @@
 
 const { v4: uuidv4 } = require('uuid');
 
-let expenses = [{
-  id: 0,
-  userId: 3,
-  spentAt: '2023-02-03T12:35:01.779Z',
-  title: 'supermarket',
-  amount: 500,
-  category: 'products',
-  note: 'buy some products',
-},
-{
-  id: 1,
-  userId: 5,
-  spentAt: '2023-01-03T12:35:01.779Z',
-  title: 'cars shop',
-  amount: 1000,
-  category: 'car',
-  note: 'buy car',
-}];
+let expenses = [];
 
 const getAll = () => {
   return expenses;

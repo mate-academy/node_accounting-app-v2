@@ -29,7 +29,7 @@ const add = (req, res) => {
   const user = usersService.getById(userId);
 
   if (!user) {
-    res.sendStatus(400);
+    res.sendStatus(404);
 
     return;
   }
