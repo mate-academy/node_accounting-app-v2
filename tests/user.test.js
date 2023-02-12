@@ -42,7 +42,7 @@ describe('User', () => {
   });
 
   describe('getUsers', () => {
-    it('should return empty array if no users', async() => {
+    it('should return empty array if no users.js', async() => {
       const response = await api
         .get('/users')
         .expect(200)
@@ -52,7 +52,7 @@ describe('User', () => {
         .toEqual([]);
     });
 
-    it('should return all users', async() => {
+    it('should return all users.js', async() => {
       const users = [
         {
           name: 'John Doe',
