@@ -1,11 +1,19 @@
-'use strict';
+import express from 'express';
+import cors from 'cors';
+import bodyParser from 'body-parser';
 
-// const express = require('express');
+const { expensesRouter } = require('./components/routes/expenses.routes');
+const { usersRouter } = require('./components/routes/users.routes');
 
 function createServer() {
-  // Use express to create a server
-  // Add a routes to the server
-  // Return the server (express app)
+  const app = express();
+
+  app.use(cors());
+  app.use(bodyParser.json());
+  app.use(usersRouter);
+  app.use(expensesRouter);
+
+  return app;
 }
 
 module.exports = {
