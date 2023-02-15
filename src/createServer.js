@@ -7,10 +7,13 @@ const { resetExpenses } = require('./expenses/services');
 const { resetUsers } = require('./users/services');
 
 function createServer() {
+  const cors = require('cors');
   const app = express();
 
   resetExpenses();
   resetUsers();
+
+  app.use(cors());
 
   app.use('/users', express.json(), usersRouter);
   app.use('/expenses', express.json(), expensesRouter);
