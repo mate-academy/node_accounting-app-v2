@@ -273,6 +273,8 @@ function createServer() {
     res.statusCode = 200;
     res.send(foundPurchase);
   });
+
+  return app;
 }
 
 module.exports = {
