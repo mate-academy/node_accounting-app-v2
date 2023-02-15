@@ -1,12 +1,16 @@
 'use strict';
 
+const { createNewId } = require('../helpers/createNewId');
+
 let expenses = [];
 
 function setInitialExpenses() {
   expenses = [];
 }
 
-function getAll(userId, category, from, to) {
+function getAll(searchParams) {
+  const { userId, category, from, to } = searchParams;
+
   return expenses.filter(expense => {
     const isUserIdMatch = userId
       ? expense.userId === +userId
@@ -30,7 +34,7 @@ function getAll(userId, category, from, to) {
 
 function addExpense(expenseData) {
   const newExpense = {
-    id: expenses.length + 1,
+    id: createNewId(expenses),
     ...expenseData,
   };
 

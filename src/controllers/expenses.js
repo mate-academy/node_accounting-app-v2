@@ -6,7 +6,14 @@ const usersServices = require('../services/users');
 function getAll(req, res) {
   const { userId, category, from, to } = req.query;
 
-  const expenses = expensesServices.getAll(userId, category, from, to);
+  const searchParams = {
+    userId,
+    category,
+    from,
+    to,
+  };
+
+  const expenses = expensesServices.getAll(searchParams);
 
   res.statusCode = 200;
   res.send(expenses);

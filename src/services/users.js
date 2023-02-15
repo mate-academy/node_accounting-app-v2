@@ -1,5 +1,7 @@
 'use strict';
 
+const { createNewId } = require('../helpers/createNewId');
+
 let users = [];
 
 function setInitialUsers() {
@@ -12,7 +14,7 @@ function getAll() {
 
 function addUser(name) {
   const newUser = {
-    id: users.length + 1,
+    id: createNewId(users),
     name,
   };
 
