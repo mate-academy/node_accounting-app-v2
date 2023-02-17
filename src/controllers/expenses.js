@@ -29,9 +29,16 @@ function addExpense(req, res) {
     note,
   } = req.body;
 
+  const isAllDataProvided = userId
+    && spentAt
+    && title
+    && amount
+    && category
+    && note;
+
   const user = usersServices.getById(userId);
 
-  if (!user) {
+  if (!user || !isAllDataProvided) {
     res.sendStatus(400);
 
     return;
@@ -54,6 +61,12 @@ function addExpense(req, res) {
 
 function getById(req, res) {
   const { expenseId } = req.params;
+
+  if (!expenseId) {
+    res.sendStatus(400);
+
+    return;
+  }
 
   const foundExpense = expensesServices.getById(expenseId);
 

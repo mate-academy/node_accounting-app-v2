@@ -27,6 +27,12 @@ function addUser(req, res) {
 function getById(req, res) {
   const { userId } = req.params;
 
+  if (!userId) {
+    res.sendStatus(400);
+
+    return;
+  }
+
   const foundUser = usersServices.getById(userId);
 
   if (!foundUser) {
@@ -57,6 +63,12 @@ function removeUser(req, res) {
 function updateUser(req, res) {
   const { userId } = req.params;
   const { name } = req.body;
+
+  if (!userId || !name) {
+    res.sendStatus(400);
+
+    return;
+  }
 
   const userToUpdate = usersServices.getById(userId);
 
