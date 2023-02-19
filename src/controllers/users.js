@@ -8,7 +8,7 @@ const {
   updateUser,
 } = require('../services/users');
 
-const getUsersController = (req, res) => {
+const getUsersController = (_, res) => {
   const users = getUsers();
 
   res.send(users);
@@ -16,6 +16,12 @@ const getUsersController = (req, res) => {
 
 const getUserController = (req, res) => {
   const { id } = req.params;
+
+  if (!id) {
+    res.sendStatus(400);
+
+    return;
+  }
 
   const user = getUserById(+id);
 

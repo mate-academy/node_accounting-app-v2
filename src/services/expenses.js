@@ -34,11 +34,10 @@ const removeExpense = (id) => {
   }
 };
 
-const updateExpense = (id, userId, spendAt, title, amount, category, note) => {
+const updateExpense = (id, spendAt, title, amount, category, note) => {
   const expense = getExpenseById(id);
 
   if (expense) {
-    expense.userId = userId;
     expense.spendAt = spendAt;
     expense.title = title;
     expense.amount = amount;

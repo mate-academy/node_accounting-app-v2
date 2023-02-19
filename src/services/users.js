@@ -24,17 +24,25 @@ const addUser = (name) => {
 const removeUser = (id) => {
   const user = getUserById(id);
 
-  if (user) {
-    users.filter((u) => u.id !== id);
+  if (!user) {
+    return;
   }
+
+  users.filter((u) => u.id !== id);
 };
 
 const updateUser = (id, name) => {
+  if (!name || !id) {
+    return;
+  }
+
   const user = getUserById(id);
 
-  if (user) {
-    user.name = name;
+  if (!user) {
+    return;
   }
+
+  user.name = name;
 
   return user;
 };

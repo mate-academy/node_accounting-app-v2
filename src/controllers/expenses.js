@@ -9,22 +9,25 @@ const {
   updateExpense,
 } = require('../services/expenses');
 
-const getExpensesController = (req, res) => {
+const getExpensesController = (_, res) => {
   const expenses = getExpenses();
-
-  if (expenses.length === 0) {
-    return res.status(404).send('No expenses found');
-  }
 
   res.send(expenses);
 };
 
 const getExpenseByIdController = (req, res) => {
   const { id } = req.params;
+
+  if (!id) {
+    res.sendStatus(400);
+
+    return;
+  }
+
   const expense = getExpenseById(+id);
 
   if (!expense) {
-    return res.status(404).send('No expense found');
+    return res.sendStatus(404);
   }
 
   res.send(expense);
@@ -32,10 +35,15 @@ const getExpenseByIdController = (req, res) => {
 
 const getExpenseByUserIdController = (req, res) => {
   const { userId } = req.query;
+
+  if (!userId) {
+    res.sendStatus(400);
+  }
+
   const expenses = getExpenseByUserId(+userId);
 
   if (!expenses) {
-    return res.status(404).send('No expenses found');
+    return res.sendStatus(404);
   }
 
   res.send(expenses);
@@ -45,44 +53,56 @@ const addExpenseController = (req, res) => {
   const { userId, title, amount, category, note } = req.body;
 
   if (!userId || !title || !amount || !category || !note) {
-    res.status(400);
+    res.sendStatus(400);
 
     return;
   }
 
   const newExpense = addExpense(+userId, title, +amount, category, note);
 
-  res.status(201).send(newExpense);
+  const { id } = newExpense;
+  const createdExpense = getExpenseById(id);
+
+  if (!createdExpense) {
+    return res.sendStatus(500);
+  }
+
+  res.statusCode = 201;
+  res.send(newExpense);
 };
 
 const removeExpenseController = (req, res) => {
   const { id } = req.params;
 
-  const expense = removeExpense(+id);
-
-  if (!expense) {
-    return res.status(404).send('No expense found');
+  if (!id) {
+    res.sendStatus(400);
   }
 
-  res.send(expense);
+  const expense = getExpenseById(+id);
+
+  if (!expense) {
+    return res.sendStatus(404);
+  }
+
+  removeExpense(+id);
+
+  res.sendStatus(204);
 };
 
 const updateExpenseController = (req, res) => {
   const { id } = req.params;
-  const { userId, spendAt, title, amount, category, note } = req.body;
+  const { spendAt, title, amount, category, note } = req.body;
 
-  const expense = updateExpense(
-    id,
-    userId,
-    spendAt,
-    title,
-    +amount,
-    category,
-    note
-  );
+  if (!id || !spendAt || !title || !amount || !category || !note) {
+    res.sendStatus(400);
+  }
 
-  if (!expense) {
-    return res.status(404);
+  const expense = updateExpense(id, spendAt, title, +amount, category, note);
+
+  const updatedExpense = getExpenseById(+id);
+
+  if (!updatedExpense) {
+    return res.sendStatus(500);
   }
 
   res.send(expense);
