@@ -31,6 +31,12 @@ const getUserController = (req, res) => {
 const addUserController = (req, res) => {
   const { name } = req.body;
 
+  if (!name) {
+    res.sendStatus(400);
+
+    return;
+  }
+
   const user = addUser(name);
 
   res.statusCode = 201;
@@ -40,7 +46,19 @@ const addUserController = (req, res) => {
 const removeUserController = (req, res) => {
   const { id } = req.params;
 
-  removeUser(+id);
+  if (!id) {
+    res.sendStatus(400);
+
+    return;
+  }
+
+  if (!getUserById(+id)) {
+    res.sendStatus(404);
+
+    return;
+  }
+
+  removeUser(id);
 
   res.sendStatus(204);
 };
@@ -49,11 +67,19 @@ const updateUserController = (req, res) => {
   const { id } = req.params;
   const { name } = req.body;
 
-  const user = updateUser(+id, name);
+  if (!id || !name) {
+    res.sendStatus(400);
 
-  if (!user) {
-    res.sendStatus(404);
+    return;
   }
+
+  if (!getUserById(id)) {
+    res.sendStatus(404);
+
+    return;
+  }
+
+  const user = updateUser(id, name);
 
   res.send(user);
 };

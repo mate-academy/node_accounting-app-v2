@@ -1,32 +1,19 @@
 'use strict';
 
-const users = [
-  {
-    id: 1,
-    name: 'John Doe',
-  },
-  {
-    id: 2,
-    name: 'Jane Doe',
-  },
-  {
-    id: 3,
-    name: 'John Smith',
-  },
-  {
-    id: 4,
-    name: 'Jane Smith',
-  },
-];
+const users = [];
 
 const getUsers = () => users;
 
 const getUserById = (id) => users.find((user) => user.id === id) || null;
 
 const addUser = (name) => {
+  if (!name) {
+    return null;
+  }
+
   const newUser = {
     name,
-    id: Math.max(...users.map((user) => user.id)) + 1,
+    id: users.length + 1,
   };
 
   users.push(newUser);
