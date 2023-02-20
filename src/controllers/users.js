@@ -71,13 +71,6 @@ const remove = (req, res) => {
 const update = (req, res) => {
   const { userId } = req.params;
 
-  // if (!userId) {
-  //   res.statusMessage = 'Required parameter is not passed';
-  //   res.sendStatus(400);
-  //
-  //   return;
-  // }
-
   const foundUser = userService.getById(userId);
 
   if (!foundUser) {
