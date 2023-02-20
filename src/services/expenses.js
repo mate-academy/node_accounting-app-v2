@@ -6,13 +6,15 @@ const { sequelize } = require('./index');
 
 const { DataTypes } = require('sequelize');
 
+const { DateTime } = require('luxon');
+
 const Expense = sequelize.define('Expense', {
   userId: {
     type: DataTypes.INTEGER,
     allowNull: false,
   },
-  spendAt: {
-    type: DataTypes.DATE,
+  spentAt: {
+    type: DataTypes.STRING,
     allowNull: false,
   },
   title: {
@@ -35,7 +37,28 @@ const Expense = sequelize.define('Expense', {
 
 Expense.sync();
 
-const getExpenses = async (userId, from, to) => {
+const getBetweenDates = (expenses, from, to) => {
+  if (!from || !to) {
+    return;
+  }
+
+  const fromDate = DateTime.fromISO(from).toMillis();
+  const toDate = DateTime.fromISO(to).toMillis();
+
+  console.log(fromDate, toDate);
+
+  if (fromDate > toDate) {
+    return;
+  }
+
+  return expenses.filter((e) => {
+    const expenseDate = DateTime.fromISO(e.spentAt).toMillis();
+
+    return expenseDate >= fromDate && expenseDate <= toDate;
+  });
+};
+
+const getExpenses = async (userId, from, to, category) => {
   let filteredExpenses = [];
 
   try {
@@ -49,6 +72,12 @@ const getExpenses = async (userId, from, to) => {
       filteredExpenses = await Expense.findAll();
     }
 
+    if (category) {
+      filteredExpenses = filteredExpenses.filter(
+        (e) => e.category === category
+      );
+    }
+
     if (from && to) {
       filteredExpenses = getBetweenDates(filteredExpenses, from, to);
     }
@@ -57,21 +86,6 @@ const getExpenses = async (userId, from, to) => {
   } catch (error) {
     console.error(error);
   }
-};
-
-const getBetweenDates = (expenses, from, to) => {
-  if (!from || !to) {
-    return;
-  }
-
-  const fromDate = new Date(from);
-  const toDate = new Date(to);
-
-  if (fromDate > toDate) {
-    return;
-  }
-
-  return expenses.filter((e) => e.spendAt >= fromDate && e.spendAt <= toDate);
 };
 
 const getExpenseById = async (id) => {
@@ -84,11 +98,14 @@ const getExpenseById = async (id) => {
   }
 };
 
-const addExpense = async (userId, title, amount, category, note, spendAt) => {
-  if (!userId || !title || !amount || !category || !note || !spendAt) {
-    return;
-  }
-
+const addExpense = async ({
+  userId,
+  title,
+  amount,
+  category,
+  note,
+  spentAt,
+}) => {
   try {
     const expense = await Expense.create({
       userId,
@@ -96,7 +113,7 @@ const addExpense = async (userId, title, amount, category, note, spendAt) => {
       amount,
       category,
       note,
-      spendAt,
+      spentAt,
     });
 
     return expense;
@@ -117,8 +134,8 @@ const removeExpense = async (id) => {
   }
 };
 
-const updateExpense = async (id, title, amount, category, note, spendAt) => {
-  if (!title || !amount || !category || !note || !spendAt) {
+const updateExpense = async (id, title, amount, category, note, spentAt) => {
+  if (!title || !amount || !category || !note || !spentAt) {
     return;
   }
 
@@ -133,7 +150,7 @@ const updateExpense = async (id, title, amount, category, note, spendAt) => {
     expense.amount = amount;
     expense.category = category;
     expense.note = note;
-    expense.spendAt = spendAt;
+    expense.spentAt = spentAt;
 
     await expense.save();
 

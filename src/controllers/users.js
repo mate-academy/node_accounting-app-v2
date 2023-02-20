@@ -20,14 +20,14 @@ const getUserController = async (req, res) => {
   const { id } = req.params;
 
   if (!id || isNaN(+id)) {
-    return res.sendStatus(400);
+    return res.status(400).send('Invalid id');
   }
 
   try {
     const user = await getUserById(+id);
 
     if (!user) {
-      return res.sendStatus(404);
+      return res.status(404).send('User not found');
     }
 
     res.send(user);
@@ -41,14 +41,14 @@ const addUserController = async (req, res) => {
   const { name } = req.body;
 
   if (!name) {
-    return res.sendStatus(400);
+    return res.status(400).send('Invalid name');
   }
 
   try {
     const user = await addUser(name);
 
     if (!user) {
-      return res.sendStatus(400);
+      return res.status(500).send('Error adding user');
     }
 
     res.send(user);
@@ -62,14 +62,14 @@ const removeUserController = async (req, res) => {
   const { id } = req.params;
 
   if (!id || isNaN(+id)) {
-    return res.sendStatus(400);
+    return res.status(400).send('Invalid id');
   }
 
   try {
     const user = await getUserById(+id);
 
     if (!user) {
-      return res.sendStatus(404);
+      return res.status(404).send('User not found');
     }
 
     await removeUser(+id);
@@ -86,20 +86,20 @@ const updateUserController = async (req, res) => {
   const { name } = req.body;
 
   if (!id || isNaN(+id) || !name) {
-    return res.sendStatus(400);
+    return res.status(400).send('Invalid id or name');
   }
 
   try {
     const user = await getUserById(+id);
 
     if (!user) {
-      return res.sendStatus(404);
+      return res.status(404).send('User not found');
     }
 
     const updatedUser = await updateUser(+id, name);
 
     if (!updatedUser) {
-      return res.sendStatus(400);
+      return res.status(500).send('Error updating user');
     }
 
     return res.send(updatedUser);

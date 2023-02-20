@@ -2,6 +2,8 @@
 /* eslint-disable no-console */
 'use strict';
 
+const z = require('zod');
+
 const {
   getExpenses,
   getExpenseById,
@@ -16,15 +18,16 @@ const getExpensesController = async (req, res) => {
   const userId = req.query.userId || null;
   const from = req.query.from || null;
   const to = req.query.to || null;
+  const category = req.query.category || null;
 
   if (userId && isNaN(+userId)) {
-    res.sendStatus(400);
+    res.status(400).send('Invalid userId');
 
     return;
   }
 
   try {
-    const expenses = await getExpenses(+userId, from, to);
+    const expenses = await getExpenses(+userId, from, to, category);
 
     res.send(expenses);
   } catch (error) {
@@ -37,7 +40,7 @@ const getExpenseByIdController = async (req, res) => {
   const { id } = req.params;
 
   if (!id || isNaN(+id)) {
-    res.sendStatus(400);
+    res.status(400).send('Invalid id');
 
     return;
   }
@@ -46,7 +49,7 @@ const getExpenseByIdController = async (req, res) => {
     const expense = await getExpenseById(+id);
 
     if (!expense) {
-      return res.sendStatus(404);
+      return res.status(404).send('Expense not found');
     }
 
     res.send(expense);
@@ -57,29 +60,48 @@ const getExpenseByIdController = async (req, res) => {
 };
 
 const addExpenseController = async (req, res) => {
-  const { userId, title, amount, category, note, spendAt } = req.body;
+  const { userId, title, amount, category, note, spentAt } = req.body;
 
-  if (!userId || !title || !amount || !category || !note || !spendAt) {
-    res.sendStatus(400);
+  const isUserIdValid = z.number().safeParse(userId);
+  const isTitleValid = z.string().min(1).safeParse(title);
+  const isAmountValid = z.number().safeParse(amount);
+  const isCategoryValid = z.string().min(1).safeParse(category);
+  const isNoteValid = z.string().min(1).safeParse(note);
+  const isspentAtValid = z.string().datetime().safeParse(spentAt);
+
+  if (
+    /* prettier-ignore */
+    !isUserIdValid
+    || !isTitleValid
+    || !isAmountValid
+    || !isCategoryValid
+    || !isNoteValid
+    || !isspentAtValid
+  ) {
+    res.status(400).send('Invalid data');
 
     return;
   }
 
   try {
-    const user = await getUserById(+userId);
+    const user = await getUserById(userId);
 
     if (!user) {
-      return res.sendStatus(400);
+      return res.status(400).send('User not found');
     }
 
-    const expense = await addExpense(
+    const expense = await addExpense({
       userId,
       title,
-      +amount,
+      amount,
       category,
       note,
-      spendAt
-    );
+      spentAt,
+    });
+
+    if (!expense) {
+      res.sendStatus(500);
+    }
 
     res.status(201);
     res.send(expense);
@@ -93,14 +115,14 @@ const removeExpenseController = async (req, res) => {
   const { id } = req.params;
 
   if (!id) {
-    res.sendStatus(400);
+    res.status(400).send('Invalid id');
   }
 
   try {
     const expense = await getExpenseById(+id);
 
     if (!expense) {
-      return res.sendStatus(404);
+      return res.status(404).send('Expense not found');
     }
 
     await removeExpense(+id);
@@ -114,22 +136,22 @@ const removeExpenseController = async (req, res) => {
 
 const updateExpenseController = async (req, res) => {
   const { id } = req.params;
-  const { spendAt, title, amount, category, note } = req.body;
+  const { spentAt, title, amount, category, note } = req.body;
 
-  if (!id || !spendAt || !title || !amount || !category || !note) {
-    res.sendStatus(400);
+  if (!id || !spentAt || !title || !amount || !category || !note) {
+    res.status(400).send('Invalid data');
   }
 
   try {
     const expense = await getExpenseById(+id);
 
     if (!expense) {
-      return res.sendStatus(404);
+      return res.status(404).send('Expense not found');
     }
 
     const updatedExpense = await updateExpense(
       +id,
-      spendAt,
+      spentAt,
       title,
       +amount,
       category,
