@@ -6,8 +6,8 @@ const {
   getUsersController,
   getUserController,
   addUserController,
-  updateUserController,
   removeUserController,
+  updateUserController,
 } = require('../controllers/users');
 
 router.get('/', getUsersController);

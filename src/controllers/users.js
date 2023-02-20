@@ -6,6 +6,7 @@ const {
   addUser,
   removeUser,
   updateUser,
+
 } = require('../services/users');
 
 const getUsersController = (_, res) => {
@@ -58,7 +59,9 @@ const removeUserController = (req, res) => {
     return;
   }
 
-  if (!getUserById(+id)) {
+  const user = getUserById(+id);
+
+  if (!user) {
     res.sendStatus(404);
 
     return;

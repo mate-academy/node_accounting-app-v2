@@ -3,14 +3,17 @@
 const {
   getExpenses,
   getExpenseById,
-  getExpenseByUserId,
   addExpense,
   removeExpense,
   updateExpense,
 } = require('../services/expenses');
 
-const getExpensesController = (_, res) => {
-  const expenses = getExpenses();
+const getExpensesController = (req, res) => {
+  const userId = req.query.userId || null;
+  const to = req.query.to || null;
+  const from = req.query.from || null;
+
+  const expenses = getExpenses(userId, from, to);
 
   res.send(expenses);
 };
@@ -31,22 +34,6 @@ const getExpenseByIdController = (req, res) => {
   }
 
   res.send(expense);
-};
-
-const getExpenseByUserIdController = (req, res) => {
-  const { userId } = req.query;
-
-  if (!userId) {
-    res.sendStatus(400);
-  }
-
-  const expenses = getExpenseByUserId(+userId);
-
-  if (!expenses) {
-    return res.sendStatus(404);
-  }
-
-  res.send(expenses);
 };
 
 const addExpenseController = (req, res) => {
@@ -111,7 +98,6 @@ const updateExpenseController = (req, res) => {
 module.exports = {
   getExpensesController,
   getExpenseByIdController,
-  getExpenseByUserIdController,
   addExpenseController,
   removeExpenseController,
   updateExpenseController,

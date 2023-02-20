@@ -2,13 +2,55 @@
 
 const expenses = [];
 
-const getExpenses = () => expenses;
+const getExpenses = (userId, from, to) => {
+  let filteredExpenses = [...expenses];
 
-const getExpenseById = (id) =>
-  expenses.find((expense) => expense.id === id) || null;
+  if (!userId && !from && !to) {
+    return filteredExpenses;
+  }
 
-const getExpenseByUserId = (userId) =>
-  expenses.filter((e) => e.userId === userId);
+  if (userId) {
+    filteredExpenses = filteredExpenses.filter((e) => e.userId === userId);
+  }
+
+  if (from && to) {
+    const fromDate = new Date(from);
+    const toDate = new Date(to);
+
+    if (fromDate > toDate) {
+      return [];
+    }
+
+    filteredExpenses = filteredExpenses.filter(
+      (e) => e.spendAt >= fromDate && e.spendAt <= toDate
+    );
+  }
+
+  return filteredExpenses;
+};
+
+const getBetweenDates = (from, to) => {
+  if (!from || !to) {
+    return null;
+  }
+
+  const fromDate = new Date(from);
+  const toDate = new Date(to);
+
+  if (fromDate > toDate) {
+    return null;
+  }
+
+  return expenses.filter((e) => e.spendAt >= fromDate && e.spendAt <= toDate);
+};
+
+const getExpenseById = (id) => {
+  return expenses.find((expense) => expense.id === id) || null;
+};
+
+const getExpenseByUserId = (userId) => {
+  return expenses.filter((e) => e.userId === userId);
+};
 
 const addExpense = (userId, title, amount, category, note) => {
   const newExpense = {
@@ -55,4 +97,5 @@ module.exports = {
   removeExpense,
   addExpense,
   updateExpense,
+  getBetweenDates,
 };

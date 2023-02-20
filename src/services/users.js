@@ -49,7 +49,6 @@ const updateUser = (id, name) => {
 
 module.exports = {
   getUsers,
-  getUserById,
   removeUser,
   addUser,
   updateUser,
