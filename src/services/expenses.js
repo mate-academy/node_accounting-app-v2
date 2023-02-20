@@ -1,101 +1,154 @@
+/* eslint-disable no-console */
+/* eslint-disable space-before-function-paren */
 'use strict';
 
-const expenses = [];
+const { sequelize } = require('./index');
 
-const getExpenses = (userId, from, to) => {
-  let filteredExpenses = [...expenses];
+const { DataTypes } = require('sequelize');
 
-  if (!userId && !from && !to) {
-    return filteredExpenses;
-  }
+const Expense = sequelize.define('Expense', {
+  userId: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+  },
+  spendAt: {
+    type: DataTypes.DATE,
+    allowNull: false,
+  },
+  title: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  amount: {
+    type: DataTypes.DECIMAL(10, 2),
+    allowNull: false,
+  },
+  category: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  note: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+});
 
-  if (userId) {
-    filteredExpenses = filteredExpenses.filter((e) => e.userId === userId);
-  }
+Expense.sync();
 
-  if (from && to) {
-    const fromDate = new Date(from);
-    const toDate = new Date(to);
+const getExpenses = async (userId, from, to) => {
+  let filteredExpenses = [];
 
-    if (fromDate > toDate) {
-      return [];
+  try {
+    if (userId) {
+      filteredExpenses = await Expense.findAll({
+        where: {
+          userId,
+        },
+      });
+    } else {
+      filteredExpenses = await Expense.findAll();
     }
 
-    filteredExpenses = filteredExpenses.filter(
-      (e) => e.spendAt >= fromDate && e.spendAt <= toDate
-    );
-  }
+    if (from && to) {
+      filteredExpenses = getBetweenDates(filteredExpenses, from, to);
+    }
 
-  return filteredExpenses;
+    return filteredExpenses;
+  } catch (error) {
+    console.error(error);
+  }
 };
 
-const getBetweenDates = (from, to) => {
+const getBetweenDates = (expenses, from, to) => {
   if (!from || !to) {
-    return null;
+    return;
   }
 
   const fromDate = new Date(from);
   const toDate = new Date(to);
 
   if (fromDate > toDate) {
-    return null;
+    return;
   }
 
   return expenses.filter((e) => e.spendAt >= fromDate && e.spendAt <= toDate);
 };
 
-const getExpenseById = (id) => {
-  return expenses.find((expense) => expense.id === id) || null;
-};
+const getExpenseById = async (id) => {
+  try {
+    const expense = await Expense.findByPk(id);
 
-const getExpenseByUserId = (userId) => {
-  return expenses.filter((e) => e.userId === userId);
-};
-
-const addExpense = (userId, title, amount, category, note) => {
-  const newExpense = {
-    userId,
-    spendAt: new Date(),
-    title,
-    amount,
-    category,
-    note,
-    id: expenses.length + 1,
-  };
-
-  expenses.push(newExpense);
-
-  return newExpense;
-};
-
-const removeExpense = (id) => {
-  const expense = getExpenseById(id);
-
-  if (expense) {
-    expenses.filter((e) => e.id !== id);
+    return expense;
+  } catch (error) {
+    console.error(error);
   }
 };
 
-const updateExpense = (id, spendAt, title, amount, category, note) => {
-  const expense = getExpenseById(id);
+const addExpense = async (userId, title, amount, category, note, spendAt) => {
+  if (!userId || !title || !amount || !category || !note || !spendAt) {
+    return;
+  }
 
-  if (expense) {
-    expense.spendAt = spendAt;
+  try {
+    const expense = await Expense.create({
+      userId,
+      title,
+      amount,
+      category,
+      note,
+      spendAt,
+    });
+
+    return expense;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+const removeExpense = async (id) => {
+  try {
+    const expense = await Expense.findByPk(id);
+
+    if (expense) {
+      await expense.destroy();
+    }
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+const updateExpense = async (id, title, amount, category, note, spendAt) => {
+  if (!title || !amount || !category || !note || !spendAt) {
+    return;
+  }
+
+  try {
+    const expense = await Expense.findByPk(id);
+
+    if (!expense) {
+      return;
+    }
+
     expense.title = title;
     expense.amount = amount;
     expense.category = category;
     expense.note = note;
-  }
+    expense.spendAt = spendAt;
 
-  return expense;
+    await expense.save();
+
+    return expense;
+  } catch (error) {
+    console.error(error);
+  }
 };
 
 module.exports = {
   getExpenses,
   getExpenseById,
-  getExpenseByUserId,
   removeExpense,
   addExpense,
   updateExpense,
   getBetweenDates,
+  Expense,
 };

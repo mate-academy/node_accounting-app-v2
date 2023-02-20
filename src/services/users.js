@@ -1,55 +1,110 @@
+/* eslint-disable no-console */
+/* eslint-disable space-before-function-paren */
 'use strict';
 
-const users = [];
+const { sequelize } = require('./index');
 
-const getUsers = () => users;
+const { DataTypes } = require('sequelize');
 
-const getUserById = (id) => users.find((user) => user.id === id) || null;
+const { Expense } = require('./expenses');
 
-const addUser = (name) => {
+const User = sequelize.define('User', {
+  name: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+});
+
+const getUsers = async () => {
+  try {
+    const users = await User.findAll();
+
+    return users;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+const getUserById = async (id) => {
+  try {
+    const user = await User.findByPk(id);
+
+    if (!user) {
+      return null;
+    }
+
+    return user;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+const addUser = async (name) => {
   if (!name) {
+    return;
+  }
+
+  try {
+    const user = await User.create({ name });
+
+    return user;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+const removeUser = async (id) => {
+  if (!id) {
+    return;
+  }
+
+  try {
+    const user = await getUserById(id);
+
+    if (!user) {
+      return;
+    }
+
+    await user.destroy();
+
+    return user;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+const updateUser = async (id, name) => {
+  if (!id || !name) {
+    return;
+  }
+
+  const user = await getUserById(id);
+
+  if (!user) {
     return null;
-  }
-
-  const newUser = {
-    name,
-    id: users.length + 1,
-  };
-
-  users.push(newUser);
-
-  return newUser;
-};
-
-const removeUser = (id) => {
-  const user = getUserById(id);
-
-  if (!user) {
-    return;
-  }
-
-  users.filter((u) => u.id !== id);
-};
-
-const updateUser = (id, name) => {
-  if (!name || !id) {
-    return;
-  }
-
-  const user = getUserById(id);
-
-  if (!user) {
-    return;
   }
 
   user.name = name;
 
-  return user;
+  await user.save();
+
+  const updatedUser = await getUserById(id);
+
+  return updatedUser;
 };
+
+User.hasMany(Expense, {
+  foreignKey: 'userId',
+  onDelete: 'CASCADE',
+  onUpdate: 'CASCADE',
+});
+
+User.sync();
 
 module.exports = {
   getUsers,
   removeUser,
   addUser,
   updateUser,
+  getUserById,
 };

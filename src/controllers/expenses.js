@@ -1,3 +1,5 @@
+/* eslint-disable space-before-function-paren */
+/* eslint-disable no-console */
 'use strict';
 
 const {
@@ -8,75 +10,109 @@ const {
   updateExpense,
 } = require('../services/expenses');
 
-const getExpensesController = (req, res) => {
+const { getUserById } = require('../services/users');
+
+const getExpensesController = async (req, res) => {
   const userId = req.query.userId || null;
-  const to = req.query.to || null;
   const from = req.query.from || null;
+  const to = req.query.to || null;
 
-  const expenses = getExpenses(userId, from, to);
-
-  res.send(expenses);
-};
-
-const getExpenseByIdController = (req, res) => {
-  const { id } = req.params;
-
-  if (!id) {
+  if (userId && isNaN(+userId)) {
     res.sendStatus(400);
 
     return;
   }
 
-  const expense = getExpenseById(+id);
+  try {
+    const expenses = await getExpenses(+userId, from, to);
 
-  if (!expense) {
-    return res.sendStatus(404);
+    res.send(expenses);
+  } catch (error) {
+    console.error(error);
+    res.sendStatus(500);
   }
-
-  res.send(expense);
 };
 
-const addExpenseController = (req, res) => {
-  const { userId, title, amount, category, note } = req.body;
+const getExpenseByIdController = async (req, res) => {
+  const { id } = req.params;
 
-  if (!userId || !title || !amount || !category || !note) {
+  if (!id || isNaN(+id)) {
     res.sendStatus(400);
 
     return;
   }
 
-  const newExpense = addExpense(+userId, title, +amount, category, note);
+  try {
+    const expense = await getExpenseById(+id);
 
-  const { id } = newExpense;
-  const createdExpense = getExpenseById(id);
+    if (!expense) {
+      return res.sendStatus(404);
+    }
 
-  if (!createdExpense) {
-    return res.sendStatus(500);
+    res.send(expense);
+  } catch (error) {
+    console.error(error);
+    res.sendStatus(500);
   }
-
-  res.statusCode = 201;
-  res.send(newExpense);
 };
 
-const removeExpenseController = (req, res) => {
+const addExpenseController = async (req, res) => {
+  const { userId, title, amount, category, note, spendAt } = req.body;
+
+  if (!userId || !title || !amount || !category || !note || !spendAt) {
+    res.sendStatus(400);
+
+    return;
+  }
+
+  try {
+    const user = await getUserById(+userId);
+
+    if (!user) {
+      return res.sendStatus(400);
+    }
+
+    const expense = await addExpense(
+      userId,
+      title,
+      +amount,
+      category,
+      note,
+      spendAt
+    );
+
+    res.status(201);
+    res.send(expense);
+  } catch (error) {
+    console.error(error);
+    res.sendStatus(500);
+  }
+};
+
+const removeExpenseController = async (req, res) => {
   const { id } = req.params;
 
   if (!id) {
     res.sendStatus(400);
   }
 
-  const expense = getExpenseById(+id);
+  try {
+    const expense = await getExpenseById(+id);
 
-  if (!expense) {
-    return res.sendStatus(404);
+    if (!expense) {
+      return res.sendStatus(404);
+    }
+
+    await removeExpense(+id);
+
+    res.sendStatus(204);
+  } catch (error) {
+    console.error(error);
+    res.sendStatus(500);
   }
-
-  removeExpense(+id);
-
-  res.sendStatus(204);
 };
 
-const updateExpenseController = (req, res) => {
+const updateExpenseController = async (req, res) => {
   const { id } = req.params;
   const { spendAt, title, amount, category, note } = req.body;
 
@@ -84,15 +120,27 @@ const updateExpenseController = (req, res) => {
     res.sendStatus(400);
   }
 
-  const expense = updateExpense(id, spendAt, title, +amount, category, note);
+  try {
+    const expense = await getExpenseById(+id);
 
-  const updatedExpense = getExpenseById(+id);
+    if (!expense) {
+      return res.sendStatus(404);
+    }
 
-  if (!updatedExpense) {
-    return res.sendStatus(500);
+    const updatedExpense = await updateExpense(
+      +id,
+      spendAt,
+      title,
+      +amount,
+      category,
+      note
+    );
+
+    res.send(updatedExpense);
+  } catch (error) {
+    console.error(error);
+    res.sendStatus(500);
   }
-
-  res.send(expense);
 };
 
 module.exports = {

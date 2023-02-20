@@ -1,3 +1,5 @@
+/* eslint-disable no-console */
+/* eslint-disable space-before-function-paren */
 'use strict';
 
 const {
@@ -6,91 +8,105 @@ const {
   addUser,
   removeUser,
   updateUser,
-
 } = require('../services/users');
 
-const getUsersController = (_, res) => {
-  const users = getUsers();
+const getUsersController = async (req, res) => {
+  const users = await getUsers();
 
   res.send(users);
 };
 
-const getUserController = (req, res) => {
+const getUserController = async (req, res) => {
   const { id } = req.params;
 
-  if (!id) {
-    res.sendStatus(400);
-
-    return;
+  if (!id || isNaN(+id)) {
+    return res.sendStatus(400);
   }
 
-  const user = getUserById(+id);
+  try {
+    const user = await getUserById(+id);
 
-  if (!user) {
-    res.sendStatus(404);
+    if (!user) {
+      return res.sendStatus(404);
+    }
 
-    return;
+    res.send(user);
+  } catch (error) {
+    console.error(error);
+    res.sendStatus(500);
   }
-
-  res.send(user);
 };
 
-const addUserController = (req, res) => {
+const addUserController = async (req, res) => {
   const { name } = req.body;
 
   if (!name) {
-    res.sendStatus(400);
-
-    return;
+    return res.sendStatus(400);
   }
 
-  const user = addUser(name);
+  try {
+    const user = await addUser(name);
 
-  res.statusCode = 201;
-  res.send(user);
+    if (!user) {
+      return res.sendStatus(400);
+    }
+
+    res.send(user);
+  } catch (error) {
+    console.error(error);
+    res.sendStatus(500);
+  }
 };
 
-const removeUserController = (req, res) => {
+const removeUserController = async (req, res) => {
   const { id } = req.params;
 
-  if (!id) {
-    res.sendStatus(400);
-
-    return;
+  if (!id || isNaN(+id)) {
+    return res.sendStatus(400);
   }
 
-  const user = getUserById(+id);
+  try {
+    const user = await getUserById(+id);
 
-  if (!user) {
-    res.sendStatus(404);
+    if (!user) {
+      return res.sendStatus(404);
+    }
 
-    return;
+    await removeUser(+id);
+
+    res.sendStatus(204);
+  } catch (error) {
+    console.error(error);
+    res.sendStatus(500);
   }
-
-  removeUser(id);
-
-  res.sendStatus(204);
 };
 
-const updateUserController = (req, res) => {
+const updateUserController = async (req, res) => {
   const { id } = req.params;
   const { name } = req.body;
 
-  if (!id || !name) {
-    res.sendStatus(400);
-
-    return;
+  if (!id || isNaN(+id) || !name) {
+    return res.sendStatus(400);
   }
 
-  if (!getUserById(id)) {
-    res.sendStatus(404);
+  try {
+    const user = await getUserById(+id);
 
-    return;
+    if (!user) {
+      return res.sendStatus(404);
+    }
+
+    const updatedUser = await updateUser(+id, name);
+
+    if (!updatedUser) {
+      return res.sendStatus(400);
+    }
+
+    return res.send(updatedUser);
+  } catch (error) {
+    console.error(error);
+    res.sendStatus(500);
   }
-
-  const user = updateUser(id, name);
-
-  res.send(user);
 };
 
 module.exports = {

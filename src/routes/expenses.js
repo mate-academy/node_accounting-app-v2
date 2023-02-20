@@ -6,13 +6,13 @@ const {
   getExpenseByIdController,
   addExpenseController,
   removeExpenseController,
+  updateExpenseController,
 } = require('../controllers/expenses');
-const { updateExpense } = require('../services/expenses');
 
 router.get('/', getExpensesController);
 router.get('/:id', getExpenseByIdController);
 router.post('/', addExpenseController);
 router.delete('/:id', removeExpenseController);
-router.patch('/:id', updateExpense);
+router.patch('/:id', updateExpenseController);
 
 module.exports = router;
