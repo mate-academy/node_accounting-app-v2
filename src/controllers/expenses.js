@@ -46,6 +46,12 @@ const removeExpense = (request, response) => {
   const { id } = request.params;
   const foundExpense = expenseService.getExpensesById(id);
 
+  if (isNaN(+id)) {
+    response.sendStatus(400);
+
+    return;
+  }
+
   if (!foundExpense) {
     response.sendStatus(404);
 

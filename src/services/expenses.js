@@ -4,17 +4,7 @@ const createExpenseId = () => {
   return Math.max(...expenses.map(expense => +expense.id), 0) + 1;
 };
 
-let expenses = [
-  {
-    id: 0,
-    userId: 0,
-    spentAt: '2023-02-21T15:32:52.235Z',
-    title: 'string',
-    amount: 0,
-    category: 'string',
-    note: 'string',
-  },
-];
+let expenses = [];
 
 const resetExpenses = () => {
   expenses = [];
@@ -68,7 +58,7 @@ const getExpensesById = (expenseId) => {
 };
 
 const deleteExpense = (expenseId) => {
-  expenses = expenses.dilter(expense => expense.id !== +expenseId);
+  expenses = expenses.filter(expense => expense.id !== +expenseId);
 };
 
 const updateExpense = (id, params) => {
