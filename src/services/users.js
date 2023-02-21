@@ -34,11 +34,11 @@ function removeUser(userId) {
 };
 
 function updateUser(userId, name) {
-  const todo = getUserById(userId);
+  const user = getUserById(userId);
 
-  Object.assign(todo, { name });
+  Object.assign(user, { name });
 
-  return todo;
+  return user;
 };
 
 module.exports = {

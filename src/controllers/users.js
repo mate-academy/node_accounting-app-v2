@@ -67,6 +67,7 @@ function updateUser(req, res) {
 
   userService.updateUser(userId, name);
 
+  res.statusCode = 200;
   res.send(foundUser);
 };
 
