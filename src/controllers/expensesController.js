@@ -1,7 +1,7 @@
 'use strict';
 
-const expenseService = require('../services/expences');
-// const userService = require('../services/users');
+const expenseService = require('../services/expencesServices');
+const userService = require('../services/usersServices');
 
 function getAll(req, res) {
   const { userId, category, from, to } = req.query;
@@ -12,6 +12,12 @@ function getAll(req, res) {
     from,
     to,
   };
+
+  if (!searchParams) {
+    res.sendStatus(400);
+
+    return;
+  }
 
   const expenses = expenseService.getAll(searchParams);
 
@@ -49,7 +55,9 @@ function addExpense(req, res) {
     note,
   } = req.body;
 
-  if (!userId || !title || !amount || !category) {
+  const foundUser = userService.getUserById(userId);
+
+  if (!foundUser || !title || !amount || !category || !userId) {
     res.sendStatus(400);
 
     return;
@@ -85,7 +93,7 @@ function deleteExpense(req, res) {
 
 function updateExpense(req, res) {
   const { expenseId } = req.params;
-  const { title, amount, category, note } = req.body;
+  const { title } = req.body;
 
   const foundExpense = expenseService.getExpenseById(expenseId);
 
@@ -95,15 +103,11 @@ function updateExpense(req, res) {
     return;
   }
 
-  const updatedExpense = expenseService.updateExpense({
-    id: expenseId,
-    title: title || foundExpense.title,
-    amount: amount || foundExpense.amount,
-    category: category || foundExpense.category,
-    note: note || foundExpense.note,
+  expenseService.updateExpense({
+    expenseId, title,
   });
 
-  res.send(updatedExpense);
+  res.send(foundExpense);
 }
 
 module.exports = {

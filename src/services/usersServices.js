@@ -2,7 +2,11 @@
 
 const { generateId } = require('../helpers/generateId');
 
-const users = [];
+let users = [];
+
+const clearUsers = () => {
+  users = [];
+};
 
 function getAll() {
   return users;
@@ -26,13 +30,13 @@ function createUser(name) {
 };
 
 function removeUser(userId) {
-  users.filter(user => user.id !== Number(userId));
+  users = users.filter(user => user.id !== Number(userId));
 }
 
-function updateUser({ userId, name }) {
+function updateUser({ userId, fieldsToUpdate }) {
   const user = getUserById(userId);
 
-  Object.assign(user, { name });
+  Object.assign(user, { ...fieldsToUpdate });
 
   return user;
 }
@@ -43,4 +47,5 @@ module.exports = {
   createUser,
   removeUser,
   updateUser,
+  clearUsers,
 };

@@ -1,6 +1,6 @@
 'use strict';
 
-const userService = require('../services/users');
+const userService = require('../services/usersServices');
 
 function getAll(req, res) {
   const users = userService.getAll();
@@ -29,11 +29,12 @@ function getUserId(req, res) {
 }
 
 function addUser(req, res) {
-  const { userId } = req.params;
   const { name } = req.body;
 
-  if (!userId || !name) {
+  if (!name) {
     res.sendStatus(400);
+
+    return;
   }
 
   const newUser = userService.createUser(name);
@@ -59,7 +60,7 @@ function deleteUser(req, res) {
 
 function updateUser(req, res) {
   const { userId } = req.params;
-  const { name } = req.body;
+  const fieldsToUpdate = req.body;
 
   const foundUser = userService.getUserById(userId);
 
@@ -70,7 +71,7 @@ function updateUser(req, res) {
   }
 
   userService.updateUser({
-    id: userId, name,
+    userId, fieldsToUpdate,
   });
 
   res.send(foundUser);

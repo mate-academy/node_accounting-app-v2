@@ -2,33 +2,39 @@
 
 const { generateId } = require('../helpers/generateId');
 
-const expenses = [];
+let expenses = [];
 
-function getAll(expensesArr, userId, categories, from, to) {
-  let filteredExpenses = expensesArr;
+const clearExpenses = () => {
+  expenses = [];
+};
+
+function getAll(query) {
+  const { userId, category, from, to } = query;
+
+  let filteredExpenses = expenses;
+
+  if (!filteredExpenses.length) {
+    return [];
+  }
 
   if (userId) {
     filteredExpenses = filteredExpenses
-      .filter((expense) => expense.userId === userId);
+      .filter((expense) => expense.userId === Number(userId));
   }
 
-  if (categories) {
+  if (category) {
     filteredExpenses = filteredExpenses
-      .filter((expense) => categories.includes(expense.category));
+      .filter((expense) => category.includes(expense.category));
   }
 
   if (from) {
-    const fromDate = new Date(from);
-
     filteredExpenses = filteredExpenses
-      .filter((expense) => new Date(expense.date) >= fromDate);
+      .filter((expense) => expense.spentAt >= from);
   }
 
   if (to) {
-    const toDate = new Date(to);
-
     filteredExpenses = filteredExpenses
-      .filter((expense) => new Date(expense.date) <= toDate);
+      .filter((expense) => expense.spentAt <= to);
   }
 
   return filteredExpenses;
@@ -47,7 +53,6 @@ function createExpense(expenseData) {
   const newExpense = {
     id: newId,
     ...expenseData,
-    spentAt: new Date(expenseData.spentAt),
   };
 
   expenses.push(newExpense);
@@ -56,13 +61,13 @@ function createExpense(expenseData) {
 };
 
 function removeExpense(expenseId) {
-  expenses.filter(expense => expense.id !== Number(expenseId));
+  expenses = expenses.filter(expense => expense.id !== Number(expenseId));
 }
 
-function updateExpense(expenseId, expenseData) {
+function updateExpense({ expenseId, title }) {
   const expense = getExpenseById(expenseId);
 
-  Object.assign(expense, expenseData);
+  Object.assign(expense, { title });
 
   return expense;
 }
@@ -73,4 +78,5 @@ module.exports = {
   createExpense,
   removeExpense,
   updateExpense,
+  clearExpenses,
 };
