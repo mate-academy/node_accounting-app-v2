@@ -57,10 +57,10 @@ function remove(expenseId) {
   expenses = filtredExpenses;
 }
 
-function update({ id, title }) {
+function update({ id, ...dataToUpdate }) {
   const expenseToUpdate = getById(id);
 
-  Object.assign(expenseToUpdate, { title });
+  Object.assign(expenseToUpdate, { ...dataToUpdate });
 
   return expenseToUpdate;
 };

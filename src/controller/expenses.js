@@ -69,7 +69,7 @@ function remove(req, res) {
 
 function update(req, res) {
   const { expenseId } = req.params;
-  const { title } = req.body;
+  const dataToUpdate = req.body;
   const foundExpense = expenseService.getById(expenseId);
 
   if (!foundExpense) {
@@ -78,15 +78,9 @@ function update(req, res) {
     return;
   }
 
-  if (typeof title !== 'string' || !title) {
-    res.sendStatus(404);
-
-    return;
-  }
-
   expenseService.update({
     id: expenseId,
-    title,
+    ...dataToUpdate,
   });
   res.send(foundExpense);
 }
