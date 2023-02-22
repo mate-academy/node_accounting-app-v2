@@ -1,101 +1,26 @@
 'use strict';
 
 const express = require('express');
+const { userRouter } = require('./routes/users');
+// const userController = require('./controllers/users');
+const userService = require('./services/users');
 
 function createServer() {
   const app = express();
 
-  let users = [];
+  userService.emptyUsers();
+  app.use('/users', userRouter);
+  // app.get('/users', userController.getAll);
 
-  app.get('/users', (req, res) => {
-    res.send(users);
-  });
+  // app.get('/users/:userId', userController.getOne);
 
-  app.patch('/users/:userId', express.json(), (req, res) => {
-    const { userId } = req.params;
-    const foundUser = users.find(user => user.id === +userId);
+  // app.post('/users', express.json(), userController.add);
 
-    if (!foundUser) {
-      res.sendStatus(404);
+  // app.patch('/users/:userId', express.json(), userController.update);
 
-      return;
-    }
-
-    const { name } = req.body;
-
-    if (typeof name !== 'string') {
-      res.sendStatus(422);
-
-      return;
-    }
-
-    Object.assign(foundUser, { name });
-
-    res.send(foundUser);
-  });
-
-  app.delete('/users/:userId', (req, res) => {
-    const { userId } = req.params;
-
-    const filteredUsers = users.filter(user => user.id !== +userId);
-
-    if (filteredUsers.length === users.length) {
-      res.sendStatus(404);
-
-      return;
-    }
-
-    users = filteredUsers;
-
-    res.sendStatus(204);
-  });
-
-  app.get('/users/:userId', (req, res) => {
-    const userId = Number(req.params.userId);
-    const isValid = !Number.isNaN(userId);
-
-    if (!isValid) {
-      res.sendStatus(422);
-
-      return;
-    }
-
-    const foundUser = users.find(user => user.id === userId);
-
-    if (!foundUser) {
-      res.sendStatus(404);
-
-      return;
-    }
-
-    res.send(foundUser);
-  });
+  // app.delete('/users/:userId', userController.remove);
 
   const expenses = [];
-
-  app.post('/users', express.json(), (req, res) => {
-    const { name } = req.body;
-
-    if (!name) {
-      res.sendStatus(400);
-
-      return;
-    }
-
-    const maxId = users.length
-      ? Math.max(...users.map(user => user.id)) + 1
-      : 0;
-
-    const newUser = {
-      id: maxId,
-      name,
-    };
-
-    users.push(newUser);
-
-    res.statusCode = 201;
-    res.send(newUser);
-  });
 
   app.get('/expenses', (req, res) => {
     res.send(expenses);
@@ -137,7 +62,7 @@ function createServer() {
       || typeof category !== 'string'
       || typeof note !== 'string';
 
-    const foundUser = users.some(user => user.id === +userId);
+    const foundUser = userService.getById(userId);
 
     // const isDataValid = !userId
     //   || !spentAt
