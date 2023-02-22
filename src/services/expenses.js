@@ -17,29 +17,30 @@ const getMany = (getQuery) => {
     return [];
   }
 
-  let filteredExpenses = expenses;
+  return expenses.filter(expense => {
+    let isIdMatch = true;
+    let isCategoryMatch = true;
+    let isFromMatch = true;
+    let isToMatch = true;
 
-  if (userId) {
-    filteredExpenses = filteredExpenses
-      .filter(expense => expense.userId === +userId);
-  }
+    if (userId) {
+      isIdMatch = expense.userId === +userId;
+    }
 
-  if (category) {
-    filteredExpenses = filteredExpenses
-      .filter(expense => expense.category === category);
-  }
+    if (category) {
+      isCategoryMatch = expense.category === category;
+    }
 
-  if (from) {
-    filteredExpenses = filteredExpenses
-      .filter(expense => expense.spentAt >= from);
-  }
+    if (from) {
+      isFromMatch = expense.spentAt >= from;
+    }
 
-  if (to) {
-    filteredExpenses = filteredExpenses
-      .filter(expense => expense.spentAt <= to);
-  }
+    if (to) {
+      isToMatch = expense.spentAt <= to;
+    }
 
-  return filteredExpenses;
+    return isIdMatch && isCategoryMatch && isFromMatch && isToMatch;
+  });
 };
 
 const getOne = (id) => {

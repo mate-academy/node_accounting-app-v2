@@ -43,7 +43,7 @@ const add = (req, res) => {
   const { userId, spentAt, title, amount, category, note } = req.body;
   const foundUser = userService.getById(userId);
 
-  const isAllRequireFields = typeof userId !== 'number'
+  const isAllFieldsValid = typeof userId !== 'number'
     || typeof spentAt !== 'string'
     || typeof title !== 'string'
     || typeof amount !== 'number'
@@ -51,7 +51,7 @@ const add = (req, res) => {
     || typeof note !== 'string'
     || !foundUser;
 
-  if (isAllRequireFields) {
+  if (isAllFieldsValid) {
     res.statusMessage = 'Required parameter is not passed';
     res.sendStatus(400);
 
