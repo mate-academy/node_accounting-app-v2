@@ -33,6 +33,8 @@ function create(name) {
 
 function remove(userId) {
   users = users.filter(user => user.id !== +userId);
+
+  return users;
 }
 
 function update(userId, name) {

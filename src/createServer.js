@@ -9,10 +9,10 @@ const expensesService = require('./services/expenses');
 const usersService = require('./services//users');
 
 function createServer() {
-  const app = express();
-
   expensesService.reset();
   usersService.reset();
+
+  const app = express();
 
   app.use('/users', usersRouter);
   app.use('/expenses', expensesRouter);

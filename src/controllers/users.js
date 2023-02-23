@@ -24,13 +24,7 @@ const getOne = (req, res) => {
 const add = (req, res) => {
   const { name } = req.body;
 
-  if (!name) {
-    res.sendStatus(400);
-
-    return;
-  }
-
-  if (typeof name !== 'string') {
+  if (!name || typeof name !== 'string') {
     res.sendStatus(400);
 
     return;
@@ -65,12 +59,12 @@ const update = (req, res) => {
   const foundUser = usersService.findById(userId);
 
   if (!foundUser) {
-    res.sendStatus(404);
+    res.sendStatus(400);
 
     return;
   }
 
-  if (typeof name !== 'string') {
+  if (!name || typeof name !== 'string') {
     res.sendStatus(400);
 
     return;

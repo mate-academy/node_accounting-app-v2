@@ -18,25 +18,30 @@ const getOne = (req, res) => {
 
     return;
   }
-
+  res.statusCode(200);
   res.send(foundExpense);
 };
 
 const add = (req, res) => {
   const {
     userId,
+    spentAt,
     title,
+    amount,
+    category,
+    note,
   } = req.body;
 
   const foundUser = usersService.findById(userId);
 
-  if (!foundUser) {
-    res.sendStatus(400);
+  const isValidBody = foundUser
+    && typeof spentAt === 'string'
+    && typeof title === 'string'
+    && typeof amount === 'number'
+    && typeof note === 'string'
+    && typeof category === 'string';
 
-    return;
-  }
-
-  if (!userId || !title) {
+  if (!isValidBody) {
     res.sendStatus(400);
 
     return;
@@ -72,17 +77,10 @@ const update = (req, res) => {
     return;
   }
 
-  const { title } = req.body;
-
-  if (typeof title !== 'string') {
-    res.sendStatus(400);
-
-    return;
-  }
+  const data = req.body;
 
   expensesService.update({
-    title,
-    id: expenseId,
+    expenseId, data,
   });
   res.send(foundExpense);
 };

@@ -23,6 +23,8 @@ function getAll(userId, category, from, to) {
   if (userId) {
     filteredExpenses = filteredExpenses.filter(expense =>
       (expense.userId === +userId));
+
+    return filteredExpenses;
   }
 
   if (from && to) {
@@ -52,6 +54,8 @@ function create(expense) {
 
 function remove(expenseId) {
   expenses = expenses.filter(expense => expense.id !== +expenseId);
+
+  return expenses;
 };
 
 function update({ title, id }) {
