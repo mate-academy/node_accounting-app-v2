@@ -1,42 +1,29 @@
 'use strict';
 
-const { userExist } = require('./users');
+const expenseService = require('../service/expenses');
+const userService = require('../service/users');
 
-let expenses = [];
-
-const initialExpenses = () => (
-  expenses = []
-);
-
-const getAllExpanses = (req, res) => {
+const getAll = (req, res) => {
   const { category, from, to, userId } = req.query;
 
-  let filteredExpenses = expenses;
+  const filteredExpenses = expenseService.getAll(category, from, to, userId);
 
-  if (from && to) {
-    filteredExpenses = filteredExpenses.filter(expense =>
-      expense.spentAt >= from
-      && expense.spentAt <= to);
-  }
+  if (!filteredExpenses) {
+    res.send(404);
 
-  if (userId) {
-    filteredExpenses = filteredExpenses.filter(expense =>
-      expense.userId === +userId);
-  }
-
-  if (category) {
-    filteredExpenses = filteredExpenses.filter(expense =>
-      expense.category === category);
+    return;
   }
 
   res.statusCode = 200;
   res.send(filteredExpenses);
 };
 
-const createNewExpanse = (req, res) => {
+const create = (req, res) => {
   const { userId, spentAt, title, amount, category, note } = req.body;
 
-  const isUserExist = userExist(userId);
+  const isUserExist = userService.findById(userId);
+
+  console.log(isUserExist)
 
   const isValidData = !title || !spentAt || !amount
   || !category || !note || !isUserExist;
@@ -47,45 +34,17 @@ const createNewExpanse = (req, res) => {
     return;
   }
 
-  const maxId = expenses.length
-    ? Math.max(...expenses.map(el => el.id))
-    : 0;
-
-  const isValidTypeData = !(
-    typeof userId !== 'number'
-    || typeof title !== 'string'
-    || typeof amount !== 'number'
-    || typeof spentAt !== 'string'
-    || typeof category !== 'string'
-    || typeof note !== 'string'
-  );
-
-  if (!isValidTypeData) {
-    res.sendStatus(422);
-
-    return;
-  }
-
-  const newExpense = {
-    id: maxId + 1,
-    userId,
-    title,
-    amount,
-    spentAt,
-    category,
-    note,
-  };
-
-  expenses.push(newExpense);
+  const newExpense = expenseService.create(userId, spentAt, title,
+    amount, category, note);
 
   res.statusCode = 201;
   res.send(newExpense);
 };
 
-const getExpenseById = (req, res) => {
+const findById = (req, res) => {
   const { expenseId } = req.params;
 
-  const foundUserExpens = expenses.find(expense => expense.id === +expenseId);
+  const foundUserExpens = expenseService.findById(expenseId);
 
   if (!foundUserExpens) {
     res.sendStatus(404);
@@ -97,10 +56,11 @@ const getExpenseById = (req, res) => {
   res.send(foundUserExpens);
 };
 
-const changeExpanseFiled = (req, res) => {
+const change = (req, res) => {
   const { expenseId } = req.params;
+  const { filed, title } = req.body;
 
-  const foundExpense = expenses.find(expense => expense.id === +expenseId);
+  const foundExpense = expenseService.findById(expenseId);
 
   if (!foundExpense) {
     res.sendStatus(404);
@@ -108,37 +68,32 @@ const changeExpanseFiled = (req, res) => {
     return;
   }
 
-  const { filed, title } = req.body;
-
-  Object.assign(foundExpense, {
-    ...filed, title,
-  });
+  expenseService.change(expenseId, filed, title);
 
   res.statusCode = 200;
   res.send(foundExpense);
 };
 
-const deleteExpense = (req, res) => {
+const remove = (req, res) => {
   const { expenseId } = req.params;
 
-  const filteredExpenses = expenses.filter(expense =>
-    expense.id !== +expenseId);
+  const foundExpense = expenseService.findById(expenseId);
 
-  if (filteredExpenses.length === expenses.length) {
+  if (!foundExpense) {
     res.sendStatus(404);
 
     return;
   }
 
-  expenses = filteredExpenses;
+  expenseService.remove(expenseId);
+
   res.sendStatus(204);
 };
 
 module.exports = {
-  getAllExpanses,
-  createNewExpanse,
-  getExpenseById,
-  changeExpanseFiled,
-  deleteExpense,
-  initialExpenses,
+  getAll,
+  create,
+  findById,
+  change,
+  remove,
 };
