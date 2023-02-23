@@ -3,22 +3,17 @@
 let expanses = [];
 let idsExpansesCounter = 0;
 
-function initialExpanses() {
+function setDefaultExpanses() {
   expanses = [];
   idsExpansesCounter = 0;
 }
 
-function create(userId, spentAt, title, amount, category, note) {
+function create(userData) {
   idsExpansesCounter++;
 
   const newExpanse = {
     id: idsExpansesCounter,
-    userId,
-    spentAt,
-    title,
-    amount,
-    category,
-    note,
+    ...userData,
   };
 
   expanses.push(newExpanse);
@@ -28,21 +23,13 @@ function create(userId, spentAt, title, amount, category, note) {
 
 function getAll({ userId, category, from, to }) {
   return expanses.filter((expense) => {
-    const isUserIdMatch = userId
-      ? expense.userId === +userId
-      : true;
+    const isUserIdMatch = userId ? expense.userId === +userId : true;
 
-    const isCategoryMatch = category
-      ? expense.category === category
-      : true;
+    const isCategoryMatch = category ? expense.category === category : true;
 
-    const isFromMatch = from
-      ? expense.spentAt >= from
-      : true;
+    const isFromMatch = from ? expense.spentAt >= from : true;
 
-    const isToMatch = to
-      ? expense.spentAt <= to
-      : true;
+    const isToMatch = to ? expense.spentAt <= to : true;
 
     return isUserIdMatch && isCategoryMatch && isFromMatch && isToMatch;
   });
@@ -65,7 +52,7 @@ function remove(expenseId) {
 }
 
 module.exports = {
-  initialExpanses,
+  setDefaultExpanses,
   create,
   getAll,
   getById,

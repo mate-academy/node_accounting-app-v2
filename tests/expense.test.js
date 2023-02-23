@@ -1,4 +1,3 @@
-/* eslint-disable */
 'use strict';
 
 const supertest = require('supertest');

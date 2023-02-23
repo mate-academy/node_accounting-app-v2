@@ -4,17 +4,15 @@ const expanseServise = require('../services/expenses');
 const userServise = require('../services/users');
 
 const add = (req, res) => {
-  const { userId, spentAt, title, amount, category, note } = req.body;
+  const { userId, spentAt, title, amount, category } = req.body;
 
   const foundUser = userServise.getById(userId);
 
-  const isValidData
-    = foundUser
+  const isValidData = foundUser
     && typeof spentAt === 'string'
     && typeof title === 'string'
     && typeof amount === 'number'
-    && typeof category === 'string'
-    && typeof note === 'string';
+    && typeof category === 'string';
 
   if (!isValidData) {
     res.sendStatus(400);
@@ -22,14 +20,9 @@ const add = (req, res) => {
     return;
   }
 
-  const newExpanse = expanseServise.create(
-    userId,
-    spentAt,
-    title,
-    amount,
-    category,
-    note
-  );
+  const userData = req.body;
+
+  const newExpanse = expanseServise.create(userData);
 
   res.statusCode = 201;
   res.send(newExpanse);

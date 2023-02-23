@@ -3,7 +3,7 @@
 let users = [];
 let idsUserCounter = 0;
 
-function initialUsers() {
+function setDefaultUsers() {
   users = [];
   idsUserCounter = 0;
 }
@@ -44,7 +44,7 @@ function update({ id, name }) {
 }
 
 module.exports = {
-  initialUsers,
+  setDefaultUsers,
   getAll,
   getById,
   create,

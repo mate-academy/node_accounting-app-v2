@@ -10,8 +10,8 @@ const { router: usersRouter } = require('./routes/users');
 const { router: expanseRouter } = require('./routes/expences');
 
 function createServer() {
-  userServise.initialUsers();
-  expanseServise.initialExpanses();
+  userServise.setDefaultUsers();
+  expanseServise.setDefaultExpanses();
 
   const app = express();
 
