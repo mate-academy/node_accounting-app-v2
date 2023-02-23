@@ -8,23 +8,25 @@ const getAll = ({ userId, category, from, to }) => {
     return [];
   }
 
-  if (userId) {
-    expenses = expenses.filter(expense => expense.userId === +userId);
-  }
+  return expenses.filter(expense => {
+    const isUserIdMatch = userId
+      ? expense.userId === +userId
+      : true;
 
-  if (category) {
-    expenses = expenses.filter(expense => expense.category === category);
-  }
+    const isCategoryMatch = category
+      ? expense.category === category
+      : true;
 
-  if (from) {
-    expenses = expenses.filter(expense => expense.spentAt >= from);
-  }
+    const isFromMatch = from
+      ? expense.spentAt >= from
+      : true;
 
-  if (to) {
-    expenses = expenses.filter(expense => expense.spentAt <= to);
-  }
+    const isToMatch = to
+      ? expense.spentAt <= to
+      : true;
 
-  return expenses;
+    return isUserIdMatch && isCategoryMatch && isFromMatch && isToMatch;
+  });
 };
 
 const create = (params) => {
@@ -38,20 +40,24 @@ const create = (params) => {
   return newExpense;
 };
 
-const getById = (expenseId) => {
+const findById = (expenseId) => {
   const foundExpense = expenses.find(expense => expense.id === +expenseId);
 
   return foundExpense || null;
 };
 
 const remove = (userId) => {
+  const initialLength = expenses.length;
+
   expenses = expenses.filter(user => user.id !== +userId);
 
-  return expenses;
+  const finalLength = expenses.length;
+
+  return finalLength < initialLength;
 };
 
 const update = (expenseId, params) => {
-  const expense = getById(expenseId);
+  const expense = findById(expenseId);
 
   Object.assign(expense, params);
 
@@ -63,5 +69,5 @@ const clear = () => {
 };
 
 module.exports = {
-  getAll, create, getById, remove, update, clear,
+  getAll, create, findById, remove, update, clear,
 };

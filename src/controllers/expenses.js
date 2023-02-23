@@ -4,25 +4,25 @@ const expensesService = require('../services/expenses.js');
 const userService = require('../services/users.js');
 
 const getAll = (req, res) => {
-  const query = req.query;
-  const expenses = expensesService.getAll(query);
+  const filters = req.query;
+  const expenses = expensesService.getAll(filters);
 
   res.statusCode = 200;
   res.send(expenses);
 };
 
-const add = (req, res) => {
-  const params = req.body;
+const create = (req, res) => {
+  const options = req.body;
 
-  const user = userService.getById(params.userId);
+  const user = userService.findById(options.userId);
 
-  if (!user || !(params)) {
+  if (!user || !options) {
     res.sendStatus(400);
 
     return;
   }
 
-  const newExpense = expensesService.create(params);
+  const newExpense = expensesService.create(options);
 
   res.statusCode = 201;
   res.send(newExpense);
@@ -30,10 +30,9 @@ const add = (req, res) => {
 
 const getOne = (req, res) => {
   const { expenseId } = req.params;
-  const foundExpense = expensesService.getById(expenseId);
+  const foundExpense = expensesService.findById(expenseId);
 
   if (!foundExpense) {
-    res.statusMessage = 'Not found';
     res.sendStatus(404);
 
     return;
@@ -43,10 +42,9 @@ const getOne = (req, res) => {
 
 const remove = (req, res) => {
   const { expenseId } = req.params;
-  const foundExpense = expensesService.getById(expenseId);
+  const foundExpense = expensesService.findById(expenseId);
 
   if (!foundExpense) {
-    res.statusMessage = 'Not found';
     res.sendStatus(404);
 
     return;
@@ -57,10 +55,10 @@ const remove = (req, res) => {
 };
 
 const update = (req, res) => {
-  const params = req.body;
+  const options = req.body;
   const { expenseId } = req.params;
 
-  const foundExpense = expensesService.getById(expenseId);
+  const foundExpense = expensesService.findById(expenseId);
 
   if (!foundExpense) {
     res.statusMessage = 'Not found';
@@ -69,18 +67,18 @@ const update = (req, res) => {
     return;
   }
 
-  if (!params) {
+  if (!options) {
     res.sendStatus(400);
 
     return;
   }
 
-  expensesService.update(expenseId, params);
+  expensesService.update(expenseId, options);
 
   res.statusCode = 200;
   res.send(foundExpense);
 };
 
 module.exports = {
-  getAll, add, getOne, remove, update,
+  getAll, create, getOne, remove, update,
 };

@@ -8,11 +8,10 @@ const getAll = (req, res) => {
   res.send(users);
 };
 
-const add = (req, res) => {
+const create = (req, res) => {
   const { name } = req.body;
 
   if (!name) {
-    res.statusMessage = 'Bad request';
     res.sendStatus(400);
 
     return;
@@ -26,10 +25,9 @@ const add = (req, res) => {
 
 const getOne = (req, res) => {
   const { userId } = req.params;
-  const foundUser = userService.getById(userId);
+  const foundUser = userService.findById(userId);
 
   if (!foundUser) {
-    res.statusMessage = 'Not found';
     res.sendStatus(404);
 
     return;
@@ -39,10 +37,9 @@ const getOne = (req, res) => {
 
 const remove = (req, res) => {
   const { userId } = req.params;
-  const foundUser = userService.getById(userId);
+  const foundUser = userService.findById(userId);
 
   if (!foundUser) {
-    res.statusMessage = 'Not found';
     res.sendStatus(404);
 
     return;
@@ -56,17 +53,15 @@ const update = (req, res) => {
   const { name } = req.body;
   const { userId } = req.params;
 
-  const foundUser = userService.getById(userId);
+  const foundUser = userService.findById(userId);
 
   if (!foundUser) {
-    res.statusMessage = 'Not found';
     res.sendStatus(404);
 
     return;
   }
 
   if (!name) {
-    res.statusMessage = 'Bad request';
     res.sendStatus(400);
 
     return;
@@ -81,5 +76,5 @@ const update = (req, res) => {
 };
 
 module.exports = {
-  getAll, add, getOne, remove, update,
+  getAll, create, getOne, remove, update,
 };

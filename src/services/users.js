@@ -16,20 +16,24 @@ const create = (name) => {
   return newUser;
 };
 
-const getById = (userId) => {
+const findById = (userId) => {
   const foundUser = users.find(user => user.id === +userId);
 
   return foundUser || null;
 };
 
 const remove = (userId) => {
+  const initialLength = users.length;
+
   users = users.filter(user => user.id !== +userId);
 
-  return users;
+  const finalLength = users.length;
+
+  return finalLength < initialLength;
 };
 
 const update = ({ userId, name }) => {
-  const user = getById(userId);
+  const user = findById(userId);
 
   Object.assign(user, { name });
 
@@ -41,5 +45,5 @@ const clear = () => {
 };
 
 module.exports = {
-  getAll, create, getById, remove, update, clear,
+  getAll, create, findById, remove, update, clear,
 };
