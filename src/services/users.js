@@ -12,7 +12,7 @@ function getAll() {
   return users;
 }
 
-function getById(userId) {
+function findById(userId) {
   const foundUser = users.find(user => user.id === +userId);
 
   return foundUser || null;
@@ -38,7 +38,7 @@ function remove(userId) {
 }
 
 function update({ id, name }) {
-  const user = getById(id);
+  const user = findById(id);
 
   Object.assign(user, { name });
 
@@ -48,7 +48,7 @@ function update({ id, name }) {
 module.exports = {
   emptyUsers,
   getAll,
-  getById,
+  findById,
   create,
   remove,
   update,

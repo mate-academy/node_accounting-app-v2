@@ -32,7 +32,7 @@ function getAll({ userId, category, from, to }) {
     : [];
 }
 
-function getById(expenseId) {
+function findById(expenseId) {
   const foundExpense = expenses.find(
     expense => expense.id === Number(expenseId)
   );
@@ -60,7 +60,7 @@ function remove(expenseId) {
 }
 
 function update(expenseId, expenseInfo) {
-  const expense = getById(expenseId);
+  const expense = findById(expenseId);
 
   Object.assign(expense, { ...expenseInfo });
 }
@@ -68,7 +68,7 @@ function update(expenseId, expenseInfo) {
 module.exports = {
   emptyExpenses,
   getAll,
-  getById,
+  findById,
   create,
   remove,
   update,

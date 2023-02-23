@@ -18,7 +18,7 @@ const getOne = (req, res) => {
     return;
   }
 
-  const foundUser = userService.getById(userId);
+  const foundUser = userService.findById(userId);
 
   if (!foundUser) {
     res.sendStatus(404);
@@ -47,7 +47,7 @@ const add = (req, res) => {
 const remove = (req, res) => {
   const { userId } = req.params;
 
-  const foundUser = userService.getById(userId);
+  const foundUser = userService.findById(userId);
 
   if (!foundUser) {
     res.sendStatus(404);
@@ -62,7 +62,7 @@ const remove = (req, res) => {
 
 const update = (req, res) => {
   const { userId } = req.params;
-  const foundUser = userService.getById(userId);
+  const foundUser = userService.findById(userId);
 
   if (!foundUser) {
     res.sendStatus(404);
