@@ -8,7 +8,7 @@ function getAll(req, res) {
   res.send(users);
 }
 
-function findById(req, res) {
+function getById(req, res) {
   const { userId } = req.params;
 
   if (!userId) {
@@ -79,7 +79,7 @@ function update(req, res) {
 
 module.exports = {
   getAll,
-  findById,
+  getById,
   create,
   remove,
   update,

@@ -18,7 +18,7 @@ function getAll(req, res) {
   res.send(expenses);
 }
 
-function findById(req, res) {
+function getById(req, res) {
   const { expenseId } = req.params;
 
   if (!expenseId) {
@@ -119,7 +119,7 @@ function update(req, res) {
 
 module.exports = {
   getAll,
-  findById,
+  getById,
   create,
   remove,
   update,
