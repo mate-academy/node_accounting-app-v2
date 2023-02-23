@@ -16,23 +16,24 @@ function getAll(userId, category, from, to) {
   if (category) {
     filteredExpenses = filteredExpenses
       .filter(expense => expense.category === category);
-
-    return filteredExpenses;
   }
 
   if (userId) {
     filteredExpenses = filteredExpenses.filter(expense =>
       (expense.userId === +userId));
-
-    return filteredExpenses;
   }
 
-  if (from && to) {
+  if (from) {
     filteredExpenses = filteredExpenses
-      .filter(expense => expense.spentAt >= from && expense.spentAt <= to);
-
-    return filteredExpenses;
+      .filter(expense => expense.spentAt >= from);
   }
+
+  if (to) {
+    filteredExpenses = filteredExpenses
+      .filter(expense => expense.spentAt <= to);
+  }
+
+  return filteredExpenses;
 };
 
 function findById(expenseId) {
@@ -41,7 +42,7 @@ function findById(expenseId) {
   return foundExpense || null;
 };
 
-function create(expense) {
+function create(...expense) {
   const newExpense = {
     id: getNewId(),
     ...expense,
@@ -58,7 +59,7 @@ function remove(expenseId) {
   return expenses;
 };
 
-function update({ title, id }) {
+function update({ id, title }) {
   const expense = findById(id);
 
   Object.assign(expense, { title });
