@@ -64,7 +64,8 @@ function create(req, res) {
     || !amount
     || !category
     || !userId
-    || !isAllDataValid) {
+    || !isAllDataValid
+  ) {
     res.sendStatus(400);
 
     return;

@@ -30,7 +30,13 @@ function create(name) {
 }
 
 function remove(userId) {
+  const initialLength = users.length;
+
   users = users.filter(user => user.id !== Number(userId));
+
+  const finalLength = users.length;
+
+  return finalLength < initialLength;
 }
 
 function update({ userId, fieldsToUpdate }) {

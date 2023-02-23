@@ -17,19 +17,22 @@ function getAll(query) {
     return [];
   }
 
-  filteredExpenses = filteredExpenses.filter((expense) =>
-    (!userId || expense.userId === Number(userId))
-    && (!category || category.includes(expense.category))
-    && (!from || expense.spentAt >= from)
-    && (!to || expense.spentAt <= to)
-  );
+  filteredExpenses = filteredExpenses.filter((expense) => {
+    const userIdMatches = !userId || expense.userId === Number(userId);
+    const categoryMatches = !category || category.includes(expense.category);
+    const fromMatches = !from || expense.spentAt >= from;
+    const toMatches = !to || expense.spentAt <= to;
+
+    return userIdMatches && categoryMatches && fromMatches && toMatches;
+  });
 
   return filteredExpenses;
 }
 
 function findById(expenseId) {
-  const foundExpense = expenses
-    .find(expense => expense.id === Number(expenseId));
+  const foundExpense = expenses.find(expense => (
+    expense.id === Number(expenseId)
+  ));
 
   return foundExpense || null;
 }
@@ -48,7 +51,13 @@ function create(expenseData) {
 };
 
 function remove(expenseId) {
+  const initialLength = expenses.length;
+
   expenses = expenses.filter(expense => expense.id !== Number(expenseId));
+
+  const finalLength = expenses.length;
+
+  return finalLength < initialLength;
 }
 
 function update({ expenseId, title }) {
