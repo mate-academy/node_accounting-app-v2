@@ -12,13 +12,13 @@ function getAll() {
   return users;
 }
 
-function getUserById(userId) {
+function findById(userId) {
   const foundUser = users.find(user => user.id === Number(userId));
 
   return foundUser || null;
 }
 
-function createUser(name) {
+function create(name) {
   const newUser = {
     id: generateId(users),
     name,
@@ -27,14 +27,14 @@ function createUser(name) {
   users.push(newUser);
 
   return newUser;
-};
+}
 
-function removeUser(userId) {
+function remove(userId) {
   users = users.filter(user => user.id !== Number(userId));
 }
 
-function updateUser({ userId, fieldsToUpdate }) {
-  const user = getUserById(userId);
+function update({ userId, fieldsToUpdate }) {
+  const user = findById(userId);
 
   Object.assign(user, { ...fieldsToUpdate });
 
@@ -43,9 +43,9 @@ function updateUser({ userId, fieldsToUpdate }) {
 
 module.exports = {
   getAll,
-  getUserById,
-  createUser,
-  removeUser,
-  updateUser,
+  findById,
+  create,
+  remove,
+  update,
   clearUsers,
 };

@@ -27,14 +27,14 @@ function getAll(query) {
   return filteredExpenses;
 }
 
-function getExpenseById(expenseId) {
+function findById(expenseId) {
   const foundExpense = expenses
     .find(expense => expense.id === Number(expenseId));
 
   return foundExpense || null;
 }
 
-function createExpense(expenseData) {
+function create(expenseData) {
   const newId = generateId(expenses);
 
   const newExpense = {
@@ -47,12 +47,12 @@ function createExpense(expenseData) {
   return newExpense;
 };
 
-function removeExpense(expenseId) {
+function remove(expenseId) {
   expenses = expenses.filter(expense => expense.id !== Number(expenseId));
 }
 
-function updateExpense({ expenseId, title }) {
-  const expense = getExpenseById(expenseId);
+function update({ expenseId, title }) {
+  const expense = findById(expenseId);
 
   Object.assign(expense, { title });
 
@@ -61,9 +61,9 @@ function updateExpense({ expenseId, title }) {
 
 module.exports = {
   getAll,
-  getExpenseById,
-  createExpense,
-  removeExpense,
-  updateExpense,
+  findById,
+  create,
+  remove,
+  update,
   clearExpenses,
 };

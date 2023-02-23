@@ -18,7 +18,7 @@ function getAll(req, res) {
   res.send(expenses);
 }
 
-function getExpenseId(req, res) {
+function findById(req, res) {
   const { expenseId } = req.params;
 
   if (!expenseId) {
@@ -27,7 +27,7 @@ function getExpenseId(req, res) {
     return;
   }
 
-  const foundExpense = expenseService.getExpenseById(expenseId);
+  const foundExpense = expenseService.findById(expenseId);
 
   if (!foundExpense) {
     res.sendStatus(404);
@@ -38,7 +38,7 @@ function getExpenseId(req, res) {
   res.send(foundExpense);
 }
 
-function addExpense(req, res) {
+function create(req, res) {
   const {
     userId,
     spentAt,
@@ -48,7 +48,7 @@ function addExpense(req, res) {
     note,
   } = req.body;
 
-  const foundUser = userService.getUserById(userId);
+  const foundUser = userService.findById(userId);
 
   const isAllDataValid = (
     typeof userId !== 'string'
@@ -70,7 +70,7 @@ function addExpense(req, res) {
     return;
   }
 
-  const newExpense = expenseService.createExpense({
+  const newExpense = expenseService.create({
     userId,
     spentAt,
     title,
@@ -83,10 +83,10 @@ function addExpense(req, res) {
   res.send(newExpense);
 }
 
-function deleteExpense(req, res) {
+function remove(req, res) {
   const { expenseId } = req.params;
 
-  const foundExpense = expenseService.getExpenseById(expenseId);
+  const foundExpense = expenseService.findById(expenseId);
 
   if (!foundExpense) {
     res.sendStatus(404);
@@ -94,15 +94,15 @@ function deleteExpense(req, res) {
     return;
   }
 
-  expenseService.removeExpense(expenseId);
+  expenseService.remove(expenseId);
   res.sendStatus(204);
 }
 
-function updateExpense(req, res) {
+function update(req, res) {
   const { expenseId } = req.params;
   const { title } = req.body;
 
-  const foundExpense = expenseService.getExpenseById(expenseId);
+  const foundExpense = expenseService.findById(expenseId);
 
   if (!foundExpense) {
     res.sendStatus(404);
@@ -110,7 +110,7 @@ function updateExpense(req, res) {
     return;
   }
 
-  expenseService.updateExpense({
+  expenseService.update({
     expenseId, title,
   });
 
@@ -119,8 +119,8 @@ function updateExpense(req, res) {
 
 module.exports = {
   getAll,
-  getExpenseId,
-  addExpense,
-  deleteExpense,
-  updateExpense,
+  findById,
+  create,
+  remove,
+  update,
 };

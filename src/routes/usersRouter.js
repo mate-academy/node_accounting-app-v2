@@ -7,12 +7,12 @@ const userRouter = express.Router();
 
 userRouter.get('/', userController.getAll);
 
-userRouter.get('/:userId', userController.getUserId);
+userRouter.get('/:userId', userController.findById);
 
-userRouter.post('/', express.json(), userController.addUser);
+userRouter.post('/', express.json(), userController.create);
 
-userRouter.delete('/:userId', userController.deleteUser);
+userRouter.delete('/:userId', userController.remove);
 
-userRouter.patch('/:userId', express.json(), userController.updateUser);
+userRouter.patch('/:userId', express.json(), userController.update);
 
 module.exports = { userRouter };

@@ -8,7 +8,7 @@ function getAll(req, res) {
   res.send(users);
 }
 
-function getUserId(req, res) {
+function findById(req, res) {
   const { userId } = req.params;
 
   if (!userId) {
@@ -17,7 +17,7 @@ function getUserId(req, res) {
     return;
   }
 
-  const foundUser = userService.getUserById(userId);
+  const foundUser = userService.findById(userId);
 
   if (!foundUser) {
     res.sendStatus(404);
@@ -28,7 +28,7 @@ function getUserId(req, res) {
   res.send(foundUser);
 }
 
-function addUser(req, res) {
+function create(req, res) {
   const { name } = req.body;
 
   if (!name) {
@@ -37,16 +37,16 @@ function addUser(req, res) {
     return;
   }
 
-  const newUser = userService.createUser(name);
+  const newUser = userService.create(name);
 
   res.statusCode = 201;
   res.send(newUser);
 }
 
-function deleteUser(req, res) {
+function remove(req, res) {
   const { userId } = req.params;
 
-  const foundUser = userService.getUserById(userId);
+  const foundUser = userService.findById(userId);
 
   if (!foundUser) {
     res.sendStatus(404);
@@ -54,15 +54,15 @@ function deleteUser(req, res) {
     return;
   }
 
-  userService.removeUser(userId);
+  userService.remove(userId);
   res.sendStatus(204);
 }
 
-function updateUser(req, res) {
+function update(req, res) {
   const { userId } = req.params;
   const fieldsToUpdate = req.body;
 
-  const foundUser = userService.getUserById(userId);
+  const foundUser = userService.findById(userId);
 
   if (!foundUser) {
     res.sendStatus(404);
@@ -70,7 +70,7 @@ function updateUser(req, res) {
     return;
   }
 
-  userService.updateUser({
+  userService.update({
     userId, fieldsToUpdate,
   });
 
@@ -79,8 +79,8 @@ function updateUser(req, res) {
 
 module.exports = {
   getAll,
-  getUserId,
-  addUser,
-  deleteUser,
-  updateUser,
+  findById,
+  create,
+  remove,
+  update,
 };
