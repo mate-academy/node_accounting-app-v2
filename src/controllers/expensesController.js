@@ -57,7 +57,21 @@ function addExpense(req, res) {
 
   const foundUser = userService.getUserById(userId);
 
-  if (!foundUser || !title || !amount || !category || !userId) {
+  const isAllDataValid = (
+    typeof userId !== 'string'
+    || typeof spentAt !== 'string'
+    || typeof title !== 'string'
+    || typeof amount !== 'number'
+    || typeof category !== 'string'
+    || typeof note !== 'string'
+  );
+
+  if (!foundUser
+    || !title
+    || !amount
+    || !category
+    || !userId
+    || !isAllDataValid) {
     res.sendStatus(400);
 
     return;

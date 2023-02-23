@@ -17,25 +17,12 @@ function getAll(query) {
     return [];
   }
 
-  if (userId) {
-    filteredExpenses = filteredExpenses
-      .filter((expense) => expense.userId === Number(userId));
-  }
-
-  if (category) {
-    filteredExpenses = filteredExpenses
-      .filter((expense) => category.includes(expense.category));
-  }
-
-  if (from) {
-    filteredExpenses = filteredExpenses
-      .filter((expense) => expense.spentAt >= from);
-  }
-
-  if (to) {
-    filteredExpenses = filteredExpenses
-      .filter((expense) => expense.spentAt <= to);
-  }
+  filteredExpenses = filteredExpenses.filter((expense) =>
+    (!userId || expense.userId === Number(userId))
+    && (!category || category.includes(expense.category))
+    && (!from || expense.spentAt >= from)
+    && (!to || expense.spentAt <= to)
+  );
 
   return filteredExpenses;
 }
