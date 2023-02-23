@@ -11,10 +11,10 @@ const getAll = (req, res) => {
   res.send(expenses);
 };
 
-const getOne = (req, res) => {
+const findExpenseById = (req, res) => {
   const { expenseId } = req.params;
 
-  const wantedExpense = expensesService.getExpenseById(expenseId);
+  const wantedExpense = expensesService.findExpenseById(expenseId);
 
   if (!wantedExpense) {
     res.sendStatus(404);
@@ -100,7 +100,7 @@ const remove = (req, res) => {
 
 module.exports = {
   getAll,
-  getOne,
+  findExpenseById,
   add,
   update,
   remove,

@@ -12,7 +12,7 @@ function getAll() {
   return users;
 }
 
-function getUserById(userId) {
+function findUserById(userId) {
   const wantedUser = users.find(user => user.id === Number(userId));
 
   return wantedUser || null;
@@ -40,7 +40,7 @@ function deleteUser(userId) {
 module.exports = {
   setInitialUsers,
   getAll,
-  getUserById,
+  findUserById,
   createUser,
   patchUser,
   deleteUser,

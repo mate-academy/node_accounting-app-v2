@@ -6,7 +6,7 @@ const expensesRouter = express.Router();
 
 expensesRouter.get('/', expensesController.getAll);
 
-expensesRouter.get('/:expenseId', expensesController.getOne);
+expensesRouter.get('/:expenseId', expensesController.findExpenseById);
 
 expensesRouter.post('/', express.json(), expensesController.add);
 

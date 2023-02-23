@@ -8,9 +8,9 @@ const getAll = (req, res) => {
   res.send(users);
 };
 
-const getOne = (req, res) => {
+const findUserById = (req, res) => {
   const { userId } = req.params;
-  const wantedUser = usersService.getUserById(userId);
+  const wantedUser = usersService.findUserById(userId);
 
   if (!wantedUser) {
     res.sendStatus(404);
@@ -74,7 +74,7 @@ const remove = (req, res) => {
 
 module.exports = {
   getAll,
-  getOne,
+  findUserById,
   add,
   update,
   remove,

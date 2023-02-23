@@ -32,7 +32,7 @@ function getAll(params) {
   });
 };
 
-function getExpenseById(expenseId) {
+function findExpenseById(expenseId) {
   const wantedExpense = expenses.find(exp => exp.id === Number(expenseId));
 
   return wantedExpense || null;
@@ -50,7 +50,7 @@ function createExpense(data) {
 }
 
 function patchExpense(expenseId, dataToUpdate) {
-  const wantedExpense = getExpenseById(expenseId);
+  const wantedExpense = findExpenseById(expenseId);
 
   const updatedExpense = Object.assign(wantedExpense, dataToUpdate);
 
@@ -64,7 +64,7 @@ function deleteExpense(expenseId) {
 module.exports = {
   setInitialExpensees,
   getAll,
-  getExpenseById,
+  findExpenseById,
   createExpense,
   patchExpense,
   deleteExpense,
