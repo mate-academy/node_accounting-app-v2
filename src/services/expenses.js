@@ -17,29 +17,31 @@ const getExpenses = (params) => {
     return [];
   }
 
-  let filteredExpenses = expenses;
+  return expenses.filter(expense => {
+    const isUserId = userId
+      ? expense.userId === +userId
+      : true;
 
-  if (userId) {
-    filteredExpenses = filteredExpenses
-      .filter(expense => expense.userId === +userId);
-  }
+    const isCategory = category
+      ? expense.category === category
+      : true;
 
-  if (category) {
-    filteredExpenses = filteredExpenses
-      .filter(expense => expense.category === category);
-  }
+    const isFrom = from
+      ? expense.spentAt >= from
+      : true;
 
-  if (from) {
-    filteredExpenses = filteredExpenses
-      .filter(expense => expense.spentAt >= from);
-  }
+    const isTo = to
+      ? expense.spentAt <= to
+      : true;
 
-  if (to) {
-    filteredExpenses = filteredExpenses
-      .filter(expense => expense.spentAt <= to);
-  }
+    const isEveryTrue = isUserId && isCategory && isFrom && isTo;
 
-  return filteredExpenses;
+    if (isEveryTrue) {
+      return true;
+    }
+
+    return false;
+  });
 };
 
 const createExpense = (expense) => {
