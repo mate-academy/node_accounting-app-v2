@@ -4,14 +4,7 @@ const expenseService = require('../services/expencesServices');
 const userService = require('../services/usersServices');
 
 function getAll(req, res) {
-  const { userId, category, from, to } = req.query;
-
-  const searchParams = {
-    userId,
-    category,
-    from,
-    to,
-  };
+  const searchParams = req.query;
 
   if (!searchParams) {
     res.sendStatus(400);
