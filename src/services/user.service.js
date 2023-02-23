@@ -1,8 +1,10 @@
+'use strict';
+
 const { generateId } = require('../helpers/generateId');
 
 let users = [];
 
-function setInitialUsers() {
+function setInitialValue() {
   users = [];
 };
 
@@ -20,9 +22,10 @@ function create(name) {
   const newUser = {
     id: generateId(users),
     name: name,
-  }
+  };
 
   users.push(newUser);
+
   return newUser;
 }
 
@@ -41,7 +44,7 @@ function update(userId, name) {
 }
 
 module.exports = {
-  setInitialUsers,
+  setInitialValue,
   getAll,
   findById,
   create,

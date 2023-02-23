@@ -1,3 +1,5 @@
+'use strict';
+
 function generateId(dataArray) {
   const dataIds = dataArray.map(item => item.id);
 

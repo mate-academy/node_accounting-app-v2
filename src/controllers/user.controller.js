@@ -1,3 +1,5 @@
+'use strict';
+
 const userService = require('../services/user.service');
 
 function getAll(req, res) {
@@ -12,6 +14,7 @@ function findById(req, res) {
 
   if (!foundUser) {
     res.sendStatus(404);
+
     return;
   }
 
@@ -24,6 +27,7 @@ function create(req, res) {
 
   if (!name) {
     res.sendStatus(400);
+
     return;
   }
 
@@ -39,6 +43,7 @@ function remove(req, res) {
 
   if (!foundUser) {
     res.sendStatus(404);
+
     return;
   }
 
@@ -54,11 +59,13 @@ function update(req, res) {
 
   if (!foundUser) {
     res.sendStatus(404);
+
     return;
   }
 
   if (typeof name !== 'string') {
     res.sendStatus(422);
+
     return;
   }
 
@@ -74,4 +81,4 @@ module.exports = {
   create,
   remove,
   update,
-}
+};
