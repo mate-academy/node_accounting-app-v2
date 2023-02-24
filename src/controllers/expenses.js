@@ -43,7 +43,7 @@ const add = (req, res) => {
     && category
     && note;
 
-  const user = usersService.getUserById(userId);
+  const user = usersService.findUserById(userId);
 
   if (!user || !isAllDataProvided) {
     res.sendStatus(400);
@@ -62,7 +62,7 @@ const add = (req, res) => {
 const update = (req, res) => {
   const { expenseId } = req.params;
   const { title } = req.body;
-  const wantedExpense = expensesService.getExpenseById(expenseId);
+  const wantedExpense = expensesService.findExpenseById(expenseId);
 
   if (!wantedExpense) {
     res.sendStatus(404);
@@ -85,7 +85,7 @@ const update = (req, res) => {
 
 const remove = (req, res) => {
   const { expenseId } = req.params;
-  const wantedExpense = expensesService.getExpenseById(expenseId);
+  const wantedExpense = expensesService.findExpenseById(expenseId);
 
   if (!wantedExpense) {
     res.sendStatus(404);

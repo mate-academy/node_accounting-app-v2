@@ -39,7 +39,7 @@ const add = (req, res) => {
 const update = (req, res) => {
   const { userId } = req.params;
   const { name } = req.body;
-  const wantedUser = usersService.getUserById(userId);
+  const wantedUser = usersService.findUserById(userId);
 
   if (!wantedUser) {
     res.sendStatus(404);
@@ -60,7 +60,7 @@ const update = (req, res) => {
 
 const remove = (req, res) => {
   const { userId } = req.params;
-  const userToDelete = usersService.getUserById(userId);
+  const userToDelete = usersService.findUserById(userId);
 
   if (!userToDelete) {
     res.sendStatus(404);
