@@ -43,19 +43,13 @@ const expensesController = {
 
     const foundUser = usersService.getById(userId);
 
-    const isAllDataProvided = userId
-      && spentAt
-      && title
-      && amount
-      && category;
-
     const isAllDataValid = foundUser
       && typeof spentAt === 'string'
       && typeof title === 'string'
       && typeof amount === 'number'
       && typeof category === 'string';
 
-    if (!isAllDataValid || !isAllDataProvided) {
+    if (!isAllDataValid) {
       res.sendStatus(400);
 
       return;
