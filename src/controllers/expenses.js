@@ -11,7 +11,12 @@ const getAll = (req, res) => {
     to,
   } = req.query;
 
-  const expenses = expensesService.getAll(userId, category, from, to);
+  const expenses = expensesService.getAll({
+    userId,
+    category,
+    from,
+    to,
+  });
 
   res.send(expenses);
 };
@@ -19,15 +24,15 @@ const getAll = (req, res) => {
 const getOne = (req, res) => {
   const { expenseId } = req.params;
 
-  const foundExpense = expensesService.getbyId(expenseId);
+  const expense = expensesService.getbyId(expenseId);
 
-  if (!foundExpense) {
+  if (!expense) {
     res.sendStatus(404);
 
     return;
   }
 
-  res.send(foundExpense);
+  res.send(expense);
 };
 
 function add(req, res) {
@@ -40,9 +45,9 @@ function add(req, res) {
     note,
   } = req.body;
 
-  const foundUser = usersService.getbyId(userId);
+  const user = usersService.getbyId(userId);
 
-  if (!foundUser) {
+  if (!user) {
     res.sendStatus(400);
 
     return;
@@ -63,9 +68,9 @@ function add(req, res) {
 
 function remove(req, res) {
   const { expenseId } = req.params;
-  const foundExpenses = expensesService.getbyId(expenseId);
+  const expense = expensesService.getbyId(expenseId);
 
-  if (!foundExpenses) {
+  if (!expense) {
     res.sendStatus(404);
 
     return;
@@ -77,9 +82,9 @@ function remove(req, res) {
 
 function update(req, res) {
   const { expenseId } = req.params;
-  const foundExpense = expensesService.getbyId(expenseId);
+  const expense = expensesService.getbyId(expenseId);
 
-  if (!foundExpense) {
+  if (!expense) {
     res.sendStatus(404);
 
     return;

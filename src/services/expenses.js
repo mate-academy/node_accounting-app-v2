@@ -6,36 +6,29 @@ function clear() {
   expenses = [];
 }
 
-function getAll(userId, category, from, to) {
-  let currentExpenses = expenses;
+function getAll({ userId, category, from, to }) {
+  return expenses.filter(expense => {
+    const isUserFilter = userId
+      ? expense.userId === +userId
+      : true;
+    const isCategoryFilter = category
+      ? expense.category === category
+      : true;
+    const isFromFilter = from
+      ? expense.spentAt >= from
+      : true;
+    const isToFilter = to
+      ? expense.spentAt <= to
+      : true;
 
-  if (userId) {
-    currentExpenses = currentExpenses
-      .filter(expense => expense.userId === +userId);
-  }
-
-  if (category) {
-    currentExpenses = currentExpenses
-      .filter(expense => expense.category === category);
-  }
-
-  if (from) {
-    currentExpenses = currentExpenses
-      .filter(expense => expense.spentAt >= from);
-  }
-
-  if (to) {
-    currentExpenses = currentExpenses
-      .filter(expense => expense.spentAt <= to);
-  }
-
-  return currentExpenses;
+    return isUserFilter && isCategoryFilter && isFromFilter && isToFilter;
+  });
 };
 
 function getbyId(expenseId) {
-  const foundExpense = expenses.find(expense => expense.id === +expenseId);
+  const expenseFound = expenses.find(expense => expense.id === +expenseId);
 
-  return foundExpense || null;
+  return expenseFound || null;
 }
 
 function create(userId, spentAt, title, amount, category, note) {

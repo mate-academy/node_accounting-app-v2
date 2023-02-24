@@ -11,9 +11,9 @@ function getAll() {
 };
 
 function getbyId(userId) {
-  const foundUser = users.find(user => user.id === +userId);
+  const userFound = users.find(user => user.id === +userId);
 
-  return foundUser || null;
+  return userFound || null;
 }
 
 function create(name) {
