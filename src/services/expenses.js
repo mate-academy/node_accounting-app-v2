@@ -55,7 +55,7 @@ const createExpense = (expense) => {
   return newExpense;
 };
 
-const getExpensesById = (expenseId) => {
+const findExpenseById = (expenseId) => {
   return expenses.find(expense => expense.id === +expenseId) || null;
 };
 
@@ -64,7 +64,7 @@ const deleteExpense = (expenseId) => {
 };
 
 const updateExpense = (id, params) => {
-  const expense = getExpensesById(id);
+  const expense = findExpenseById(id);
 
   Object.assign(expense, params);
 
@@ -74,7 +74,7 @@ const updateExpense = (id, params) => {
 module.exports = {
   getExpenses,
   createExpense,
-  getExpensesById,
+  findExpenseById,
   deleteExpense,
   updateExpense,
   resetExpenses,

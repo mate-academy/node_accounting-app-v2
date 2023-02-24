@@ -2,7 +2,7 @@
 
 const userService = require('../services/users');
 
-const getAll = (request, response) => {
+const getAll = (_, response) => {
   const users = userService.getAllUsers();
 
   response.send(users);
@@ -11,27 +11,27 @@ const getAll = (request, response) => {
 const getOne = (request, response) => {
   const { userId } = request.params;
 
-  if (typeof +userId !== 'number') {
+  if (isNaN(userId)) {
     response.sendStatus(400);
 
     return;
   }
 
-  const foundUser = userService.getUserById(userId);
+  const user = userService.getUserById(userId);
 
-  if (!foundUser) {
+  if (!user) {
     response.sendStatus(404);
 
     return;
   }
 
-  response.send(foundUser);
+  response.send(user);
 };
 
 const add = (request, response) => {
   const { name } = request.body;
 
-  if (!name) {
+  if (!name || !name.length) {
     response.sendStatus(400);
 
     return;
@@ -46,9 +46,9 @@ const add = (request, response) => {
 
 const remove = (request, response) => {
   const { userId } = request.params;
-  const foundUser = userService.getUserById(userId);
+  const user = userService.getUserById(userId);
 
-  if (!foundUser) {
+  if (!user) {
     response.sendStatus(404);
 
     return;
@@ -60,9 +60,9 @@ const remove = (request, response) => {
 
 const update = (request, response) => {
   const { userId } = request.params;
-  const foundUser = userService.getUserById(userId);
+  const user = userService.getUserById(userId);
 
-  if (!foundUser) {
+  if (!user) {
     response.sendStatus(404);
 
     return;

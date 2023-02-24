@@ -6,9 +6,9 @@ const { getUserById } = require('../services/users');
 const createExpense = (request, response) => {
   const params = request.body;
 
-  const foundUser = getUserById(params.userId);
+  const user = getUserById(params.userId);
 
-  if (!foundUser || !params) {
+  if (!user || !params) {
     response.sendStatus(400);
 
     return;
@@ -23,15 +23,15 @@ const createExpense = (request, response) => {
 const getExpenses = (request, response) => {
   const params = request.query;
 
-  const foundExpenses = expenseService
+  const expenses = expenseService
     .getExpenses(params);
 
-  response.send(foundExpenses);
+  response.send(expenses);
 };
 
 const getExpense = (request, response) => {
   const { id } = request.params;
-  const expense = expenseService.getExpensesById(id);
+  const expense = expenseService.findExpenseById(id);
 
   if (!expense) {
     response.sendStatus(404);
@@ -43,16 +43,16 @@ const getExpense = (request, response) => {
 };
 
 const removeExpense = (request, response) => {
-  const { id } = request.params;
-  const foundExpense = expenseService.getExpensesById(id);
+  const id = Number(request.params.id);
+  const expense = expenseService.findExpenseById(id);
 
-  if (isNaN(+id)) {
+  if (isNaN(id)) {
     response.sendStatus(400);
 
     return;
   }
 
-  if (!foundExpense) {
+  if (!expense) {
     response.sendStatus(404);
 
     return;
@@ -67,9 +67,9 @@ const updateExpense = (req, res) => {
   const { id } = req.params;
   const params = req.body;
 
-  const foundExpense = expenseService.getExpensesById(id);
+  const expense = expenseService.findExpenseById(id);
 
-  if (!foundExpense) {
+  if (!expense) {
     res.sendStatus(404);
 
     return;
@@ -77,7 +77,7 @@ const updateExpense = (req, res) => {
 
   expenseService.updateExpense(id, params);
 
-  res.send(foundExpense);
+  res.send(expense);
 };
 
 module.exports = {
