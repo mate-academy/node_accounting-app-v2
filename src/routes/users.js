@@ -7,9 +7,9 @@ const router = express.Router();
 
 router.get('/', usersController.getAll);
 router.get('/:userId', usersController.getOne);
-router.post('/', usersController.add);
+router.post('/', express.json(), usersController.add);
 router.delete('/:userId', usersController.remove);
-router.patch('/:userId', usersController.update);
+router.patch('/:userId', express.json(), usersController.update);
 
 module.exports = {
   router,

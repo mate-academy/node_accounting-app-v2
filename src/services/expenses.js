@@ -1,51 +1,45 @@
 'use strict';
 
+const { getNewId } = require('./helper');
+
 let expenses = [];
 
-function getNewId() {
-  if (!expenses.length) {
-    return 1;
-  }
+function getAll({ userId, category, from, to }) {
+  return expenses.length
+    ? expenses.filter(expense => {
+      const isUserIdMatch = userId
+        ? expense.userId === +userId
+        : true;
 
-  return Math.max(...expenses.map(user => user.id)) + 1;
-};
+      const isCategoryMatch = category
+        ? expense.category === category
+        : true;
 
-function getAll(userId, category, from, to) {
-  let filteredExpenses = [...expenses];
+      const isFromMatch = from
+        ? expense.spentAt >= from
+        : true;
 
-  if (category) {
-    filteredExpenses = filteredExpenses
-      .filter(expense => expense.category === category);
-  }
+      const isToMatch = to
+        ? expense.spentAt <= to
+        : true;
 
-  if (userId) {
-    filteredExpenses = filteredExpenses.filter(expense =>
-      (expense.userId === +userId));
-  }
-
-  if (from) {
-    filteredExpenses = filteredExpenses
-      .filter(expense => expense.spentAt >= from);
-  }
-
-  if (to) {
-    filteredExpenses = filteredExpenses
-      .filter(expense => expense.spentAt <= to);
-  }
-
-  return filteredExpenses;
-};
+      return isUserIdMatch && isCategoryMatch && isFromMatch && isToMatch;
+    })
+    : [];
+}
 
 function findById(expenseId) {
-  const foundExpense = expenses.find(expense => expense.id === +expenseId);
+  const foundExpense = expenses.find(
+    expense => expense.id === Number(expenseId)
+  );
 
   return foundExpense || null;
-};
+}
 
-function create(...expense) {
+function create(expenseData) {
   const newExpense = {
-    id: getNewId(),
-    ...expense,
+    id: getNewId(expenses),
+    ...expenseData,
   };
 
   expenses.push(newExpense);
@@ -55,16 +49,12 @@ function create(...expense) {
 
 function remove(expenseId) {
   expenses = expenses.filter(expense => expense.id !== +expenseId);
+}
 
-  return expenses;
-};
+function update(expenseId, expenseInfo) {
+  const expense = findById(expenseId);
 
-function update({ id, title }) {
-  const expense = findById(id);
-
-  Object.assign(expense, { title });
-
-  return expense;
+  Object.assign(expense, { ...expenseInfo });
 }
 
 function reset() {

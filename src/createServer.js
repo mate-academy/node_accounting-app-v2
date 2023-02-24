@@ -14,10 +14,10 @@ function createServer() {
 
   app.use(cors());
 
-  app.use('/users', express.json(), usersRouter);
+  app.use('/users', usersRouter);
   usersService.reset();
 
-  app.use('/expenses', express.json(), expensesRouter);
+  app.use('/expenses', expensesRouter);
   expensesService.reset();
 
   return app;

@@ -18,7 +18,7 @@ const getOne = (req, res) => {
 
     return;
   }
-  res.statusCode(200);
+
   res.send(foundExpense);
 };
 
@@ -34,14 +34,15 @@ const add = (req, res) => {
 
   const foundUser = usersService.findById(userId);
 
-  const isValidBody = foundUser
+  const isValidBody
+  = typeof userId === 'number'
     && typeof spentAt === 'string'
     && typeof title === 'string'
     && typeof amount === 'number'
     && typeof note === 'string'
     && typeof category === 'string';
 
-  if (!isValidBody) {
+  if (!isValidBody || !foundUser) {
     res.sendStatus(400);
 
     return;
@@ -49,7 +50,7 @@ const add = (req, res) => {
 
   const newExpense = expensesService.create(req.body);
 
-  res.sendStatus = 201;
+  res.statusCode = 201;
   res.send(newExpense);
 };
 
@@ -69,6 +70,8 @@ const remove = (req, res) => {
 
 const update = (req, res) => {
   const { expenseId } = req.params;
+  const data = req.body;
+
   const foundExpense = expensesService.findById(expenseId);
 
   if (!foundExpense) {
@@ -77,11 +80,8 @@ const update = (req, res) => {
     return;
   }
 
-  const data = req.body;
+  expensesService.update(expenseId, data);
 
-  expensesService.update({
-    expenseId, data,
-  });
   res.send(foundExpense);
 };
 
