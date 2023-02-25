@@ -34,16 +34,16 @@ const add = (req, res) => {
     note,
   } = req.body;
 
-  const isDataValid = typeof userId !== 'number'
-    || typeof spentAt !== 'string'
-    || typeof title !== 'string'
-    || typeof amount !== 'number'
-    || typeof category !== 'string'
-    || typeof note !== 'string';
+  const isDataValid = typeof userId === 'number'
+    || typeof spentAt === 'string'
+    || typeof title === 'string'
+    || typeof amount === 'number'
+    || typeof category === 'string'
+    || typeof note === 'string';
 
   const foundUser = userService.findById(userId);
 
-  if (isDataValid || !foundUser) {
+  if (!isDataValid || !foundUser) {
     res.sendStatus(400);
 
     return;

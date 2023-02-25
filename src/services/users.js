@@ -1,8 +1,10 @@
 'use strict';
 
+const { generateId } = require('../helpers/idGenerator');
+
 let users = [];
 
-function emptyUsers() {
+function setInitial() {
   users = [];
 
   return users;
@@ -13,18 +15,14 @@ function getAll() {
 }
 
 function findById(userId) {
-  const foundUser = users.find(user => user.id === +userId);
-
-  return foundUser || null;
+  return users.find(user => user.id === +userId) || null;
 }
 
 function create(name) {
-  const maxId = users.length
-    ? Math.max(...users.map(user => user.id)) + 1
-    : 0;
+  const newId = generateId(users);
 
   const newUser = {
-    id: maxId,
+    id: newId,
     name,
   };
 
@@ -46,7 +44,7 @@ function update({ id, name }) {
 }
 
 module.exports = {
-  emptyUsers,
+  setInitial,
   getAll,
   findById,
   create,

@@ -1,53 +1,49 @@
 'use strict';
 
+const { generateId } = require('../helpers/idGenerator');
+
 let expenses = [];
 
-function emptyExpenses() {
+function setInitial() {
   expenses = [];
 
   return expenses;
 }
 
 function getAll({ userId, category, from, to }) {
-  return expenses.length
-    ? expenses.filter(expense => {
-      const isUserIdMatch = userId
-        ? expense.userId === +userId
-        : true;
+  return expenses.filter(expense => {
+    const isUserIdMatch = userId
+      ? expense.userId === +userId
+      : true;
 
-      const isCategoryMatch = category
-        ? expense.category === category
-        : true;
+    const isCategoryMatch = category
+      ? expense.category === category
+      : true;
 
-      const isFromMatch = from
-        ? expense.spentAt >= from
-        : true;
+    const isFromMatch = from
+      ? expense.spentAt >= from
+      : true;
 
-      const isToMatch = to
-        ? expense.spentAt <= to
-        : true;
+    const isToMatch = to
+      ? expense.spentAt <= to
+      : true;
 
-      return isUserIdMatch && isCategoryMatch && isFromMatch && isToMatch;
-    })
-    : [];
+    return isUserIdMatch && isCategoryMatch && isFromMatch && isToMatch;
+  });
 }
 
 function findById(expenseId) {
-  const foundExpense = expenses.find(
+  return expenses.find(
     expense => expense.id === Number(expenseId)
-  );
-
-  return foundExpense || null;
+  ) || null;
 }
 
 function create(expenseData) {
-  const maxId = expenses.length
-    ? Math.max(...expenses.map(user => user.id)) + 1
-    : 0;
+  const newId = generateId(expenses);
 
   const newExpense = {
     ...expenseData,
-    id: maxId,
+    id: newId,
   };
 
   expenses.push(newExpense);
@@ -66,7 +62,7 @@ function update(expenseId, expenseInfo) {
 }
 
 module.exports = {
-  emptyExpenses,
+  setInitial,
   getAll,
   findById,
   create,
