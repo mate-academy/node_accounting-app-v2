@@ -2,6 +2,10 @@
 
 let users = [];
 
+const getInitial = () => {
+  users = [];
+};
+
 const getAll = () => users;
 
 const create = (options) => {
@@ -39,6 +43,7 @@ const update = ({ id, name }) => {
 
 module.exports = {
   userService: {
+    getInitial,
     getAll,
     create,
     findById,

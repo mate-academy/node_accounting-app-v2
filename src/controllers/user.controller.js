@@ -34,7 +34,7 @@ const create = (req, res) => {
 const getById = (req, res) => {
   const userId = Number(req.params.userId);
 
-  const isUserIdValid = typeof userId === 'number';
+  const isUserIdValid = !isNaN(userId);
 
   if (!isUserIdValid) {
     res.sendStatus(422);
@@ -60,7 +60,16 @@ const getById = (req, res) => {
 };
 
 const remove = (req, res) => {
-  const { userId } = req.params;
+  const userId = Number(req.params.userId);
+
+  const isUserIdValid = !isNaN(userId);
+
+  if (!isUserIdValid) {
+    res.sendStatus(422);
+
+    return;
+  }
+
   const foundUser = userService.findById(userId);
 
   if (!foundUser) {
@@ -80,18 +89,26 @@ const remove = (req, res) => {
 };
 
 const update = (req, res) => {
-  const { userId } = req.params;
+  const userId = Number(req.params.userId);
 
-  const foundUser = userService.findById(userId);
+  const isUserIdValid = !isNaN(userId);
 
-  if (!userId) {
-    res.sendStatus(400);
+  if (!isUserIdValid) {
+    res.sendStatus(422);
 
     return;
   }
 
+  const foundUser = userService.findById(userId);
+
   if (!foundUser) {
     res.sendStatus(404);
+
+    return;
+  }
+
+  if (!userId) {
+    res.sendStatus(400);
 
     return;
   }
