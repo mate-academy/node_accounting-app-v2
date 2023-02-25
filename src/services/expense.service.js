@@ -6,7 +6,40 @@ const getInitial = () => {
   expenses = [];
 };
 
-const getAll = () => expenses;
+const getAll = (userId, from, to, category) => {
+  if (!userId && !from && !to && !category) {
+    return expenses;
+  };
+
+  return expenses.filter(e => {
+    const isFilteredByUser = userId
+      ? e.userId === userId
+      : true;
+
+    const isFilteredByDates = from && to
+      ? getAllBetweenDates(from, to).includes(e)
+      : true;
+
+    const isFilteredByCategory = category
+      ? e.category === category
+      : true;
+
+    return isFilteredByUser && isFilteredByDates && isFilteredByCategory;
+  });
+};
+
+const getAllBetweenDates = (from, to) => {
+  const parsedFromDate = Date.parse(from);
+  const parsedToDate = Date.parse(to);
+
+  const foundExpenses = expenses.filter(e => {
+    const parsedExpense = Date.parse(e.spentAt);
+
+    return parsedExpense >= parsedFromDate && parsedExpense <= parsedToDate;
+  });
+
+  return foundExpenses;
+};
 
 const create = (options) => {
   const maxId = expenses.length
@@ -27,31 +60,6 @@ const findById = (expenseId) => {
   const foundExpense = expenses.find(e => e.id === expenseId);
 
   return foundExpense || null;
-};
-
-const getAllForUser = (userId) => {
-  const foundExpenses = expenses.filter(e => e.userId === userId);
-
-  return foundExpenses;
-};
-
-const getAllBetweenDates = (from, to) => {
-  const parsedFromDate = Date.parse(from);
-  const parsedToDate = Date.parse(to);
-
-  const foundExpenses = expenses.filter(e => {
-    const parsedExpense = Date.parse(e.spentAt);
-
-    return parsedExpense >= parsedFromDate && parsedExpense <= parsedToDate;
-  });
-
-  return foundExpenses;
-};
-
-const getAllByCategory = (category) => {
-  const foundExpenses = expenses.filter(e => e.category === category);
-
-  return foundExpenses;
 };
 
 const remove = (expenseId) => {
@@ -75,9 +83,7 @@ module.exports = {
     getAll,
     create,
     findById,
-    getAllForUser,
     getAllBetweenDates,
-    getAllByCategory,
     remove,
     update,
   },

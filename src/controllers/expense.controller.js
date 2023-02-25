@@ -7,12 +7,6 @@ const { userService } = require('../services/user.service.js');
 const getAll = (req, res) => {
   const { userId, category, from, to } = req.query;
 
-  if (Object.keys(req.query).length === 0) {
-    const expenses = expenseService.getAll();
-
-    res.send(expenses);
-  }
-
   if (userId) {
     const isUserIdValid = !isNaN(Number(userId));
 
@@ -21,16 +15,6 @@ const getAll = (req, res) => {
 
       return;
     }
-
-    const foundExpenses = expenseService.getAllForUser(Number(userId));
-
-    if (!foundExpenses) {
-      res.sendStatus(404);
-
-      return;
-    }
-
-    res.send(foundExpenses);
   }
 
   if (from && to) {
@@ -42,29 +26,32 @@ const getAll = (req, res) => {
 
       return;
     }
-
-    const foundExpenses = expenseService.getAllBetweenDates(from, to);
-
-    if (!foundExpenses) {
-      res.sendStatus(404);
-
-      return;
-    }
-
-    res.send(foundExpenses);
   }
 
   if (category) {
-    const foundExpenses = expenseService.getAllByCategory(category);
+    const isCategoryValid = typeof category === 'string';
 
-    if (!foundExpenses) {
-      res.sendStatus(404);
+    if (!isCategoryValid) {
+      res.sendStatus(422);
 
       return;
     }
-
-    res.send(foundExpenses);
   }
+
+  const foundExpenses = expenseService.getAll(
+    Number(userId),
+    from,
+    to,
+    category,
+  );
+
+  if (!foundExpenses) {
+    res.sendStatus(404);
+
+    return;
+  }
+
+  res.send(foundExpenses);
 };
 
 const create = (req, res) => {
