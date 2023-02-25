@@ -36,10 +36,10 @@ function create(req, res) {
   const foundUser = userService.findById(userId);
 
   const isRequiredDataProvided = userId
-    && spentAt
-    && title
-    && amount
-    && category;
+    && typeof spentAt === 'string'
+    && typeof title === 'string'
+    && typeof amount === 'number'
+    && typeof category === 'string';
 
   if (!isRequiredDataProvided || !foundUser) {
     res.sendStatus(400);
