@@ -1,7 +1,7 @@
-/* eslint-disable no-console */
 'use strict';
 
 const expensesServices = require('../services/expenses');
+const userServices = require('../services/users');
 
 function getAll(req, res) {
   const getQuery = req.query;
@@ -12,8 +12,6 @@ function getAll(req, res) {
 
 function getOne(req, res) {
   const { expensesId } = req.params;
-
-  console.log(expensesId);
 
   const foundExpenses = expensesServices.getById(expensesId);
 
@@ -27,10 +25,13 @@ function getOne(req, res) {
 }
 
 function addNew(req, res) {
-  const { userId, title, amount, category, note } = req.body;
+  const { userId, title, amount, category, note, spentAt } = req.body;
+  const user = userServices.getById(userId);
 
-  if (!userId || !title || !amount || !category || !note) {
-    res.sendStatus(422);
+  if (!user || !userId || !title || !amount || !category || !note) {
+    res.sendStatus(400);
+
+    return;
   }
 
   const newUser = expensesServices.addNew({
@@ -39,17 +40,15 @@ function addNew(req, res) {
     amount,
     category,
     note,
+    spentAt,
   });
 
+  res.statusCode = 201;
   res.send(newUser);
-
-  res.sendStatus(201);
 }
 
 function remove(req, res) {
   const { expensesId } = req.params;
-
-  console.log(expensesId);
 
   const foundUser = expensesServices.getById(expensesId);
 
@@ -67,33 +66,15 @@ function change(req, res) {
   const { expensesId } = req.params;
   const foundExpenses = expensesServices.getById(expensesId);
 
+  const newParams = req.body;
+
   if (!foundExpenses) {
     res.sendStatus(404);
 
     return;
   }
 
-  const { userId, title, amount, category, note } = req.body;
-
-  if (
-    typeof title !== 'string'
-    || typeof +amount !== 'number'
-    || typeof category !== 'string'
-    || typeof note !== 'string'
-  ) {
-    res.sendStatus(422);
-
-    return;
-  }
-
-  expensesServices.change({
-    expensesId,
-    userId,
-    title,
-    amount,
-    category,
-    note,
-  });
+  expensesServices.change(expensesId, newParams);
 
   res.send(foundExpenses);
 }

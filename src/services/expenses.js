@@ -1,8 +1,18 @@
 'use strict';
 
-const { v4 } = require('uuid');
+const newId = () => {
+  let counter = 1;
+
+  return () => counter++;
+};
+
+const getId = newId();
 
 let expenses = [];
+
+function clear() {
+  expenses = [];
+}
 
 function getAll(getQuery) {
   const { userId, category, from, to } = getQuery;
@@ -10,7 +20,7 @@ function getAll(getQuery) {
   let expensesCopy = expenses;
 
   if (userId) {
-    expensesCopy = expensesCopy.filter(item => item.userId === userId);
+    expensesCopy = expensesCopy.filter(item => +item.userId === +userId);
   }
 
   if (category) {
@@ -28,39 +38,37 @@ function getAll(getQuery) {
   return expensesCopy;
 }
 
-function getById(userId) {
-  return expenses.find((user) => user.id === userId) || null;
+function getById(expenseId) {
+  return expenses.find((expense) => expense.id === +expenseId) || null;
 }
 
-function addNew({ userId, title, amount, category, note }) {
-  const newUser = {
-    id: v4(),
+function addNew({ userId, title, amount, category, note, spentAt }) {
+  const newExpenses = {
+    id: getId(),
     userId,
     title: title || '',
     amount: amount || 0,
     category: category || '',
     note: note || '',
-    spentAt: new Date(),
+    spentAt,
   };
 
-  expenses.push(newUser);
+  expenses.push(newExpenses);
 
-  return newUser;
+  return newExpenses;
 }
 
 function remove(expensesId) {
-  expenses = expenses.filter((user) => user.id !== expensesId);
+  expenses = expenses.filter((user) => user.id !== +expensesId);
 }
 
-function change({ expensesId, userId, title, amount, category, note }) {
+function change(expensesId, newParams) {
   const cangeExpenses = expenses
-    .find((expensesItem) => expensesItem.id === expensesId);
+    .find((expensesItem) => expensesItem.id === +expensesId);
 
-  cangeExpenses.userId = userId;
-  cangeExpenses.title = title;
-  cangeExpenses.amount = amount;
-  cangeExpenses.category = category;
-  cangeExpenses.note = note;
+  Object.assign(cangeExpenses, newParams);
+
+  return cangeExpenses;
 }
 
 module.exports = {
@@ -68,5 +76,6 @@ module.exports = {
   getById,
   addNew,
   remove,
+  clear,
   change,
 };

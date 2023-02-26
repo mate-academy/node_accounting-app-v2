@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 'use strict';
 
 const userServices = require('../services/users');
@@ -34,8 +33,6 @@ function getOne(req, res) {
 function addNew(req, res) {
   const { name } = req.body;
 
-  console.log(name);
-
   if (!name) {
     res.sendStatus(400);
   }
@@ -66,8 +63,6 @@ function change(req, res) {
 
   const foundUser = userServices.getById(userId);
 
-  console.log(foundUser);
-
   if (!foundUser) {
     res.sendStatus(404);
 
@@ -75,8 +70,6 @@ function change(req, res) {
   }
 
   const { name } = req.body;
-
-  console.log(name);
 
   if (typeof name !== 'string') {
     res.sendStatus(400);
