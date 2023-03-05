@@ -7,8 +7,8 @@ const router = express.Router();
 
 router.get('/', usersController.getAll);
 router.get('/:id', usersController.getById);
-router.post('/', usersController.add);
+router.post('/', express.json(), usersController.add);
 router.delete('/:id', usersController.remove);
-router.patch('/:id', usersController.update);
+router.patch('/:id', express.json(), usersController.update);
 
 module.exports = router;

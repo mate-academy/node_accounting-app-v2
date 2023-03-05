@@ -11,73 +11,68 @@ const getAll = (req, res) => {
 const getById = (req, res) => {
   const id = +req.params.id;
 
-  if (isNaN(id)) {
+  try {
+    const user = usersService.getById(id);
+
+    if (!user) {
+      res.sendStatus(404);
+
+      return;
+    }
+
+    res.send(user);
+  } catch (err) {
     res.sendStatus(400);
-
-    return;
   }
-
-  const user = usersService.getById(id);
-
-  if (!user) {
-    res.sendStatus(404);
-
-    return;
-  }
-
-  res.send(user);
 };
 
 const add = (req, res) => {
   const { name } = req.body;
 
-  if (typeof name !== 'string') {
+  try {
+    const user = usersService.add(name);
+
+    res.statusCode = 201;
+    res.send(user);
+  } catch (err) {
     res.sendStatus(400);
-
-    return;
   }
-
-  const user = usersService.add(name);
-
-  res.statusCode = 201;
-  res.send(user);
 };
 
 const remove = (req, res) => {
   const id = +req.params.id;
 
-  if (!usersService.getById(id)) {
-    res.sendStatus(404);
+  try {
+    if (!usersService.getById(id)) {
+      res.sendStatus(404);
 
-    return;
+      return;
+    }
+
+    usersService.remove(id);
+    res.sendStatus(204);
+  } catch (err) {
+    res.sendStatus(400);
   }
-
-  usersService.remove(id);
-  res.sendStatus(204);
 };
 
 const update = (req, res) => {
   const id = +req.params.id;
   const { name } = req.body;
 
-  if (!usersService.getById(id)) {
-    res.sendStatus(404);
+  try {
+    if (!usersService.getById(id)) {
+      res.sendStatus(404);
 
-    return;
-  }
+      return;
+    }
 
-  if (typeof name !== 'string') {
+    const user = usersService.update(id, { name });
+
+    res.send(user);
+  } catch (err) {
     res.sendStatus(400);
-
-    return;
   }
-
-  const user = usersService.update({
-    id,
-    name,
-  });
-
-  res.send(user);
 };
 
 module.exports = {

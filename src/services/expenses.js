@@ -1,22 +1,20 @@
 'use strict';
 
+const validator = require('./expenses.validator');
+
 let expenses = [];
 
 const initiate = (initialValue) => {
   expenses = initialValue;
 };
 
-const getNewId = () => {
-  if (!expenses.length) {
-    return 1;
-  }
+const getNewId = () => (
+  Math.max(
+    ...expenses.map(({ id }) => id), 0
+  ) + 1
+);
 
-  return Math.max(
-    ...expenses.map(({ id }) => id)
-  ) + 1;
-};
-
-const getAll = ({ userId, category, from, to }) => {
+const getFiltered = ({ userId, category, from, to }) => {
   let filteredExpenses = expenses;
   const categories = Array.isArray(category)
     ? category
@@ -47,24 +45,26 @@ const getAll = ({ userId, category, from, to }) => {
   return filteredExpenses;
 };
 
-const getById = id => expenses.find(expense => expense.id === id) || null;
+const getAll = (query) => {
+  validator.validateQuery(query);
 
-const add = ({
-  userId,
-  title,
-  category,
-  note,
-  amount,
-  spentAt,
-}) => {
+  return getFiltered(query);
+};
+
+const getById = id => {
+  if (isNaN(id)) {
+    throw Error();
+  }
+
+  return expenses.find(expense => expense.id === id) || null;
+};
+
+const add = (data) => {
+  validator.validateEntity(data);
+
   const expense = {
+    ...data,
     id: getNewId(),
-    userId,
-    title,
-    category,
-    note,
-    amount,
-    spentAt,
   };
 
   expenses.push(expense);
@@ -77,6 +77,8 @@ const remove = (id) => {
 };
 
 const update = (id, data) => {
+  validator.validatePartial(data);
+
   const expense = getById(id);
 
   return Object.assign(expense, data);
