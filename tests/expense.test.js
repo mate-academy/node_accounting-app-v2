@@ -38,7 +38,7 @@ describe('Expense', () => {
       expect(response.body)
         .toEqual(
           expect.objectContaining({
-            id: expect.any(Number),
+            id: expect.any(String),
             ...expenseData,
           }),
         );
@@ -188,6 +188,7 @@ describe('Expense', () => {
         });
 
       const response = await api
+        // eslint-disable-next-line max-len
         .get(`/expenses?&from=2022-10-19T00:00:00.000Z&to=2022-10-19T23:59:59.999Z`)
         .expect(200)
         .expect('Content-Type', /application\/json/);
