@@ -18,29 +18,21 @@ const getAll = (userId, from, to, category) => {
       ? e.userId === userId
       : true;
 
-    const isFilteredByDate = from && to
-      ? getAllBetweenDates(from, to).includes(e)
+    const isFromMatches = from
+      ? e.spentAt >= from
+      : true;
+
+    const isToMatches = to
+      ? e.spentAt <= to
       : true;
 
     const isFilteredByCategory = category
       ? e.category === category
       : true;
 
-    return isFilteredByUser && isFilteredByDate && isFilteredByCategory;
+    return isFilteredByUser && isFromMatches
+      && isToMatches && isFilteredByCategory;
   });
-};
-
-const getAllBetweenDates = (from, to) => {
-  const parsedFromDate = Date.parse(from);
-  const parsedToDate = Date.parse(to);
-
-  const foundExpenses = expenses.filter(e => {
-    const parsedExpense = Date.parse(e.spentAt);
-
-    return parsedExpense >= parsedFromDate && parsedExpense <= parsedToDate;
-  });
-
-  return foundExpenses;
 };
 
 const getById = (expenseId) => {
@@ -77,7 +69,6 @@ module.exports = {
     getAll,
     create,
     getById,
-    getAllBetweenDates,
     remove,
     update,
     getInitial,

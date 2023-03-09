@@ -29,6 +29,12 @@ const add = (req, res) => {
     return;
   }
 
+  if (typeof name !== 'string') {
+    res.sendStatus(422);
+
+    return;
+  }
+
   const newUser = userService.create(name);
 
   res.statusCode = 201;

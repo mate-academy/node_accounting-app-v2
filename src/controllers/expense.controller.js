@@ -21,19 +21,9 @@ const getAll = (req, res) => {
     }
   }
 
-  if (from && to) {
-    const isFromValid = typeof from === 'string';
-    const isToValid = typeof to === 'string';
-
-    if (!isFromValid || !isToValid) {
-      res.sendStatus(422);
-
-      return;
-    }
-  }
-
   if (category) {
-    const isCategoryValid = typeof category === 'string';
+    const isCategoryValid = typeof category === 'string'
+      || Array.isArray(category);
 
     if (!isCategoryValid) {
       res.sendStatus(422);
@@ -63,7 +53,7 @@ const getOne = (req, res) => {
   const isExpenseValid = !isNaN(expenseId);
 
   if (!isExpenseValid) {
-    res.sendStatus(422);
+    res.sendStatus(400);
 
     return;
   }
@@ -95,13 +85,7 @@ const create = (req, res) => {
     note,
   } = req.body;
 
-  const isDataValid = !(
-    !userId
-    || !spentAt
-    || !title
-    || !amount
-    || !category
-  );
+  const isDataValid = userId && spentAt && title && amount && category && note;
 
   if (!isDataValid) {
     res.sendStatus(400);
@@ -200,6 +184,12 @@ const update = (req, res) => {
   }
 
   const options = req.body;
+
+  if (!options) {
+    res.sendStatus(422);
+
+    return;
+  }
 
   expenseService.update(
     expenseId,
