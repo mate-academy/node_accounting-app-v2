@@ -18,8 +18,10 @@ const userService = {
   },
 
   create(name) {
+    const newId = Math.max(...users.map(({ id }) => id), 1) + 1;
+
     const newUser = {
-      id: Math.random(),
+      id: newId,
       name,
     };
 

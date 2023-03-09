@@ -51,8 +51,10 @@ const expenseService = {
       note,
     } = body;
 
+    const newId = Math.max(...expenses.map(({ id }) => id), 1) + 1;
+
     const newExpenses = {
-      id: Math.random(),
+      id: newId,
       userId,
       spentAt,
       title,

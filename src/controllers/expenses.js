@@ -43,21 +43,21 @@ const getOne = (req, res) => {
 };
 
 const add = (req, res) => {
-  const { userId } = req.body;
+  const data = req.body;
 
-  if (!Object.keys(req.body).length) {
+  if (!Object.keys(data).length) {
     res.sendStatus(400);
 
     return;
   }
 
-  if (!userService.getById(userId)) {
+  if (!userService.getById(data.userId)) {
     res.sendStatus(400);
 
     return;
   }
 
-  const newExpenses = expenseService.create(req.body);
+  const newExpenses = expenseService.create(data);
 
   res.statusCode = 201;
   res.send(newExpenses);
@@ -65,6 +65,7 @@ const add = (req, res) => {
 
 const update = (req, res) => {
   const { expensesId } = req.params;
+  const data = req.body;
 
   const foundExpense = expenseService.getById(expensesId);
 
@@ -74,7 +75,7 @@ const update = (req, res) => {
     return;
   }
 
-  Object.assign(foundExpense, req.body);
+  Object.assign(foundExpense, data);
 
   res.send(foundExpense);
 };
