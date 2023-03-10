@@ -11,15 +11,15 @@ function setInitialExpenses(initialExpenses) {
 }
 
 function getFilteredExpenses(params) {
-  const { userId, category, from, to } = params;
+  const { userId, categories, from, to } = params;
 
   return expenses.filter(expense => {
     const isUserIdMatch = userId
       ? expense.userId === +userId
       : true;
 
-    const isCategoryMatch = category
-      ? expense.category === category
+    const isCategoryMatch = categories
+      ? categories.includes(expense.category)
       : true;
 
     const isFromMath = from
