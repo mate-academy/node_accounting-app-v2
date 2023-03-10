@@ -8,7 +8,7 @@ const getAll = (req, res) => {
     userId,
     from,
     to,
-    category,
+    categories,
   } = req.query;
 
   let expenses = expenseService.getAll();
@@ -21,8 +21,8 @@ const getAll = (req, res) => {
     expenses = expenseService.filterAllByDate(from, to);
   }
 
-  if (category) {
-    expenses = expenseService.filterAllByCategory(category);
+  if (categories) {
+    expenses = expenseService.filterAllByCategory(categories);
   }
 
   res.send(expenses);
