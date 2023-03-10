@@ -2,7 +2,7 @@
 
 let expenses = [];
 
-function getEmptyExpenses() {
+function setEmptyExpenses() {
   expenses = [];
 }
 
@@ -17,14 +17,11 @@ function filterAllByUserId(userId) {
 }
 
 function filterAllByDate(from, to) {
-  const start = Date.parse(from);
-  const end = Date.parse(to);
-
   return expenses.filter(expense => {
-    const currentDate = Date.parse(expense.spentAt);
+    const currentDate = expense.spentAt;
 
-    return currentDate.valueOf() >= start.valueOf()
-      && currentDate.valueOf() <= end.valueOf();
+    return currentDate.valueOf() >= from.valueOf()
+      && currentDate.valueOf() <= to.valueOf();
   });
 }
 
@@ -41,35 +38,11 @@ function getById(expensesId) {
 }
 
 function create(body) {
-  const {
-    userId,
-    spentAt,
-    title,
-    amount,
-    category,
-    note,
-  } = body;
-
-  const dataIsValid = typeof spentAt === 'string'
-    || typeof title === 'string'
-    || typeof amount === 'number'
-    || typeof category === 'string'
-    || typeof note === 'string';
-
-  if (!dataIsValid) {
-    throw new Error('Data is not valid');
-  }
-
   const newId = Math.max(...expenses.map(({ id }) => id), 0) + 1;
 
   const newExpenses = {
     id: newId,
-    userId,
-    spentAt,
-    title,
-    amount,
-    category,
-    note,
+    ...body,
   };
 
   expenses.push(newExpenses);
@@ -95,7 +68,7 @@ module.exports = {
   create,
   remove,
   update,
-  getEmptyExpenses,
+  setEmptyExpenses,
   filterAllByCategory,
   filterAllByDate,
   filterAllByUserId,

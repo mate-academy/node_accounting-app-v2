@@ -2,7 +2,7 @@
 
 let users = [];
 
-function getEmptyUsers() {
+function setEmptyUsers() {
   users = [];
 }
 
@@ -17,7 +17,7 @@ function getById(userId) {
 }
 
 function create(name) {
-  const newId = Math.max(...users.map(({ id }) => id), 1) + 1;
+  const newId = Math.max(...users.map(({ id }) => id), 0) + 1;
 
   const newUser = {
     id: newId,
@@ -42,7 +42,7 @@ function update(userId, name) {
 }
 
 module.exports = {
-  getEmptyUsers,
+  setEmptyUsers,
   getAll,
   getById,
   remove,

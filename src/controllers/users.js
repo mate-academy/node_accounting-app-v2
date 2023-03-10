@@ -25,7 +25,7 @@ const getOne = (req, res) => {
 const add = (req, res) => {
   const { name } = req.body;
 
-  if (!name) {
+  if (!name || typeof name !== 'string') {
     res.sendStatus(400);
 
     return;

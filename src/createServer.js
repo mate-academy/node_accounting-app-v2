@@ -9,8 +9,8 @@ const userService = require('./services/users.js');
 const expenseService = require('./services/expenses.js');
 
 function createServer() {
-  userService.getEmptyUsers();
-  expenseService.getEmptyExpenses();
+  userService.setEmptyUsers();
+  expenseService.setEmptyExpenses();
 
   const app = express();
 

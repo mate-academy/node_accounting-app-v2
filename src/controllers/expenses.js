@@ -51,7 +51,28 @@ const add = (req, res) => {
     return;
   }
 
-  if (!userService.getById(data.userId)) {
+  const {
+    userId,
+    spentAt,
+    title,
+    amount,
+    category,
+    note,
+  } = data;
+
+  const dataIsValid = typeof spentAt === 'string'
+    || typeof title === 'string'
+    || typeof amount === 'number'
+    || typeof category === 'string'
+    || typeof note === 'string';
+
+  if (!dataIsValid) {
+    throw new Error('Data is not valid');
+  }
+
+  const isUser = userService.getById(userId);
+
+  if (!isUser) {
     res.sendStatus(400);
 
     return;

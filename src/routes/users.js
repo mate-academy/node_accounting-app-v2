@@ -9,9 +9,9 @@ router.get('/', userController.getAll);
 
 router.get('/:userId', userController.getOne);
 
-router.post('/', express.json(), userController.add);
+router.post('/', userController.add);
 
-router.patch('/:userId', express.json(), userController.update);
+router.patch('/:userId', userController.update);
 
 router.delete('/:userId', userController.remove);
 
