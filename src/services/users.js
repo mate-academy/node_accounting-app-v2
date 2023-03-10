@@ -34,7 +34,7 @@ const remove = (userId) => {
 const update = (userId, name) => {
   const foundUser = getById(userId);
 
-  Object.assign(foundUser, { name });
+  Object.assign(foundUser, name);
 
   return foundUser;
 };
