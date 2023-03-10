@@ -9,30 +9,33 @@ const reset = () => {
 const getAll = () => expenses;
 
 const getAllFilteredExpenses
-  = (userId = '', categories = '', from = '', to = '') => {
-    let expensesToShow = expenses;
-
-    if (userId) {
-      expensesToShow = expensesToShow
-        .filter(expense => expense.userId === +userId);
+  = ({ userId, categories, from, to }) => {
+    if (!expenses) {
+      return [];
     }
 
-    if (categories) {
-      expensesToShow = expensesToShow
-        .filter(expense => categories.includes(expense.category));
-    }
+    return expenses.filter(expense => {
+      const isUserIdMatch = userId
+        ? expense.userId === +userId
+        : true;
 
-    if (from) {
-      expensesToShow = expensesToShow
-        .filter(expense => expense.spentAt > from && expense.spentAt < to);
-    }
+      const isCategoryMatch = categories
+        ? categories.includes(expense.category)
+        : true;
 
-    if (to) {
-      expensesToShow = expensesToShow
-        .filter(expense => expense.spentAt < to);
-    }
+      const isFromMatch = from
+        ? expense.spentAt > from
+        : true;
 
-    return expensesToShow;
+      const isToMatch = to
+        ? expense.spentAt < to
+        : true;
+
+      return isUserIdMatch
+        && isCategoryMatch
+        && isFromMatch
+        && isToMatch;
+    });
   };
 
 const getById = (expenseId) => {

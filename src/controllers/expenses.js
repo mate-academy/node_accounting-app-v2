@@ -16,10 +16,10 @@ const getAll = (req, res, next) => {
 };
 
 const getAllFilteredExpenses = (req, res) => {
-  const { userId, categories, from, to } = req.query;
+  const filters = req.query;
 
   const expensesToShow = expensesService
-    .getAllFilteredExpenses(userId, categories, from, to);
+    .getAllFilteredExpenses(filters);
 
   res.send(expensesToShow);
 };
