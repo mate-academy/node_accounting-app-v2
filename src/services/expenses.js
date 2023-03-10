@@ -21,23 +21,24 @@ const getMany = (query) => {
     : [category];
 
   if (userId) {
-    filteredExpenses = expenses.filter(expense => expense.userId === +userId);
+    filteredExpenses = filteredExpenses
+      .filter(expense => expense.userId === +userId);
   }
 
   if (category) {
-    filteredExpenses = expenses.filter(expense => (
+    filteredExpenses = filteredExpenses.filter(expense => (
       categories.includes(expense.category)
     ));
   }
 
   if (from) {
-    filteredExpenses = expenses.filter(expense => (
+    filteredExpenses = filteredExpenses.filter(expense => (
       expense.spentAt > from
     ));
   }
 
   if (to) {
-    filteredExpenses = expenses.filter(expense => (
+    filteredExpenses = filteredExpenses.filter(expense => (
       expense.spentAt < to
     ));
   }

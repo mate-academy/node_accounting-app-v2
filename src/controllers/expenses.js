@@ -4,9 +4,9 @@ const expensesService = require('../services/expenses');
 const usersService = require('../services/users');
 
 const getAll = (req, res) => {
-  const users = expensesService.getMany(req.query);
+  const expenses = expensesService.getMany(req.query);
 
-  res.send(users);
+  res.send(expenses);
 };
 
 const getById = (req, res) => {
