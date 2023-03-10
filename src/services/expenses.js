@@ -1,6 +1,7 @@
 'use strict';
 
 const validator = require('./expenses.validator');
+const { generateId } = require('../utils/generateId');
 
 let expenses = [];
 
@@ -8,14 +9,13 @@ const initiate = (initialValue) => {
   expenses = initialValue;
 };
 
-const getNewId = () => (
-  Math.max(
-    ...expenses.map(({ id }) => id), 0
-  ) + 1
-);
+const getMany = (query) => {
+  validator.validateQuery(query);
 
-const getFiltered = ({ userId, category, from, to }) => {
+  const { userId, category, from, to } = query;
+
   let filteredExpenses = expenses;
+
   const categories = Array.isArray(category)
     ? category
     : [category];
@@ -45,18 +45,14 @@ const getFiltered = ({ userId, category, from, to }) => {
   return filteredExpenses;
 };
 
-const getAll = (query) => {
-  validator.validateQuery(query);
-
-  return getFiltered(query);
-};
-
 const getById = id => {
-  if (isNaN(id)) {
+  const expenseId = Number(id);
+
+  if (isNaN(expenseId)) {
     throw Error();
   }
 
-  return expenses.find(expense => expense.id === id) || null;
+  return expenses.find(expense => expense.id === expenseId) || null;
 };
 
 const add = (data) => {
@@ -64,7 +60,7 @@ const add = (data) => {
 
   const expense = {
     ...data,
-    id: getNewId(),
+    id: generateId(expenses),
   };
 
   expenses.push(expense);
@@ -73,7 +69,9 @@ const add = (data) => {
 };
 
 const remove = (id) => {
-  expenses = expenses.filter(expense => expense.id !== id);
+  const expenseId = Number(id);
+
+  expenses = expenses.filter(expense => expense.id !== expenseId);
 };
 
 const update = (id, data) => {
@@ -86,7 +84,7 @@ const update = (id, data) => {
 
 module.exports = {
   initiate,
-  getAll,
+  getMany,
   getById,
   remove,
   add,

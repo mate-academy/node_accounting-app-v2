@@ -9,15 +9,13 @@ const getAll = (req, res) => {
 };
 
 const getById = (req, res) => {
-  const id = +req.params.id;
+  const { id } = req.params;
 
   try {
     const user = usersService.getById(id);
 
     if (!user) {
-      res.sendStatus(404);
-
-      return;
+      return res.sendStatus(404);
     }
 
     res.send(user);
@@ -32,21 +30,20 @@ const add = (req, res) => {
   try {
     const user = usersService.add(name);
 
-    res.statusCode = 201;
-    res.send(user);
+    res.status(201).send(user);
   } catch (err) {
     res.sendStatus(400);
   }
 };
 
 const remove = (req, res) => {
-  const id = +req.params.id;
+  const { id } = req.params;
 
   try {
-    if (!usersService.getById(id)) {
-      res.sendStatus(404);
+    const user = usersService.getById(id);
 
-      return;
+    if (!user) {
+      return res.sendStatus(404);
     }
 
     usersService.remove(id);
@@ -57,19 +54,19 @@ const remove = (req, res) => {
 };
 
 const update = (req, res) => {
-  const id = +req.params.id;
+  const { id } = req.params;
   const { name } = req.body;
 
   try {
-    if (!usersService.getById(id)) {
-      res.sendStatus(404);
+    const user = usersService.getById(id);
 
-      return;
+    if (!user) {
+      return res.sendStatus(404);
     }
 
-    const user = usersService.update(id, { name });
+    const updatedUser = usersService.update(id, { name });
 
-    res.send(user);
+    res.send(updatedUser);
   } catch (err) {
     res.sendStatus(400);
   }

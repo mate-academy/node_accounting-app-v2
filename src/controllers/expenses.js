@@ -4,21 +4,19 @@ const expensesService = require('../services/expenses');
 const usersService = require('../services/users');
 
 const getAll = (req, res) => {
-  const users = expensesService.getAll(req.query);
+  const users = expensesService.getMany(req.query);
 
   res.send(users);
 };
 
 const getById = (req, res) => {
-  const id = +req.params.id;
+  const { id } = req.params;
 
   try {
     const expense = expensesService.getById(id);
 
     if (!expense) {
-      res.sendStatus(404);
-
-      return;
+      return res.sendStatus(404);
     }
 
     res.send(expense);
@@ -31,10 +29,10 @@ const add = (req, res) => {
   const data = req.body;
 
   try {
-    if (!usersService.getById(data.userId)) {
-      res.sendStatus(400);
+    const hasUser = Boolean(usersService.getById(data.userId));
 
-      return;
+    if (!hasUser) {
+      return res.sendStatus(400);
     }
 
     const expense = expensesService.add(data);
@@ -47,13 +45,13 @@ const add = (req, res) => {
 };
 
 const remove = (req, res) => {
-  const id = +req.params.id;
+  const { id } = req.params;
 
   try {
-    if (!expensesService.getById(id)) {
-      res.sendStatus(404);
+    const expense = expensesService.getById(id);
 
-      return;
+    if (!expense) {
+      return res.sendStatus(404);
     }
 
     expensesService.remove(id);
@@ -64,19 +62,19 @@ const remove = (req, res) => {
 };
 
 const update = (req, res) => {
-  const id = +req.params.id;
+  const { id } = req.params;
   const data = req.body;
 
   try {
-    if (!expensesService.getById(id)) {
-      res.sendStatus(404);
+    const expense = expensesService.getById(id);
 
-      return;
+    if (!expense) {
+      return res.sendStatus(404);
     }
 
-    const user = expensesService.update(id, data);
+    const updatedExpense = expensesService.update(id, data);
 
-    res.send(user);
+    res.send(updatedExpense);
   } catch (err) {
     res.sendStatus(400);
   }

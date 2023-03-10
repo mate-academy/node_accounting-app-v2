@@ -1,5 +1,7 @@
 'use strict';
 
+const { generateId } = require('../utils/generateId');
+
 let users = [];
 
 const initiate = (initialUsers) => {
@@ -9,26 +11,22 @@ const initiate = (initialUsers) => {
 const getAll = () => users;
 
 const getById = (id) => {
-  if (isNaN(id)) {
+  const userId = Number(id);
+
+  if (isNaN(userId)) {
     throw Error();
   }
 
-  return users.find(user => user.id === id) || null;
+  return users.find(user => user.id === userId) || null;
 };
-
-const getNewId = () => (
-  Math.max(
-    ...users.map(user => user.id), 0
-  ) + 1
-);
 
 const add = (name) => {
   if (typeof name !== 'string') {
-    throw Error(name);
+    throw Error();
   }
 
   const user = {
-    id: getNewId(),
+    id: generateId(users),
     name,
   };
 
@@ -38,15 +36,17 @@ const add = (name) => {
 };
 
 const remove = (id) => {
-  users = users.filter(user => user.id !== id);
+  const userId = Number(id);
+
+  users = users.filter(user => user.id !== userId);
 };
 
 const update = (id, { name }) => {
-  const user = getById(id);
-
   if (typeof name !== 'string') {
     throw Error();
   }
+
+  const user = getById(id);
 
   return Object.assign(user, { name });
 };
