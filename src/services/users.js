@@ -2,46 +2,50 @@
 
 let users = [];
 
-const userService = {
-  getEmptyUsers() {
-    users = [];
-  },
+function getEmptyUsers() {
+  users = [];
+}
 
-  getAll() {
-    return users;
-  },
+function getAll() {
+  return users;
+}
 
-  getById(userId) {
-    const foundUser = users.find(user => user.id === +userId);
+function getById(userId) {
+  const foundUser = users.find(user => user.id === +userId);
 
-    return foundUser || null;
-  },
+  return foundUser || null;
+}
 
-  create(name) {
-    const newId = Math.max(...users.map(({ id }) => id), 1) + 1;
+function create(name) {
+  const newId = Math.max(...users.map(({ id }) => id), 1) + 1;
 
-    const newUser = {
-      id: newId,
-      name,
-    };
+  const newUser = {
+    id: newId,
+    name,
+  };
 
-    users.push(newUser);
+  users.push(newUser);
 
-    return newUser;
-  },
+  return newUser;
+}
 
-  remove(userId) {
-    users = users.filter(user => user.id !== +userId);
-  },
+function remove(userId) {
+  users = users.filter(user => user.id !== +userId);
+}
 
-  update(userId, name) {
-    const foundUser = users.find(user => user.id === +userId);
+function update(userId, name) {
+  const foundUser = getById(userId);
 
-    Object.assign(foundUser, { name });
+  Object.assign(foundUser, { name });
 
-    return foundUser;
-  },
+  return foundUser;
+}
 
+module.exports = {
+  getEmptyUsers,
+  getAll,
+  getById,
+  remove,
+  update,
+  create,
 };
-
-module.exports = { userService };

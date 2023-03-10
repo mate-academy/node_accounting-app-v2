@@ -2,84 +2,101 @@
 
 let expenses = [];
 
-const expenseService = {
-  getEmptyExpenses() {
-    expenses = [];
-  },
+function getEmptyExpenses() {
+  expenses = [];
+}
 
-  getAll() {
-    return expenses;
-  },
+function getAll() {
+  return expenses;
+}
 
-  filterAllByUserId(userId) {
-    return expenses.filter(
-      expense => expense.userId === +userId,
-    );
-  },
+function filterAllByUserId(userId) {
+  return expenses.filter(
+    expense => expense.userId === +userId,
+  );
+}
 
-  filterAllByDate(from, to) {
-    const start = Date.parse(from);
-    const end = Date.parse(to);
+function filterAllByDate(from, to) {
+  const start = Date.parse(from);
+  const end = Date.parse(to);
 
-    return expenses.filter(expense => {
-      const currentDate = Date.parse(expense.spentAt);
+  return expenses.filter(expense => {
+    const currentDate = Date.parse(expense.spentAt);
 
-      return currentDate.valueOf() >= start.valueOf()
-        && currentDate.valueOf() <= end.valueOf();
-    });
-  },
+    return currentDate.valueOf() >= start.valueOf()
+      && currentDate.valueOf() <= end.valueOf();
+  });
+}
 
-  filterAllByCategory(category) {
-    return expenses.filter(
-      expense => expense.category === category,
-    );
-  },
+function filterAllByCategory(category) {
+  return expenses.filter(
+    expense => expense.category === category,
+  );
+}
 
-  getById(expensesId) {
-    const foundExpense = expenses.find(expense => expense.id === +expensesId);
+function getById(expensesId) {
+  const foundExpense = expenses.find(expense => expense.id === +expensesId);
 
-    return foundExpense || null;
-  },
+  return foundExpense || null;
+}
 
-  create(body) {
-    const {
-      userId,
-      spentAt,
-      title,
-      amount,
-      category,
-      note,
-    } = body;
+function create(body) {
+  const {
+    userId,
+    spentAt,
+    title,
+    amount,
+    category,
+    note,
+  } = body;
 
-    const newId = Math.max(...expenses.map(({ id }) => id), 1) + 1;
+  const dataIsValid = typeof spentAt === 'string'
+    || typeof title === 'string'
+    || typeof amount === 'number'
+    || typeof category === 'string'
+    || typeof note === 'string';
 
-    const newExpenses = {
-      id: newId,
-      userId,
-      spentAt,
-      title,
-      amount,
-      category,
-      note,
-    };
+  if (!dataIsValid) {
+    throw new Error('Data is not valid');
+  }
 
-    expenses.push(newExpenses);
+  const newId = Math.max(...expenses.map(({ id }) => id), 0) + 1;
 
-    return newExpenses;
-  },
+  const newExpenses = {
+    id: newId,
+    userId,
+    spentAt,
+    title,
+    amount,
+    category,
+    note,
+  };
 
-  remove(expensesId) {
-    expenses = expenses.filter(expense => expense.id !== +expensesId);
-  },
+  expenses.push(newExpenses);
 
-  update(expensesId, body) {
-    const foundExpense = expenses.find(expense => expense.id === +expensesId);
+  return newExpenses;
+}
 
-    Object.assign(foundExpense, body);
+function remove(expensesId) {
+  expenses = expenses.filter(expense => expense.id !== +expensesId);
+}
 
-    return foundExpense;
-  },
+function update(expensesId, body) {
+  const foundExpense = getById(expensesId);
 
+  Object.assign(foundExpense, body);
+
+  return foundExpense;
+}
+
+module.exports = {
+  getAll,
+  getById,
+  create,
+  remove,
+  update,
+  getEmptyExpenses,
+  filterAllByCategory,
+  filterAllByDate,
+  filterAllByUserId,
 };
-
-module.exports = { expenseService };

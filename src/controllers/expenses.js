@@ -1,7 +1,7 @@
 'use strict';
 
-const { userService } = require('../services/users.js');
-const { expenseService } = require('../services/expenses.js');
+const userService = require('../services/users.js');
+const expenseService = require('../services/expenses.js');
 
 const getAll = (req, res) => {
   const {
@@ -97,11 +97,9 @@ const remove = (req, res) => {
 };
 
 module.exports = {
-  expenseController: {
-    getAll,
-    getOne,
-    add,
-    update,
-    remove,
-  },
+  getAll,
+  getOne,
+  add,
+  update,
+  remove,
 };

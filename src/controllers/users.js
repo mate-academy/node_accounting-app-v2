@@ -1,6 +1,6 @@
 'use strict';
 
-const { userService } = require('../services/users.js');
+const userService = require('../services/users.js');
 
 const getAll = (req, res) => {
   const users = userService.getAll();
@@ -78,11 +78,9 @@ const remove = (req, res) => {
 };
 
 module.exports = {
-  userController: {
-    getAll,
-    getOne,
-    add,
-    update,
-    remove,
-  },
+  getAll,
+  getOne,
+  add,
+  update,
+  remove,
 };

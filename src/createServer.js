@@ -5,8 +5,8 @@ const cors = require('cors');
 
 const { router: usersRouter } = require('./routes/users.js');
 const { router: expensesRouter } = require('./routes/expenses.js');
-const { userService } = require('./services/users.js');
-const { expenseService } = require('./services/expenses.js');
+const userService = require('./services/users.js');
+const expenseService = require('./services/expenses.js');
 
 function createServer() {
   userService.getEmptyUsers();

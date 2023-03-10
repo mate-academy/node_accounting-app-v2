@@ -1,7 +1,7 @@
 'use strict';
 
 const express = require('express');
-const { expenseController } = require('../controllers/expenses.js');
+const expenseController = require('../controllers/expenses.js');
 
 const router = express.Router();
 
