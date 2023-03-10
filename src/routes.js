@@ -11,7 +11,7 @@ router.use((req, res, next) => {
 
 router.get('/', controllers.getAll);
 router.get('/:id', controllers.getById);
-router.post('/', controllers.post);
+router.post('/', controllers.create);
 router.delete('/:id', controllers.remove);
 router.patch('/:id', controllers.patch);
 

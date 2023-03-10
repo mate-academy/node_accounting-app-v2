@@ -8,8 +8,9 @@ function createServer() {
   const app = express();
 
   app.use(cors());
-  app.use('/users', express.json(), router);
-  app.use('/expenses', express.json(), router);
+  app.use(express.json());
+  app.use('/users', router);
+  app.use('/expenses', router);
 
   return app;
 };

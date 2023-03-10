@@ -1,33 +1,11 @@
 'use strict';
 
-const { isEmpty, isArray } = require('lodash');
+const { isEmpty } = require('lodash');
+const checkParams = require('./utils/checkParams');
 
 const db = {
   expenses: [],
   users: [],
-};
-
-const checkParams = (params) => (expense) => {
-  const date = new Date(expense.spentAt).getTime();
-  const from = new Date(params.from).getTime();
-  const to = new Date(params.to).getTime();
-
-  const hasCategory = isArray(params.category)
-    ? params.category.includes(expense.category)
-    : params.category === expense.category;
-
-  return Object.keys(params).every(key => {
-    switch (key) {
-      case 'from':
-        return date >= from;
-      case 'to':
-        return date <= to;
-      case 'category':
-        return hasCategory;
-      default:
-        return expense[key] === params[key];
-    }
-  });
 };
 
 module.exports = {
@@ -42,10 +20,10 @@ module.exports = {
   },
 
   getById: (collection, id) => {
-    return db[collection].find(entry => entry.id === id);
+    return db[collection].find(entry => entry.id === id) || null;
   },
 
-  post: (collection, item) => {
+  create: (collection, item) => {
     db[collection].push(item);
 
     return item;
@@ -55,21 +33,14 @@ module.exports = {
     const arr = db[collection];
     const i = arr.findIndex(entry => entry.id === id);
 
-    if (i === -1) {
-      return 404;
-    }
     arr.splice(i, 1);
-
-    return 204;
   },
 
   patch: (collection, id, data) => {
     const arr = db[collection];
     const i = arr.findIndex(entry => entry.id === id);
 
-    if (arr[i]) {
-      arr[i] = Object.assign(arr[i], data);
-    }
+    arr[i] = Object.assign(arr[i], data);
 
     return arr[i];
   },

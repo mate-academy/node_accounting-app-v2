@@ -57,7 +57,7 @@ module.exports = {
     res.send(item);
   },
 
-  post: (req, res) => {
+  create: (req, res) => {
     const { headers: { collection }, body: { userId } } = req;
     const props = getProps(req);
     const isBodyValid = isEqual(Object.keys(props), getKeys(req));
@@ -74,20 +74,26 @@ module.exports = {
       return res.sendStatus(400);
     }
     res.statusCode = 201;
-    res.send(services.post(collection, newItem));
+    res.send(services.create(collection, newItem));
   },
 
   remove: (req, res) => {
     const { collection } = req.headers;
     const { id } = req.params;
+    const item = services.getById(collection, id);
 
-    res.sendStatus(services.remove(collection, id));
+    if (!item) {
+      return res.sendStatus(404);
+    }
+
+    services.remove(collection, id);
+    res.sendStatus(204);
   },
 
   patch: (req, res) => {
     const { params: { id }, body, headers: { collection } } = req;
     const props = getProps(req);
-    const item = services.patch(collection, id, props);
+    const item = services.getById(collection, id);
     const isBodyValid = getKeys(req).some(key => key in body);
 
     if (!item) {
@@ -97,6 +103,6 @@ module.exports = {
     if (!id || !isBodyValid) {
       return res.sendStatus(400);
     }
-    res.send(item);
+    res.send(services.patch(collection, id, props));
   },
 };
