@@ -7,7 +7,6 @@ function getAll(req, res) {
   const params = req.query;
   const expenses = expensesServices.getFilteredExpenses(params);
 
-  res.sendStatus = 200;
   res.send(expenses);
 }
 
@@ -28,7 +27,6 @@ function getOne(req, res) {
     return;
   }
 
-  res.statusCode = 200;
   res.send(foundExpense);
 }
 
@@ -43,15 +41,15 @@ function addNewExpense(req, res) {
 
   const foundUser = getUserById(userId);
 
-  const isSomeDataMissed = (!foundUser
-    || !userId
-    || !spentAt
-    || !title
-    || !amount
-    || !category
+  const isAllDataProvided = (foundUser
+    && userId
+    && spentAt
+    && title
+    && amount
+    && category
   );
 
-  if (isSomeDataMissed) {
+  if (!isAllDataProvided) {
     res.sendStatus(400);
 
     return;
@@ -87,7 +85,7 @@ function deleteExpense(req, res) {
 
 function updateExpense(req, res) {
   const { expenseId } = req.params;
-  const { title } = req.body;
+  const dataToUpdate = req.body;
 
   if (!expenseId) {
     res.sendStatus(400);
@@ -103,13 +101,11 @@ function updateExpense(req, res) {
     return;
   }
 
-  const dataToUpdate = { title };
   const updatedExpense = expensesServices.updateExpense(
     expenseId,
     dataToUpdate,
   );
 
-  res.statusCode = 200;
   res.send(updatedExpense);
 }
 

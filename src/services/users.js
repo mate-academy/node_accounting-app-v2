@@ -21,6 +21,10 @@ function getUserById(userId) {
 }
 
 function createNewUser(name) {
+  if (typeof name !== 'string') {
+    throw new Error('The name must be a string');
+  }
+
   const newUser = {
     id: createId(users),
     name,

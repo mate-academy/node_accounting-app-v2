@@ -5,7 +5,6 @@ const usersServices = require('../services/users');
 function getAll(req, res) {
   const users = usersServices.getAll();
 
-  res.statusCode = 200;
   res.send(users);
 }
 
@@ -26,7 +25,6 @@ function getOne(req, res) {
     return;
   }
 
-  res.statusCode = 200;
   res.send(foundUser);
 }
 
@@ -69,9 +67,9 @@ function deleteUser(req, res) {
 function updateUserInfo(req, res) {
   const { userId } = req.params;
   const { name } = req.body;
-  const invalidData = !userId || !name || (typeof name !== 'string');
+  const hasInvalidData = !name || (typeof name !== 'string');
 
-  if (invalidData) {
+  if (hasInvalidData || !userId) {
     res.sendStatus(400);
 
     return;
@@ -90,7 +88,6 @@ function updateUserInfo(req, res) {
     name,
   });
 
-  res.statusCode = 200;
   res.send(updatedUser);
 }
 
