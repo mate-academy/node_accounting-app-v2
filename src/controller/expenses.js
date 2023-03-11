@@ -38,24 +38,11 @@ const getOne = (req, res) => {
 
 const addExpense = (req, res) => {
   const expense = req.body;
-  const {
-    userId,
-    spentAt,
-    title,
-    amount,
-    category,
-    note,
-  } = expense;
+  const { userId } = expense;
 
   const foundUser = userServise.getById(userId);
 
-  if (!foundUser
-    || !spentAt
-    || !title
-    || !amount
-    || !category
-    || !note
-  ) {
+  if (Object.keys(expense).length < 6 || !foundUser) {
     res.sendStatus(400);
 
     return;
@@ -85,13 +72,7 @@ const removeExpense = (req, res) => {
 const updateExpense = (req, res) => {
   const { expenseId } = req.params;
   const expense = req.body;
-  const {
-    spentAt,
-    title,
-    amount,
-    category,
-    note,
-  } = expense;
+
   const foundExpense = expenseService.getById(+expenseId);
 
   if (!foundExpense) {
@@ -100,13 +81,7 @@ const updateExpense = (req, res) => {
     return;
   }
 
-  if (
-    !spentAt
-    && !title
-    && !amount
-    && !category
-    && !note
-  ) {
+  if (!Object.keys(expense).length) {
     res.sendStatus(400);
 
     return;

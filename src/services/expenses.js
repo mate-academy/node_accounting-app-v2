@@ -66,12 +66,12 @@ const removeExpense = (expenseId) => {
   expenses = expenses.filter(({ id }) => id !== expenseId);
 };
 
-const updateExpense = (expenseId, newExpenseData) => {
+const updateExpense = (expenseId, expenseNewData) => {
   let expense = getById(expenseId);
 
   expense = {
     ...expense,
-    ...newExpenseData,
+    ...expenseNewData,
   };
 
   return expense;
