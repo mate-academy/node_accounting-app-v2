@@ -12,4 +12,6 @@ router.post('/', expensesController.add);
 router.patch('/:expenseId', expensesController.update);
 router.delete('/:expenseId', expensesController.remove);
 
-module.exports = { router };
+module.exports = {
+  router,
+};

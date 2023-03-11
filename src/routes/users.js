@@ -12,4 +12,6 @@ router.post('/', usersController.add);
 router.patch('/:userId', usersController.update);
 router.delete('/:userId', usersController.remove);
 
-module.exports = { router };
+module.exports = {
+  router,
+};

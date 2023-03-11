@@ -34,37 +34,17 @@ const getOne = (req, res) => {
 };
 
 const add = (req, res) => {
-  const {
-    userId,
-    spentAt,
-    title,
-    amount,
-    category,
-    note,
-  } = req.body;
-
-  if (!userId || !spentAt || !title || !amount || !category || !note) {
-    res.sendStatus(400);
-
-    return;
-  }
+  const { userId } = req.body;
 
   const user = usersService.getUser(userId);
 
-  if (!user) {
+  if (!user || Object.keys(req.body) < 6) {
     res.sendStatus(400);
 
     return;
   }
 
-  const expense = expensesService.createExpense(
-    userId,
-    spentAt,
-    title,
-    amount,
-    category,
-    note,
-  );
+  const expense = expensesService.createExpense(req.body);
 
   res.statusCode = 201;
   res.send(expense);

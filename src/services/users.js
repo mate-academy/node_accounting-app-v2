@@ -6,12 +6,12 @@ const init = () => {
   users = [];
 };
 
-const getUsers = () => {
-  return users;
-};
+const getUsers = () => users;
 
 const getUser = (userId) => {
-  return users.find(user => user.id === +userId);
+  const foundUser = users.find(user => user.id === +userId);
+
+  return foundUser || null;
 };
 
 const createUser = (name) => {

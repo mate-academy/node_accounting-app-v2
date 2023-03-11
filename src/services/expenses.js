@@ -6,21 +6,14 @@ const init = () => {
   expenses = [];
 };
 
-const getExpenses = () => {
-  return expenses;
-};
+const getExpenses = () => expenses;
 
-const getFilteredExpenses = ({ userId, category, categories, from, to }) => {
+const getFilteredExpenses = ({ userId, categories, from, to }) => {
   let filteredExpenses = [...expenses];
 
   if (userId) {
     filteredExpenses = filteredExpenses
       .filter(expense => expense.userId === +userId);
-  }
-
-  if (category) {
-    filteredExpenses = filteredExpenses
-      .filter(expense => expense.category === category);
   }
 
   if (categories) {
@@ -37,25 +30,15 @@ const getFilteredExpenses = ({ userId, category, categories, from, to }) => {
 };
 
 const getExpense = (expenseId) => {
-  return expenses.find(expense => expense.id === +expenseId);
+  const foundExpense = expenses.find(expense => expense.id === +expenseId);
+
+  return foundExpense || null;
 };
 
-const createExpense = (
-  userId,
-  spentAt,
-  title,
-  amount,
-  category,
-  note,
-) => {
+const createExpense = (data) => {
   const newExpense = {
     id: Math.random(),
-    userId,
-    spentAt,
-    title,
-    amount,
-    category,
-    note,
+    ...data,
   };
 
   expenses.push(newExpense);
