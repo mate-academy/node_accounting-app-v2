@@ -4,8 +4,8 @@ const express = require('express');
 const cors = require('cors');
 const userService = require('./services/users');
 const expenseService = require('./services/expenses');
-const userRouter = require('./routes/users').router;
-const expenseRouter = require('./routes/expenses').router;
+const userRouter = require('./routes/users');
+const expenseRouter = require('./routes/expenses');
 
 function createServer() {
   userService.initiate();
