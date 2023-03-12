@@ -4,17 +4,17 @@ const userService = require('../services/users');
 const expenseService = require('../services/expenses');
 
 const getAll = (req, res) => {
-  const { userId, category, from, to } = req.query;
+  const { userId, categories, from, to } = req.query;
   const expenses = expenseService.getAll();
 
   if (userId) {
     let filteredExpenses
       = expenses.filter(expense => expense.userId === +userId);
 
-    if (category) {
+    if (categories) {
       filteredExpenses
           = expenses
-          .filter(expense => expense.category === category);
+          .filter(expense => categories.includes(expense.category));
 
       res.send(filteredExpenses);
 
