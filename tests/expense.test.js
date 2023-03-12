@@ -1,4 +1,5 @@
 'use strict';
+/* eslint-disable max-len */
 
 const supertest = require('supertest');
 const { createServer } = require('../src/createServer');
@@ -229,7 +230,7 @@ describe('Expense', () => {
         });
 
       const response = await api
-        .get(`/expenses?userId=${userId}&category=Electronics`)
+        .get(`/expenses?userId=${userId}&categories=Electronics`)
         .expect(200)
         .expect('Content-Type', /application\/json/);
 
