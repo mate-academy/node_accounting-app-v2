@@ -10,10 +10,6 @@ const getAll = () => expenses;
 
 const getAllFilteredExpenses
   = ({ userId, categories, from, to }) => {
-    if (!expenses) {
-      return [];
-    }
-
     return expenses.filter(expense => {
       const isUserIdMatch = userId
         ? expense.userId === +userId

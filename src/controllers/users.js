@@ -12,6 +12,12 @@ const getById = (req, res) => {
   const { userId } = req.params;
   const foundUser = usersService.getById(userId);
 
+  if (isNaN(+userId)) {
+    res.sendStatus(400);
+
+    return;
+  }
+
   if (!foundUser) {
     res.sendStatus(404);
 

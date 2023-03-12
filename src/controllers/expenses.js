@@ -34,6 +34,12 @@ const getById = (req, res) => {
     return;
   }
 
+  if (isNaN(+expenseId)) {
+    res.sendStatus(400);
+
+    return;
+  }
+
   res.send(foundExpense);
 };
 
