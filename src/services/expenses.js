@@ -8,44 +8,38 @@ function getAll() {
 
 function getById(expenseId) {
   const foundExpense = expenses.find(
-    (expense) => expense.id === Number(expenseId),
+    (expense) => expense.id === +expenseId,
   );
 
   return foundExpense || null;
 }
 
-function getFiltered(userId, from, to, category) {
-  const filteredExpenses = expenses.filter((expense) => {
-    const { spentAt } = expense;
+function getFiltered(id, from, to, categoryTitle) {
+  return expenses.filter((expense) => {
+    const { userId, category, spentAt } = expense;
 
-    if (userId && expense.userId !== Number(userId)) {
+    if (id && userId !== +id) {
       return false;
     }
 
-    if (category && expense.category !== category) {
+    if (categoryTitle && category !== categoryTitle) {
       return false;
     }
 
-    if (
-      from
-      && to
-      && (spentAt.localeCompare(from) === -1 || spentAt.localeCompare(to) === 1)
-    ) {
+    if (from && to && (spentAt < from || spentAt > to)) {
       return false;
     }
 
     return true;
   });
-
-  return filteredExpenses;
 }
 
 function create(userId, spentAt, title, amount, category, note) {
-  const maxId = Math.max(0, ...expenses.map((expense) => expense.id));
+  const maxId = Math.max(...expenses.map((expense) => expense.id), 0);
 
   const newExpense = {
     id: maxId + 1,
-    userId: Number(userId),
+    userId: +userId,
     spentAt,
     title,
     amount,
@@ -59,7 +53,7 @@ function create(userId, spentAt, title, amount, category, note) {
 }
 
 function remove(expenseId) {
-  expenses = expenses.filter((expense) => expense.id !== Number(expenseId));
+  expenses = expenses.filter((expense) => expense.id !== +expenseId);
 }
 
 function update(expense, body) {
