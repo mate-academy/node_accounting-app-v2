@@ -15,7 +15,7 @@ const getExpenses = ({ userId, categories, from, to }) => {
       : true;
 
     const hasCategories = categories
-      ? categories.include(expense.category)
+      ? categories.includes(expense.category)
       : true;
 
     const hasFrom = from
