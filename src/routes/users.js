@@ -7,8 +7,8 @@ const router = express.Router();
 
 router.get('/', userConroller.getAll);
 router.get('/:userId', userConroller.getOne);
-router.post('/', express.json(), userConroller.add);
+router.post('/', userConroller.add);
 router.delete('/:userId', userConroller.remove);
-router.patch('/:userId', express.json(), userConroller.update);
+router.patch('/:userId', userConroller.update);
 
 module.exports = { router };

@@ -188,6 +188,7 @@ describe('Expense', () => {
         });
 
       const response = await api
+        // eslint-disable-next-line max-len
         .get(`/expenses?&from=2022-10-19T00:00:00.000Z&to=2022-10-19T23:59:59.999Z`)
         .expect(200)
         .expect('Content-Type', /application\/json/);
@@ -229,7 +230,7 @@ describe('Expense', () => {
         });
 
       const response = await api
-        .get(`/expenses?userId=${userId}&category=Electronics`)
+        .get(`/expenses?userId=${userId}&categories=Electronics`)
         .expect(200)
         .expect('Content-Type', /application\/json/);
 
