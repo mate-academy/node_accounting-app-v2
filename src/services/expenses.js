@@ -56,7 +56,7 @@ function create(userId,
   note,
 ) {
   const id = !expenses.length
-    ? 0
+    ? 1
     : Math.max(...expenses.map(expense => expense.id)) + 1;
 
   const newExpense = {
@@ -75,11 +75,9 @@ function create(userId,
 }
 
 function remove(expenseId) {
-  const filteredExpenses = expenses.filter(expense => (
+  expenses = expenses.filter(expense => (
     expense.id !== +expenseId
   ));
-
-  expenses = filteredExpenses;
 }
 
 function update(id, obj) {

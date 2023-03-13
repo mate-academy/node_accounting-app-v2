@@ -18,7 +18,7 @@ function getById(userId) {
 
 function create(name) {
   const id = !users.length
-    ? 0
+    ? 1
     : Math.max(...users.map(user => user.id)) + 1;
 
   const newUser = {
@@ -32,9 +32,7 @@ function create(name) {
 }
 
 function remove(userId) {
-  const filteredUsers = users.filter(user => user.id !== +userId);
-
-  users = filteredUsers;
+  users = users.filter(user => user.id !== +userId);
 }
 
 function update({ id, name }) {
