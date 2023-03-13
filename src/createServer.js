@@ -16,8 +16,8 @@ function createServer() {
   const app = express();
 
   app.use(cors());
-  app.use(usersRouter);
-  app.use(expensesRouter);
+  app.use('/users', express.json(), usersRouter);
+  app.use('/expenses', express.json(), expensesRouter);
 
   return app;
 }
