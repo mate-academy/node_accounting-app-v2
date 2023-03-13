@@ -14,36 +14,31 @@ const getMany = (query) => {
 
   const { userId, category, from, to } = query;
 
-  let filteredExpenses = expenses;
-
   const categories = Array.isArray(category)
     ? category
     : [category];
 
-  if (userId) {
-    filteredExpenses = filteredExpenses
-      .filter(expense => expense.userId === +userId);
-  }
+  return expenses.filter(expense => {
+    const isMatchingUserId = userId
+      ? expense.userId === +userId
+      : true;
 
-  if (category) {
-    filteredExpenses = filteredExpenses.filter(expense => (
-      categories.includes(expense.category)
-    ));
-  }
+    const isMatchingCategory = category
+      ? categories.includes(expense.category)
+      : true;
 
-  if (from) {
-    filteredExpenses = filteredExpenses.filter(expense => (
-      expense.spentAt > from
-    ));
-  }
+    const isMatchingFrom = from
+      ? expense.spentAt > from
+      : true;
 
-  if (to) {
-    filteredExpenses = filteredExpenses.filter(expense => (
-      expense.spentAt < to
-    ));
-  }
+    const isMatchingTo = to
+      ? expense.spentAt < to
+      : true;
 
-  return filteredExpenses;
+    return (
+      isMatchingUserId && isMatchingCategory && isMatchingFrom && isMatchingTo
+    );
+  });
 };
 
 const getById = id => {
