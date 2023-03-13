@@ -2,6 +2,7 @@
 
 const expensesService = require('../services/expenses');
 const usersService = require('../services/users');
+const { ApiError } = require('../exceptions/ApiError');
 
 const getAll = (req, res) => {
   const expenses = expensesService.getMany(req.query);
@@ -11,73 +12,54 @@ const getAll = (req, res) => {
 
 const getById = (req, res) => {
   const { id } = req.params;
+  const expense = expensesService.getById(id);
 
-  try {
-    const expense = expensesService.getById(id);
-
-    if (!expense) {
-      return res.sendStatus(404);
-    }
-
-    res.send(expense);
-  } catch (err) {
-    res.sendStatus(400);
+  if (!expense) {
+    throw ApiError.NotFound();
   }
+
+  res.send(expense);
 };
 
 const add = (req, res) => {
   const data = req.body;
+  const hasUser = Boolean(usersService.getById(data.userId));
 
-  try {
-    const hasUser = Boolean(usersService.getById(data.userId));
-
-    if (!hasUser) {
-      return res.sendStatus(400);
-    }
-
-    const expense = expensesService.add(data);
-
-    res.statusCode = 201;
-    res.send(expense);
-  } catch (err) {
-    res.sendStatus(400);
+  if (!hasUser) {
+    throw ApiError.BadRequest();
   }
+
+  const expense = expensesService.add(data);
+
+  res.statusCode = 201;
+  res.send(expense);
 };
 
 const remove = (req, res) => {
   const { id } = req.params;
 
-  try {
-    const expense = expensesService.getById(id);
+  const expense = expensesService.getById(id);
 
-    if (!expense) {
-      return res.sendStatus(404);
-    }
-
-    expensesService.remove(id);
-    res.sendStatus(204);
-  } catch (err) {
-    res.sendStatus(400);
+  if (!expense) {
+    throw ApiError.NotFound();
   }
+
+  expensesService.remove(id);
+  res.sendStatus(204);
 };
 
 const update = (req, res) => {
   const { id } = req.params;
   const data = req.body;
+  const expense = expensesService.getById(id);
 
-  try {
-    const expense = expensesService.getById(id);
-
-    if (!expense) {
-      return res.sendStatus(404);
-    }
-
-    const updatedExpense = expensesService.update(id, data);
-
-    res.send(updatedExpense);
-  } catch (err) {
-    res.sendStatus(400);
+  if (!expense) {
+    throw ApiError.NotFound();
   }
+
+  const updatedExpense = expensesService.update(id, data);
+
+  res.send(updatedExpense);
 };
 
 module.exports = {

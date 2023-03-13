@@ -1,6 +1,7 @@
 'use strict';
 
 const { generateId } = require('../utils/generateId');
+const { ValidationError } = require('../exceptions/ValidationError');
 
 let users = [];
 
@@ -14,7 +15,7 @@ const getById = (id) => {
   const userId = Number(id);
 
   if (isNaN(userId)) {
-    throw Error();
+    throw ValidationError.IncorrectType();
   }
 
   return users.find(user => user.id === userId) || null;
@@ -22,7 +23,7 @@ const getById = (id) => {
 
 const add = (name) => {
   if (typeof name !== 'string') {
-    throw Error();
+    throw ValidationError.IncorrectType();
   }
 
   const user = {
@@ -43,7 +44,7 @@ const remove = (id) => {
 
 const update = (id, { name }) => {
   if (typeof name !== 'string') {
-    throw Error();
+    throw ValidationError.IncorrectType();
   }
 
   const user = getById(id);

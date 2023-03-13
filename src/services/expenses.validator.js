@@ -1,5 +1,7 @@
 'use strict';
 
+const { ValidationError } = require('../exceptions/ValidationError');
+
 const PropertyTypes = {
   userId: 'number',
   title: 'string',
@@ -22,19 +24,19 @@ const validateDataTypes = data => {
     switch (PropertyTypes[key]) {
       case 'string':
         if (typeof value !== 'string') {
-          throw Error();
+          throw ValidationError.IncorrectType();
         }
         break;
 
       case 'number':
         if (typeof value !== 'number') {
-          throw Error();
+          throw ValidationError.IncorrectType();
         }
         break;
 
       case 'Date':
         if (!Date.parse(data.spentAt)) {
-          throw Error();
+          throw ValidationError.IncorrectType();
         }
         break;
 
@@ -45,19 +47,19 @@ const validateDataTypes = data => {
 };
 
 const validateQuery = (query) => {
-  Object.entries(query).forEach(([key, value]) => {
+  for (const [key, value] of Object.entries(query)) {
     switch (key) {
       case 'from':
       case 'to':
         if (!Date.parse(value)) {
-          throw Error();
+          throw ValidationError.IncorrectType();
         }
 
         break;
 
       case 'userId':
         if (isNaN(+value)) {
-          throw Error();
+          throw ValidationError.IncorrectType();
         }
 
         break;
@@ -65,7 +67,7 @@ const validateQuery = (query) => {
       default:
         //
     }
-  });
+  }
 };
 
 const validateEntity = data => {
@@ -74,7 +76,7 @@ const validateEntity = data => {
   ));
 
   if (!hasRequiredProperties) {
-    throw Error();
+    throw ValidationError.RequiredProperty();
   }
 
   validateDataTypes(data);
@@ -86,7 +88,7 @@ const validatePartial = data => {
   ));
 
   if (!isPartial) {
-    throw Error();
+    throw ValidationError.RequiredProperty();
   }
 
   validateDataTypes(data);

@@ -2,6 +2,7 @@
 
 const validator = require('./expenses.validator');
 const { generateId } = require('../utils/generateId');
+const { ValidationError } = require('../exceptions/ValidationError');
 
 let expenses = [];
 
@@ -45,7 +46,7 @@ const getById = id => {
   const expenseId = Number(id);
 
   if (isNaN(expenseId)) {
-    throw Error();
+    throw ValidationError.IncorrectType();
   }
 
   return expenses.find(expense => expense.id === expenseId) || null;
