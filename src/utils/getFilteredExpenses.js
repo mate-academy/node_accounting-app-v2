@@ -9,8 +9,12 @@ const getFilteredExpenses = (expenses, filterParams) => {
   }
 
   if (category) {
-    filteredExpenses = expenses.filter(expense => (
-      expense.category === category
+    const categories = Array.isArray(category)
+      ? category
+      : [category];
+
+    filteredExpenses = filteredExpenses.filter(expense => (
+      categories.includes(expense.category)
     ));
   }
 
