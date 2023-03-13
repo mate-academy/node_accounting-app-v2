@@ -4,8 +4,8 @@ const express = require('express');
 const cors = require('cors');
 const { routerUsers } = require('./routes/users');
 const { routerExpenses } = require('./routes/expenses');
-const { userService } = require('./services/users');
-const { expenseService } = require('./services/expenses');
+const userService = require('./services/users');
+const expenseService = require('./services/expenses');
 
 function createServer() {
   const app = express();
@@ -15,8 +15,8 @@ function createServer() {
   userService.getInitialValue();
   expenseService.getInitialValue();
 
-  app.use('/users', routerUsers);
-  app.use('/expenses', routerExpenses);
+  app.use('/users', express.json(), routerUsers);
+  app.use('/expenses', express.json(), routerExpenses);
 
   return app;
 }

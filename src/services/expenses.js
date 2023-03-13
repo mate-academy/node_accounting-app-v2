@@ -52,12 +52,10 @@ const updateExpense = (id, values) => {
 };
 
 module.exports = {
-  expenseService: {
-    getInitialValue,
-    getAllExpenses,
-    getExpenseById,
-    createExpense,
-    removeExpense,
-    updateExpense,
-  },
+  getInitialValue,
+  getAllExpenses,
+  getExpenseById,
+  createExpense,
+  removeExpense,
+  updateExpense,
 };

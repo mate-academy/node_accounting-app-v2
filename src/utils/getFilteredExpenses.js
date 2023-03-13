@@ -2,29 +2,25 @@
 
 const getFilteredExpenses = (expenses, filterParams) => {
   const { userId, categories, from, to } = filterParams;
-  let filteredExpenses = expenses;
+  const filteredExpenses = expenses.filter(expense => {
+    if (userId && expense.userId !== +userId) {
+      return false;
+    }
 
-  if (userId) {
-    filteredExpenses = expenses.filter(expense => expense.userId === +userId);
-  }
+    if (categories && !categories.includes(expense.category)) {
+      return false;
+    }
 
-  if (categories) {
-    filteredExpenses = filteredExpenses.filter(expense => (
-      categories.includes(expense.category)
-    ));
-  }
+    if (from && expense.spentAt < from) {
+      return false;
+    }
 
-  if (from) {
-    filteredExpenses = expenses.filter(expense => (
-      expense.spentAt >= from
-    ));
-  }
+    if (to && expense.spentAt > to) {
+      return false;
+    }
 
-  if (to) {
-    filteredExpenses = expenses.filter(expense => (
-      expense.spentAt <= to
-    ));
-  }
+    return true;
+  });
 
   return filteredExpenses;
 };

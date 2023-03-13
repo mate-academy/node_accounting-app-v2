@@ -8,9 +8,7 @@ const getInitialValue = () => {
   users = [];
 };
 
-const getAllUsers = () => {
-  return users;
-};
+const getAllUsers = () => users;
 
 const getUserById = (userId) => {
   const foundUser = users.find(user => user.id === userId);
@@ -44,12 +42,10 @@ const updateUser = (id, name) => {
 };
 
 module.exports = {
-  userService: {
-    getInitialValue,
-    getAllUsers,
-    getUserById,
-    createUser,
-    removeUser,
-    updateUser,
-  },
+  getInitialValue,
+  getAllUsers,
+  getUserById,
+  createUser,
+  removeUser,
+  updateUser,
 };
