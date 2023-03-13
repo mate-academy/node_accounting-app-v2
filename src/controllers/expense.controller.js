@@ -4,48 +4,10 @@ const { expenseService } = require('../services/expense.service.js');
 const { userService } = require('../services/user.service.js');
 
 const getAll = (req, res) => {
-  const {
-    userId,
-    from,
-    to,
-    category,
-  } = req.query;
+  const params = req.query;
+  const expenses = expenseService.getAll(params);
 
-  if (userId) {
-    const isUserIdInvalid = !isNaN(Number(userId));
-
-    if (!isUserIdInvalid) {
-      res.sendStatus(422);
-
-      return;
-    }
-  }
-
-  if (category) {
-    const isCategoryValid = typeof category === 'string'
-      || Array.isArray(category);
-
-    if (!isCategoryValid) {
-      res.sendStatus(422);
-
-      return;
-    }
-  }
-
-  const filteredExpenses = expenseService.getAll(
-    Number(userId),
-    from,
-    to,
-    category,
-  );
-
-  if (!filteredExpenses) {
-    res.sendStatus(404);
-
-    return;
-  }
-
-  res.send(filteredExpenses);
+  res.send(expenses);
 };
 
 const getOne = (req, res) => {

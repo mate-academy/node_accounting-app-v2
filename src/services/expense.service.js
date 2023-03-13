@@ -8,10 +8,10 @@ const getInitial = () => {
   expenses = [];
 };
 
-const getAll = ({ userId, from, to, categories }) => {
+const getAll = ({ userId, categories, from, to }) => {
   return expenses.filter(e => {
-    const isFilteredByUser = +userId
-      ? e.userId === userId
+    const isFilteredByUser = userId
+      ? e.userId === +userId
       : true;
 
     const isFromMatches = from
@@ -32,7 +32,7 @@ const getAll = ({ userId, from, to, categories }) => {
 };
 
 const getById = (expenseId) => {
-  const foundExpense = expenses.find(exp => exp.id === expenseId);
+  const foundExpense = expenses.find(exp => exp.id === +expenseId);
 
   return foundExpense || null;
 };
