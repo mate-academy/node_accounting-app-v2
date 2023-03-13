@@ -11,31 +11,26 @@ const getAll = ({
   categories,
   from,
   to,
-}) => {
-  let filteredExpenses = [...expenses];
+}) => (
+  expenses.filter(expense => {
+    const byUserId = userId
+      ? expense.userId === +userId
+      : true;
 
-  if (userId) {
-    filteredExpenses = filteredExpenses
-      .filter(e => e.userId === +userId);
-  }
+    const byCategories = categories
+      ? categories.includes(expense.category)
+      : true;
 
-  if (categories) {
-    filteredExpenses = filteredExpenses
-      .filter(e => categories.includes(e.category));
-  }
+    const byFrom = from
+      ? expense.spentAt > from
+      : true;
 
-  if (from) {
-    filteredExpenses = filteredExpenses
-      .filter(e => e.spentAt > from);
-  }
+    const byTo = to
+      ? expense.spentAt < to
+      : true;
 
-  if (to) {
-    filteredExpenses = filteredExpenses
-      .filter(e => e.spentAt < to);
-  }
-
-  return filteredExpenses;
-};
+    return byUserId && byCategories && byFrom && byTo;
+  }));
 
 const getById = (expenseId) => {
   const foundExpense = expenses.find(e => e.id === +expenseId);
