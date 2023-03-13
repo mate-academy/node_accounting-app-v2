@@ -5,8 +5,8 @@ const cors = require('cors');
 const { userRouter } = require('./routes/users');
 const { expenseRouter } = require('./routes/expenses');
 
-const { userService } = require('./services/users');
-const { expenseService } = require('./services/expenses');
+const userService = require('./services/users');
+const expenseService = require('./services/expenses');
 
 function createServer() {
   userService.getInitial();

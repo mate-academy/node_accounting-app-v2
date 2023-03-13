@@ -1,18 +1,14 @@
 'use strict';
 
-const { userService } = require('../services/users');
+const userService = require('../services/users');
 
 const getAll = (req, res) => {
-  res.setHeader('Content-Type', 'application/json');
-
   const users = userService.getUsers();
 
   res.send(users);
 };
 
 const getOne = (req, res) => {
-  res.setHeader('Content-Type', 'application/json');
-
   const { userId } = req.params;
 
   if (isNaN(+userId)) {
@@ -79,11 +75,9 @@ const update = (req, res) => {
 };
 
 module.exports = {
-  userController: {
-    getAll,
-    getOne,
-    add,
-    remove,
-    update,
-  },
+  getAll,
+  getOne,
+  add,
+  remove,
+  update,
 };

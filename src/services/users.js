@@ -40,12 +40,10 @@ const updateUser = ({ id, name }) => {
 };
 
 module.exports = {
-  userService: {
-    getInitial,
-    getUsers,
-    getUser,
-    createUser,
-    deleteUser,
-    updateUser,
-  },
+  getInitial,
+  getUsers,
+  getUser,
+  createUser,
+  deleteUser,
+  updateUser,
 };

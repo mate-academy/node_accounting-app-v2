@@ -1,21 +1,16 @@
 'use strict';
 
-const { expenseService } = require('../services/expenses');
-const { userService } = require('../services/users');
+const expenseService = require('../services/expenses');
+const userService = require('../services/users');
 
 const getAll = (req, res) => {
-  res.setHeader('Content-Type', 'application/json');
-
   const { userId, categories, from, to } = req.query;
-
   const expenses = expenseService.getExpenses(userId, categories, from, to);
 
   res.send(expenses);
 };
 
 const getOne = (req, res) => {
-  res.setHeader('Content-Type', 'application/json');
-
   const { expenseId } = req.params;
 
   if (isNaN(+expenseId)) {
@@ -53,8 +48,7 @@ const add = (req, res) => {
     return;
   }
 
-  if (isNaN(+userId)
-  || !spentAt
+  if (!spentAt
   || !title
   || isNaN(+amount)
   || !category
@@ -109,11 +103,9 @@ const update = (req, res) => {
 };
 
 module.exports = {
-  expenseController: {
-    getAll,
-    getOne,
-    add,
-    remove,
-    update,
-  },
+  getAll,
+  getOne,
+  add,
+  remove,
+  update,
 };
