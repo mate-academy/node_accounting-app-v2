@@ -48,11 +48,13 @@ const add = (req, res) => {
     return;
   }
 
-  if (!spentAt
+  const dataIsNotValid = !spentAt
   || !title
   || isNaN(+amount)
   || !category
-  || !note) {
+  || !note;
+
+  if (dataIsNotValid) {
     res.sendStatus(400);
   }
 

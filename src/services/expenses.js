@@ -11,25 +11,28 @@ const getInitial = () => {
 const getExpenses = (userId, categories, from, to) => {
   let filteredExpenses = expenses;
 
-  if (!isNaN(+userId)) {
-    filteredExpenses = filteredExpenses
-      .filter(expense => expense.userId === +userId);
-  }
+  filteredExpenses = filteredExpenses
+    .filter(expense => {
+      if (!isNaN(+userId) && expense.userId !== +userId) {
+        return false;
+      }
 
-  if (categories && categories.length) {
-    filteredExpenses = filteredExpenses
-      .filter(expense => categories.includes(expense.category));
-  }
+      if (categories
+        && categories.length
+        && !(categories.includes(expense.category))) {
+        return false;
+      }
 
-  if (from) {
-    filteredExpenses = filteredExpenses
-      .filter(expense => Date.parse(expense.spentAt) >= Date.parse(from));
-  }
+      if (from && Date.parse(expense.spentAt) < Date.parse(from)) {
+        return false;
+      }
 
-  if (to) {
-    filteredExpenses = filteredExpenses
-      .filter(expense => Date.parse(expense.spentAt) <= Date.parse(to));
-  }
+      if (to && Date.parse(expense.spentAt) > Date.parse(to)) {
+        return false;
+      }
+
+      return true;
+    });
 
   return filteredExpenses;
 };
@@ -67,8 +70,10 @@ const deleteExpense = (expenseId) => {
   expenses = expenses.filter(expense => expense.id !== +expenseId);
 };
 
-const updateExpense = ({ id,
-  dataToUpdate }) => {
+const updateExpense = ({
+  id,
+  dataToUpdate,
+}) => {
   const foundExpense = getExpense(id);
 
   Object.assign(foundExpense, dataToUpdate);
