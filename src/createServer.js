@@ -94,7 +94,7 @@ function createServer() {
   let expenses = [];
 
   const getExpenses = (filterBy) => {
-    const { userId, category, from, to } = filterBy;
+    const { userId, categories, from, to } = filterBy;
 
     let filteredExpenses = expenses;
 
@@ -102,9 +102,9 @@ function createServer() {
       filteredExpenses = expenses.filter(expense => expense.userId === +userId);
     }
 
-    if (category) {
+    if (categories) {
       filteredExpenses = expenses.filter(expense => (
-        expense.category === category
+        expense.category === categories
       ));
     }
 
