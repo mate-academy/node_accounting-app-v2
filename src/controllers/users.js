@@ -9,8 +9,6 @@ const getAll = (req, res) => {
 };
 
 const getOne = (req, res) => {
-  res.setHeader('Content-Type', 'application/json');
-
   const { userId } = req.params;
   const foundUser = usersService.findById(userId);
 

@@ -4,16 +4,12 @@ const expensesService = require('../services/expenses');
 const usersService = require('../services/users');
 
 const getAll = (req, res) => {
-  res.setHeader('Content-Type', 'application/json');
-
   const expenses = expensesService.getFilteredExpenses(req.query);
 
   res.send(expenses);
 };
 
 const getOne = (req, res) => {
-  res.setHeader('Content-Type', 'application/json');
-
   const { expenseId } = req.params;
 
   const foundExpense = expensesService.findById(expenseId);
