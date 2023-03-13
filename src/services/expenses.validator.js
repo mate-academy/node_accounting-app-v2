@@ -76,7 +76,7 @@ const validateEntity = data => {
   ));
 
   if (!hasRequiredProperties) {
-    throw ValidationError.RequiredProperty();
+    throw ValidationError.MissingData();
   }
 
   validateDataTypes(data);
@@ -88,7 +88,7 @@ const validatePartial = data => {
   ));
 
   if (!isPartial) {
-    throw ValidationError.RequiredProperty();
+    throw ValidationError.MissingData();
   }
 
   validateDataTypes(data);

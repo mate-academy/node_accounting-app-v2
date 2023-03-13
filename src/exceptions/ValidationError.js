@@ -2,11 +2,11 @@
 
 class ValidationError extends Error {
   static IncorrectType() {
-    return new ValidationError('Incorrect data type');
+    return new ValidationError('Incorrect data type for this request');
   };
 
-  static RequiredProperty() {
-    return new ValidationError('Missing required property');
+  static MissingData() {
+    return new ValidationError('Missing required data for this request');
   }
 }
 
