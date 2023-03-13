@@ -45,7 +45,7 @@ function create(
 }
 
 function remove(expenseId) {
-  expenses = expenses.filter(user => user.id !== expenseId);
+  expenses = expenses.filter(expense => expense.id !== expenseId);
 }
 
 function update({
