@@ -8,13 +8,9 @@ const getInitial = () => {
   expenses = [];
 };
 
-const getAll = (userId, from, to, category) => {
-  if (!userId && !from && !to && !category) {
-    return expenses;
-  }
-
+const getAll = ({ userId, from, to, categories }) => {
   return expenses.filter(e => {
-    const isFilteredByUser = userId
+    const isFilteredByUser = +userId
       ? e.userId === userId
       : true;
 
@@ -26,8 +22,8 @@ const getAll = (userId, from, to, category) => {
       ? e.spentAt <= to
       : true;
 
-    const isFilteredByCategory = category
-      ? e.category === category
+    const isFilteredByCategory = categories
+      ? categories.includes(e.category)
       : true;
 
     return isFilteredByUser && isFromMatches
