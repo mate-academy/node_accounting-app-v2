@@ -14,10 +14,6 @@ const getAll = ({
 }) => {
   let filteredExpenses = [...expenses];
 
-  const category = Array.isArray(categories)
-    ? categories
-    : [categories];
-
   if (userId) {
     const userIdToNumber = +userId;
 
@@ -28,7 +24,7 @@ const getAll = ({
   if (categories) {
     filteredExpenses = filteredExpenses
       .filter(expense => {
-        return category.includes(expense.category);
+        return categories.includes(expense.category);
       });
   }
 

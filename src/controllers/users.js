@@ -25,8 +25,7 @@ const add = (req, res) => {
   const { name } = req.body;
 
   if (!name) {
-    res.statusCode = 400;
-    res.send({});
+    res.sendStatus(400);
 
     return;
   }
@@ -65,8 +64,8 @@ const update = (req, res) => {
 
   const { name } = req.body;
 
-  if (typeof name !== 'string') {
-    res.sendStatus(422);
+  if (typeof name !== 'string' || !name) {
+    res.sendStatus(400);
 
     return;
   }

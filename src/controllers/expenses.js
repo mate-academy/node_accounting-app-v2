@@ -24,14 +24,13 @@ const getOne = (req, res) => {
 };
 
 const create = (req, res) => {
-  const data = req.body;
-  const { name, userId } = req.body;
-
-  if (name === 'undefined') {
-    res.sendStatus(400);
-
-    return;
-  }
+  const {
+    userId,
+    spentAt,
+    title,
+    amount,
+    category,
+  } = req.body;
 
   const foundUser = userService.getOne(userId);
 
@@ -41,7 +40,19 @@ const create = (req, res) => {
     return;
   }
 
-  const newExpense = expenseService.create(data);
+  const hasAllData = (spentAt
+    && title
+    && amount
+    && category
+  );
+
+  if (!hasAllData) {
+    res.sendStatus(400);
+
+    return;
+  }
+
+  const newExpense = expenseService.create(req.body);
 
   res.status(201);
   res.send(newExpense);
