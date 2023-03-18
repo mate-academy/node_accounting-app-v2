@@ -75,7 +75,7 @@ function createServer() {
   app.get('/expenses', (req, res) => {
     const {
       userId,
-      category,
+      categories,
       from,
       to,
     } = req.query;
@@ -85,8 +85,8 @@ function createServer() {
         ? expense.userId === +userId
         : true;
 
-      const isCategoryMatch = category
-        ? expense.category === category
+      const isCategoryMatch = categories
+        ? expense.category === categories
         : true;
 
       const isFromMatch = from
