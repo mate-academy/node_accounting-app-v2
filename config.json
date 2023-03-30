@@ -1,0 +1,23 @@
+{
+  "development": {
+    "username": "ckabyrih",
+    "password": "ziYsThk6wL-qOetlpigtbjenUywImZ9H",
+    "database": "ckabyrih",
+    "host": "mel.db.elephantsql.com",
+    "dialect": "postgres"
+  },
+  "test": {
+    "username": "ckabyrih",
+    "password": "ziYsThk6wL-qOetlpigtbjenUywImZ9H",
+    "database": "ckabyrih",
+    "host": "mel.db.elephantsql.com",
+    "dialect": "postgres"
+  },
+  "production": {
+    "username": "ckabyrih",
+    "password": "ziYsThk6wL-qOetlpigtbjenUywImZ9H",
+    "database": "ckabyrih",
+    "host": "mel.db.elephantsql.com",
+    "dialect": "postgres"
+  }
+}
