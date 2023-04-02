@@ -1,6 +1,4 @@
-'use strict';
-
-const getExpenseByQuery = require('../helpers/getExpenseByQuery');
+import getExpenseByQuery from '../helpers/getExpenseByQuery';
 
 const testExpenses = [
   {

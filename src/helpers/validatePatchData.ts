@@ -1,6 +1,4 @@
-import _ from 'lodash';
-
-function getTypeOfDatabaseItem (dbItem: {}): {
+function validatePatchData (dbItem: {}): {
   type: string,
   correctDb: string,
   isValid: boolean
@@ -8,16 +6,18 @@ function getTypeOfDatabaseItem (dbItem: {}): {
   const keysOfUser = ['name'];
   const keysOfExpenses = ['userId', 'spentAt', 'title', 'amount', 'category', 'note'];
   const dbItemKeys = Object.keys(dbItem);
+  const isUserPatch = dbItemKeys.every(key => keysOfUser.includes(key));
+  const isExpensePatch = dbItemKeys.every(key => keysOfExpenses.includes(key));
 
   switch (true) {
-    case (_.isEqual(keysOfUser, dbItemKeys)):
+    case isUserPatch:
       return {
         type: 'User',
         correctDb: 'users',
         isValid: true,
       };
 
-    case (_.isEqual(keysOfExpenses, dbItemKeys)):
+    case isExpensePatch:
       return {
         type: 'Expense',
         correctDb: 'expenses',
@@ -34,4 +34,4 @@ function getTypeOfDatabaseItem (dbItem: {}): {
 }
 
 
-export default getTypeOfDatabaseItem;
+export default validatePatchData;

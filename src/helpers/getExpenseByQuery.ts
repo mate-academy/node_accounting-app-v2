@@ -1,5 +1,3 @@
-'use strict'
-
 import { Expense } from '../utils/types/ExpenseType';
 import { QueryType } from '../utils/types/QueryType';
 
@@ -44,4 +42,4 @@ function getExpenseByQuery(
     return filteredExpenses;
 }
 
-module.exports = getExpenseByQuery;
+export default getExpenseByQuery;

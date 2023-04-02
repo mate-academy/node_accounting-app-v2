@@ -1,12 +1,9 @@
-'use strict';
-
 import { CommonDatabase, Database } from '../utils/types/database';
 import { Expense } from '../utils/types/ExpenseType';
 import { User } from '../utils/types/UserType';
 import { QueryType } from '../utils/types/QueryType';
-
-const {v4: uuidv4} = require('uuid');
-const getExpenseByQuery = require('../helpers/getExpenseByQuery');
+import getExpenseByQuery from '../helpers/getExpenseByQuery';
+import { v4 as uuidv4 } from 'uuid';
 
 const commonDatabase: CommonDatabase = {
   users: [],
@@ -15,18 +12,18 @@ const commonDatabase: CommonDatabase = {
 
 const {users, expenses} = commonDatabase;
 
-module.exports = {
-  getAll: (
+  export function getAll (
     db: Database,
     query: Partial<QueryType> = {},
-  ) => {
-    if(query && db === 'expenses') {
-      return getExpenseByQuery(commonDatabase.expenses, query);
+  ) {
+    const isQueryEmpty = Object.keys(query).length === 0;
+    if(!isQueryEmpty && db === 'expenses') {
+      return getExpenseByQuery(expenses, query);
     }
     return commonDatabase[db];
-  },
+  };
 
-  create: (db: Database, item: Partial<User> | Expense) => {
+  export function create (db: Database, item: Partial<User> | Partial<Expense>) {
     switch(db) {
       case 'users':
         const { name } = item as Partial<User>;
@@ -39,34 +36,38 @@ module.exports = {
         return item;
 
       case 'expenses':
-        expenses.push(item as Expense);
+        expenses.push({
+          id: uuidv4(),
+          ...item
+        } as Expense);
         return item;
 
-      default: return;
+      default:
+        return;
     }
-  },
+  };
 
-  getById: (db: Database, id: string) => {
+  export function getById (db: Database, idToFind: string) {
     const dbToSearch = commonDatabase[db] as (User | Expense)[];
-    return dbToSearch.find((item) => item.id === id)
-  },
 
-  remove: (db: Database, id: string) => {
+    return dbToSearch.find(({id}) => id === idToFind || null)
+  };
+
+  export function remove (db: Database, idToFind: string) {
     const dbToSearch = commonDatabase[db] as (User | Expense)[];
-    const elementIndex = dbToSearch.findIndex(item => item.id === id);
+    const elementIndex = dbToSearch.findIndex(({id}) => id === idToFind);
 
     commonDatabase[db].splice(elementIndex, 1);
-  },
+  };
 
-  patch: (db: Database, id: string, data: Partial<User> | Partial<Expense>) => {
+  export function patch (db: Database, idToFind: string, data: Partial<User> | Partial<Expense>) {
     const dbToSearch = commonDatabase[db];
-    const elementIndexToPatch = dbToSearch.findIndex(element => element.id === id);
+    const elementIndex = dbToSearch.findIndex(({id}) => id === idToFind);
+
     Object.assign(
-      dbToSearch[elementIndexToPatch],
-      {...dbToSearch[elementIndexToPatch], ...data},
+      dbToSearch[elementIndex],
+      {...dbToSearch[elementIndex], ...data},
     )
 
-    return dbToSearch[elementIndexToPatch];
-  }
-
-}
+    return dbToSearch[elementIndex];
+  };

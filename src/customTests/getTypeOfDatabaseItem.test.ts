@@ -1,9 +1,6 @@
-'use strict';
-
-const getTypeOfDatabaseItem = require('../helpers/getTypeOfDatabaseItem');
+import getTypeOfDatabaseItem from '../helpers/getTypeOfDatabaseItem';
 
 const testExpense = {
-  id: '3fasdfa2324',
   userId: 'fdasf543dfs',
   spentAt: '2023-04-02T11:46:08.681Z',
   title: 'some title',
@@ -13,7 +10,6 @@ const testExpense = {
 };
 
 const testUser = {
-  id: 'fasjj5645j',
   name: 'john Doe',
 };
 
@@ -25,24 +21,24 @@ const failTest = {
 
 test('Returns {type: User, isValid: true}', () => {
   expect(getTypeOfDatabaseItem(testUser)).toEqual({
-    type: 'User', isValid: true,
+    type: 'User', correctDb: 'users', isValid: true,
   });
 });
 
 test('Returns {type: Expense, isValid: true}', () => {
   expect(getTypeOfDatabaseItem(testExpense)).toEqual({
-    type: 'Expense', isValid: true,
+    type: 'Expense', correctDb: 'expenses', isValid: true,
   });
 });
 
-test('Returns {type: object, isValid: false}', () => {
+test('Returns {type: Unknown, isValid: false}', () => {
   expect(getTypeOfDatabaseItem(failTest)).toEqual({
-    type: 'object', isValid: false,
+    type: 'Unknown', correctDb: 'none', isValid: false,
   });
 });
 
-test('Returns {type: number, isValid: false}', () => {
-  expect(getTypeOfDatabaseItem(123124)).toEqual({
-    type: 'number', isValid: false,
+test('Returns {type: Unknown, isValid: false}', () => {
+  expect(getTypeOfDatabaseItem({ something: 1213421 })).toEqual({
+    type: 'Unknown', correctDb: 'none', isValid: false,
   });
 });
