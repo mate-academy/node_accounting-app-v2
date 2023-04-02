@@ -1,0 +1,26 @@
+'use strict';
+
+const {
+  expensesController,
+} = require('../controller/expensesController');
+
+const express = require('express');
+const { expensesService } = require('../services/expenses');
+
+// #region expensesRouter
+const expensesRouter = express.Router();
+
+function expences(app) {
+  app.use('/expenses', expensesRouter);
+  expensesService.setInitialExpenses();
+  expensesRouter.get('/', expensesController.getExpenses);
+  expensesRouter.get('/:expenseId', expensesController.getExpense);
+  expensesRouter.post('/', expensesController.postExpense);
+  expensesRouter.patch('/:expenseId', expensesController.patchExpense);
+  expensesRouter.delete('/:expenseId', expensesController.removeExpense);
+}
+// #endregion
+
+module.exports = {
+  expences,
+};
