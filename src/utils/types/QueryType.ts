@@ -1,5 +1,5 @@
 export type QueryType = {
-  category: string,
+  categories: string,
   from: string,
   to: string,
 };

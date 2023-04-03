@@ -72,7 +72,7 @@ const testQueryBetweenDates = {
 };
 
 const testQueryCategory = {
-  category: 'Food',
+  categories: 'Food',
 };
 
 const testQueryFrom = {
@@ -219,7 +219,7 @@ test('Returns empty array', () => {
   expect(getExpenseByQuery([], testQueryCategory)).toEqual([]);
 
   expect(getExpenseByQuery(testExpenses, {
-    category: 'Not Exisiting Category',
+    categories: 'Not Exisiting Category',
   })).toEqual([]);
 
   expect(getExpenseByQuery(testExpenses, {

@@ -9,9 +9,9 @@ function getExpenseByQuery(
 
   for (const key in query) {
     switch(key) {
-      case 'category':
+      case 'categories':
         filteredExpenses = filteredExpenses
-          .filter(item => item.category === query[key]);
+          .filter(item => item.category === query['categories']);
         break;
 
       case 'from':

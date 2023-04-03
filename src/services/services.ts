@@ -27,20 +27,23 @@ const {users, expenses} = commonDatabase;
     switch(db) {
       case 'users':
         const { name } = item as Partial<User>;
+        const newUser = {
+          id: uuidv4(),
+          name,
+        };
+
         if(name) {
-          users.push({
-            id: uuidv4(),
-            name,
-          });
+          users.push(newUser as User);
         }
-        return item;
+        return newUser;
 
       case 'expenses':
-        expenses.push({
+        const newExpense = {
           id: uuidv4(),
           ...item
-        } as Expense);
-        return item;
+        }
+        expenses.push(newExpense as Expense);
+        return newExpense;
 
       default:
         return;
