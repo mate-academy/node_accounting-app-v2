@@ -1,7 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import router from './routes/routes';
-import { validDatabases } from './helpers/validDatabases';
+import { validDatabases } from './utils/helpers/validDatabases';
 function createServer() {
     const app = express();
     app.use(cors());

@@ -1,4 +1,4 @@
-import getExpenseByQuery from '../helpers/getExpenseByQuery';
+import getExpenseByQuery from '../utils/helpers/getExpenseByQuery';
 import { v4 as uuidv4 } from 'uuid';
 const commonDatabase = {
     users: [],

@@ -1,5 +1,5 @@
-import { Expense } from '../utils/types/ExpenseType';
-import { QueryType } from '../utils/types/QueryType';
+import { Expense } from '../types/ExpenseType';
+import { QueryType } from '../types/QueryType';
 
 function getExpenseByQuery(
   expenses: Expense[],

@@ -2,7 +2,7 @@ import { CommonDatabase, Database } from '../utils/types/database';
 import { Expense } from '../utils/types/ExpenseType';
 import { User } from '../utils/types/UserType';
 import { QueryType } from '../utils/types/QueryType';
-import getExpenseByQuery from '../helpers/getExpenseByQuery';
+import getExpenseByQuery from '../utils/helpers/getExpenseByQuery';
 import { v4 as uuidv4 } from 'uuid';
 
 const commonDatabase: CommonDatabase = {

@@ -1,7 +1,7 @@
 import * as services from '../services/services';
-import { validDatabases } from '../helpers/validDatabases';
-import validatePatchData from '../helpers/validatePatchData';
-import getTypeOfDatabaseItem from '../helpers/getTypeOfDatabaseItem';
+import { validDatabases } from '../utils/helpers/validDatabases';
+import validatePatchData from '../utils/helpers/validatePatchData';
+import getTypeOfDatabaseItem from '../utils/helpers/getTypeOfDatabaseItem';
 export function getAll(req, res) {
     const { headers: { db }, query } = req;
     if (validDatabases.some(item => item === db)) {

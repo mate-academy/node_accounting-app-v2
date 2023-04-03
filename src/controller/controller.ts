@@ -1,9 +1,9 @@
 import * as services from '../services/services'
 import { Request, Response} from 'express';
-import { validDatabases } from '../helpers/validDatabases';
+import { validDatabases } from '../utils/helpers/validDatabases';
 import { Database } from '../utils/types/database';
-import validatePatchData from '../helpers/validatePatchData';
-import getTypeOfDatabaseItem from '../helpers/getTypeOfDatabaseItem';
+import validatePatchData from '../utils/helpers/validatePatchData';
+import getTypeOfDatabaseItem from '../utils/helpers/getTypeOfDatabaseItem';
 
 export function getAll (req: Request, res: Response) {
   const {headers: { db }, query} = req;
