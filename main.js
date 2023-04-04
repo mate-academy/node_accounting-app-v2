@@ -1,6 +1,4 @@
-'use strict';
-
-const { createServer } = require('./src/createServer');
+import createServer from './compiled/createServer';
 
 createServer()
   .listen(3000, () => {
