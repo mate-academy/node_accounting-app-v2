@@ -8,44 +8,7 @@ class Expenses {
   }
 
   init() {
-    this.data = [
-      // {
-      //   amount: 999,
-      //   category: 'Electronics',
-      //   id: 59644,
-      //   note: 'I need a new laptop',
-      //   spentAt: '2022-10-19T11:01:43.462Z',
-      //   title: 'Buy a new laptop',
-      //   userId: 96708,
-      // },
-      // {
-      //   amount: 999,
-      //   category: 'Food',
-      //   id: 76359,
-      //   note: 'I need a new laptop',
-      //   spentAt: '2022-10-19T11:01:43.462Z',
-      //   title: 'Buy a new laptop',
-      //   userId: 96708,
-      // },
-      // {
-      //   amount: 999,
-      //   category: 'Electronics',
-      //   id: 59645,
-      //   note: 'I need a new laptop',
-      //   spentAt: '2022-10-19T11:01:43.462Z',
-      //   title: 'Buy a new laptop',
-      //   userId: 96709,
-      // },
-      // {
-      //   amount: 999,
-      //   category: 'Food',
-      //   id: 76358,
-      //   note: 'I need a new laptop',
-      //   spentAt: '2022-10-19T11:01:43.462Z',
-      //   title: 'Buy a new laptop',
-      //   userId: 96709,
-      // },
-    ];
+    this.data = [];
   }
 
   getAll() {

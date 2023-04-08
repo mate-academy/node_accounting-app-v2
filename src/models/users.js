@@ -8,16 +8,7 @@ class Expenses {
   }
 
   init() {
-    this.data = [
-      // {
-      //   name: 'John',
-      //   id: 96708,
-      // },
-      // {
-      //   name: 'John',
-      //   id: 96709,
-      // },
-    ];
+    this.data = [];
   }
 
   getAll() {
