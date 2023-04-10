@@ -53,37 +53,6 @@ const getByParameters = (req, res) => {
   res.send(foundExpenses);
 };
 
-const getByUser = (req, res) => {
-  const { userId } = req.query;
-  const foundUser = userService.getById(userId);
-
-  if (!foundUser) {
-    res.sendStatus(404);
-
-    return;
-  }
-
-  const foundExpenses = expenseService.getByUser(userId);
-
-  res.send(foundExpenses);
-};
-
-const getByCategory = (req, res) => {
-  const { category } = req.query;
-
-  const foundExpenses = expenseService.getByCategory(category);
-
-  res.send(foundExpenses);
-};
-
-const getByTime = (req, res) => {
-  const { from, to } = req.query;
-
-  const foundExpenses = expenseService.getByTime(from, to);
-
-  res.send(foundExpenses);
-};
-
 const add = (req, res) => {
   const {
     userId,
@@ -193,9 +162,6 @@ const update = (req, res) => {
 module.exports = {
   getAll,
   getOne,
-  getByUser,
-  getByTime,
-  getByCategory,
   getByParameters,
   add,
   remove,
