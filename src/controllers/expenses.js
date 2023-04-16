@@ -1,7 +1,7 @@
 'use strict';
 
 const expenseServices = require('../services/expenses');
-const usersServices = require('../services/users');
+const validateData = require('../utils/expenses');
 
 const getAll = (req, res) => {
   const expenses = expenseServices.getAll(req.query);
@@ -23,38 +23,9 @@ const getOne = (req, res) => {
 };
 
 const create = (req, res) => {
-  const {
-    userId,
-    title,
-    amount,
-    category,
-    spentAt,
-    note,
-  } = req.body;
+  const isValid = validateData(req.body);
 
-  const requiredFields = ['userId', 'spentAt', 'title', 'amount', 'category'];
-
-  const requestFields = Object.keys(req.body);
-
-  const hasRequiredFields
-    = requiredFields.every(field => requestFields.includes(field));
-
-  const user = usersServices.getById(userId);
-
-  if (!user || !hasRequiredFields || !requestFields.length) {
-    res.sendStatus(400);
-
-    return;
-  }
-
-  if (
-    typeof userId !== 'number'
-    || typeof amount !== 'number'
-    || typeof title !== 'string'
-    || typeof note !== 'string'
-    || typeof category !== 'string'
-    || isNaN(Date.parse(spentAt))
-  ) {
+  if (!isValid) {
     res.sendStatus(400);
 
     return;
