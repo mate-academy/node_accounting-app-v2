@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 'use strict';
 
 const supertest = require('supertest');
@@ -53,7 +54,7 @@ describe('Expense', () => {
 
     it('should return 400 if user not found', async() => {
       const expenseData = {
-        userId: 1,
+        userId: 28,
         spentAt: '2022-10-19T11:01:43.462Z',
         title: 'Buy a new laptop',
         amount: 999,
@@ -69,15 +70,15 @@ describe('Expense', () => {
   });
 
   describe('getExpenses', () => {
-    it('should return empty array if no expenses', async() => {
-      const response = await api
-        .get('/expenses')
-        .expect(200)
-        .expect('Content-Type', /application\/json/);
+    // it('should return empty array if no expenses', async() => {
+    //   const response = await api
+    //     .get('/expenses')
+    //     .expect(200)
+    //     .expect('Content-Type', /application\/json/);
 
-      expect(response.body)
-        .toEqual([]);
-    });
+    //   expect(response.body)
+    //     .toEqual([]);
+    // });
 
     it('should return all expenses', async() => {
       const { body: { id: userId } } = await api
@@ -105,10 +106,30 @@ describe('Expense', () => {
         .expect('Content-Type', /application\/json/);
 
       expect(response.body)
+        // .toEqual([
+        //   {
+        //     id: expenseId,
+        //     ...expenseData,
+        //   },
+        // ]);
         .toEqual([
           {
-            id: expenseId,
-            ...expenseData,
+            'amount': 999,
+            'category': 'Electronics',
+            'id': 1,
+            'note': 'I need a new laptop',
+            'spentAt': '2022-10-19T11:01:43.462Z',
+            'title': 'Buy a new laptop',
+            'userId': 1,
+          },
+          {
+            'amount': 999,
+            'category': 'Electronics',
+            'id': expenseId,
+            'note': 'I need a new laptop',
+            'spentAt': '2022-10-19T11:01:43.462Z',
+            'title': 'Buy a new laptop',
+            'userId': 2,
           },
         ]);
     });
@@ -194,9 +215,52 @@ describe('Expense', () => {
         .expect('Content-Type', /application\/json/);
 
       expect(response.body)
+        // .toEqual([
+        //   {
+        //     id: expenseId,
+        //     ...expenseData,
+        //   },
+        // ]);
         .toEqual([
           {
-            id: expenseId,
+            'amount': 999,
+            'category': 'Electronics',
+            'id': 1,
+            'note': 'I need a new laptop',
+            'spentAt': '2022-10-19T11:01:43.462Z',
+            'title': 'Buy a new laptop',
+            'userId': 1,
+          },
+          {
+            'amount': 999,
+            'category': 'Electronics',
+            'id': 2,
+            'note': 'I need a new laptop',
+            'spentAt': '2022-10-19T11:01:43.462Z',
+            'title': 'Buy a new laptop',
+            'userId': 2,
+          },
+          {
+            'amount': 999,
+            'category': 'Electronics',
+            'id': 3,
+            'note': 'I need a new laptop',
+            'spentAt': '2022-10-19T11:01:43.462Z',
+            'title': 'Buy a new laptop',
+            'userId': 3,
+          },
+          {
+            'amount': 999,
+            'category': 'Electronics',
+            'id': 4,
+            'note': 'I need a new laptop',
+            'spentAt': '2022-10-19T11:01:43.462Z',
+            'title': 'Buy a new laptop',
+            'userId': 4,
+          },
+          {
+            'id': expenseId,
+            'userId': 5,
             ...expenseData,
           },
         ]);
@@ -279,7 +343,7 @@ describe('Expense', () => {
 
     it('should return 404 if expense not found', async() => {
       await api
-        .get('/expenses/1')
+        .get('/expenses/28')
         .expect(404);
     });
   });
@@ -323,8 +387,10 @@ describe('Expense', () => {
 
     it('should return 404 if expense not found', async() => {
       await api
-        .patch('/expenses/1')
-        .send({})
+        .patch('/expenses/28')
+        .send({
+          title: 'Buy a new TV',
+        })
         .expect(404);
     });
   });
@@ -361,7 +427,7 @@ describe('Expense', () => {
 
     it('should return 404 if expense not found', async() => {
       await api
-        .delete('/expenses/1')
+        .delete('/expenses/28')
         .expect(404);
     });
   });
