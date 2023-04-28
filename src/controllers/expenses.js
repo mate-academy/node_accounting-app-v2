@@ -4,24 +4,15 @@ const expenseService = require('../services/expenses');
 const userService = require('../services/users');
 const { isDateValid } = require('../functions/validateDate');
 
-const getAll = (_req, res, _next) => {
-  const expenses = expenseService.getAll();
+const getAll = (req, res, _next) => {
+  if (Object.keys(req.query).length === 0) {
+    const expenses = expenseService.getAll();
 
-  res.send(expenses);
-};
+    res.send(expenses);
 
-const getOne = (req, res) => {
-  const { expenseId } = req.params;
-  const foundExpense = expenseService.getById(expenseId);
-
-  if (!foundExpense) {
-    res.sendStatus(404);
-  } else {
-    res.send(foundExpense);
+    return;
   }
-};
 
-const getByParameters = (req, res) => {
   const {
     userId,
     categories,
@@ -51,6 +42,17 @@ const getByParameters = (req, res) => {
     .getByParameters(userId, categoriesArray, from, to);
 
   res.send(foundExpenses);
+};
+
+const getOne = (req, res) => {
+  const { expenseId } = req.params;
+  const foundExpense = expenseService.getById(expenseId);
+
+  if (!foundExpense) {
+    res.sendStatus(404);
+  } else {
+    res.send(foundExpense);
+  }
 };
 
 const add = (req, res) => {
@@ -162,7 +164,6 @@ const update = (req, res) => {
 module.exports = {
   getAll,
   getOne,
-  getByParameters,
   add,
   remove,
   update,

@@ -61,6 +61,8 @@ const update = (req, res) => {
 
   if (typeof name !== 'string') {
     res.sendStatus(422);
+
+    return;
   }
 
   userService.update(foundUser, name);

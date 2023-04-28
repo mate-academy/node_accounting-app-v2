@@ -2,7 +2,7 @@
 
 const { generateId } = require('../functions/generateId');
 
-class Expenses {
+class Users {
   constructor() {
     this.data = [];
   }
@@ -41,4 +41,4 @@ class Expenses {
   }
 }
 
-module.exports = { users: new Expenses() };
+module.exports = { users: new Users() };
