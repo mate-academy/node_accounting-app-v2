@@ -2,7 +2,7 @@
 
 const expenses = [];
 
-let countExpensesId = 0;
+let countExpensesId = 1;
 
 const getExpenses = ({ from, to, category, userId }) => {
   const startFrom = Date.parse(from);

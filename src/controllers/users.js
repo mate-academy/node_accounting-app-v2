@@ -11,7 +11,7 @@ const getAll = (req, res) => {
 const getOne = (req, res) => {
   const userId = +req.params.userId;
 
-  if (userId < 0) {
+  if (!userId) {
     res.sendStatus(400);
 
     return;

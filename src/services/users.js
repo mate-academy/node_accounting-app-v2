@@ -1,7 +1,7 @@
 'use strict';
 
 const users = [];
-let countUsersId = 0;
+let countUsersId = 1;
 
 const getAll = () => users;
 
