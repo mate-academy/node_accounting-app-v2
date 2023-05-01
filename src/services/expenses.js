@@ -87,9 +87,8 @@ const removeExpense = (expenseId) => {
   const foundExpenseIndex = expenses.findIndex(expense => (
     expense.id === expenseId
   ));
-  const deleted = expenses.splice(foundExpenseIndex, 1);
 
-  return deleted;
+  expenses.splice(foundExpenseIndex, 1);
 };
 
 const updateExpense = (expenseId, body) => {

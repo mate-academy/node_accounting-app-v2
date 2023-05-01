@@ -26,9 +26,8 @@ const addUser = (name) => {
 
 const removeUser = (userId) => {
   const foundUserIndex = users.findIndex(user => user.id === userId);
-  const deleted = users.splice(foundUserIndex, 1);
 
-  return deleted;
+  users.splice(foundUserIndex, 1);
 };
 
 const updateUser = (userId, name) => {

@@ -53,10 +53,8 @@ const removeUser = (req, res) => {
     return;
   }
 
-  const deleted = userService.removeUser(foundUser.id);
-
-  res.status(204);
-  res.send(deleted);
+  userService.removeUser(foundUser.id);
+  res.sendStatus(204);
 };
 
 const updateUser = (req, res) => {

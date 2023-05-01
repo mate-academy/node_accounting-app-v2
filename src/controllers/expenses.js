@@ -61,10 +61,9 @@ const removeExpense = (req, res) => {
     return;
   }
 
-  const deleted = expenseService.removeExpense(expenseId);
+  expenseService.removeExpense(expenseId);
 
-  res.status(204);
-  res.send(deleted);
+  res.sendStatus(204);
 };
 
 const updateExpense = (req, res) => {
