@@ -41,6 +41,13 @@ const getAll = (req, res) => {
 
 const getOne = (req, res) => {
   const { expenseId } = req.params;
+
+  if (!expenseId) {
+    res.sendStatus(400);
+
+    return;
+  }
+
   const foundExpense = expensesService.getById(expenseId);
 
   if (!foundExpense) {
@@ -99,7 +106,21 @@ const update = (req, res) => {
     return;
   }
 
-  expensesService.update(foundExpense, { ...req.body });
+  const {
+    spentAt = foundExpense.spentAt,
+    title = foundExpense.title,
+    amount = foundExpense.amount,
+    category = foundExpense.category,
+    note = foundExpense.note,
+  } = req.body;
+
+  expensesService.update(foundExpense, {
+    spentAt,
+    title,
+    amount,
+    category,
+    note,
+  });
   res.send(foundExpense);
 };
 
