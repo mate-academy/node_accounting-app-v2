@@ -9,14 +9,14 @@ function createServer() {
   const { ExpensesModel } = require('./models/expenses.js');
   const { UsersModel } = require('./models/users.js');
 
+  ExpensesModel.reset();
+  UsersModel.reset();
+
   const app = express();
 
   app.use(cors());
   app.use('/users', express.json(), usersRouter);
   app.use('/expenses', express.json(), expensesRouter);
-
-  ExpensesModel.reset();
-  UsersModel.reset();
 
   return app;
 }

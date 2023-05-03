@@ -9,16 +9,18 @@ class ExpensesModel {
     this.expenses = [];
   }
 
-  getAll(
-    categories,
-    userId,
-    from,
-    to,
-  ) {
-    let filteredExpenses = [...this.expenses];
+  getAll(requestBody) {
+    const {
+      userId,
+      categories,
+      from,
+      to,
+    } = requestBody;
+
+    let filteredExpenses = this.expenses;
 
     if (userId) {
-      filteredExpenses = this.expenses.filter(
+      filteredExpenses = filteredExpenses.filter(
         expense => expense.id === +userId,
       );
     }

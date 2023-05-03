@@ -4,19 +4,7 @@ const { ExpensesModel } = require('../models/expenses.js');
 const { UsersModel } = require('../models/users.js');
 
 const getAll = (req, res) => {
-  const {
-    userId,
-    categories,
-    from,
-    to,
-  } = req.query;
-
-  const filteredExpenses = ExpensesModel.getAll(
-    categories,
-    userId,
-    from,
-    to,
-  );
+  const filteredExpenses = ExpensesModel.getAll(req.query);
 
   res.statusCode = 200;
   res.send(filteredExpenses);
