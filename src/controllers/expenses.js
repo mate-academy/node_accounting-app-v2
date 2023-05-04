@@ -58,7 +58,7 @@ function deleteExpenseAction(req, res) {
 
   deleteExpense(expenseId);
 
-  res.sendStatus(200);
+  res.sendStatus(204);
 };
 
 function updateExpenseAction(req, res) {

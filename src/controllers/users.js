@@ -58,7 +58,7 @@ function deleteUserAction(req, res) {
   }
 
   deleteUser(userId);
-  res.sendStatus(200);
+  res.sendStatus(204);
 };
 
 function updateUserAction(req, res) {
