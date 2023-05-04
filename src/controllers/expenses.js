@@ -4,43 +4,7 @@ const userService = require('../services/users');
 const expensesService = require('../services/expenses');
 
 const getAll = (req, res) => {
-  const {
-    userId: userIdStr,
-    categories,
-    from: fromStr,
-    to: toStr,
-  } = req.query;
-
-  const userId = isNaN(Number(userIdStr))
-    ? null
-    : Number(userIdStr);
-
-  const from = isNaN(new Date(fromStr).getTime())
-    ? null
-    : new Date(fromStr).getTime();
-
-  const to = isNaN(new Date(toStr).getTime())
-    ? null
-    : new Date(toStr).getTime();
-
-  if (
-    (userIdStr && !userId)
-    || (fromStr && !from)
-    || (toStr && !to)
-  ) {
-    res.sendStatus(400);
-
-    return;
-  }
-
-  const options = {
-    userId,
-    categories,
-    from,
-    to,
-  };
-
-  const expenses = expensesService.getAll(options);
+  const expenses = expensesService.getAll(req.query);
 
   res.send(expenses);
 };

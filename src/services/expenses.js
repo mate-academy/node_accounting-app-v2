@@ -18,11 +18,8 @@ function getAll(options) {
     to,
   } = options;
 
-  // eslint-disable-next-line no-console
-  console.log(options, expenses);
-
   const filteredExpenses = expenses.filter(expense => {
-    if (userId && expense.userId !== userId) {
+    if (userId && expense.userId !== Number(userId)) {
       return false;
     }
 
@@ -32,8 +29,10 @@ function getAll(options) {
 
     if (from && to) {
       const spentAt = new Date(expense.spentAt).getTime();
+      const fromDate = new Date(from).getTime();
+      const toDate = new Date(to).getTime();
 
-      return (spentAt >= from) && (spentAt <= to);
+      return (spentAt >= fromDate) && (spentAt <= toDate);
     }
 
     return true;
