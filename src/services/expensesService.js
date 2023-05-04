@@ -21,7 +21,7 @@ class ExpensesModel {
 
     if (userId) {
       filteredExpenses = filteredExpenses.filter(
-        expense => expense.id === +userId,
+        expense => expense.userId === +userId,
       );
     }
 
@@ -123,5 +123,5 @@ class ExpensesModel {
 }
 
 module.exports = {
-  ExpensesModel: new ExpensesModel(),
+  expensesService: new ExpensesModel(),
 };

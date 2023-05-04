@@ -1,9 +1,9 @@
 'use strict';
 
-const { UsersModel } = require('../models/users.js');
+const { userService } = require('../services/usersService.js');
 
 const getAll = (req, res) => {
-  const users = UsersModel.getAll();
+  const users = userService.getAll();
 
   res.send(users);
 };
@@ -17,7 +17,7 @@ const getById = (req, res) => {
     return;
   }
 
-  const foundUser = UsersModel.getById(Number(userId));
+  const foundUser = userService.getById(Number(userId));
 
   if (!foundUser) {
     res.sendStatus(404);
@@ -38,7 +38,7 @@ const create = (req, res) => {
     return;
   }
 
-  const newUser = UsersModel.addUser(name);
+  const newUser = userService.addUser(name);
 
   res.statusCode = 201;
   res.send(newUser);
@@ -46,7 +46,7 @@ const create = (req, res) => {
 
 const remove = (req, res) => {
   const { userId } = req.params;
-  const isUserRemoved = UsersModel.removeUser(Number(userId));
+  const isUserRemoved = userService.removeUser(Number(userId));
 
   if (!isUserRemoved) {
     res.sendStatus(404);
@@ -67,7 +67,7 @@ const update = (req, res) => {
     return;
   }
 
-  const updatedUser = UsersModel.updateUser(Number(userId), name);
+  const updatedUser = userService.updateUser(Number(userId), name);
 
   if (!updatedUser) {
     res.sendStatus(404);

@@ -1,6 +1,6 @@
 'use strict';
 
-class UsersModel {
+class UserModel {
   constructor() {
     this.users = [];
   }
@@ -18,7 +18,7 @@ class UsersModel {
   }
 
   addUser(name) {
-    const maxId = this.users.lengt
+    const maxId = this.users.length
       ? Math.max(...this.users.map(user => user.id))
       : -1;
     const newUser = {
@@ -55,5 +55,5 @@ class UsersModel {
 }
 
 module.exports = {
-  UsersModel: new UsersModel(),
+  userService: new UserModel(),
 };

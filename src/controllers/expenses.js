@@ -1,10 +1,10 @@
 'use strict';
 
-const { ExpensesModel } = require('../models/expenses.js');
-const { UsersModel } = require('../models/users.js');
+const { expensesService } = require('../services/expensesService.js');
+const { userService } = require('../services/usersService.js');
 
 const getAll = (req, res) => {
-  const filteredExpenses = ExpensesModel.getAll(req.query);
+  const filteredExpenses = expensesService.getAll(req.query);
 
   res.statusCode = 200;
   res.send(filteredExpenses);
@@ -12,7 +12,7 @@ const getAll = (req, res) => {
 
 const getById = (req, res) => {
   const { expenseId } = req.params;
-  const foundExpense = ExpensesModel.getById(Number(expenseId));
+  const foundExpense = expensesService.getById(Number(expenseId));
 
   if (!foundExpense) {
     res.sendStatus(404);
@@ -34,7 +34,7 @@ const create = (req, res) => {
     note,
   } = req.body;
 
-  const isUserExist = UsersModel.getById(Number(userId));
+  const isUserExist = userService.getById(Number(userId));
 
   if (!title || !isUserExist) {
     res.sendStatus(400);
@@ -42,7 +42,7 @@ const create = (req, res) => {
     return;
   }
 
-  const newExpense = ExpensesModel.create(
+  const newExpense = expensesService.create(
     userId,
     spentAt,
     title,
@@ -57,7 +57,7 @@ const create = (req, res) => {
 
 const remove = (req, res) => {
   const { expenseId } = req.params;
-  const isExpenseRemoved = ExpensesModel.remove(Number(expenseId));
+  const isExpenseRemoved = expensesService.remove(Number(expenseId));
 
   if (!isExpenseRemoved) {
     res.sendStatus(404);
@@ -70,7 +70,7 @@ const remove = (req, res) => {
 
 const update = (req, res) => {
   const { expenseId } = req.params;
-  const updatedExpense = ExpensesModel.update(Number(expenseId), req.body);
+  const updatedExpense = expensesService.update(Number(expenseId), req.body);
 
   if (!updatedExpense) {
     res.sendStatus(404);

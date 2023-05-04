@@ -6,11 +6,11 @@ function createServer() {
   const cors = require('cors');
   const { router: usersRouter } = require('./routes/users.js');
   const { router: expensesRouter } = require('./routes/expenses.js');
-  const { ExpensesModel } = require('./models/expenses.js');
-  const { UsersModel } = require('./models/users.js');
+  const { expensesService } = require('./services/expensesService.js');
+  const { userService } = require('./services/usersService.js');
 
-  ExpensesModel.reset();
-  UsersModel.reset();
+  expensesService.reset();
+  userService.reset();
 
   const app = express();
 
