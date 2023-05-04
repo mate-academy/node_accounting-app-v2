@@ -71,7 +71,14 @@ const add = (req, res) => {
     return;
   }
 
-  const newExpense = expenseService.create(req.body);
+  const newExpense = expenseService.create({
+    userId,
+    spentAt,
+    title,
+    amount,
+    category,
+    note,
+  });
 
   res.statusCode = 201;
   res.send(newExpense);
@@ -101,6 +108,13 @@ const remove = (req, res) => {
 
 const update = (req, res) => {
   const { expenseId } = req.params;
+  const {
+    spentAt,
+    title,
+    amount,
+    category,
+    note,
+  } = req.body;
 
   if (!expenseId) {
     res.sendStatus(400);
@@ -116,7 +130,13 @@ const update = (req, res) => {
     return;
   }
 
-  expenseService.update(foundExpense, req.body);
+  expenseService.update(foundExpense, {
+    spentAt: spentAt || foundExpense.spentAt,
+    title: title || foundExpense.title,
+    amount: amount || foundExpense.amount,
+    category: category || foundExpense.category,
+    note: note || foundExpense.note,
+  });
 
   res.statusCode = 200;
   res.send(foundExpense);

@@ -68,6 +68,7 @@ const remove = (req, res) => {
 
 const update = (req, res) => {
   const { userId } = req.params;
+  const { name } = req.body;
 
   if (!userId) {
     res.sendStatus(400);
@@ -83,7 +84,7 @@ const update = (req, res) => {
     return;
   }
 
-  userService.update(foundUser, req.body);
+  userService.update(foundUser, { name });
 
   res.statusCode = 200;
   res.send(foundUser);

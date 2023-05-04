@@ -6,7 +6,7 @@ class Users {
     this.idCounter = 0;
   }
 
-  init() {
+  reset() {
     this.data = [];
     this.idCounter = 0;
   }
