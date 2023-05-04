@@ -33,7 +33,7 @@ function getUserAction(req, res) {
   const { userId } = req.params;
 
   if (!userId) {
-    res.sendStatus(422);
+    res.sendStatus(404);
 
     return;
   }
@@ -52,7 +52,7 @@ function deleteUserAction(req, res) {
   const { userId } = req.params;
 
   if (!userId) {
-    res.sendStatus(422);
+    res.sendStatus(404);
 
     return;
   }
