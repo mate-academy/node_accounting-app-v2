@@ -25,7 +25,7 @@ function addExpenseAction(req, res) {
 
   if (missingFields.length
     || !getAllExpenses().filter((el) => el.userId === userId).length) {
-    res.sendStatus(422);
+    res.sendStatus(400);
 
     return;
   }
@@ -61,11 +61,20 @@ function deleteExpenseAction(req, res) {
   res.sendStatus(204);
 };
 
+function checkObjectProps(obj, arr) {
+  const keys = Object.keys(obj);
+
+  return keys.some(element => !arr.includes(element));
+}
+
 function updateExpenseAction(req, res) {
   const { expenseId } = req.params;
   const expense = req.body;
+  const listPlaces = ['title', 'amount', 'category', 'note'];
 
-  if (!getAllExpenses().filter((el) => el.id === expenseId).length) {
+  if (!getAllExpenses().filter((el) => el.id === expenseId).length
+      || checkObjectProps(expense, listPlaces)
+  ) {
     res.sendStatus(404);
 
     return;

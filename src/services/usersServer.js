@@ -8,7 +8,7 @@ let users = [{
   id: uuidv4(), name: 'Oleg',
 } ];
 
-function getAll() {
+function getAllUsers() {
   return users;
 };
 
@@ -19,11 +19,13 @@ function addUser(name) {
 };
 
 function getUser(id) {
-  return users.filter(el => el.id === id);
+  return users.find(el => el.id === id);
 }
 
 function deleteUser(id) {
   users = users.filter(el => el.id !== id);
+
+  return true;
 }
 
 function updateUser(id, name) {
@@ -34,8 +36,10 @@ function updateUser(id, name) {
 
     return el;
   });
+
+  return true;
 };
 
 module.exports = {
-  getAll, addUser, getUser, deleteUser, updateUser,
+  getAllUsers, addUser, getUser, deleteUser, updateUser,
 };

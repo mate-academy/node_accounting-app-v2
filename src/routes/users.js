@@ -2,8 +2,8 @@
 
 const express = require('express');
 const {
-  getAllAction,
-  addUsersAction,
+  getAllUsersAction,
+  addUserAction,
   getUserAction,
   deleteUserAction,
   updateUserAction,
@@ -11,9 +11,9 @@ const {
 
 const router = express.Router();
 
-router.get('/', getAllAction);
+router.get('/', getAllUsersAction);
 
-router.post('/', addUsersAction);
+router.post('/', addUserAction);
 
 router.get('/:userId', getUserAction);
 
@@ -21,4 +21,4 @@ router.delete('/:userId', deleteUserAction);
 
 router.patch('/:userId', updateUserAction);
 
-module.exports = { router };
+module.exports = router;

@@ -1,24 +1,24 @@
 'use strict';
 
 const {
-  getAll,
+  getAllUsers,
   addUser,
   getUser,
   deleteUser,
   updateUser,
 } = require('../services/usersServer');
 
-function getAllAction(req, res) {
-  const users = getAll();
+function getAllUsersAction(req, res) {
+  const users = getAllUsers();
 
   res.send(users);
 };
 
-function addUsersAction(req, res) {
+function addUserAction(req, res) {
   const { name } = req.body;
 
   if (!name) {
-    res.sendStatus(422);
+    res.sendStatus(400);
 
     return;
   }
@@ -40,7 +40,7 @@ function getUserAction(req, res) {
 
   const user = getUser(userId);
 
-  if (!user.length) {
+  if (!user) {
     res.sendStatus(404);
   }
 
@@ -65,8 +65,8 @@ function updateUserAction(req, res) {
   const { userId } = req.params;
   const { name } = req.body;
 
-  if (!getAll().filter(el => el.id === userId).length) {
-    res.sendStatus(404);
+  if (!name) {
+    res.sendStatus(400);
 
     return;
   }
@@ -77,8 +77,8 @@ function updateUserAction(req, res) {
 }
 
 module.exports = {
-  getAllAction,
-  addUsersAction,
+  getAllUsersAction,
+  addUserAction,
   getUserAction,
   deleteUserAction,
   updateUserAction,

@@ -1,11 +1,11 @@
 'use strict';
 
 const { v4: uuidv4 } = require('uuid');
-const { getAll } = require('../services/usersServer');
+const { getAllUsers } = require('../services/usersServer');
 
 let expenses = [];
 
-getAll().forEach((el, index) => {
+getAllUsers().forEach((el, index) => {
   const date = new Date();
 
   expenses.push({
@@ -15,7 +15,6 @@ getAll().forEach((el, index) => {
     title: 'Test',
     amount: 10000,
     category: 'salary',
-    note: '',
   });
 });
 

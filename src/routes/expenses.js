@@ -21,4 +21,4 @@ routerExpenses.delete('/:expenseId', deleteExpenseAction);
 
 routerExpenses.patch('/:expenseId', updateExpenseAction);
 
-module.exports = { routerExpenses };
+module.exports = routerExpenses;
