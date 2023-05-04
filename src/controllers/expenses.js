@@ -13,12 +13,7 @@ const getAll = (req, res, _next) => {
     return;
   }
 
-  const {
-    userId,
-    categories,
-    from,
-    to,
-  } = req.query;
+  const { userId, categories, from, to } = req.query;
 
   if (userId && !categories && !from && !to) {
     const foundUser = userService.getById(userId);
@@ -33,13 +28,15 @@ const getAll = (req, res, _next) => {
   let categoriesArray = categories;
 
   if (categoriesArray) {
-    categoriesArray = Array.isArray(categories)
-      ? categories
-      : [ categories ];
+    categoriesArray = Array.isArray(categories) ? categories : [categories];
   }
 
-  const foundExpenses = expenseService
-    .getByParameters(userId, categoriesArray, from, to);
+  const foundExpenses = expenseService.getByParameters(
+    userId,
+    categoriesArray,
+    from,
+    to
+  );
 
   res.send(foundExpenses);
 };
@@ -56,22 +53,7 @@ const getOne = (req, res) => {
 };
 
 const add = (req, res) => {
-  const {
-    userId,
-    spentAt,
-    title,
-    amount,
-    category,
-    note,
-  } = req.body;
-
-  const foundUser = userService.getById(userId);
-
-  if (!foundUser) {
-    res.sendStatus(400);
-
-    return;
-  };
+  const { userId, spentAt, title, amount, category, note } = req.body;
 
   if (
     typeof userId !== 'number'
@@ -81,6 +63,14 @@ const add = (req, res) => {
     || typeof category !== 'string'
     || typeof note !== 'string'
   ) {
+    res.sendStatus(400);
+
+    return;
+  }
+
+  const foundUser = userService.getById(userId);
+
+  if (!foundUser) {
     res.sendStatus(400);
 
     return;
@@ -115,10 +105,7 @@ const remove = (req, res) => {
 
 const update = (req, res) => {
   const { expenseId } = req.params;
-  const {
-    spentAt,
-    amount,
-  } = req.body;
+  const { spentAt, amount } = req.body;
 
   const foundExpense = expenseService.getById(expenseId);
 
