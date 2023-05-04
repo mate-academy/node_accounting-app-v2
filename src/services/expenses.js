@@ -28,7 +28,7 @@ const getById = (expenseId) => {
   return foundExpense || null;
 };
 
-const create = (userId, spentAt, title, amount, category, note) => {
+const create = ({ userId, spentAt, title, amount, category, note }) => {
   const newExpense = {
     id: expenses.length + 1,
     userId,
@@ -54,9 +54,7 @@ const remove = (expenseId) => {
 const update = (expenseId, title) => {
   const foundExpense = getById(expenseId);
 
-  const updatedExpense = Object.assign(foundExpense, { title });
-
-  return updatedExpense;
+  Object.assign(foundExpense, { title });
 };
 
 module.exports = {

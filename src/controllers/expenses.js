@@ -43,9 +43,7 @@ const getOne = (req, res) => {
   const foundExpense = expensesService.getById(expenseId);
 
   if (!foundExpense) {
-    res.sendStatus(404);
-
-    return;
+    return res.sendStatus(404);
   }
 
   res.statusCode = 200;
@@ -55,29 +53,18 @@ const getOne = (req, res) => {
 const add = (req, res) => {
   const {
     userId,
-    spentAt,
     title,
     amount,
     category,
-    note,
   } = req.body;
 
   const foundUser = usersService.getById(userId);
 
   if (!userId || !title || !amount || !category || !foundUser) {
-    res.sendStatus(400);
-
-    return;
+    return res.sendStatus(400);
   }
 
-  const newExpense = expensesService.create(
-    userId,
-    spentAt,
-    title,
-    amount,
-    category,
-    note,
-  );
+  const newExpense = expensesService.create(req.body);
 
   res.statusCode = 201;
   res.send(newExpense);
@@ -89,9 +76,7 @@ const remove = (req, res) => {
   const foundExpenses = expensesService.getById(expenseId);
 
   if (!foundExpenses) {
-    res.sendStatus(404);
-
-    return;
+    return res.sendStatus(404);
   }
 
   expensesService.remove(expenseId);
@@ -105,15 +90,13 @@ const update = (req, res) => {
   const foundExpense = expensesService.getById(expenseId);
 
   if (!foundExpense) {
-    res.sendStatus(404);
-
-    return;
+    return res.sendStatus(404);
   }
 
-  const updatedExpense = expensesService.update(expenseId, title);
+  expensesService.update(expenseId, title);
 
   res.statusCode = 200;
-  res.send(updatedExpense);
+  res.send(foundExpense);
 };
 
 module.exports = {

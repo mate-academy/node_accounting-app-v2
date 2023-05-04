@@ -26,17 +26,13 @@ const create = (name) => {
 };
 
 const remove = (userId) => {
-  const filteredUsers = users.filter(user => user.id !== +userId);
-
-  users = filteredUsers;
+  users = users.filter(user => user.id !== +userId);
 };
 
 const update = (userId, name) => {
   const foundUser = getById(userId);
 
-  const updatedUser = Object.assign(foundUser, { name });
-
-  return updatedUser;
+  Object.assign(foundUser, { name });
 };
 
 module.exports = {
