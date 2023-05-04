@@ -10,37 +10,43 @@ const getInitial = () => {
   return expenses;
 };
 
-const getAllExpenses = ({
-  userId,
+const getAllExpenses = (
+  id,
   categories,
   from,
   to,
-}) => {
+) => {
   let visibleExpenses = expenses;
 
-  if (userId) {
-    visibleExpenses = expenses.filter(expense => expense.userId === +userId);
+  if (id) {
+    visibleExpenses = visibleExpenses.filter(
+      expense => expense.userId === id
+    );
   }
 
   if (categories) {
-    visibleExpenses = expenses.filter(
+    visibleExpenses = visibleExpenses.filter(
       ({ category }) => categories.includes(category)
     );
   }
 
   if (from) {
-    visibleExpenses = expenses.filter(({ spentAt }) => spentAt > from);
+    visibleExpenses = visibleExpenses.filter(
+      ({ spentAt }) => spentAt > from
+    );
   }
 
   if (to) {
-    visibleExpenses = expenses.filter(({ spentAt }) => spentAt < to);
+    visibleExpenses = visibleExpenses.filter(
+      ({ spentAt }) => spentAt < to
+    );
   }
 
   return visibleExpenses;
 };
 
 const getExpenseById = (expenseId) => {
-  const foundExpense = expenses.find(({ id }) => id === +expenseId);
+  const foundExpense = expenses.find(({ id }) => id === expenseId);
 
   return foundExpense || null;
 };
@@ -57,7 +63,7 @@ const createExpense = (expenseBody) => {
 };
 
 const removeExpense = (expenseId) => {
-  expenses = expenses.filter(({ id }) => id !== +expenseId);
+  expenses = expenses.filter(({ id }) => id !== expenseId);
 };
 
 const updateExpense = (expenseId, body) => {

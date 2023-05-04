@@ -13,7 +13,7 @@ const getInitial = () => {
 const getAllUsers = () => users;
 
 const getUserById = (userId) => {
-  const foundUser = users.find(user => user.id === +userId);
+  const foundUser = users.find(user => user.id === userId);
 
   return foundUser || null;
 };
@@ -30,7 +30,7 @@ const createUser = (name) => {
 };
 
 const removeUser = (userId) => {
-  users = users.filter(user => user.id !== +userId);
+  users = users.filter(user => user.id !== userId);
 };
 
 const updateUser = ({ id, name }) => {
