@@ -23,9 +23,7 @@ const add = (req, res) => {
   const { name } = req.body;
 
   if (!name) {
-    res.sendStatus(400);
-
-    return;
+    return res.sendStatus(400);
   }
 
   const newUser = userService.create(req.body);

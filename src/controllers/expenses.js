@@ -4,27 +4,32 @@ const expenseService = require('../services/expenses');
 const userService = require('../services/users');
 
 const getAll = (req, res) => {
-  const { userId, from, to, categories } = req.query;
-  let copyExpenses = [...expenseService.getAll()];
+  const {
+    userId,
+    from,
+    to,
+    categories,
+  } = req.query;
+  let expenses = expenseService.getAll();
 
   if (+userId) {
-    copyExpenses = copyExpenses.filter(expense => expense.userId === +userId);
+    expenses = expenses.filter(expense => expense.userId === +userId);
   }
 
   if (from) {
-    copyExpenses = copyExpenses.filter(expense => expense.spentAt >= from);
+    expenses = expenses.filter(expense => expense.spentAt >= from);
   }
 
   if (to) {
-    copyExpenses = copyExpenses.filter(expense => expense.spentAt <= to);
+    expenses = expenses.filter(expense => expense.spentAt <= to);
   }
 
   if (categories) {
-    copyExpenses
-      = copyExpenses.filter(expense => categories.includes(expense.category));
+    expenses
+      = expenses.filter(expense => categories.includes(expense.category));
   }
 
-  res.send(copyExpenses);
+  res.send(expenses);
 };
 
 const getOne = (req, res) => {
@@ -32,9 +37,7 @@ const getOne = (req, res) => {
   const foundExpense = expenseService.getById(expenseId);
 
   if (!foundExpense) {
-    res.sendStatus(404);
-
-    return;
+    return res.sendStatus(404);
   }
 
   res.send(foundExpense);
@@ -52,9 +55,7 @@ const add = (req, res) => {
   const foundUser = userService.getById(userId);
 
   if (!amount || !category || !note || !spentAt || !title || !foundUser) {
-    res.sendStatus(400);
-
-    return;
+    return res.sendStatus(400);
   }
 
   const newExpense = expenseService.create(req.body);

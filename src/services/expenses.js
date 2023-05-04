@@ -1,10 +1,6 @@
 'use strict';
 
-const getNewId = (array) => {
-  return array.length
-    ? Math.max(...array.map(element => element.id)) + 1
-    : 1;
-};
+const { getNewId } = require('../utils/helpers');
 
 let expenses = [];
 
@@ -13,7 +9,7 @@ const getAll = () => {
 };
 
 const getById = (expenseId) => {
-  const foundExpense = expenses.find(expense => expense.id === +expenseId);
+  const foundExpense = expenses.find(({ id }) => id === +expenseId);
 
   return foundExpense || null;
 };
@@ -30,7 +26,7 @@ const create = (expenseBody) => {
 };
 
 const remove = (expenseId) => {
-  expenses = expenses.filter(expense => expense.id !== +expenseId);
+  expenses = expenses.filter(({ id }) => id !== +expenseId);
 };
 
 const update = (expense, expenseBody) => {

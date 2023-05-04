@@ -2,6 +2,9 @@
 
 const express = require('express');
 
+const { router: expensesRouter } = require('./routes/expenses');
+const { router: usersRouter } = require('./routes/users');
+
 const expenseController = require('./controllers/expenses');
 const userController = require('./controllers/users');
 
@@ -9,18 +12,8 @@ function createServer() {
   const app = express();
 
   app.use(express.json());
-
-  app.get('/expenses', expenseController.getAll);
-  app.get('/expenses/:expenseId', expenseController.getOne);
-  app.post('/expenses', expenseController.add);
-  app.delete('/expenses/:expenseId', expenseController.remove);
-  app.patch('/expenses/:expenseId', expenseController.change);
-
-  app.get('/users', userController.getAll);
-  app.get('/users/:userId', userController.getOne);
-  app.post('/users', userController.add);
-  app.delete('/users/:userId', userController.remove);
-  app.patch('/users/:userId', userController.change);
+  app.use('/expenses', expensesRouter);
+  app.use('/users', usersRouter);
 
   expenseController.reset();
   userController.reset();
