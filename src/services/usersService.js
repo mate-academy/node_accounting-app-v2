@@ -18,9 +18,10 @@ class UserModel {
   }
 
   addUser(name) {
-    const maxId = this.users.length
-      ? Math.max(...this.users.map(user => user.id))
-      : -1;
+    const maxId = this.users.reduce(
+      (max, user) => Math.max(max, user.id),
+      -1,
+    );
     const newUser = {
       id: maxId + 1,
       name,
@@ -32,7 +33,7 @@ class UserModel {
   }
 
   removeUser(userId) {
-    if (!this.users.some(user => user.id === userId)) {
+    if (!this.getById(userId)) {
       return false;
     }
 
@@ -42,7 +43,7 @@ class UserModel {
   }
 
   updateUser(userId, name) {
-    const foundUser = this.users.find(user => user.id === userId) || null;
+    const foundUser = this.getById(userId);
 
     if (!foundUser) {
       return foundUser;

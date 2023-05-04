@@ -9,19 +9,17 @@ class ExpensesModel {
     this.expenses = [];
   }
 
-  getAll(requestBody) {
-    const {
-      userId,
-      categories,
-      from,
-      to,
-    } = requestBody;
-
+  getAll({
+    userId,
+    categories,
+    from,
+    to,
+  }) {
     let filteredExpenses = this.expenses;
 
     if (userId) {
       filteredExpenses = filteredExpenses.filter(
-        expense => expense.userId === +userId,
+        expense => expense.userId === Number(userId),
       );
     }
 
@@ -54,17 +52,18 @@ class ExpensesModel {
     return foundExpense;
   }
 
-  create(
+  create({
     userId,
     spentAt,
     title,
     amount,
     category,
     note,
-  ) {
-    const maxId = this.expenses.length
-      ? Math.max(...this.expenses.map(({ id }) => id))
-      : -1;
+  }) {
+    const maxId = this.expenses.reduce(
+      (max, expense) => Math.max(max, expense.id),
+      -1,
+    );
     const tempExpense = {
       id: maxId + 1,
       userId,

@@ -6,7 +6,6 @@ const { userService } = require('../services/usersService.js');
 const getAll = (req, res) => {
   const filteredExpenses = expensesService.getAll(req.query);
 
-  res.statusCode = 200;
   res.send(filteredExpenses);
 };
 
@@ -20,36 +19,24 @@ const getById = (req, res) => {
     return;
   }
 
-  res.statusCode = 200;
   res.send(foundExpense);
 };
 
 const create = (req, res) => {
   const {
     userId,
-    spentAt,
     title,
-    amount,
-    category,
-    note,
   } = req.body;
 
-  const isUserExist = userService.getById(Number(userId));
+  const user = userService.getById(Number(userId));
 
-  if (!title || !isUserExist) {
+  if (!title || !user) {
     res.sendStatus(400);
 
     return;
   }
 
-  const newExpense = expensesService.create(
-    userId,
-    spentAt,
-    title,
-    amount,
-    category,
-    note,
-  );
+  const newExpense = expensesService.create(req.body);
 
   res.statusCode = 201;
   res.send(newExpense);
@@ -89,7 +76,6 @@ const update = (req, res) => {
     return;
   }
 
-  res.statusCode = 200;
   res.send(updatedExpense);
 };
 
