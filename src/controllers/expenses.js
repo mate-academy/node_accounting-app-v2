@@ -64,7 +64,7 @@ const add = (req, res) => {
 
   const foundUser = usersService.getById(userId);
 
-  if (!foundUser) {
+  if (!userId || !title || !amount || !category || !foundUser) {
     res.sendStatus(400);
 
     return;

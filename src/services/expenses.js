@@ -6,7 +6,7 @@ const init = () => {
   expenses = [];
 };
 
-const getAll = (userId, category, from, to) => {
+const getAll = (category, from, to) => {
   let filteredExpenses = expenses;
 
   if (category) {
@@ -17,13 +17,6 @@ const getAll = (userId, category, from, to) => {
   if (from && to) {
     filteredExpenses = filteredExpenses
       .filter(expense => expense.spentAt >= from && expense.spentAt <= to);
-  }
-
-  if (userId) {
-    const foundUser = expenses
-      .filter(expense => expense.userId === +userId);
-
-    return foundUser;
   }
 
   return filteredExpenses;
