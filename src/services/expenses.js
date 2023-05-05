@@ -57,7 +57,7 @@ class Expenses {
   }
 
   getById(expenseId) {
-    const foundExpense = this.data.find(({ id }) => id === +expenseId);
+    const foundExpense = this.data.find(({ id }) => id === expenseId);
 
     return foundExpense || null;
   }
@@ -76,7 +76,7 @@ class Expenses {
   }
 
   removeById(expenseId) {
-    this.data = this.data.filter(({ id }) => id !== +expenseId);
+    this.data = this.data.filter(({ id }) => id !== expenseId);
   }
 
   update(expense, partsToUpdate) {

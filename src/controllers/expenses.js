@@ -22,7 +22,6 @@ const getAll = (req, res) => {
 
   const foundExpenses = expenseService.getAll(filterOptions);
 
-  res.statusCode = 200;
   res.send(foundExpenses);
 };
 
@@ -35,7 +34,7 @@ const getOne = (req, res) => {
     return;
   }
 
-  const foundExpense = expenseService.getById(expenseId);
+  const foundExpense = expenseService.getById(+expenseId);
 
   if (!foundExpense) {
     res.sendStatus(404);
@@ -43,7 +42,6 @@ const getOne = (req, res) => {
     return;
   }
 
-  res.statusCode = 200;
   res.send(foundExpense);
 };
 
@@ -63,7 +61,7 @@ const add = (req, res) => {
     return;
   }
 
-  const foundUser = userService.getById(userId);
+  const foundUser = userService.getById(+userId);
 
   if (!foundUser) {
     res.sendStatus(400);
@@ -93,7 +91,7 @@ const remove = (req, res) => {
     return;
   }
 
-  const foundExpense = expenseService.getById(expenseId);
+  const foundExpense = expenseService.getById(+expenseId);
 
   if (!foundExpense) {
     res.sendStatus(404);
@@ -101,7 +99,7 @@ const remove = (req, res) => {
     return;
   }
 
-  expenseService.removeById(expenseId);
+  expenseService.removeById(+expenseId);
 
   res.sendStatus(204);
 };
@@ -122,7 +120,7 @@ const update = (req, res) => {
     return;
   }
 
-  const foundExpense = expenseService.getById(expenseId);
+  const foundExpense = expenseService.getById(+expenseId);
 
   if (!foundExpense) {
     res.sendStatus(404);
@@ -138,7 +136,6 @@ const update = (req, res) => {
     note: note || foundExpense.note,
   });
 
-  res.statusCode = 200;
   res.send(foundExpense);
 };
 

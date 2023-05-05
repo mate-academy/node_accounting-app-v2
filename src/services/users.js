@@ -16,7 +16,7 @@ class Users {
   }
 
   getById(userId) {
-    const foundUser = this.data.find(({ id }) => id === +userId);
+    const foundUser = this.data.find(({ id }) => id === userId);
 
     return foundUser || null;
   }
@@ -35,7 +35,7 @@ class Users {
   }
 
   removeById(userId) {
-    this.data = this.data.filter(({ id }) => id !== +userId);
+    this.data = this.data.filter(({ id }) => id !== userId);
   }
 
   update(user, partsToUpdate) {
