@@ -6,31 +6,50 @@ const init = () => {
   expenses = [];
 };
 
-const getAll = (category, from, to) => {
+const getAll = (params) => {
+  const { userId, categories, from, to } = params;
+
   let filteredExpenses = expenses;
 
-  if (category) {
-    filteredExpenses = filteredExpenses
-      .filter(expense => expense.category === category);
+  if (userId) {
+    filteredExpenses = expenses.filter(expense => expense.userId === +userId);
+  }
+
+  if (categories) {
+    filteredExpenses = expenses.filter(({ category }) => (
+      categories.includes(category)
+    ));
   }
 
   if (from && to) {
-    filteredExpenses = filteredExpenses
-      .filter(expense => expense.spentAt >= from && expense.spentAt <= to);
+    const fromDate = new Date(from).getTime();
+    const toDate = new Date(to).getTime();
+
+    filteredExpenses = expenses.filter(expense => {
+      const currentDate = new Date(expense.spentAt).getTime();
+
+      return fromDate <= currentDate && currentDate <= toDate;
+    });
   }
 
   return filteredExpenses;
 };
 
 const getById = (expenseId) => {
-  const foundExpense = expenses.find(expense => expense.id === +expenseId);
+  const foundExpense = expenses.find(expense => expense.id === expenseId);
 
   return foundExpense || null;
 };
 
 const create = ({ userId, spentAt, title, amount, category, note }) => {
+  const ids = expenses.map(expense => expense.id);
+
+  const maxId = expenses.length
+    ? Math.max(...ids)
+    : 0;
+
   const newExpense = {
-    id: expenses.length + 1,
+    id: maxId + 1,
     userId,
     spentAt,
     title,
@@ -46,15 +65,15 @@ const create = ({ userId, spentAt, title, amount, category, note }) => {
 
 const remove = (expenseId) => {
   const filteredExpenses = expenses
-    .filter(expense => expense.id !== +expenseId);
+    .filter(expense => expense.id !== expenseId);
 
   expenses = filteredExpenses;
 };
 
-const update = (expenseId, title) => {
+const update = (expenseId, data) => {
   const foundExpense = getById(expenseId);
 
-  Object.assign(foundExpense, { title });
+  Object.assign(foundExpense, { ...data });
 };
 
 module.exports = {

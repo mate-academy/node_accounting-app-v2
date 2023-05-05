@@ -11,7 +11,7 @@ const getAll = (req, res) => {
 const getOne = (req, res) => {
   const { userId } = req.params;
 
-  const foundUser = usersService.getById(userId);
+  const foundUser = usersService.getById(+userId);
 
   if (!foundUser) {
     return res.sendStatus(404);
@@ -37,13 +37,13 @@ const add = (req, res) => {
 const remove = (req, res) => {
   const { userId } = req.params;
 
-  const foundUser = usersService.getById(userId);
+  const foundUser = usersService.getById(+userId);
 
   if (!foundUser) {
     return res.sendStatus(404);
   }
 
-  usersService.remove(userId);
+  usersService.remove(+userId);
   res.sendStatus(204);
 };
 
@@ -51,7 +51,7 @@ const update = (req, res) => {
   const { userId } = req.params;
   const { name } = req.body;
 
-  const foundUser = usersService.getById(userId);
+  const foundUser = usersService.getById(+userId);
 
   if (!foundUser) {
     return res.sendStatus(404);
@@ -61,7 +61,7 @@ const update = (req, res) => {
     return res.status(422);
   }
 
-  usersService.update(userId, name);
+  usersService.update(+userId, name);
 
   res.statusCode = 200;
   res.send(foundUser);
