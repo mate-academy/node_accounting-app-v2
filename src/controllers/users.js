@@ -23,22 +23,22 @@ function addUserAction(req, res) {
     return;
   }
 
-  addUser(name);
+  const user = addUser(name);
 
   res.statusCode = 201;
-  res.send('Added');
+  res.send(user);
 }
 
 function getUserAction(req, res) {
-  const { userId } = req.params;
+  const { id } = req.params;
 
-  if (!userId) {
+  if (!id) {
     res.sendStatus(404);
 
     return;
   }
 
-  const user = getUser(userId);
+  const user = getUser(id);
 
   if (!user) {
     res.sendStatus(404);
@@ -49,20 +49,20 @@ function getUserAction(req, res) {
 }
 
 function deleteUserAction(req, res) {
-  const { userId } = req.params;
+  const { id } = req.params;
 
-  if (!userId) {
+  if (!id) {
     res.sendStatus(404);
 
     return;
   }
 
-  deleteUser(userId);
+  deleteUser(id);
   res.sendStatus(204);
 };
 
 function updateUserAction(req, res) {
-  const { userId } = req.params;
+  const { id } = req.params;
   const { name } = req.body;
 
   if (!name) {
@@ -71,7 +71,7 @@ function updateUserAction(req, res) {
     return;
   }
 
-  updateUser(userId, name);
+  updateUser(id, name);
 
   res.sendStatus(200);
 }

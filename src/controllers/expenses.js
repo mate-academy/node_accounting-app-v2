@@ -7,80 +7,97 @@ const {
   deleteExpense,
   updateExpense,
 } = require('../services/exprensesService');
+const { getAllUsers } = require('../services/usersServer.js');
 
 function getAllExpensesAction(req, res) {
   const expenses = getAllExpenses();
 
-  res.send(expenses);
+  res.json(expenses);
 };
 
 function addExpenseAction(req, res) {
   const expense = req.body;
-  const listPlaces = ['title', 'amount', 'category', 'note'];
+  const allowedKeys = [
+    'title',
+    'mount',
+    'category',
+    'note',
+    'spentAt',
+    'userId',
+  ];
   const keysExpense = Object.keys(expense);
-  const { userId } = req.body;
 
-  const missingFields = listPlaces
-    .filter(field => !keysExpense.includes(field));
+  const missingFields = keysExpense.every(key => allowedKeys.includes(key));
 
-  if (missingFields.length
-    || !getAllExpenses().filter((el) => el.userId === userId).length) {
+  if (
+    !getAllUsers().length
+    || !getAllUsers().filter((el) => el.id === expense.userId).length
+    || !missingFields) {
     res.sendStatus(400);
 
     return;
   }
 
-  addExpense(expense);
+  const newExpense = addExpense(expense);
 
-  res.sendStatus(201);
+  res.json(newExpense);
+  res.status(201);
 };
 
 function getExpenseAction(req, res) {
-  const { expenseId } = req.params;
+  const { id } = req.params;
 
-  if (!getAllExpenses().filter((el) => el.id === expenseId).length) {
+  if (!getAllExpenses().filter((el) => el.userId === id).length) {
     res.sendStatus(404);
 
     return;
   }
 
-  res.send(getExpense(expenseId));
+  res.json(getExpense(id));
 };
 
 function deleteExpenseAction(req, res) {
-  const { expenseId } = req.params;
+  const { id } = req.params;
 
-  if (!getAllExpenses().filter((el) => el.id === expenseId).length) {
+  if (!getAllExpenses().filter((el) => el.id === id).length) {
     res.sendStatus(404);
 
     return;
   }
 
-  deleteExpense(expenseId);
+  deleteExpense(id);
 
   res.sendStatus(204);
 };
 
-function checkObjectProps(obj, arr) {
-  const keys = Object.keys(obj);
-
-  return keys.some(element => !arr.includes(element));
-}
-
 function updateExpenseAction(req, res) {
-  const { expenseId } = req.params;
+  const { id } = req.params;
   const expense = req.body;
-  const listPlaces = ['title', 'amount', 'category', 'note'];
+  const allowedKeys = [
+    'title',
+    'mount',
+    'category',
+    'note',
+    'spentAt',
+    'userId',
+  ];
+  const keysExpense = Object.keys(expense);
 
-  if (!getAllExpenses().filter((el) => el.id === expenseId).length
-      || checkObjectProps(expense, listPlaces)
-  ) {
+  const missingFields = keysExpense.every(key => allowedKeys.includes(key));
+
+  if (!missingFields) {
+    res.sendStatus(400);
+
+    return;
+  }
+
+  if (!getAllExpenses().filter((el) => el.userId === id).length) {
     res.sendStatus(404);
 
     return;
   }
 
-  updateExpense(expenseId, expense);
+  updateExpense(id, expense);
 
   res.sendStatus(200);
 }

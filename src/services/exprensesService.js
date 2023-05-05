@@ -1,39 +1,26 @@
 'use strict';
 
 const { v4: uuidv4 } = require('uuid');
-const { getAllUsers } = require('../services/usersServer');
 
 let expenses = [];
-
-getAllUsers().forEach((el, index) => {
-  const date = new Date();
-
-  expenses.push({
-    id: uuidv4(),
-    userId: el.id,
-    spentAt: new Date(date.getTime() + index * 10000),
-    title: 'Test',
-    amount: 10000,
-    category: 'salary',
-  });
-});
 
 function getAllExpenses() {
   return expenses;
 };
 
 function addExpense(obj) {
-  expenses.push(
-    {
-      id: uuidv4(),
-      spentAt: new Date(),
-      ...obj,
-    }
-  );
+  const newExpense = {
+    id: uuidv4(),
+    ...obj,
+  };
+
+  expenses.push(newExpense);
+
+  return newExpense;
 }
 
 function getExpense(id) {
-  return expenses.find((el) => el.id === id);
+  return expenses.filter((el) => el.userId === id);
 }
 
 function deleteExpense(id) {
@@ -42,7 +29,7 @@ function deleteExpense(id) {
 
 function updateExpense(id, obj) {
   expenses = expenses.map((el) => {
-    if (el.id === id) {
+    if (el.userId === id) {
       return {
         ...el,
         ...obj,

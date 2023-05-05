@@ -15,10 +15,10 @@ router.get('/', getAllUsersAction);
 
 router.post('/', addUserAction);
 
-router.get('/:userId', getUserAction);
+router.get('/:id', getUserAction);
 
-router.delete('/:userId', deleteUserAction);
+router.delete('/:id', deleteUserAction);
 
-router.patch('/:userId', updateUserAction);
+router.patch('/:id', updateUserAction);
 
 module.exports = router;

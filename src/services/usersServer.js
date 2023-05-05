@@ -2,20 +2,20 @@
 
 const { v4: uuidv4 } = require('uuid');
 
-let users = [{
-  id: uuidv4(), name: 'Vasy',
-}, {
-  id: uuidv4(), name: 'Oleg',
-} ];
+let users = [];
 
 function getAllUsers() {
   return users;
 };
 
 function addUser(name) {
-  users.push({
+  const newUser = {
     id: uuidv4(), name,
-  });
+  };
+
+  users.push(newUser);
+
+  return newUser;
 };
 
 function getUser(id) {

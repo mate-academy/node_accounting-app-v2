@@ -35,6 +35,9 @@ describe('Expense', () => {
         .expect(201)
         .expect('Content-Type', /application\/json/);
 
+      // eslint-disable-next-line no-console
+      console.log(response.body);
+
       expect(response.body)
         .toEqual(
           expect.objectContaining({

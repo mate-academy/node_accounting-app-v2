@@ -15,10 +15,10 @@ routerExpenses.get('/', getAllExpensesAction);
 
 routerExpenses.post('/', addExpenseAction);
 
-routerExpenses.get('/:expenseId', getExpenseAction);
+routerExpenses.get('/:id', getExpenseAction);
 
-routerExpenses.delete('/:expenseId', deleteExpenseAction);
+routerExpenses.delete('/:id', deleteExpenseAction);
 
-routerExpenses.patch('/:expenseId', updateExpenseAction);
+routerExpenses.patch('/:id', updateExpenseAction);
 
 module.exports = routerExpenses;
