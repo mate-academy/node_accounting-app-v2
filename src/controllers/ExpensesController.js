@@ -106,47 +106,11 @@ const remove = (req, res) => {
 
 const update = (req, res) => {
   const { id } = req.params;
-  const { spentAt, amount } = req.body;
 
   const foundExpense = expenseService.getById(+id);
 
   if (!foundExpense) {
     res.sendStatus(404);
-
-    return;
-  }
-
-  let isValid = true;
-
-  const isDateValid = (string) => {
-    const date = new Date(string);
-    const isDate = !isNaN(date.getTime());
-
-    return isDate;
-  };
-
-  for (const key in req.body) {
-    switch (key) {
-      case 'spentAt':
-        isValid = isDateValid(spentAt);
-        break;
-      case 'amount':
-        isValid = typeof amount === 'number';
-        break;
-      case 'title':
-      case 'category':
-      case 'note':
-        isValid = typeof req.body[key] === 'string';
-        break;
-      default:
-        res.sendStatus(422);
-
-        return;
-    }
-  }
-
-  if (!isValid) {
-    res.sendStatus(400);
 
     return;
   }
