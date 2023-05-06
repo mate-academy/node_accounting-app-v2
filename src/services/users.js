@@ -14,10 +14,10 @@ const getById = (userId) => {
   return foundUser;
 };
 
-const create = (userBody) => {
+const create = (name) => {
   const newUser = {
     id: getNewId(users),
-    ...userBody,
+    name,
   };
 
   users.push(newUser);

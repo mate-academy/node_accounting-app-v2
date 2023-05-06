@@ -26,7 +26,7 @@ const add = (req, res) => {
     return res.sendStatus(400);
   }
 
-  const newUser = userService.create(req.body);
+  const newUser = userService.create(name);
 
   res.status(201);
   res.send(newUser);

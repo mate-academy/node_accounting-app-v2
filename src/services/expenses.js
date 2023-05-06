@@ -4,7 +4,31 @@ const { getNewId } = require('../utils/helpers');
 
 let expenses = [];
 
-const getAll = () => {
+const getAll = (filters) => {
+  const {
+    userId,
+    from,
+    to,
+    categories,
+  } = filters;
+
+  if (+userId) {
+    expenses = expenses.filter(expense => expense.userId === +userId);
+  }
+
+  if (from) {
+    expenses = expenses.filter(expense => expense.spentAt >= from);
+  }
+
+  if (to) {
+    expenses = expenses.filter(expense => expense.spentAt <= to);
+  }
+
+  if (categories) {
+    expenses
+      = expenses.filter(expense => categories.includes(expense.category));
+  }
+
   return expenses;
 };
 
