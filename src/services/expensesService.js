@@ -64,8 +64,12 @@ class ExpensesService {
 
     return this.expenses[expenseIndex];
   }
+
+  resetExpenses() {
+    this.expenses = [];
+  }
 }
 
 module.exports = {
-  ExpensesService,
+  expenseService: new ExpensesService(),
 };

@@ -49,8 +49,12 @@ class UserService {
 
     return this.users[userIndex];
   }
+
+  resetUsers() {
+    this.users = [];
+  }
 }
 
 module.exports = {
-  UserService,
+  userService: new UserService(),
 };
