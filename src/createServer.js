@@ -21,8 +21,6 @@ function createServer() {
   return app;
 }
 
-createServer().listen(3000);
-
 module.exports = {
   createServer,
 };
