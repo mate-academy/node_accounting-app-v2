@@ -42,36 +42,23 @@ const updateUser = (req, res) => {
   const { userId } = req.params;
   const { name } = req.body;
 
-  const user = UserModel.updateUser(userId, name);
+  const updatedUser = UserModel.updateUser({
+    id: userId, name,
+  });
 
-  if (!user) {
+  if (!updatedUser) {
     res.status(404).send('User not found');
 
     return;
   }
 
-  if (typeof title !== 'string') {
+  if (typeof name !== 'string') {
     res.status(400).send('Bad request');
+
+    return;
   }
 
-  res.setStatus(200);
-  res.send(user);
-};
-
-const deleteUsers = (req, res) => {
-  const { ids } = req.body;
-
-  UserModel.removeUsers(ids);
-  res.sendStatus(204);
-};
-
-const updateUsers = (req, res) => {
-  const { ids } = req.body;
-
-  const updateUsersResult = UserModel.updateUsers(ids);
-
-  res.sendStatus(204);
-  res.send(updateUsersResult);
+  res.status(200).send(updatedUser);
 };
 
 module.exports = {
@@ -80,6 +67,4 @@ module.exports = {
   getOneUser,
   deleteUser,
   updateUser,
-  deleteUsers,
-  updateUsers,
 };

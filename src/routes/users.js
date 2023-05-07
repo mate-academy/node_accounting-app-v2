@@ -14,23 +14,7 @@ router.get('/:userId', UserController.getOneUser);
 
 router.delete('/:userId', UserController.deleteUser);
 
-router.put('/:userId', UserController.updateUser);
-
-const hasAction = (currentAction) => {
-  return (req, res, next) => {
-    const { action } = req.query;
-
-    if (currentAction === action) {
-      next();
-    } else {
-      next('route');
-    }
-  };
-};
-
-router.patch('/', hasAction('delete'), UserController.deleteUsers);
-
-router.patch('/', hasAction('update'), UserController.updateUsers);
+router.patch('/:userId', UserController.updateUser);
 
 module.exports = {
   router,
