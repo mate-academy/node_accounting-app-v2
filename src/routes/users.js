@@ -6,15 +6,15 @@ const express = require('express');
 
 const router = express.Router();
 
-router.get('/users', UserController.getAllUsers);
+router.get('/', UserController.getAllUsers);
 
-router.post('/users', UserController.addNewUser);
+router.post('/', UserController.addNewUser);
 
-router.get('/users/:userId', UserController.getOneUser);
+router.get('/:userId', UserController.getOneUser);
 
-router.delete('/users/:userId', UserController.deleteUser);
+router.delete('/:userId', UserController.deleteUser);
 
-router.put('/users/:userId', UserController.updateUser);
+router.put('/:userId', UserController.updateUser);
 
 const hasAction = (currentAction) => {
   return (req, res, next) => {
@@ -28,9 +28,9 @@ const hasAction = (currentAction) => {
   };
 };
 
-router.patch('/users', hasAction('delete'), UserController.deleteUsers);
+router.patch('/', hasAction('delete'), UserController.deleteUsers);
 
-router.patch('/users', hasAction('update'), UserController.updateUsers);
+router.patch('/', hasAction('update'), UserController.updateUsers);
 
 module.exports = {
   router,

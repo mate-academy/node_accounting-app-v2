@@ -1,8 +1,13 @@
 'use strict';
 
-class User {
+class Users {
   constructor() {
-    this.users = [];
+    this.users = [
+      {
+        id: 0,
+        name: 'John Doe',
+      },
+    ];
   }
 
   getUsers() {
@@ -78,5 +83,5 @@ class User {
 }
 
 module.exports = {
-  UserModel: new User(),
+  UserModel: new Users(),
 };

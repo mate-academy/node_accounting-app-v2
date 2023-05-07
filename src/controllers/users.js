@@ -11,7 +11,7 @@ const getAllUsers = (req, res) => {
 const addNewUser = (req, res) => {
   const { name } = req.body;
 
-  const newUser = UserModel.addUser(name);
+  const newUser = UserModel.addUser({ name });
 
   res.statusCode = 201;
   res.send(newUser);
@@ -19,7 +19,7 @@ const addNewUser = (req, res) => {
 
 const getOneUser = (req, res) => {
   const { userId } = req.params;
-  const user = UserModel.getUserById(userId);
+  const user = UserModel.getUser(+userId);
 
   if (!user) {
     res.status(404).send('User not found');
@@ -33,7 +33,7 @@ const getOneUser = (req, res) => {
 const deleteUser = (req, res) => {
   const { userId } = req.params;
 
-  const usersWithoutRemovedUser = UserModel.removeUser(userId);
+  const usersWithoutRemovedUser = UserModel.removeUser(+userId);
 
   res.send(usersWithoutRemovedUser);
 };
