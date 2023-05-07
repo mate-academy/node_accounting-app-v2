@@ -2,12 +2,11 @@
 
 class Users {
   constructor() {
-    this.users = [
-      {
-        id: 0,
-        name: 'John Doe',
-      },
-    ];
+    this.users = [];
+  }
+
+  reset() {
+    this.users = [];
   }
 
   getUsers() {
@@ -30,7 +29,15 @@ class Users {
   }
 
   removeUser(id) {
-    this.users = this.users.filter(user => user.id !== id);
+    const user = this.getUser(id);
+
+    if (!user) {
+      return null;
+    }
+
+    this.users = this.users.filter(currentUser => currentUser.id !== id);
+
+    return user;
   }
 
   updateUser({ id, name }) {
@@ -44,7 +51,7 @@ class Users {
     Object.assign(user, { name });
 
     return user;
-}
+  }
 }
 
 module.exports = {
