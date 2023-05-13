@@ -15,32 +15,34 @@ const {
 const { getById: getUserById } = require('../services/users');
 
 const getAllExpenses = (req, res) => {
-  let expenses = getAll();
   const { userId } = req.query;
   const { categories } = req.query;
   const { from, to } = req.query;
 
-  switch (true) {
-    case !!userId:
-      if (userId) {
-        expenses = getAllForUser(userId);
-      }
+  if (userId && !categories) {
+    res.send(getAllForUser(userId));
 
-    case !!categories:
-      if (categories) {
-        expenses = getAllForCategory(expenses, categories);
-      }
-
-    case (!!from && !!to):
-      if (from && to) {
-        const timestampFrom = new Date(from).getTime();
-        const timestampTo = new Date(to).getTime();
-
-        expenses = getAllBetweenDates(expenses, timestampFrom, timestampTo);
-      }
+    return;
   }
 
-  res.send(expenses);
+  if (userId && categories) {
+    const userExpenses = getAllForUser(userId);
+
+    res.send(getAllForCategory(userExpenses, categories));
+
+    return;
+  }
+
+  if (from && to) {
+    const timestampFrom = new Date(from).getTime();
+    const timestampTo = new Date(to).getTime();
+
+    res.send(getAllBetweenDates(timestampFrom, timestampTo));
+
+    return;
+  }
+
+  res.send(getAll());
 };
 
 const getExpenseById = (req, res) => {
@@ -65,7 +67,7 @@ const createExpense = (req, res) => {
     return;
   }
 
-  if (Object.keys(req.body) === 0) {
+  if (Object.keys(req.body).length === 0) {
     res.sendStatus(400);
 
     return;

@@ -3,7 +3,10 @@
 const { v4: uuidv4 } = require('uuid');
 
 let users = [];
-// let count = 0;
+
+function initUsers() {
+  users = [];
+}
 
 function getAll() {
   return users;
@@ -23,8 +26,6 @@ function create(name) {
 
   users.push(newUser);
 
-  // count++;
-
   return newUser;
 }
 
@@ -41,5 +42,10 @@ function update({ id, name }) {
 }
 
 module.exports = {
-  getAll, getById, create, remove, update,
+  getAll,
+  getById,
+  create,
+  remove,
+  update,
+  initUsers,
 };

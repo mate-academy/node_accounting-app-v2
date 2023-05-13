@@ -4,6 +4,10 @@ const { v4: uuidv4 } = require('uuid');
 
 let expenses = [];
 
+function initExpenses() {
+  expenses = [];
+}
+
 function getAll() {
   return expenses;
 }
@@ -45,19 +49,16 @@ function getAllForCategory(expencesList, category) {
   return expencesList.filter(expense => expense.category === category);
 }
 
-function getAllBetweenDates(expencesList, from, to) {
-  return expencesList.filter(expense => {
+function getAllBetweenDates(from, to) {
+  return expenses.filter(expense => {
     const timestamp = new Date(expense.spentAt).getTime();
 
-    if (timestamp >= from && timestamp <= to) {
-      return true;
-    } else {
-      return false;
-    }
+    return (timestamp >= from && timestamp <= to);
   });
 }
 
 module.exports = {
+  initExpenses,
   getAll,
   getById,
   create,
