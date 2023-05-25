@@ -52,8 +52,7 @@ const add = (req, res) => {
   const user = usersService.getById(userId);
 
   if (!user) {
-    return res
-      .status(404).send({ message: `User with id ${userId} not found` });
+    return res.sendStatus(400);
   }
 
   const expense = expensesService.create({
@@ -110,11 +109,11 @@ const update = (req, res) => {
   } = req.body;
 
   expensesService.update(expense, {
-    spentAt,
-    title,
-    amount,
-    category,
-    note,
+    spentAt: spentAt || expense.spentAt,
+    title: title || expense.title,
+    amount: amount || expense.amount,
+    category: category || expense.category,
+    note: note || expense.note,
   });
 
   res.status(200).send(expense);

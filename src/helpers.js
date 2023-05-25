@@ -1,6 +1,7 @@
 'use strict';
 
-const filterExpenses = (expenses, { userId, categories, from, to }) => {
+const filterExpenses = (expenses, options) => {
+  const { userId, categories, from, to } = options;
   let filteredExpenses = expenses;
 
   if (userId) {
@@ -9,7 +10,7 @@ const filterExpenses = (expenses, { userId, categories, from, to }) => {
     );
   }
 
-  if (categories.length) {
+  if (categories && categories.length) {
     filteredExpenses = filteredExpenses.filter(
       expense => categories.includes(expense.category)
     );

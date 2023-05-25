@@ -13,7 +13,7 @@ class Expenses {
   }
 
   getAll({ userId, categories, from, to }) {
-    return filterExpenses(
+    const expenses = filterExpenses(
       this.expenses,
       {
         userId,
@@ -22,6 +22,12 @@ class Expenses {
         to,
       }
     );
+
+    if (this.expenses.length === 0) {
+      return [];
+    }
+
+    return expenses;
   }
 
   getById(id) {
