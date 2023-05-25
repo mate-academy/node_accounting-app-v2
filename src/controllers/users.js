@@ -5,7 +5,7 @@ const { usersService } = require('../services/users');
 const getAll = (req, res) => {
   const users = usersService.getAll();
 
-  res.send(users);
+  res.status(200).send(users);
 };
 
 const getOne = (req, res) => {
@@ -22,7 +22,7 @@ const getOne = (req, res) => {
       .status(404).send({ message: `User with id ${userId} not found` });
   }
 
-  res.send(user);
+  res.status(200).send(user);
 };
 
 const add = (req, res) => {
@@ -42,6 +42,13 @@ const remove = (req, res) => {
 
   if (!userId) {
     return res.sendStatus(400);
+  }
+
+  const user = usersService.getById(userId);
+
+  if (!user) {
+    return res
+      .status(404).send({ message: `User with id ${userId} not found` });
   }
 
   usersService.removeById(userId);
@@ -66,7 +73,7 @@ const update = (req, res) => {
 
   usersService.updateById(user, { name });
 
-  res.send(user);
+  res.status(200).send(user);
 };
 
 module.exports = {

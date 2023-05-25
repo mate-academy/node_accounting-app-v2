@@ -15,7 +15,7 @@ const getAll = (req, res) => {
     }
   );
 
-  res.send(expenses);
+  res.status(200).send(expenses);
 };
 
 const getOne = (req, res) => {
@@ -32,7 +32,7 @@ const getOne = (req, res) => {
       .status(404).send({ message: `Expense with id ${expenseId} not found` });
   }
 
-  res.send(expense);
+  res.status(200).send(expense);
 };
 
 const add = (req, res) => {
@@ -117,7 +117,7 @@ const update = (req, res) => {
     note,
   });
 
-  res.send(expense);
+  res.status(200).send(expense);
 };
 
 module.exports = {
