@@ -4,11 +4,15 @@ const filterExpenses = (expenses, { userId, categories, from, to }) => {
   let filteredExpenses = expenses;
 
   if (userId) {
-    filteredExpenses = filteredExpenses.filter(expense => expense.userId === userId);
+    filteredExpenses = filteredExpenses.filter(
+      expense => expense.userId === userId
+    );
   }
 
   if (categories.length) {
-    filteredExpenses = filteredExpenses.filter(expense => categories.includes(expense.category));
+    filteredExpenses = filteredExpenses.filter(
+      expense => categories.includes(expense.category)
+    );
   }
 
   if (from) {
@@ -32,6 +36,6 @@ const filterExpenses = (expenses, { userId, categories, from, to }) => {
   }
 
   return filteredExpenses;
-}
+};
 
 module.exports = { filterExpenses };
