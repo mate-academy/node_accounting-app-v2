@@ -2,41 +2,19 @@
 
 const filterExpenses = (expenses, options) => {
   const { userId, categories, from, to } = options;
-  let filteredExpenses = expenses;
 
-  if (userId) {
-    filteredExpenses = filteredExpenses.filter(
-      expense => expense.userId === userId
-    );
-  }
+  return expenses.filter(expense => {
+    const spentAtDate = Date.parse(expense.spentAt);
+    const fromDate = from ? Date.parse(from) : null;
+    const toDate = to ? Date.parse(to) : null;
 
-  if (categories && categories.length) {
-    filteredExpenses = filteredExpenses.filter(
-      expense => categories.includes(expense.category)
-    );
-  }
+    const matchesUserId = !userId || expense.userId === +userId;
+    const matchesCategories = !categories || !categories.length || categories.includes(expense.category);
+    const matchesFromDate = !fromDate || spentAtDate >= fromDate;
+    const matchesToDate = !toDate || spentAtDate <= toDate;
 
-  if (from) {
-    const fromDate = Date.parse(from);
-
-    filteredExpenses = filteredExpenses.filter(expense => {
-      const spentAtDate = Date.parse(expense.spentAt);
-
-      return spentAtDate >= fromDate;
-    });
-  }
-
-  if (to) {
-    const toDate = Date.parse(to);
-
-    filteredExpenses = filteredExpenses.filter(expense => {
-      const spentAtDate = Date.parse(expense.spentAt);
-
-      return spentAtDate <= toDate;
-    });
-  }
-
-  return filteredExpenses;
+    return matchesUserId && matchesCategories && matchesFromDate && matchesToDate;
+  });
 };
 
 module.exports = { filterExpenses };

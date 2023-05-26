@@ -1,6 +1,5 @@
 'use strict';
 
-const { v4: uuid } = require('uuid');
 const { filterExpenses } = require('../helpers');
 
 class Expenses {
@@ -23,7 +22,7 @@ class Expenses {
       }
     );
 
-    if (this.expenses.length === 0) {
+    if (expenses.length === 0) {
       return [];
     }
 
@@ -31,12 +30,12 @@ class Expenses {
   }
 
   getById(id) {
-    return this.expenses.find(expense => expense.id === id);
+    return this.expenses.find(expense => expense.id === +id);
   }
 
   create(expense) {
     const newExpense = {
-      id: uuid(),
+      id: this.expenses.length + 1,
       ...expense,
     };
 
@@ -49,10 +48,10 @@ class Expenses {
     const expense = this.getById(id);
 
     if (!expense) {
-      throw new Error(`Expense with id ${id} not found`);
+      return null;
     }
 
-    this.expenses = this.expenses.filter(exp => exp.id !== id);
+    this.expenses = this.expenses.filter(exp => exp.id !== +id);
 
     return expense;
   }

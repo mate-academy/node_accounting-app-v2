@@ -38,7 +38,7 @@ describe('Expense', () => {
       expect(response.body)
         .toEqual(
           expect.objectContaining({
-            id: expect.any(String),
+            id: expect.any(Number),
             ...expenseData,
           }),
         );

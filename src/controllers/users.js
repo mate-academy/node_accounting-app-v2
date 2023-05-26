@@ -71,7 +71,7 @@ const update = (req, res) => {
       .status(404).send({ message: `User with id ${userId} not found` });
   }
 
-  usersService.updateById(user, { name });
+  usersService.updateByName(user, { name });
 
   res.status(200).send(user);
 };

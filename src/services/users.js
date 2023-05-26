@@ -1,7 +1,5 @@
 'use strict';
 
-const { v4: uuid } = require('uuid');
-
 class Users {
   constructor() {
     this.users = [];
@@ -16,12 +14,12 @@ class Users {
   }
 
   getById(id) {
-    return this.users.find(user => user.id === id);
+    return this.users.find(user => user.id === +id);
   }
 
   create(user) {
     const newUser = {
-      id: uuid(),
+      id: this.users.length + 1,
       ...user,
     };
 
@@ -34,15 +32,15 @@ class Users {
     const user = this.getById(id);
 
     if (!user) {
-      throw new Error(`User with id ${id} not found`);
+      return null;
     }
 
-    this.users = this.users.filter(u => u.id !== id);
+    this.users = this.users.filter(u => u.id !== +id);
 
     return user;
   }
 
-  updateById(user, partsToUpdate) {
+  updateByName(user, partsToUpdate) {
     Object.assign(user, partsToUpdate);
   }
 }
