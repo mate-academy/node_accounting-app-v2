@@ -9,11 +9,16 @@ const filterExpenses = (expenses, options) => {
     const toDate = to ? Date.parse(to) : null;
 
     const matchesUserId = !userId || expense.userId === +userId;
-    const matchesCategories = !categories || !categories.length || categories.includes(expense.category);
+    const matchesCategories = !categories
+      || !categories.length
+      || categories.includes(expense.category);
     const matchesFromDate = !fromDate || spentAtDate >= fromDate;
     const matchesToDate = !toDate || spentAtDate <= toDate;
 
-    return matchesUserId && matchesCategories && matchesFromDate && matchesToDate;
+    return matchesUserId
+      && matchesCategories
+      && matchesFromDate
+      && matchesToDate;
   });
 };
 
