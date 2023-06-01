@@ -1,7 +1,7 @@
 /* eslint-disable max-len */
 'use strict';
 
-const generateId = require('../utils/generateId.js');
+// const generateId = require('../utils/generateId.js');
 
 let expenses = [];
 
@@ -30,7 +30,7 @@ function getExpenseById(expensesId) {
 
 function createExpense(data) {
   const newExpense = {
-    id: generateId(expenses),
+    id: (Math.max(...expenses.map(element => element.id), 0) + 1),
     ...data,
   };
 

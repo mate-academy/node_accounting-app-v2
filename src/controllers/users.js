@@ -47,6 +47,13 @@ const add = (req, res) => {
 
 const remove = (req, res) => {
   const { userId } = req.params;
+
+  if (!Number(userId)) {
+    res.sendStatus(204);
+
+    return;
+  }
+
   const foundUser = usersService.getUserById(Number(userId));
 
   if (!foundUser) {
@@ -62,6 +69,12 @@ const remove = (req, res) => {
 const update = (req, res) => {
   const { userId } = req.params;
 
+  if (!Number(userId)) {
+    res.sendStatus(400);
+
+    return;
+  }
+
   const foundUser = usersService.getUserById(Number(userId));
 
   if (!foundUser) {
@@ -72,11 +85,11 @@ const update = (req, res) => {
 
   const { name } = req.body;
 
-  // if (typeof name !== 'string') {
-  //   res.sendStatus(400);
+  if (!name) {
+    res.sendStatus(400);
 
-  //   return;
-  // }
+    return;
+  }
 
   const updatedUser = usersService.updateUser({ id: Number(userId), name });
 

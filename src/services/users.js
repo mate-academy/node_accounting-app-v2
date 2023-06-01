@@ -1,6 +1,6 @@
 'use strict';
 
-const generateId = require('../utils/generateId.js');
+// const generateId = require('../utils/generateId.js');
 
 let users = [];
 
@@ -22,7 +22,7 @@ function getUserById(id) {
 
 function createUser(name) {
   const newUser = {
-    id: generateId(users),
+    id: (Math.max(...users.map(element => element.id), 0) + 1),
     name,
   };
 
