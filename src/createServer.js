@@ -10,8 +10,8 @@ const usersRouter = require('./routes/users.js').router;
 const expensesRouter = require('./routes/expenses.js').router;
 
 function createServer() {
-  usersService.getInitialUsers();
-  expensesService.getInitialExpenses();
+  usersService.resetUsers();
+  expensesService.resetExpenses();
 
   const app = express();
 
@@ -21,10 +21,6 @@ function createServer() {
 
   return app;
 }
-
-// const setver1 = createServer();
-
-// setver1.listen();
 
 module.exports = {
   createServer,

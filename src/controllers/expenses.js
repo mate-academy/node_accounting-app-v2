@@ -4,20 +4,13 @@ const expensesService = require('../services/expenses.js');
 const usersService = require('../services/users.js');
 
 const getExpenses = (req, res) => {
-  const { userId, categories, from, to } = req.params;
-  const expenses = expensesService.getExpenses(userId, categories, from, to);
+  const filtredEcpenses = expensesService.getExpenses(req.query);
 
-  res.send(expenses);
+  res.send(filtredEcpenses);
 };
 
 const getExpenseById = (req, res) => {
   const { expensesId } = req.params;
-
-  // if (isNaN(Number(expensesId))) {
-  //   res.sendStatus(400);
-
-  //   return;
-  // }
 
   const foundExpense = expensesService.getExpenseById(Number(expensesId));
 
@@ -31,9 +24,9 @@ const getExpenseById = (req, res) => {
 };
 
 const addExpense = (req, res) => {
-  const { userId, spentAt, title, amount, category, note } = req.body;
+  const { userId } = req.body;
 
-  const bodyProps = [userId, spentAt, title, amount, category, note];
+  const bodyProps = Object.values(req.body);
   const isRequireValid = bodyProps.every(prop => prop);
 
   const foundUser = usersService.getUserById(userId);
@@ -77,17 +70,10 @@ const updateExpense = (req, res) => {
     return;
   }
 
-  const { spentAt, title, amount, category, note } = req.body;
-  const bodyProps = [spentAt, title, amount, category, note];
-  const isRequireValid = bodyProps.every(prop => prop);
-
-  if (!isRequireValid) {
-    res.sendStatus(400);
-
-    return;
-  }
-
-  const updatedExpense = expensesService.updateExpense(expensesId, req.body);
+  const updatedExpense = expensesService.updateExpense({
+    expensesId,
+    data: req.body,
+  });
 
   res.send(updatedExpense);
 };

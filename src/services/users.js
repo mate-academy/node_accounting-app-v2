@@ -1,28 +1,26 @@
 'use strict';
 
-// const generateId = require('../utils/generateId.js');
+const { createId } = require('../utils/createId.js');
 
 let users = [];
 
-const getInitialUsers = () => {
+const resetUsers = () => {
   users = [];
-
-  return users;
 };
 
 function getUsers() {
   return users;
 }
 
-function getUserById(id) {
-  const foundUser = users.find(user => user.id === Number(id));
+function getUserById(userId) {
+  const foundUser = users.find(({ id }) => id === Number(userId));
 
   return foundUser || null;
 }
 
 function createUser(name) {
   const newUser = {
-    id: (Math.max(...users.map(element => element.id), 0) + 1),
+    id: createId(users),
     name,
   };
 
@@ -31,8 +29,8 @@ function createUser(name) {
   return newUser;
 }
 
-function removeUser(id) {
-  users = users.filter(user => user.id !== Number(id));
+function removeUser(userId) {
+  users = users.filter(({ id }) => id !== Number(userId));
 }
 
 function updateUser({ id, name }) {
@@ -49,5 +47,5 @@ module.exports = {
   createUser,
   removeUser,
   updateUser,
-  getInitialUsers,
+  resetUsers,
 };

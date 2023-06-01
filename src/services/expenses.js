@@ -1,36 +1,29 @@
-/* eslint-disable max-len */
 'use strict';
 
-// const generateId = require('../utils/generateId.js');
+const { filterExpanses } = require('../utils/filterExpanses.js');
+const { createId } = require('../utils/createId.js');
 
 let expenses = [];
 
-const getInitialExpenses = () => {
+const resetExpenses = () => {
   expenses = [];
-
-  return expenses;
 };
 
-function getExpenses(userId, categories, from, to) {
-  const demandExpenses = expenses.filter(expense => (
-    (!userId || expense.id === Number(userId))
-    && (!categories || categories.includes(expense.category))
-    && (!from || expense.spentAt >= from)
-    && (!to || expense.spentAt <= to)
-  ));
+function getExpenses(queryParams) {
+  expenses = expenses.filter(expense => filterExpanses(expense, queryParams));
 
-  return demandExpenses;
+  return expenses;
 }
 
 function getExpenseById(expensesId) {
-  const foundExpense = expenses.find(expense => expense.id === Number(expensesId));
+  const foundExpense = expenses.find(({ id }) => id === Number(expensesId));
 
   return foundExpense || null;
 }
 
 function createExpense(data) {
   const newExpense = {
-    id: (Math.max(...expenses.map(element => element.id), 0) + 1),
+    id: createId(expenses),
     ...data,
   };
 
@@ -40,10 +33,10 @@ function createExpense(data) {
 }
 
 function removeExpense(expensesId) {
-  expenses = expenses.filter(expense => expense.id !== Number(expensesId));
+  expenses = expenses.filter(({ id }) => id !== Number(expensesId));
 }
 
-function updateExpense(expensesId, data) {
+function updateExpense({ expensesId, data }) {
   const expense = getExpenseById(expensesId);
 
   Object.assign(expense, data);
@@ -57,5 +50,5 @@ module.exports = {
   createExpense,
   removeExpense,
   updateExpense,
-  getInitialExpenses,
+  resetExpenses,
 };
