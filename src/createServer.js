@@ -3,15 +3,15 @@
 const express = require('express');
 const cors = require('cors');
 
-const usersService = require('./services/users.js');
-const expensesService = require('./services/expenses.js');
+const { userModel } = require('./controllers/users.js');
+const { expensesModel } = require('./controllers/expenses.js');
 
 const usersRouter = require('./routes/users.js').router;
 const expensesRouter = require('./routes/expenses.js').router;
 
 function createServer() {
-  usersService.resetUsers();
-  expensesService.resetExpenses();
+  userModel.resetUsers();
+  expensesModel.resetExpenses();
 
   const app = express();
 

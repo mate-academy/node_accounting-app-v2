@@ -1,10 +1,15 @@
 'use strict';
 
-const expensesService = require('../services/expenses.js');
-const usersService = require('../services/users.js');
+const { filterExpanses } = require('../utils/filterExpanses.js');
+const { createId } = require('../utils/createId.js');
+
+const { userModel } = require('../controllers/users.js');
+const { ExpensesModel } = require('../models/expenses.js');
+
+const expensesModel = new ExpensesModel(createId, filterExpanses);
 
 const getExpenses = (req, res) => {
-  const filtredEcpenses = expensesService.getExpenses(req.query);
+  const filtredEcpenses = expensesModel.getExpenses(req.query);
 
   res.send(filtredEcpenses);
 };
@@ -12,7 +17,7 @@ const getExpenses = (req, res) => {
 const getExpenseById = (req, res) => {
   const { expensesId } = req.params;
 
-  const foundExpense = expensesService.getExpenseById(Number(expensesId));
+  const foundExpense = expensesModel.getExpenseById(Number(expensesId));
 
   if (!foundExpense) {
     res.sendStatus(404);
@@ -27,9 +32,9 @@ const addExpense = (req, res) => {
   const { userId } = req.body;
 
   const bodyProps = Object.values(req.body);
-  const isRequireValid = bodyProps.every(prop => prop);
+  const isRequireValid = bodyProps.every((prop) => prop);
 
-  const foundUser = usersService.getUserById(userId);
+  const foundUser = userModel.getUserById(userId);
 
   if (!isRequireValid || !foundUser) {
     res.sendStatus(400);
@@ -37,7 +42,7 @@ const addExpense = (req, res) => {
     return;
   }
 
-  const newExpense = expensesService.createExpense(req.body);
+  const newExpense = expensesModel.createExpense(req.body);
 
   res.statusCode = 201;
 
@@ -47,22 +52,7 @@ const addExpense = (req, res) => {
 const removeExpense = (req, res) => {
   const { expensesId } = req.params;
 
-  const foundExpense = expensesService.getExpenseById(Number(expensesId));
-
-  if (!foundExpense) {
-    res.sendStatus(404);
-
-    return;
-  };
-
-  expensesService.removeExpense(Number(expensesId));
-  res.sendStatus(204);
-};
-
-const updateExpense = (req, res) => {
-  const { expensesId } = req.params;
-
-  const foundExpense = expensesService.getExpenseById(expensesId);
+  const foundExpense = expensesModel.getExpenseById(Number(expensesId));
 
   if (!foundExpense) {
     res.sendStatus(404);
@@ -70,7 +60,22 @@ const updateExpense = (req, res) => {
     return;
   }
 
-  const updatedExpense = expensesService.updateExpense({
+  expensesModel.removeExpense(Number(expensesId));
+  res.sendStatus(204);
+};
+
+const updateExpense = (req, res) => {
+  const { expensesId } = req.params;
+
+  const foundExpense = expensesModel.getExpenseById(expensesId);
+
+  if (!foundExpense) {
+    res.sendStatus(404);
+
+    return;
+  }
+
+  const updatedExpense = expensesModel.updateExpense({
     expensesId,
     data: req.body,
   });
@@ -84,4 +89,5 @@ module.exports = {
   addExpense,
   removeExpense,
   updateExpense,
+  expensesModel,
 };

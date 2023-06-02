@@ -1,10 +1,13 @@
-/* eslint-disable object-curly-newline */
 'use strict';
 
-const usersService = require('../services/users.js');
+const { createId } = require('../utils/createId.js');
+
+const { UserModel } = require('../models/users.js');
+
+const userModel = new UserModel(createId);
 
 const getUsers = (req, res) => {
-  const users = usersService.getUsers();
+  const users = userModel.getUsers();
 
   res.send(users);
 };
@@ -12,7 +15,7 @@ const getUsers = (req, res) => {
 const getUser = (req, res) => {
   const { userId } = req.params;
 
-  const foundUser = usersService.getUserById(Number(userId));
+  const foundUser = userModel.getUserById(Number(userId));
 
   if (!foundUser) {
     res.sendStatus(404);
@@ -32,7 +35,7 @@ const add = (req, res) => {
     return;
   }
 
-  const newUser = usersService.createUser(name);
+  const newUser = userModel.createUser(name);
 
   res.statusCode = 201;
 
@@ -48,15 +51,15 @@ const remove = (req, res) => {
     return;
   }
 
-  const foundUser = usersService.getUserById(Number(userId));
+  const foundUser = userModel.getUserById(Number(userId));
 
   if (!foundUser) {
     res.sendStatus(404);
 
     return;
-  };
+  }
 
-  usersService.removeUser(Number(userId));
+  userModel.removeUser(Number(userId));
   res.sendStatus(204);
 };
 
@@ -69,7 +72,7 @@ const update = (req, res) => {
     return;
   }
 
-  const foundUser = usersService.getUserById(Number(userId));
+  const foundUser = userModel.getUserById(Number(userId));
 
   if (!foundUser) {
     res.sendStatus(404);
@@ -85,7 +88,10 @@ const update = (req, res) => {
     return;
   }
 
-  const updatedUser = usersService.updateUser({ id: Number(userId), name });
+  const updatedUser = userModel.updateUser({
+    id: Number(userId),
+    name,
+  });
 
   res.send(updatedUser);
 };
@@ -96,4 +102,5 @@ module.exports = {
   add,
   remove,
   update,
+  userModel,
 };
