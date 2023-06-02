@@ -104,7 +104,7 @@ function createServer() {
     }
 
     if (from && to) {
-      expenses = expenses.filter(expense => {
+      filteredExpenses = filteredExpenses.filter(expense => {
         const expenseDate = new Date(expense.spentAt);
         const fromDate = new Date(from);
         const toDate = new Date(to);
