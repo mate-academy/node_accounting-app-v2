@@ -159,18 +159,21 @@ function createServer() {
     let filteredExpenses = expenses;
 
     if (userId) {
-      filteredExpenses = filteredExpenses
-        .filter((expense) => expense.userId === +userId);
+      filteredExpenses = filteredExpenses.filter(expense => (
+        expense.userId === +userId
+      ));
     };
 
     if (categories) {
-      filteredExpenses = filteredExpenses
-        .filter((expense) => categories.includes(expense.category));
+      filteredExpenses = filteredExpenses.filter(expense => (
+        categories.includes(expense.category)
+      ));
     }
 
     if (from && to) {
-      filteredExpenses = filteredExpenses
-        .filter((expense) => expense.spentAt >= from && expense.spentAt <= to);
+      filteredExpenses = filteredExpenses.filter(expense => (
+        expense.spentAt >= from && expense.spentAt <= to
+      ));
     }
 
     res.send(filteredExpenses);
