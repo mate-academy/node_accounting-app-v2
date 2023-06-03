@@ -1,6 +1,7 @@
 'use strict';
 
 let expenses = [];
+const { getMax } = require('../utils/getMax');
 
 const filterExpenses = (filters) => {
   let filteredExpenses = expenses;
@@ -47,7 +48,7 @@ const createExpense = (body) => {
     note,
   } = body;
 
-  const id = expenses.length + 1;
+  const id = getMax(expenses);
   const expense = {
     id,
     userId: +userId,

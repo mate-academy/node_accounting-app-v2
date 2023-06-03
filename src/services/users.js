@@ -1,6 +1,7 @@
 'use strict';
 
 let users = [];
+const { getMax } = require('../utils/getMax');
 
 const getAllUsers = () => {
   return users;
@@ -11,7 +12,7 @@ const getUserById = (userId) => {
 };
 
 const createUser = (name) => {
-  const id = users.length + 1;
+  const id = getMax(users);
 
   const user = {
     id,
