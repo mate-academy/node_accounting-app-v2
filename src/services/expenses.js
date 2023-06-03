@@ -1,24 +1,25 @@
 'use strict';
 
 let expenses = [];
-const { returnAll } = require('./users');
-const getAll = (req, res) => {
-  const { userId, categories, from, to } = req.query;
+
+const filterExpenses = (filters) => {
+  let filteredExpenses = expenses;
+  const { userId, categories, from, to } = filters;
 
   if (userId) {
-    expenses = expenses.filter(expense => (
+    filteredExpenses = filteredExpenses.filter(expense => (
       expense.userId.toString() === userId
     ));
   }
 
   if (categories) {
-    expenses = expenses.filter(expense => (
+    filteredExpenses = filteredExpenses.filter(expense => (
       categories.includes(expense.category)
     ));
   }
 
   if (from && to) {
-    expenses = expenses.filter(expense => {
+    filteredExpenses = filteredExpenses.filter(expense => {
       const expenseDate = new Date(expense.spentAt);
       const fromDate = new Date(from);
       const toDate = new Date(to);
@@ -26,28 +27,17 @@ const getAll = (req, res) => {
       return expenseDate < toDate && fromDate <= expenseDate;
     });
   }
-  res.send(expenses);
 
-  return expenses;
+  return filteredExpenses;
 };
 
-const getById = (req, res) => {
-  const { expenseId } = req.params;
-
-  const foundExpense = expenses.find(expense => (
+const getById = (expenseId) => {
+  return expenses.find(expense => (
     expense.id.toString() === expenseId
   ));
-
-  if (!foundExpense) {
-    res.sendStatus(404);
-
-    return;
-  }
-
-  res.send(foundExpense);
 };
 
-const create = (req, res) => {
+const createExpense = (body) => {
   const {
     userId,
     spentAt,
@@ -55,17 +45,7 @@ const create = (req, res) => {
     amount,
     category,
     note,
-  } = req.body;
-  const users = returnAll();
-  const allUsersId = users.map(user => user.id);
-  const hasAllData = userId && title && amount && category && note;
-  const hasUser = allUsersId.includes(userId);
-
-  if (!hasUser || !hasAllData) {
-    res.sendStatus(400);
-
-    return;
-  }
+  } = body;
 
   const id = expenses.length + 1;
   const expense = {
@@ -80,43 +60,13 @@ const create = (req, res) => {
 
   expenses.push(expense);
 
-  res.statusCode = 201;
-  res.send(expense);
+  return expense;
 };
 
-const update = (req, res) => {
-  const { expenseId } = req.params;
-
-  const foundExpense = expenses.find(expense => (
-    expense.id.toString() === expenseId
-  ));
-
-  if (!foundExpense) {
-    res.sendStatus(404);
-
-    return;
-  }
-
-  Object.assign(foundExpense, req.body);
-
-  res.send(foundExpense);
-};
-
-const remove = (req, res) => {
-  const { expenseId } = req.params;
-  const filteredExpenses = expenses.filter(({ id }) => (
+const removeExpense = (expenseId) => {
+  expenses = expenses.filter(({ id }) => (
     id.toString() !== expenseId
   ));
-
-  if (filteredExpenses.length === expenses.length) {
-    res.sendStatus(404);
-
-    return;
-  }
-
-  expenses = filteredExpenses;
-
-  res.sendStatus(204);
 };
 
 const removeAll = () => {
@@ -124,10 +74,9 @@ const removeAll = () => {
 };
 
 module.exports = {
-  getAll,
+  filterExpenses,
   getById,
-  create,
-  update,
-  remove,
+  createExpense,
+  removeExpense,
   removeAll,
 };
