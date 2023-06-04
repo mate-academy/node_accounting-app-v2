@@ -1,7 +1,7 @@
 'use strict';
 
 const getNewId = (dataArray) => {
-  if (dataArray.length === 0) {
+  if (!dataArray.length) {
     return 1;
   }
 
