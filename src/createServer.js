@@ -38,7 +38,7 @@ function createServer() {
     }
 
     const newUser = {
-      id: users.length + 1,
+      id: Math.random(users.length + 1),
       name,
     };
 
@@ -81,26 +81,23 @@ function createServer() {
   app.get('/expenses', (req, res) => {
     const { userId, categories, from, to } = req.query;
 
-    console.log(userId, categories, from, to);
-
-    let filteredExpenses = expenses;
-
     if (userId) {
-      filteredExpenses = filteredExpenses
+      expenses = expenses
         .filter((expense) => expense.userId === +userId);
     };
 
     if (categories) {
-      filteredExpenses = filteredExpenses
+      expenses = expenses
         .filter((expense) => categories.includes(expense.category));
     }
 
     if (from && to) {
-      filteredExpenses = filteredExpenses
-        .filter((expense) => expense.spentAt >= from && expense.spentAt <= to);
+      expenses = expenses.filter(({ spentAt }) => (
+        spentAt >= from && spentAt <= to
+      ));
     }
 
-    res.send(filteredExpenses);
+    res.send(expenses);
   });
 
   app.get('/expenses/:expenseId', (req, res) => {
@@ -119,9 +116,6 @@ function createServer() {
     const {
       userId,
       title,
-      amount,
-      category,
-      note,
     } = req.body;
 
     const checkOnUser = users.find((user) => user.id === userId);
@@ -133,13 +127,8 @@ function createServer() {
     }
 
     const newExpence = {
-      id: expenses.length + 1,
-      userId: checkOnUser.id,
-      spentAt: '2022-10-19T11:01:43.462Z',
-      title,
-      amount,
-      category,
-      note,
+      id: Math.random(expenses.length + 1),
+      ...req.body,
     };
 
     expenses.push(newExpence);
