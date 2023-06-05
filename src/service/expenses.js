@@ -57,25 +57,12 @@ const remove = (expenseId) => {
   expenses = expenses.filter(user => user.id !== expenseId);
 };
 
-const update = (
-  id,
-  {
-    spentAt,
-    title,
-    amount,
-    category,
-    note,
-  },
-) => {
+const update = (id, updatedData) => {
   const expense = getById(id);
 
-  Object.assign(expense, {
-    spentAt,
-    title,
-    amount,
-    category,
-    note,
-  });
+  Object.assign(expense, updatedData);
+
+  return expense;
 };
 
 module.exports = {

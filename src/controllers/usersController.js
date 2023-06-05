@@ -67,9 +67,11 @@ const update = (req, res) => {
     return;
   }
 
-  user.name = name;
+  userService.update({
+    id: user.id,
+    name,
+  });
 
-  userService.update(user);
   res.send(user);
 };
 

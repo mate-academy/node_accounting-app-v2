@@ -67,18 +67,12 @@ const update = (req, res) => {
     return;
   }
 
-  const updatedExpense = {
-    ...expense,
-    ...req.body,
-  };
-
   expensesService.update(
     expenseIdNumber,
-    req.body
+    req.body,
   );
 
-  res.setHeader('Content-Type', 'application/json');
-  res.status(200).send(updatedExpense);
+  res.status(200).send(expense);
 };
 
 const remove = (req, res) => {

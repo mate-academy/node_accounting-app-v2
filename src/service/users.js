@@ -35,6 +35,8 @@ const update = ({ id, name }) => {
   const user = getById(id);
 
   Object.assign(user, { name });
+
+  return user;
 };
 
 module.exports = {
