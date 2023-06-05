@@ -1,7 +1,7 @@
 'use strict';
 
 const supertest = require('supertest');
-const { createServer } = require('../src/createServer');
+const { createServer } = require('../src/controllers/createServer');
 
 describe('User', () => {
   let server;
