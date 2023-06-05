@@ -1,6 +1,6 @@
 'use strict';
 
-const { createServer } = require('./src/createServer');
+const { createServer } = require('./src/controllers/createServer');
 
 createServer()
   .listen(3000, () => {
