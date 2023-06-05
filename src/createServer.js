@@ -2,7 +2,6 @@
 
 const express = require('express');
 
-const cors = require('cors');
 const { userRouter } = require('./routes/userRouter');
 const { expenseRouter } = require('./routes/expenseRouter');
 const { resetUsers } = require('./services/userServices');
@@ -10,8 +9,6 @@ const { resetExpenses } = require('./services/expenseServices');
 
 function createServer() {
   const server = express();
-
-  server.use(cors());
 
   server.use(express.json());
 
