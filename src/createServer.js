@@ -1,7 +1,6 @@
 'use strict';
 
 const express = require('express');
-const { v4: uuidv4 } = require('uuid');
 
 let users = [];
 
@@ -9,6 +8,8 @@ let expenses = [];
 
 function createServer() {
   const app = express();
+
+  app.use(express.json());
 
   app.get('/users', (req, res) => {
     res.send(users);
@@ -23,8 +24,12 @@ function createServer() {
       return;
     }
 
+    const id = users.length
+      ? Number(Math.max(...users.map((user) => user.id)) + 1)
+      : 1;
+
     const newUser = {
-      id: uuidv4(),
+      id,
       name,
     };
 
@@ -36,7 +41,7 @@ function createServer() {
 
   app.get('/users/:userId', (req, res) => {
     const { userId } = req.params;
-    const foundUser = users.find(user => user.id === userId);
+    const foundUser = users.find(user => user.id === Number(userId));
 
     if (!foundUser) {
       res.sendStatus(404);
@@ -50,13 +55,16 @@ function createServer() {
   app.delete('users/:userId', (req, res) => {
     const { userId } = req.params;
 
-    const filteredUsers = users.filter(user => user.id !== userId);
+    const filteredUsers = users.filter(user => user.id !== Number(userId));
 
-    if (filteredUsers.length === users.length) {
-      res.sendStatus(404);
+    // eslint-disable-next-line no-console
+    console.log(userId, filteredUsers);
 
-      return;
-    }
+    // if (filteredUsers.length === users.length) {
+    //   res.sendStatus(404);
+
+    //   return;
+    // }
 
     users = filteredUsers;
 
@@ -65,7 +73,7 @@ function createServer() {
 
   app.patch('users/:userId', express.json(), (req, res) => {
     const { userId } = req.params;
-    const foundUser = users.find(user => user.id === userId);
+    const foundUser = users.find(user => user.id === Number(userId));
 
     if (!foundUser) {
       res.sendStatus(404);
@@ -95,7 +103,7 @@ function createServer() {
     }
 
     const newExpens = {
-      id: uuidv4(),
+      id: Number(Math.max(users.map(({ id }) => id)) + 1),
       userId,
       spentAt,
       title,
@@ -112,7 +120,7 @@ function createServer() {
 
   app.get('/expenses/:expensId', (req, res) => {
     const { expensId } = req.params;
-    const foundExpens = expenses.find(expens => expens.id === expensId);
+    const foundExpens = expenses.find(expens => expens.id === Number(expensId));
 
     if (!foundExpens) {
       res.sendStatus(404);
