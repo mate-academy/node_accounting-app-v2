@@ -1,10 +1,8 @@
 'use strict';
 
 const express = require('express');
-
-let users = [];
-
-let expenses = [];
+const userService = require('./services/users.js');
+const expensService = require('./services/expenses.js');
 
 function createServer() {
   const app = express();
@@ -12,6 +10,8 @@ function createServer() {
   app.use(express.json());
 
   app.get('/users', (req, res) => {
+    const users = userService.getAll();
+
     res.send(users);
   });
 
@@ -24,16 +24,7 @@ function createServer() {
       return;
     }
 
-    const id = users.length
-      ? Number(Math.max(...users.map((user) => user.id)) + 1)
-      : 1;
-
-    const newUser = {
-      id,
-      name,
-    };
-
-    users.push(newUser);
+    const newUser = userService.create(name);
 
     res.statusCode = 201;
     res.send(newUser);
@@ -41,7 +32,7 @@ function createServer() {
 
   app.get('/users/:userId', (req, res) => {
     const { userId } = req.params;
-    const foundUser = users.find(user => user.id === Number(userId));
+    const foundUser = userService.getUserById(userId);
 
     if (!foundUser) {
       res.sendStatus(404);
@@ -52,28 +43,23 @@ function createServer() {
     res.send(foundUser);
   });
 
-  app.delete('users/:userId', (req, res) => {
+  app.delete('/users/:userId', (req, res) => {
     const { userId } = req.params;
+    const foundUser = userService.getUserById(userId);
 
-    const filteredUsers = users.filter(user => user.id !== Number(userId));
+    if (!foundUser) {
+      res.sendStatus(404);
 
-    // eslint-disable-next-line no-console
-    console.log(userId, filteredUsers);
+      return;
+    }
 
-    // if (filteredUsers.length === users.length) {
-    //   res.sendStatus(404);
-
-    //   return;
-    // }
-
-    users = filteredUsers;
-
+    userService.remove(userId);
     res.sendStatus(204);
   });
 
-  app.patch('users/:userId', express.json(), (req, res) => {
+  app.patch('/users/:userId', express.json(), (req, res) => {
     const { userId } = req.params;
-    const foundUser = users.find(user => user.id === Number(userId));
+    const foundUser = userService.getUserById(userId);
 
     if (!foundUser) {
       res.sendStatus(404);
@@ -85,11 +71,13 @@ function createServer() {
       res.sendStatus(400);
     }
 
-    Object.assign(foundUser, { name });
+    userService.update(userId, name);
     res.send(foundUser);
   });
 
   app.get('/expenses', (req, res) => {
+    const expenses = expensService.getAll();
+
     res.send(expenses);
   });
 
@@ -102,17 +90,14 @@ function createServer() {
       return;
     }
 
-    const newExpens = {
-      id: Number(Math.max(users.map(({ id }) => id)) + 1),
+    const newExpens = expensService.create(
       userId,
       spentAt,
       title,
       amount,
       category,
       note,
-    };
-
-    users.push(newExpens);
+    );
 
     res.statusCode = 201;
     res.send(newExpens);
@@ -120,7 +105,7 @@ function createServer() {
 
   app.get('/expenses/:expensId', (req, res) => {
     const { expensId } = req.params;
-    const foundExpens = expenses.find(expens => expens.id === Number(expensId));
+    const foundExpens = expensService.getExpensById(expensId);
 
     if (!foundExpens) {
       res.sendStatus(404);
@@ -133,23 +118,21 @@ function createServer() {
 
   app.delete('/expenses/:expensId', (req, res) => {
     const { expensId } = req.params;
+    const foundExpens = expensService.getExpensById(expensId);
 
-    const filteredExpenses = expenses.filter(expens => expens.id !== expensId);
-
-    if (filteredExpenses.length === expenses.length) {
+    if (!foundExpens) {
       res.sendStatus(404);
 
       return;
     }
 
-    expenses = filteredExpenses;
-
+    expensService.remove(expensId);
     res.sendStatus(204);
   });
 
   app.patch('/expenses/:expensId', express.json(), (req, res) => {
     const { expensId } = req.params;
-    const foundExpens = expenses.find(expens => expens.id === expensId);
+    const foundExpens = expensService.getExpensById(expensId);
 
     if (!foundExpens) {
       res.sendStatus(404);
@@ -161,9 +144,14 @@ function createServer() {
       res.sendStatus(400);
     }
 
-    Object.assign(foundExpens, {
-      spentAt, title, amount, category, note,
-    });
+    expensService.update(
+      expensId,
+      spentAt,
+      title,
+      amount,
+      category,
+      note,
+    );
     res.send(foundExpens);
   });
 
