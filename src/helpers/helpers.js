@@ -1,7 +1,11 @@
 'use strict';
 
 const getNewId = (data) => {
-  return Math.max(...data.map((item) => item.id), 0) + 1;
+  if (!data.length) {
+    return 1;
+  }
+
+  return Math.max(...data.map((item) => item.id)) + 1;
 };
 
 module.exports = { getNewId };

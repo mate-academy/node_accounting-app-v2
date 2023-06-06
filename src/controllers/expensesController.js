@@ -56,7 +56,7 @@ const createExpense = (req, res) => {
   const newExpense = expensesService
     .create(userId, spentAt, title, amount, category, note);
 
-  res.statusCode = 201;
+  res.status(201);
   res.send(newExpense);
 };
 

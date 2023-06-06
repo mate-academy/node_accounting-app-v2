@@ -13,8 +13,9 @@ function createServer() {
   clearExpenses();
   clearUsers();
 
-  app.use('/users', express.json(), userRouter);
-  app.use('/expenses', express.json(), expensesRouter);
+  app.use(express.json());
+  app.use('/users', userRouter);
+  app.use('/expenses', expensesRouter);
 
   return app;
 }
