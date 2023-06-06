@@ -53,7 +53,7 @@ const removeUser = (req, res) => {
     return;
   }
 
-  const foundUser = this.users.find(user => Number(userId) === user.id);
+  const foundUser = userServices.getById(userId);
 
   if (!foundUser) {
     res.sendStatus(404);

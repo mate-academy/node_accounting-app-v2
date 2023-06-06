@@ -8,6 +8,7 @@ const getAll = (req, res) => {
 
   const expenses = expenceServices.getAll(userId, categories, from, to);
 
+  res.statusCode = 200;
   res.send(expenses);
 };
 
@@ -28,6 +29,7 @@ const getOne = (req, res) => {
     return;
   }
 
+  res.statusCode = 200;
   res.send(foundExpense);
 };
 
@@ -57,16 +59,17 @@ const remove = (req, res) => {
     return;
   }
 
-  const filteredExpenses = expenceServices.removeExpence(expensesId);
+  const expense = expenceServices.getById(expensesId);
 
-  if (!filteredExpenses) {
+  if (!expense) {
     res.sendStatus(404);
 
     return;
   }
 
-  res.statusCode = 204;
-  res.send();
+  expenceServices.removeExpence(expensesId);
+
+  return res.sendStatus(204);
 };
 
 const update = (req, res) => {
@@ -79,7 +82,7 @@ const update = (req, res) => {
     return;
   }
 
-  const foundExpense = expenceServices.updateById(expensesId, body);
+  const foundExpense = expenceServices.getById(expensesId);
 
   if (!foundExpense) {
     res.sendStatus(404);
@@ -87,8 +90,10 @@ const update = (req, res) => {
     return;
   }
 
+  const updateExpense = expenceServices.updateById(expensesId, body);
+
   res.statusCode = 200;
-  res.send(foundExpense);
+  res.send(updateExpense);
 };
 
 module.exports = {

@@ -2,40 +2,41 @@
 
 class Expences {
   constructor() {
-    this.expences = [];
+    this.expenses = [];
   }
 
   reset() {
-    this.expences = [];
+    this.expenses = [];
   }
 
-  getAll(userId, categories, from, to) {
-    if (userId) {
-      this.expences = this.expenses
-        .filter(expence => expence.userId === Number(userId));
-    }
+  getAll(userId, category, from, to) {
+    const filterByUserId = (expense) => {
+      return !userId || expense.userId === userId;
+    };
 
-    if (categories) {
-      this.expences = this.expenses
-        .filter(expence => expence.category === categories);
-    }
+    const filterByCategory = (expense) => {
+      return !category || category.includes(expense.category);
+    };
 
-    if (from && to) {
-      this.expences = this.expenses.filter(expence => {
-        const expanseDate = new Date(expence.spentAt);
-        const fromDate = new Date(from);
-        const toDate = new Date(to);
+    const filterByTime = (expense) => {
+      const expenseDate = new Date(expense.spentAt);
+      const fromDate = from ? new Date(from) : null;
+      const toDate = to ? new Date(to) : null;
 
-        return fromDate <= expanseDate && toDate > expanseDate;
-      });
-    }
-    this.expences = this.expences;
+      return (!fromDate || expenseDate >= fromDate)
+        && (!toDate || expenseDate <= toDate);
+    };
 
-    return this.expences;
+    this.expenses = this.expenses
+      .filter(filterByUserId)
+      .filter(filterByCategory)
+      .filter(filterByTime);
+
+    return this.expenses;
   }
 
   getById(expenceId) {
-    const foundExpense = this.expences
+    const foundExpense = this.expenses
       .find(expense => Number(expenceId) === expense.id);
 
     return foundExpense || null;
@@ -43,18 +44,18 @@ class Expences {
 
   createExpence(data) {
     const newUser = {
-      id: this.expences.length + 1,
+      id: this.expenses.length + 1,
       ...data,
     };
 
-    this.expences.push(newUser);
+    this.expenses.push(newUser);
 
     return newUser;
   }
 
-  removeExpence(expensesId) {
-    this.expences = this.expences
-      .filter(expense => Number(expensesId) !== expense.id);
+  removeExpence(expenseId) {
+    this.expenses = this.expenses
+      .filter(currExpense => currExpense.id !== expenseId);
   }
 
   updateById(expensesId, body) {

@@ -30,7 +30,8 @@ class Users {
   }
 
   removeUser(userId) {
-    this.users = this.users.filter(user => Number(userId) !== user.id);
+    this.users = this.users
+      .filter(user => Number(userId) !== user.id);
   }
 
   updateById(userId, userName) {
