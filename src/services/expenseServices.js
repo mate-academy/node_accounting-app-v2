@@ -1,5 +1,7 @@
 'use strict';
 
+const { findMaxID } = require('../utils/createNewID');
+
 let expenses = [];
 
 function resetExpenses() {
@@ -22,19 +24,22 @@ function getExpenses(userId, categories, from, to) {
   if (from && to) {
     filteredExpenses = filteredExpenses
       .filter(expense => (
-        expense.spentAt > from
-        && expense.spentAt < to
+        expense.spentAt > from && expense.spentAt < to
       ));
   }
 
   if (from && !to) {
     filteredExpenses = filteredExpenses
-      .filter(expense => expense.spentAt >= from);
+      .filter(expense => (
+        expense.spentAt >= from
+      ));
   }
 
   if (to && !from) {
     filteredExpenses = filteredExpenses
-      .filter(expense => expense.spentAt <= to);
+      .filter(expense => (
+        expense.spentAt <= to
+      ));
   }
 
   return filteredExpenses;
@@ -52,7 +57,7 @@ function getExpenseById(id) {
   return foundExpense;
 }
 
-function createExpense({
+function create({
   userId,
   spentAt,
   title,
@@ -61,7 +66,7 @@ function createExpense({
   note,
 }) {
   const newExpense = {
-    id: expenses.length + 1,
+    id: findMaxID(expenses) + 1,
     userId,
     spentAt,
     title,
@@ -75,11 +80,11 @@ function createExpense({
   return newExpense;
 }
 
-function deleteExpense(id) {
+function remove(id) {
   expenses = expenses.filter(expense => expense.id !== +id);
 }
 
-function updateExpense(expense, req) {
+function update(expense, req) {
   Object.assign(expense, req.body);
 
   return expense;
@@ -89,8 +94,8 @@ module.exports = {
   getExpenses,
   getExpenseByUserId,
   getExpenseById,
-  createExpense,
-  deleteExpense,
-  updateExpense,
+  create,
+  remove,
+  update,
   resetExpenses,
 };

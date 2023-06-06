@@ -34,11 +34,11 @@ function getExpenseByUserId(req, res) {
     return;
   }
 
-  res.statusCode = 200;
+  res.status(200);
   res.send(foundExpense);
 }
 
-function createExpense(req, res) {
+function create(req, res) {
   const {
     userId,
     spentAt,
@@ -56,7 +56,7 @@ function createExpense(req, res) {
     return;
   }
 
-  const newExpense = expenseServices.createExpense({
+  const newExpense = expenseServices.create({
     userId,
     spentAt,
     title,
@@ -65,11 +65,11 @@ function createExpense(req, res) {
     note,
   });
 
-  res.statusCode = 201;
+  res.status(201);
   res.send(newExpense);
 }
 
-function removeExpense(req, res) {
+function remove(req, res) {
   const { id } = req.params;
 
   const isExpenseExist = expenseServices.getExpenseById(id);
@@ -80,11 +80,11 @@ function removeExpense(req, res) {
     return;
   }
 
-  expenseServices.deleteExpense(id);
+  expenseServices.remove(id);
   res.sendStatus(204);
 }
 
-function updateExpense(req, res) {
+function update(req, res) {
   const { id } = req.params;
 
   const foundExpense = expenseServices.getExpenseById(id);
@@ -95,16 +95,16 @@ function updateExpense(req, res) {
     return;
   }
 
-  expenseServices.updateExpense(foundExpense, req);
+  expenseServices.update(foundExpense, req);
 
-  res.statusCode = 200;
+  res.status(200);
   res.send(foundExpense);
 }
 
 module.exports = {
   getAllExpenses,
   getExpenseByUserId,
-  createExpense,
-  removeExpense,
-  updateExpense,
+  create,
+  remove,
+  update,
 };

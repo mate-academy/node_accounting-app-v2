@@ -9,11 +9,11 @@ expenseRouter.get('/', expenseController.getAllExpenses);
 
 expenseRouter.get('/:userId', expenseController.getExpenseByUserId);
 
-expenseRouter.post('/', expenseController.createExpense);
+expenseRouter.post('/', expenseController.create);
 
-expenseRouter.delete('/:id', expenseController.removeExpense);
+expenseRouter.delete('/:id', expenseController.remove);
 
-expenseRouter.patch('/:id', expenseController.updateExpense);
+expenseRouter.patch('/:id', expenseController.update);
 
 module.exports = {
   expenseRouter,

@@ -1,5 +1,7 @@
 'use strict';
 
+const { findMaxID } = require('../utils/createNewID');
+
 let users = [];
 
 function resetUsers() {
@@ -14,9 +16,9 @@ function getByUserId(userId) {
   return users.find(user => user.id === +userId);
 }
 
-function createUser(name) {
+function create(name) {
   const newUser = {
-    id: users.length + 1,
+    id: findMaxID(users) + 1,
     name,
   };
 
@@ -25,11 +27,11 @@ function createUser(name) {
   return newUser;
 }
 
-function deleteUser(userId) {
+function remove(userId) {
   users = users.filter(user => user.id !== +userId);
 }
 
-function updateUser(userId, name) {
+function update(userId, name) {
   const user = getByUserId(userId);
 
   Object.assign(user, { name });
@@ -40,8 +42,8 @@ function updateUser(userId, name) {
 module.exports = {
   getAllUsers,
   getByUserId,
-  createUser,
-  deleteUser,
-  updateUser,
+  create,
+  remove,
+  update,
   resetUsers,
 };

@@ -25,11 +25,11 @@ function getUserById(req, res) {
     return;
   }
 
-  res.statusCode = 200;
+  res.status(200);
   res.send(user);
 }
 
-function createUser(req, res) {
+function create(req, res) {
   const { name } = req.body;
 
   if (!name) {
@@ -38,13 +38,13 @@ function createUser(req, res) {
     return;
   }
 
-  const newUser = userServices.createUser(name);
+  const newUser = userServices.create(name);
 
-  res.statusCode = 201;
+  res.status(201);
   res.send(newUser);
 }
 
-function deleteUser(req, res) {
+function remove(req, res) {
   const { userId } = req.params;
 
   const foundUser = userServices.getByUserId(userId);
@@ -55,11 +55,11 @@ function deleteUser(req, res) {
     return;
   }
 
-  userServices.deleteUser(userId);
+  userServices.remove(userId);
   res.sendStatus(204);
 }
 
-function updateUser(req, res) {
+function update(req, res) {
   const { userId } = req.params;
   const user = userServices.getByUserId(userId);
 
@@ -77,15 +77,15 @@ function updateUser(req, res) {
     return;
   }
 
-  userServices.updateUser(userId, name);
-  res.statusCode = 200;
+  userServices.update(userId, name);
+  res.status(200);
   res.send(user);
 }
 
 module.exports = {
   getAllUsers,
   getUserById,
-  createUser,
-  deleteUser,
-  updateUser,
+  create,
+  remove,
+  update,
 };
