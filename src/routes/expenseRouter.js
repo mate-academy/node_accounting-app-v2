@@ -11,9 +11,9 @@ expenseRouter.get('/:userId', expenseController.getExpenseByUserId);
 
 expenseRouter.post('/', expenseController.createExpense);
 
-expenseRouter.delete('/:id', expenseController.removeExpense);
+expenseRouter.delete('/:userId', expenseController.removeExpense);
 
-expenseRouter.patch('/:id', expenseController.updateExpense);
+expenseRouter.patch('/:userId', expenseController.updateExpense);
 
 module.exports = {
   expenseRouter,

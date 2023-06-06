@@ -1,7 +1,7 @@
 'use strict';
 
-const userServices = require('../services/userServices');
 const expenseServices = require('../services/expenseServices');
+const userServices = require('../services/userServices');
 
 function getAllExpenses(req, res) {
   const {
@@ -34,8 +34,7 @@ function getExpenseByUserId(req, res) {
     return;
   }
 
-  res.statusCode = 200;
-  res.send(foundExpense);
+  res.status(200).send(foundExpense);
 }
 
 function createExpense(req, res) {
@@ -50,8 +49,11 @@ function createExpense(req, res) {
 
   const foundUser = userServices.getByUserId(userId);
 
-  if (!foundUser) {
-    return res.sendStatus(400);
+  if (!foundUser || !userId || !spentAt || !title
+    || !amount || !category || !note) {
+    res.sendStatus(400);
+
+    return;
   }
 
   const newExpense = expenseServices.createExpense({
@@ -63,8 +65,7 @@ function createExpense(req, res) {
     note,
   });
 
-  res.statusCode = 201;
-  res.send(newExpense);
+  res.status(201).send(newExpense);
 }
 
 function removeExpense(req, res) {
@@ -93,10 +94,9 @@ function updateExpense(req, res) {
     return;
   }
 
-  expenseServices.updateExpense(foundExpense, req);
+  expenseServices.updateExpense(foundExpense, req.body);
 
-  res.statusCode = 200;
-  res.send(foundExpense);
+  res.status(200).send(foundExpense);
 }
 
 module.exports = {
