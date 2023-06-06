@@ -1,6 +1,5 @@
 'use strict';
 
-// controllers.js
 const models = require('./models');
 
 function getUsers(req, res) {

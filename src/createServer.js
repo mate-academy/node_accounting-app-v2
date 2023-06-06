@@ -1,9 +1,9 @@
 'use strict';
 
-// createServer.js
 const express = require('express');
 const cors = require('cors');
-const controllers = require('./controllers');
+const userControllers = require('./controllers/users');
+const expenseControllers = require('./controllers/expenses');
 
 function createServer() {
   const app = express();
@@ -11,13 +11,13 @@ function createServer() {
   app.use(cors());
   app.use(express.json());
 
-  app.get('/users', controllers.getUsers);
-  app.get('/users/:userId', controllers.getUserById);
-  app.post('/users', controllers.createUser);
+  app.get('/users', userControllers.getUsers);
+  app.get('/users/:userId', userControllers.getUserById);
+  app.post('/users', userControllers.createUser);
 
-  app.get('/expenses', controllers.getExpenses);
-  app.get('/expenses/:expenseId', controllers.getExpenseById);
-  app.post('/expenses', controllers.createExpense);
+  app.get('/expenses', expenseControllers.getExpenses);
+  app.get('/expenses/:expenseId', expenseControllers.getExpenseById);
+  app.post('/expenses', expenseControllers.createExpense);
 
   return app;
 }
