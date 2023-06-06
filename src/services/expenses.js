@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 'use strict';
 
 const { v4: uuidv4 } = require('uuid');
@@ -11,7 +12,7 @@ function getAllExpenses(requestQuery) {
 
   if (userId) {
     filteredExpenses = filteredExpenses.filter(expense => (
-      expense.userId === +userId
+      expense.userId === Number(userId)
     ));
   };
 
@@ -31,7 +32,7 @@ function getAllExpenses(requestQuery) {
 };
 
 function getExpenseById(expenseId) {
-  const foundExpenses = expenses.find(expense => expense.id === +expenseId);
+  const foundExpenses = expenses.find(expense => expense.id === Number(expenseId));
 
   return foundExpenses || null;
 }
@@ -63,7 +64,7 @@ function createExpense(requestBody) {
 
 function removeExpense(expenseId) {
   expenses = expenses.filter(expense => (
-    expense.id !== +expenseId));
+    expense.id !== Number(expenseId)));
 }
 
 function updateExpense(expenseId, requestBody) {

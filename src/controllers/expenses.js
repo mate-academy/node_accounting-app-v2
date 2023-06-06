@@ -48,7 +48,7 @@ function add(req, res) {
 
   const newExpense = expensesService.createExpense(req.body);
 
-  res.statusCode = 201;
+  res.status(201);
   res.send(newExpense);
 };
 
