@@ -8,18 +8,18 @@ const { expenseRouter } = require('./routes/expenseRouter');
 const { resetUsers } = require('./services/userServices');
 const { resetExpenses } = require('./services/expenseServices');
 
-function createServer() {
+const createServer = () => {
   const server = express();
 
   server.use(express.json());
   server.use('/users', userRouter);
-  server.use('/expense', expenseRouter);
+  server.use('/expenses', expenseRouter);
 
   resetUsers();
   resetExpenses();
 
   return server;
-}
+};
 
 module.exports = {
   createServer,

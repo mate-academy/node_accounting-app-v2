@@ -1,12 +1,18 @@
 'use strict';
 
+const getMaxId = (array) => {
+  const maxId = Math.max(array.map(({ id }) => id)) + 1;
+
+  return maxId;
+};
+
 let expenses = [];
 
-function resetExpenses() {
+const resetExpenses = () => {
   expenses = [];
-}
+};
 
-function getExpenses(userId, categories, from, to) {
+const getExpenses = (userId, categories, from, to) => {
   let filteredExpenses = expenses;
 
   if (userId) {
@@ -40,30 +46,30 @@ function getExpenses(userId, categories, from, to) {
   return filteredExpenses;
 };
 
-function getExpenseByUserId(userId) {
+const getExpenseByUserId = (expenseId) => {
   const foundExpense = expenses
-    .find(expense => expense.userId === Number(userId));
+    .find(expense => expense.id === Number(expenseId));
 
   return foundExpense;
-}
+};
 
-function getExpenseById(id) {
+const getExpenseById = (id) => {
   const foundExpense = expenses
     .find(expense => expense.id === Number(id));
 
   return foundExpense;
-}
+};
 
-function createExpense({
+const createExpense = ({
   userId,
   spentAt,
   title,
   amount,
   category,
   note,
-}) {
+}) => {
   const newExpense = {
-    id: expenses.length + 1,
+    id: getMaxId(expenses),
     userId,
     spentAt,
     title,
@@ -75,18 +81,18 @@ function createExpense({
   expenses.push(newExpense);
 
   return newExpense;
-}
+};
 
-function deleteExpense(id) {
+const deleteExpense = (expenseId) => {
   expenses = expenses
-    .filter(expense => expense.id !== Number(id));
-}
+    .filter(expense => expense.id !== Number(expenseId));
+};
 
-function updateExpense(expense, req) {
-  Object.assign(expense, req.body);
+const updateExpense = (expenseId, req) => {
+  const expense = getExpenseById(expenseId);
 
-  return expense;
-}
+  Object.assign(expense, req);
+};
 
 module.exports = {
   getExpenses,

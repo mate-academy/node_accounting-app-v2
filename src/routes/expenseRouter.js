@@ -7,13 +7,13 @@ const expenseRouter = express.Router();
 
 expenseRouter.get('/', expenseController.getAllExpenses);
 
-expenseRouter.get('/:userId', expenseController.getExpenseByUserId);
+expenseRouter.get('/:expenseId', expenseController.getExpenseByUserId);
 
 expenseRouter.post('/', expenseController.createExpense);
 
-expenseRouter.delete('/:userId', expenseController.removeExpense);
+expenseRouter.delete('/:expenseId', expenseController.removeExpense);
 
-expenseRouter.patch('/:userId', expenseController.updateExpense);
+expenseRouter.patch('/:expenseId', expenseController.updateExpense);
 
 module.exports = {
   expenseRouter,

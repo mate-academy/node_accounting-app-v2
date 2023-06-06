@@ -2,13 +2,13 @@
 
 const userServices = require('../services/userServices');
 
-function getAllUsers(_, res) {
+const getAllUsers = (_, res) => {
   const allUsers = userServices.getAllUsers();
 
   res.send(allUsers);
-}
+};
 
-function getUserById(req, res) {
+const getUserById = (req, res) => {
   const { userId } = req.params;
 
   if (!userId) {
@@ -25,11 +25,10 @@ function getUserById(req, res) {
     return;
   }
 
-  res.statusCode = 200;
-  res.send(user);
-}
+  res.status(200).send(user);
+};
 
-function createUser(req, res) {
+const createUser = (req, res) => {
   const { name } = req.body;
 
   if (!name) {
@@ -40,11 +39,10 @@ function createUser(req, res) {
 
   const newUser = userServices.createUser(name);
 
-  res.statusCode = 201;
-  res.send(newUser);
-}
+  res.status(201).send(newUser);
+};
 
-function deleteUser(req, res) {
+const deleteUser = (req, res) => {
   const { userId } = req.params;
 
   const foundUser = userServices.getByUserId(userId);
@@ -57,9 +55,9 @@ function deleteUser(req, res) {
 
   userServices.deleteUser(userId);
   res.sendStatus(204);
-}
+};
 
-function updateUser(req, res) {
+const updateUser = (req, res) => {
   const { userId } = req.params;
   const user = userServices.getByUserId(userId);
 
@@ -78,9 +76,8 @@ function updateUser(req, res) {
   }
 
   userServices.updateUser(userId, name);
-  res.statusCode = 200;
-  res.send(user);
-}
+  res.status(200).send(userServices.updateUser(userId, name));
+};
 
 module.exports = {
   getAllUsers,

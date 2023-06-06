@@ -2,41 +2,47 @@
 
 let users = [];
 
-function resetUsers() {
+const getMaxId = (array) => {
+  const maxId = Math.max(array.map(({ id }) => id)) + 1;
+
+  return maxId;
+};
+
+const resetUsers = () => {
   users = [];
-}
+};
 
-function getAllUsers() {
+const getAllUsers = () => {
   return users;
-}
+};
 
-function getByUserId(userId) {
-  return users.find(user => user.id === Number(userId));
-}
+const getByUserId = (id) => {
+  return users.find(user => user.id === Number(id));
+};
 
-function createUser(name) {
+const createUser = (name) => {
   const newUser = {
-    id: users.length + 1,
+    id: getMaxId(users),
     name,
   };
 
   users.push(newUser);
 
   return newUser;
-}
+};
 
-function deleteUser(userId) {
+const deleteUser = (userId) => {
   users = users
     .filter(user => user.id !== Number(userId));
-}
+};
 
-function updateUser(userId, name) {
+const updateUser = (userId, name) => {
   const user = getByUserId(userId);
 
   Object.assign(user, { name });
 
   return user;
-}
+};
 
 module.exports = {
   getAllUsers,
