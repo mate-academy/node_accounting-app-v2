@@ -11,7 +11,7 @@ const { resetExpenses } = require('./services/expenseServices');
 function createServer() {
   const server = express();
 
-  server.use(express.json);
+  server.use(express.json());
   server.use('/users', userRouter);
   server.use('/expense', expenseRouter);
 

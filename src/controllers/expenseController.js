@@ -51,9 +51,7 @@ function createExpense(req, res) {
   const foundUser = userServices.getByUserId(userId);
 
   if (!foundUser) {
-    res.sendStatus(400);
-
-    return;
+    return res.sendStatus(400);
   }
 
   const newExpense = expenseServices.createExpense({
