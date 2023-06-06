@@ -38,7 +38,7 @@ function create(req, res) {
 
   const newExpense = expenseService.create(req.body);
 
-  res.statusCode = 201;
+  res.status(201);
   res.send(newExpense);
 }
 
@@ -70,7 +70,7 @@ function remove(req, res) {
   }
 
   expenseService.remove(expenseId);
-  res.statusCode = 204;
+  res.status(204);
   res.send();
 }
 

@@ -7,14 +7,16 @@ function getAll() {
 }
 
 function getById(userId) {
-  const foundUser = users.find((user) => user.id === +userId);
+  const foundUser = users.find((user) => user.id === Number(userId));
 
   return foundUser || null;
 }
 
 function create(name) {
+  const newId = Math.max(users.map(({ id }) => id)) + 1;
+
   const newUser = {
-    id: Math.random(users.length + 1),
+    id: newId,
     name,
   };
 
@@ -32,7 +34,7 @@ function update({ id, name }) {
 }
 
 function remove(userId) {
-  users = users.filter(user => user.id !== +userId);
+  users = users.filter(user => user.id !== Number(userId));
 }
 
 function reset() {

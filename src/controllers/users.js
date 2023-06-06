@@ -41,13 +41,25 @@ function update(req, res) {
   const { name } = req.body;
   const foundUser = userService.getById(userId);
 
+  if (!name) {
+    res.sendStatus(400);
+
+    return;
+  }
+
+  if (!foundUser) {
+    res.statusCode(404);
+
+    return;
+  }
+
   Object.assign(foundUser, { name });
 
-  userService.update({
+  const updatedUser = userService.update({
     id: userId, name,
   });
 
-  res.send(foundUser);
+  res.send(updatedUser);
 }
 
 function remove(req, res) {

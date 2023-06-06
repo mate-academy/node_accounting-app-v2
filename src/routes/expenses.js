@@ -7,8 +7,8 @@ const router = express.Router();
 
 router.get('/', expenseController.getFiltered);
 router.get('/:expenseId', expenseController.getById);
-router.post('/', express.json(), expenseController.create);
-router.patch('/:expenseId', express.json(), expenseController.update);
+router.post('/', expenseController.create);
+router.patch('/:expenseId', expenseController.update);
 router.delete('/:expenseId', expenseController.remove);
 
 module.exports = router;

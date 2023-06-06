@@ -6,7 +6,7 @@ function getFiltered(data) {
   const { userId, categories, from, to } = data;
 
   if (userId) {
-    expenses = expenses.filter(expense => +userId === expense.userId);
+    expenses = expenses.filter(expense => Number(userId) === expense.userId);
   }
 
   if (categories) {
@@ -23,14 +23,18 @@ function getFiltered(data) {
 }
 
 function getById(expenseId) {
-  const foundExpense = expenses.find((expense) => expense.id === +expenseId);
+  const foundExpense = expenses.find((expense) =>
+    expense.id === Number(expenseId)
+  );
 
   return foundExpense || null;
 }
 
 function create(data) {
+  const newId = Math.max(expenses.map(({ id }) => id)) + 1;
+
   const newExpense = {
-    id: Math.random(expenses.length + 1),
+    id: newId,
     ...data,
   };
 
@@ -49,7 +53,7 @@ function update({ id, ...data }) {
 
 function remove(expenseId) {
   expenses = expenses.filter(
-    expense => expense.id !== +expenseId
+    expense => expense.id !== Number(expenseId)
   );
 }
 
