@@ -58,7 +58,13 @@ const update = (req, res) => {
     return;
   }
 
-  Object.assign(foundUser, { name });
+  if (!foundUser) {
+    res.sendStatus(404);
+
+    return;
+  }
+
+  usersServices.updateUser(userId, name);
 
   res.send(foundUser);
 };

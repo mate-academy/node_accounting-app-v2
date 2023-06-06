@@ -2,11 +2,13 @@
 
 const usersService = require('../services/users');
 const expenseService = require('../services/expenses');
+
 const getAll = (req, res) => {
   const filteredExpenses = expenseService.filterExpenses(req.query);
 
   res.send(filteredExpenses);
 };
+
 const getOne = (req, res) => {
   const { expenseId } = req.params;
 
@@ -20,6 +22,7 @@ const getOne = (req, res) => {
 
   res.send(foundExpense);
 };
+
 const create = (req, res) => {
   const {
     userId,
@@ -43,6 +46,7 @@ const create = (req, res) => {
   res.statusCode = 201;
   res.send(expense);
 };
+
 const update = (req, res) => {
   const { expenseId } = req.params;
 
@@ -58,6 +62,7 @@ const update = (req, res) => {
 
   res.send(foundExpense);
 };
+
 const remove = (req, res) => {
   const { expenseId } = req.params;
   const foundExpense = expenseService.getById(expenseId);

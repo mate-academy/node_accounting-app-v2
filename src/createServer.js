@@ -2,10 +2,10 @@
 
 const express = require('express');
 const cors = require('cors');
-const { router: usersRouter } = require('./routers/users');
-const { router: expensesRouter } = require('./routers/expenses');
-const { removeAll: removeExpenses } = require('./services/expenses');
-const { removeAll: removeUsers } = require('./services/users');
+const usersRouter = require('./routers/users');
+const expensesRouter = require('./routers/expenses');
+const { removeAllExpenses } = require('./services/expenses');
+const { removeAllUsers } = require('./services/users');
 
 function createServer() {
   const app = express();
@@ -15,8 +15,8 @@ function createServer() {
   app.use('/users', usersRouter);
   app.use('/expenses', expensesRouter);
 
-  removeExpenses();
-  removeUsers();
+  removeAllExpenses();
+  removeAllUsers();
 
   return app;
 }

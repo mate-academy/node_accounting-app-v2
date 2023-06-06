@@ -2,7 +2,7 @@
 
 let expenses = [];
 
-const getMax = (array) => {
+const getNextId = (array) => {
   if (array.length === 0) {
     return 1;
   }
@@ -18,7 +18,7 @@ const filterExpenses = (filters) => {
 
   if (userId) {
     filteredExpenses = filteredExpenses.filter(expense => (
-      expense.userId.toString() === userId
+      expense.userId === Number(userId)
     ));
   }
 
@@ -43,7 +43,7 @@ const filterExpenses = (filters) => {
 
 const getById = (expenseId) => {
   return expenses.find(expense => (
-    expense.id.toString() === expenseId
+    expense.id === Number(expenseId)
   ));
 };
 
@@ -57,13 +57,13 @@ const createExpense = (body) => {
     note,
   } = body;
 
-  const id = getMax(expenses);
+  const id = getNextId(expenses);
   const expense = {
     id,
-    userId: +userId,
+    userId: Number(userId),
     spentAt,
     title,
-    amount: +amount,
+    amount: Number(amount),
     category,
     note,
   };
@@ -75,11 +75,11 @@ const createExpense = (body) => {
 
 const removeExpense = (expenseId) => {
   expenses = expenses.filter(({ id }) => (
-    id.toString() !== expenseId
+    id !== Number(expenseId)
   ));
 };
 
-const removeAll = () => {
+const removeAllExpenses = () => {
   expenses = [];
 };
 
@@ -88,5 +88,5 @@ module.exports = {
   getById,
   createExpense,
   removeExpense,
-  removeAll,
+  removeAllExpenses,
 };

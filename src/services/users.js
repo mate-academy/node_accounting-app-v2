@@ -2,7 +2,7 @@
 
 let users = [];
 
-const getMax = (array) => {
+const getNextId = (array) => {
   if (array.length === 0) {
     return 1;
   }
@@ -12,7 +12,7 @@ const getMax = (array) => {
   return maxId + 1;
 };
 
-const getAllUsers = () => {
+const getUsers = () => {
   return users;
 };
 
@@ -21,7 +21,7 @@ const getUserById = (userId) => {
 };
 
 const createUser = (name) => {
-  const id = getMax(users);
+  const id = getNextId(users);
 
   const user = {
     id,
@@ -33,18 +33,29 @@ const createUser = (name) => {
   return user;
 };
 
+const updateUser = (userId, name) => {
+  const user = getUserById(userId);
+
+  if (user) {
+    Object.assign(user, { name });
+  }
+
+  return user;
+};
+
 const removeUser = (userId) => {
   users = users.filter(({ id }) => id.toString() !== userId);
 };
 
-const removeAll = () => {
+const removeAllUsers = () => {
   users = [];
 };
 
 module.exports = {
-  getAllUsers,
+  getAllUsers: getUsers,
   getUserById,
   createUser,
+  updateUser,
   removeUser,
-  removeAll,
+  removeAllUsers,
 };
