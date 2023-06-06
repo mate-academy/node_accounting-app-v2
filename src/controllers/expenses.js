@@ -3,7 +3,14 @@
 const expensService = require('../services/expenses.js');
 
 const getAll = (req, res) => {
-  const expenses = expensService.getAll();
+  const { userId, categories, from, to } = req.query;
+
+  const expenses = expensService.getAll({
+    userId,
+    categories,
+    from,
+    to,
+  });
 
   res.send(expenses);
 };
@@ -30,14 +37,14 @@ const add = (req, res) => {
     return;
   }
 
-  const newExpens = expensService.create(
+  const newExpens = expensService.create({
     userId,
     spentAt,
     title,
     amount,
     category,
     note,
-  );
+  });
 
   res.status(201);
   res.send(newExpens);
