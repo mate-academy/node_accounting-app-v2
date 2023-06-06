@@ -56,12 +56,16 @@ const update = (req, res) => {
 
   if (!foundUser) {
     res.sendStatus(404);
+
+    return;
   }
 
   const { name } = req.body;
 
   if (!name) {
     res.sendStatus(400);
+
+    return;
   }
 
   userService.update(userId, name);

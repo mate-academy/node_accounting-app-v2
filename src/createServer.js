@@ -7,8 +7,9 @@ const expensesRouter = require('./routes/expenses.js');
 function createServer() {
   const app = express();
 
-  app.use('/users', express.json(), usersRouter);
-  app.use('/expenses', express.json(), expensesRouter);
+  app.use(express.json());
+  app.use('/users', usersRouter);
+  app.use('/expenses', expensesRouter);
 
   return app;
 }
@@ -16,9 +17,3 @@ function createServer() {
 module.exports = {
   createServer,
 };
-
-// Use express to create a server
-// Add a routes to the server
-// Return the server (express app)
-
-// MVC (model view controller)

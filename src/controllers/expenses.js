@@ -9,16 +9,16 @@ const getAll = (req, res) => {
 };
 
 const getOne = (req, res) => {
-  const { expensId } = req.params;
-  const foundExpens = expensService.getExpensById(expensId);
+  const { expenseId } = req.params;
+  const foundExpense = expensService.getExpensById(expenseId);
 
-  if (!foundExpens) {
+  if (!foundExpense) {
     res.sendStatus(404);
 
     return;
   }
 
-  res.send(foundExpens);
+  res.send(foundExpense);
 };
 
 const add = (req, res) => {
@@ -39,47 +39,52 @@ const add = (req, res) => {
     note,
   );
 
-  res.statusCode = 201;
+  res.status(201);
   res.send(newExpens);
 };
 
 const remove = (req, res) => {
-  const { expensId } = req.params;
-  const foundExpens = expensService.getExpensById(expensId);
+  const { expenseId } = req.params;
+  const foundExpense = expensService.getExpensById(expenseId);
 
-  if (!foundExpens) {
+  if (!foundExpense) {
     res.sendStatus(404);
 
     return;
   }
 
-  expensService.remove(expensId);
+  expensService.remove(expenseId);
   res.sendStatus(204);
 };
 
 const update = (req, res) => {
-  const { expensId } = req.params;
-  const foundExpens = expensService.getExpensById(expensId);
+  const { expenseId } = req.params;
+  const foundExpense = expensService.getExpensById(expenseId);
 
-  if (!foundExpens) {
+  if (!foundExpense) {
     res.sendStatus(404);
+
+    return;
   }
 
   const { spentAt, title, amount, category, note } = req.body;
 
   if (!spentAt && !title && !amount && !category && !note) {
     res.sendStatus(400);
+
+    return;
   }
 
   expensService.update(
-    expensId,
+    expenseId,
     spentAt,
     title,
     amount,
     category,
     note,
   );
-  res.send(foundExpens);
+
+  res.send(foundExpense);
 };
 
 module.exports = {
