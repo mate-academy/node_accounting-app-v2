@@ -11,7 +11,7 @@ class Expences {
 
   getAll(userId, category, from, to) {
     const filterByUserId = (expense) => {
-      return !userId || expense.userId === userId;
+      return !userId || expense.userId === Number(userId);
     };
 
     const filterByCategory = (expense) => {
@@ -55,7 +55,7 @@ class Expences {
 
   removeExpence(expenseId) {
     this.expenses = this.expenses
-      .filter(currExpense => currExpense.id !== expenseId);
+      .filter(currExpense => currExpense.id !== Number(expenseId));
   }
 
   updateById(expensesId, body) {
