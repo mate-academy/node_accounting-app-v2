@@ -11,8 +11,10 @@ userRouter.get('/:userId', userController.getUserById);
 
 userRouter.post('/', userController.createUser);
 
-userRouter.delete('/:id', userController.deleteUser);
+userRouter.delete('/:userId', userController.deleteUser);
 
-userRouter.patch('/:id', userController.updateUser);
+userRouter.patch('/:userId', userController.updateUser);
 
-module.exports = { userRouter };
+module.exports = {
+  userRouter,
+};
