@@ -11,8 +11,9 @@ function createServer() {
   const app = express();
 
   app.use(cors());
-  app.use('/users', express.json(), usersRouter);
-  app.use('/expenses', express.json(), expensesRouter);
+  app.use(express.json());
+  app.use('/users', usersRouter);
+  app.use('/expenses', expensesRouter);
 
   removeUsers();
   removeExpenses();

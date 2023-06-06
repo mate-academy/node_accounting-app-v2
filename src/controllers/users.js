@@ -1,9 +1,11 @@
 'use strict';
 
+const { getNextId } = require('../getNextId');
+
 let users = [];
 
-const getAllUsers = (req, res) => {
-  if (res) {
+const getUsers = (req, res) => {
+  if (req) {
     res.send(users);
   }
 
@@ -12,7 +14,7 @@ const getAllUsers = (req, res) => {
 
 const getOne = (req, res) => {
   const { userId } = req.params;
-  const foundUser = users.find(user => user.id === +userId);
+  const foundUser = users.find(user => user.id === Number(userId));
 
   if (!foundUser) {
     res.sendStatus(404);
@@ -33,7 +35,7 @@ const add = (req, res) => {
   }
 
   const newUser = {
-    id: Math.random(),
+    id: getNextId(users),
     name,
   };
 
@@ -45,7 +47,7 @@ const add = (req, res) => {
 
 const remove = (req, res) => {
   const { userId } = req.params;
-  const filteredUsers = users.filter(user => user.id !== +userId);
+  const filteredUsers = users.filter(user => user.id !== Number(userId));
 
   if (filteredUsers.length === users.length) {
     res.sendStatus(404);
@@ -59,7 +61,7 @@ const remove = (req, res) => {
 
 const update = (req, res) => {
   const { userId } = req.params;
-  const foundUser = users.find(user => user.id === +userId);
+  const foundUser = users.find(user => user.id === Number(userId));
 
   if (!foundUser) {
     res.sendStatus(404);
@@ -85,7 +87,7 @@ const removeUsers = () => {
 };
 
 module.exports = {
-  getAllUsers,
+  getUsers,
   getOne,
   add,
   remove,

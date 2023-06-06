@@ -1,6 +1,7 @@
 'use strict';
 
-const { getAllUsers } = require('./users');
+const { getUsers } = require('./users');
+const { getNextId } = require('../getNextId');
 
 let expenses = [];
 
@@ -8,7 +9,7 @@ const getAll = (req, res) => {
   const { userId, categories, from, to } = req.query;
 
   if (userId) {
-    expenses = expenses.filter(expense => expense.userId === +userId);
+    expenses = expenses.filter(expense => expense.userId === Number(userId));
   }
 
   if (categories) {
@@ -18,10 +19,11 @@ const getAll = (req, res) => {
   }
 
   if (from && to) {
+    const fromDate = new Date(from);
+    const toDate = new Date(to);
+
     expenses = expenses.filter(expense => {
       const expenseDate = new Date(expense.spentAt);
-      const fromDate = new Date(from);
-      const toDate = new Date(to);
 
       return expenseDate < toDate && fromDate <= expenseDate;
     });
@@ -32,7 +34,9 @@ const getAll = (req, res) => {
 
 const getOne = (req, res) => {
   const { expenseId } = req.params;
-  const foundExpense = expenses.find(expense => expense.id === +expenseId);
+  const foundExpense = expenses.find(expense => (
+    expense.id === Number(expenseId)
+  ));
 
   if (!foundExpense) {
     res.sendStatus(404);
@@ -46,7 +50,7 @@ const getOne = (req, res) => {
 const add = (req, res) => {
   const { userId, spentAt, title, amount, category, note } = req.body;
   const hasAllData = userId && title && amount && category && note;
-  const hasUser = getAllUsers().map(user => user.id).includes(userId);
+  const hasUser = getUsers().map(user => user.id).includes(Number(userId));
 
   if (!hasUser || !hasAllData) {
     res.sendStatus(400);
@@ -55,7 +59,7 @@ const add = (req, res) => {
   }
 
   const newExpense = {
-    id: Math.random(),
+    id: getNextId(expenses),
     userId,
     spentAt,
     title,
@@ -73,7 +77,7 @@ const add = (req, res) => {
 const remove = (req, res) => {
   const { expenseId } = req.params;
   const filteredExpenses = expenses.filter(expense => (
-    expense.id !== +expenseId
+    expense.id !== Number(expenseId)
   ));
 
   if (filteredExpenses.length === expenses.length) {
@@ -90,7 +94,7 @@ const update = (req, res) => {
   const { expenseId } = req.params;
 
   const foundExpense = expenses.find(expense => (
-    expense.id.toString() === expenseId
+    expense.id === Number(expenseId)
   ));
 
   if (!foundExpense) {
