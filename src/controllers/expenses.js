@@ -10,11 +10,11 @@ const getAll = (req, res) => {
 };
 
 const getById = (req, res) => {
-  const { expensesId } = req.params;
+  const { expenseId } = req.params;
 
-  const foundExpense = expenseService.getById(expensesId);
+  const foundExpense = expenseService.getById(expenseId);
 
-  if (foundExpense === undefined) {
+  if (!foundExpense) {
     res.sendStatus(404);
 
     return;
@@ -42,9 +42,9 @@ const addExpense = (req, res) => {
 };
 
 const remove = (req, res) => {
-  const { expensesId } = req.params;
+  const { expenseId } = req.params;
 
-  const foundExpenses = expenseService.getById(expensesId);
+  const foundExpenses = expenseService.getById(expenseId);
 
   if (!foundExpenses) {
     res.sendStatus(404);
@@ -52,17 +52,16 @@ const remove = (req, res) => {
     return;
   }
 
-  expenseService.remove(expensesId);
+  expenseService.remove(expenseId);
 
-  res.statusCode = 204;
-  res.send();
+  res.sendStatus(204);
 };
 
 const update = (req, res) => {
-  const { expensesId } = req.params;
+  const { expenseId } = req.params;
   const body = req.body;
 
-  const foundExpense = expenseService.getById(expensesId);
+  const foundExpense = expenseService.getById(expenseId);
 
   if (!foundExpense) {
     res.sendStatus(404);
@@ -71,11 +70,11 @@ const update = (req, res) => {
   }
 
   const updateExpense = expenseService.update({
-    id: expensesId,
+    id: expenseId,
     body,
   });
 
-  res.statusCode = 200;
+  res.status(200);
   res.send(updateExpense);
 };
 

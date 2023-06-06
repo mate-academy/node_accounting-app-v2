@@ -1,5 +1,6 @@
 'use strict';
 
+const { getMaxId } = require('../utils/getMaxId.js');
 let users = [];
 
 function getAll() {
@@ -12,7 +13,7 @@ function getById(userId) {
 
 function addUser(name) {
   const newUser = {
-    id: users.length + 1,
+    id: getMaxId(users),
     name,
   };
 

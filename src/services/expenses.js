@@ -1,5 +1,6 @@
 'use strict';
 
+const { getMaxId } = require('../utils/getMaxId.js');
 let expenses = [];
 
 const filterExpenses = (filters) => {
@@ -37,7 +38,7 @@ function getById(expenseId) {
 
 function addExpense(data) {
   const newExpense = {
-    id: expenses.length + 1,
+    id: getMaxId(expenses),
     ...data,
   };
 
