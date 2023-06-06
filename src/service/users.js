@@ -1,4 +1,4 @@
-'use strict';
+const { v4: uuidv4 } = require('uuid');
 
 let users = [];
 
@@ -18,7 +18,7 @@ const getById = (userId) => {
 
 const add = (name) => {
   const newUser = {
-    id: users.length + 1,
+    id: uuidv4(),
     name,
   };
 

@@ -1,5 +1,3 @@
-'use strict';
-
 const express = require('express');
 const cors = require('cors');
 const userService = require('./service/users');
@@ -21,10 +19,6 @@ function createServer() {
 
   return app;
 }
-
-const server = createServer();
-
-server.listen(3000);
 
 module.exports = {
   createServer,

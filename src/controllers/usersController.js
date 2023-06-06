@@ -1,5 +1,3 @@
-'use strict';
-
 const userService = require('../service/users');
 
 const getAll = (req, res) => {
@@ -46,7 +44,7 @@ const remove = (req, res) => {
   }
 
   userService.remove(Number(userId));
-  res.status(204).send(user);
+  res.sendStatus(204);
 };
 
 const update = (req, res) => {

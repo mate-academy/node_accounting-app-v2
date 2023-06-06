@@ -1,4 +1,4 @@
-'use strict';
+const { v4: uuidv4 } = require('uuid');
 
 let expenses = [];
 
@@ -9,12 +9,13 @@ const reset = () => {
 const filterExpanses = (expense, queryParams) => {
   const { userId, categories, from, to } = queryParams;
 
-  return (
-    (!userId || expense.userId === Number(userId))
-    && (!categories || categories.includes(expense.category))
-    && (!from || expense.spentAt >= from)
-    && (!to || expense.spentAt <= to)
-  );
+  const isValidUserId = !userId || expense.userId === Number(userId);
+  const isValidCategories = !categories
+    || categories.includes(expense.category);
+  const isValidFromDate = !from || new Date(expense.spentAt) >= new Date(from);
+  const isValidToData = !to || new Date(expense.spentAt) <= new Date(to);
+
+  return isValidUserId && isValidCategories && isValidFromDate && isValidToData;
 };
 
 const getAll = (params) => {
@@ -39,7 +40,7 @@ const add = ({
   note,
 }) => {
   const newExpense = {
-    id: expenses.length + 1,
+    id: uuidv4(),
     userId,
     spentAt,
     title,

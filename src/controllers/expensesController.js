@@ -1,5 +1,3 @@
-'use strict';
-
 const expensesService = require('../service/expenses');
 const userService = require('../service/users');
 
