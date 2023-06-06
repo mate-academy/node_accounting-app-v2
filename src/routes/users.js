@@ -8,10 +8,10 @@ router.get('/users', userController.getAll);
 
 router.get('/users/:userId', userController.getOne);
 
-router.post('/users', express.json(), userController.add);
+router.post('/users', userController.add);
 
 router.delete('/users/:userId', userController.remove);
 
-router.patch('/users/:userId', express.json(), userController.update);
+router.patch('/users/:userId', userController.update);
 
-module.exports = { todosRouter: router };
+module.exports = { usersRouter: router };

@@ -8,10 +8,10 @@ router.get('/expenses', expenseController.getAll);
 
 router.get('/expenses/:expenseId', expenseController.getOne);
 
-router.post('/expenses', express.json(), expenseController.add);
+router.post('/expenses', expenseController.add);
 
 router.delete('/expenses/:expenseId', expenseController.remove);
 
-router.patch('/expenses/:expenseId', express.json(), expenseController.update);
+router.patch('/expenses/:expenseId', expenseController.update);
 
 module.exports = { expenseRouter: router };

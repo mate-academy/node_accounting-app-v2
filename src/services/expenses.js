@@ -13,7 +13,7 @@ function getAll() {
 }
 
 function getById(expenseId) {
-  const foundExpense = expenses.find(({ id }) => id === +expenseId);
+  const foundExpense = expenses.find(({ id }) => id === Number(expenseId));
 
   return foundExpense || null;
 }
@@ -42,7 +42,7 @@ function create(
 }
 
 function remove(expenseId) {
-  expenses = expenses.filter(({ id }) => id !== +expenseId);
+  expenses = expenses.filter(({ id }) => id !== Number(expenseId));
 }
 
 function update({

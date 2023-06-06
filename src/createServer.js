@@ -2,7 +2,7 @@
 
 const express = require('express');
 
-const { todosRouter } = require('./routes/users');
+const { usersRouter } = require('./routes/users');
 const { expenseRouter } = require('./routes/expenses');
 
 const userService = require('./services/users');
@@ -11,7 +11,9 @@ const expenseService = require('./services/expenses');
 function createServer() {
   const app = express();
 
-  app.use(todosRouter);
+  app.use(express.json());
+
+  app.use(usersRouter);
   app.use(expenseRouter);
 
   userService.eraseData();

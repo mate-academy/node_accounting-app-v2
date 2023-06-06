@@ -13,7 +13,7 @@ function getAll() {
 }
 
 function getById(userId) {
-  const foundUser = users.find(({ id }) => id === +userId);
+  const foundUser = users.find(({ id }) => id === Number(userId));
 
   return foundUser || null;
 }
@@ -30,7 +30,7 @@ function create(name) {
 }
 
 function remove(userId) {
-  users = users.filter(({ id }) => id !== +userId);
+  users = users.filter(({ id }) => id !== Number(userId));
 }
 
 function update({ id, name }) {
