@@ -11,8 +11,7 @@ function getAllUsers() {
 }
 
 function getByUserId(userId) {
-  return users
-    .find(user => user.id === Number(userId));
+  return users.find(user => user.id === Number(userId));
 }
 
 function createUser(name) {
@@ -40,10 +39,10 @@ function updateUser(userId, name) {
 }
 
 module.exports = {
-  resetUsers,
   getAllUsers,
   getByUserId,
   createUser,
   deleteUser,
   updateUser,
+  resetUsers,
 };

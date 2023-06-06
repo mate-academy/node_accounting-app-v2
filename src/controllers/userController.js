@@ -1,9 +1,9 @@
 'use strict';
 
-const userService = require('../services/userService');
+const userServices = require('../services/userServices');
 
-function getAllUser(_, res) {
-  const allUsers = userService.getAllUsers();
+function getAllUsers(_, res) {
+  const allUsers = userServices.getAllUsers();
 
   res.send(allUsers);
 }
@@ -12,13 +12,17 @@ function getUserById(req, res) {
   const { userId } = req.params;
 
   if (!userId) {
-    return res.sendStatus(400);
+    res.sendStatus(400);
+
+    return;
   }
 
-  const user = userService.getByUserId(userId);
+  const user = userServices.getByUserId(userId);
 
   if (!user) {
-    return res.sendStatus(404);
+    res.sendStatus(404);
+
+    return;
   }
 
   res.statusCode = 200;
@@ -29,10 +33,12 @@ function createUser(req, res) {
   const { name } = req.body;
 
   if (!name) {
-    return res.sendStatus(400);
+    res.sendStatus(400);
+
+    return;
   }
 
-  const newUser = userService.createUser(name);
+  const newUser = userServices.createUser(name);
 
   res.statusCode = 201;
   res.send(newUser);
@@ -40,37 +46,44 @@ function createUser(req, res) {
 
 function deleteUser(req, res) {
   const { userId } = req.params;
-  const user = userService.getByUserId(userId);
 
-  if (!user) {
-    return res.sendStatus(404);
+  const foundUser = userServices.getByUserId(userId);
+
+  if (!foundUser) {
+    res.sendStatus(404);
+
+    return;
   }
 
-  userService.deleteUser(userId);
+  userServices.deleteUser(userId);
   res.sendStatus(204);
 }
 
 function updateUser(req, res) {
   const { userId } = req.params;
-  const user = userService.getByUserId(userId);
+  const user = userServices.getByUserId(userId);
 
   if (!user) {
-    return res.sendStatus(404);
+    res.sendStatus(404);
+
+    return;
   }
 
   const { name } = req.body;
 
   if (!name || typeof name !== 'string') {
-    return res.sendStatus(400);
+    res.sendStatus(400);
+
+    return;
   }
 
-  userService.updateUser(userId, name);
+  userServices.updateUser(userId, name);
   res.statusCode = 200;
   res.send(user);
 }
 
 module.exports = {
-  getAllUser,
+  getAllUsers,
   getUserById,
   createUser,
   deleteUser,
