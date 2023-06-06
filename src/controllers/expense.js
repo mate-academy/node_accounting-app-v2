@@ -1,7 +1,7 @@
 'use strict';
 
 const expenseService = require('../services/expense');
-const userServise = require('../services/user');
+const userService = require('../services/user');
 
 const getFiltered = (req, res) => {
   const {
@@ -11,7 +11,8 @@ const getFiltered = (req, res) => {
     to,
   } = req.query;
 
-  const expenses = expenseService.getFiltered(+userId, categories, from, to);
+  const expenses = expenseService
+    .getFiltered(Number(userId), categories, from, to);
 
   res.send(expenses);
 };
@@ -25,7 +26,7 @@ const getOne = (req, res) => {
     return;
   }
 
-  const foundExpense = expenseService.getById(+expenseId);
+  const foundExpense = expenseService.getById(Number(expenseId));
 
   if (!foundExpense) {
     res.sendStatus(404);
@@ -36,11 +37,11 @@ const getOne = (req, res) => {
   res.send(foundExpense);
 };
 
-const addExpense = (req, res) => {
+const add = (req, res) => {
   const expense = req.body;
   const { userId } = expense;
 
-  const foundUser = userServise.getById(userId);
+  const foundUser = userService.getById(userId);
 
   if (Object.keys(expense).length < 6 || !foundUser) {
     res.sendStatus(400);
@@ -48,7 +49,7 @@ const addExpense = (req, res) => {
     return;
   }
 
-  const newExpense = expenseService.addExpense(expense);
+  const newExpense = expenseService.add(expense);
 
   res.status(201);
   res.send(newExpense);
@@ -56,7 +57,7 @@ const addExpense = (req, res) => {
 
 const removeExpense = (req, res) => {
   const { expenseId } = req.params;
-  const foundExpense = expenseService.getById(+expenseId);
+  const foundExpense = expenseService.getById(Number(expenseId));
 
   if (!foundExpense) {
     res.sendStatus(404);
@@ -64,7 +65,7 @@ const removeExpense = (req, res) => {
     return;
   }
 
-  expenseService.removeExpense(+expenseId);
+  expenseService.removeExpense(Number(expenseId));
 
   res.sendStatus(204);
 };
@@ -73,7 +74,7 @@ const updateExpense = (req, res) => {
   const { expenseId } = req.params;
   const expense = req.body;
 
-  const foundExpense = expenseService.getById(+expenseId);
+  const foundExpense = expenseService.getById(Number(expenseId));
 
   if (!foundExpense) {
     res.sendStatus(404);
@@ -87,14 +88,15 @@ const updateExpense = (req, res) => {
     return;
   }
 
-  const updatedExpense = expenseService.updateExpense(+expenseId, expense);
+  const updatedExpense = expenseService
+    .updateExpense(Number(expenseId), expense);
 
   res.send(updatedExpense);
 };
 
 module.exports = {
   getFiltered,
-  addExpense,
+  add,
   getOne,
   removeExpense,
   updateExpense,

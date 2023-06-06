@@ -7,37 +7,29 @@ const resetExpenses = () => {
 };
 
 const getFiltered = (userId, category, from, to) => {
-  let filteredExpenses = expenses;
+  let filteredExpenses = [...expenses];
 
-  if (userId) {
-    filteredExpenses = filteredExpenses.filter(expense => (
-      expense.userId === userId));
-  }
+  const filterByUserId = (expense) => {
+    return !userId || expense.userId === userId;
+  };
 
-  if (category) {
-    filteredExpenses = filteredExpenses.filter(expense => (
-      category.includes(expense.category)));
-  }
+  const filterByCategory = (expense) => {
+    return !category || category.includes(expense.category);
+  };
 
-  if (from) {
-    const fromDate = new Date(from);
+  const filterByDateRange = (expense) => {
+    const expenseDate = new Date(expense.spentAt);
+    const fromDate = from ? new Date(from) : null;
+    const toDate = to ? new Date(to) : null;
 
-    filteredExpenses = filteredExpenses.filter(expense => {
-      const expenseDate = new Date(expense.spentAt);
+    return (!fromDate || expenseDate >= fromDate)
+      && (!toDate || expenseDate <= toDate);
+  };
 
-      return expenseDate >= fromDate;
-    });
-  }
-
-  if (to) {
-    const toDate = new Date(to);
-
-    filteredExpenses = filteredExpenses.filter(expense => {
-      const expenseDate = new Date(expense.spentAt);
-
-      return expenseDate <= toDate;
-    });
-  }
+  filteredExpenses = filteredExpenses
+    .filter(filterByUserId)
+    .filter(filterByCategory)
+    .filter(filterByDateRange);
 
   return filteredExpenses;
 };
@@ -48,7 +40,7 @@ const getById = (expenseId) => {
   return foundExpense || null;
 };
 
-const addExpense = (expenseData) => {
+const add = (expenseData) => {
   const maxId = Math.max(...expenses.map(expense => expense.id), 0);
   const newId = maxId + 1;
 
@@ -67,21 +59,25 @@ const removeExpense = (expenseId) => {
 };
 
 const updateExpense = (expenseId, expenseNewData) => {
-  let expense = getById(expenseId);
+  const expenseIndex = expenses.findIndex(({ id }) => id === expenseId);
 
-  expense = {
-    ...expense,
-    ...expenseNewData,
-  };
+  if (!expenseIndex) {
+    expenses[expenseIndex] = {
+      ...expenses[expenseIndex],
+      ...expenseNewData,
+    };
 
-  return expense;
+    return expenses[expenseIndex];
+  }
+
+  return null;
 };
 
 module.exports = {
   resetExpenses,
   getFiltered,
   getById: getById,
-  addExpense,
+  add,
   removeExpense,
   updateExpense,
 };

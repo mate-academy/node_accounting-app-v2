@@ -16,9 +16,14 @@ const getById = (userId) => {
   return foundUser || null;
 };
 
-const addUser = (name) => {
+const getMaxId = () => {
   const maxId = Math.max(...users.map(user => user.id), 0);
-  const newId = maxId + 1;
+
+  return maxId + 1;
+};
+
+const addUser = (name) => {
+  const newId = getMaxId();
 
   const newUser = {
     id: newId,
