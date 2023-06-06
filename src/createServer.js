@@ -1,5 +1,7 @@
 'use strict';
 
+// All i need is cry all tonight... still now worked ;(
+
 const express = require('express');
 const { userRouter } = require('./routes/userRouter');
 const { expenseRouter } = require('./routes/expenseRouter');
