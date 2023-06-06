@@ -1,5 +1,7 @@
 'use strict';
 
+const { getMaxId } = require('../utils/helpers');
+
 let users = [];
 
 function getAll() {
@@ -13,9 +15,7 @@ function getUserById(userId) {
 }
 
 function create(name) {
-  const id = users.length
-    ? Number(Math.max(...users.map((user) => user.id)) + 1)
-    : 1;
+  const id = getMaxId(users);
 
   const newUser = {
     id,

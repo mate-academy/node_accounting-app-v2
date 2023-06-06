@@ -32,7 +32,7 @@ const add = (req, res) => {
 
   const newUser = userService.create(name);
 
-  res.statusCode = 201;
+  res.status(201);
   res.send(newUser);
 };
 

@@ -1,5 +1,7 @@
 'use strict';
 
+const { getMaxId } = require('../utils/helpers');
+
 let expenses = [];
 
 const filterExpanses = (expense, queryParams) => {
@@ -35,9 +37,7 @@ function create({
   category,
   note,
 }) {
-  const id = expenses.length
-    ? Number(Math.max(...expenses.map((expens) => expens.id)) + 1)
-    : 1;
+  const id = getMaxId(expenses);
 
   const newExpens = {
     id,
