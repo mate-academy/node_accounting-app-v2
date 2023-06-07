@@ -1,6 +1,6 @@
 'use strict';
 
-const models = require('./models');
+const models = require('../models');
 
 function getUsers(req, res) {
   const users = models.getUsers();
