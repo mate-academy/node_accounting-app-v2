@@ -20,6 +20,7 @@ const getOne = (req, res) => {
 
   res.send(foundUser);
 };
+
 const create = (req, res) => {
   const { name } = req.body;
 
@@ -31,7 +32,7 @@ const create = (req, res) => {
 
   const user = usersServices.createUser(name);
 
-  res.statusCode = 201;
+  res.status(201);
   res.send(user);
 };
 
@@ -61,7 +62,7 @@ const update = (req, res) => {
     return;
   }
 
-  Object.assign(foundUser, { name });
+  usersServices.updateUser(foundUser, { name });
 
   res.send(foundUser);
 };

@@ -8,7 +8,7 @@ const getAllUsers = () => {
 };
 
 const getUserById = (userId) => {
-  return users.find(user => user.id.toString() === userId);
+  return users.find(user => user.id === Number(userId));
 };
 
 const createUser = (name) => {
@@ -24,8 +24,12 @@ const createUser = (name) => {
   return user;
 };
 
+const updateUser = (user, data) => {
+  Object.assign(user, data);
+};
+
 const removeUser = (userId) => {
-  users = users.filter(({ id }) => id.toString() !== userId);
+  users = users.filter(({ id }) => id !== Number(userId));
 };
 
 const removeAll = () => {
@@ -36,6 +40,7 @@ module.exports = {
   getAllUsers,
   getUserById,
   createUser,
+  updateUser,
   removeUser,
   removeAll,
 };

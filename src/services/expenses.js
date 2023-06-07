@@ -3,13 +3,21 @@
 let expenses = [];
 const { getMax } = require('../utils/getMax');
 
+const parseDate = (spentAt, from, to) => {
+  return {
+    expenseDate: new Date(spentAt),
+    fromDate: new Date(from),
+    toDate: new Date(to),
+  };
+};
+
 const filterExpenses = (filters) => {
   let filteredExpenses = expenses;
   const { userId, categories, from, to } = filters;
 
   if (userId) {
     filteredExpenses = filteredExpenses.filter(expense => (
-      expense.userId.toString() === userId
+      expense.userId === Number(userId)
     ));
   }
 
@@ -21,9 +29,11 @@ const filterExpenses = (filters) => {
 
   if (from && to) {
     filteredExpenses = filteredExpenses.filter(expense => {
-      const expenseDate = new Date(expense.spentAt);
-      const fromDate = new Date(from);
-      const toDate = new Date(to);
+      const {
+        expenseDate,
+        toDate,
+        fromDate,
+      } = parseDate(expense.spentAt, from, to);
 
       return expenseDate < toDate && fromDate <= expenseDate;
     });
@@ -34,7 +44,7 @@ const filterExpenses = (filters) => {
 
 const getById = (expenseId) => {
   return expenses.find(expense => (
-    expense.id.toString() === expenseId
+    expense.id === Number(expenseId)
   ));
 };
 
@@ -51,7 +61,7 @@ const createExpense = (body) => {
   const id = getMax(expenses);
   const expense = {
     id,
-    userId: +userId,
+    userId: Number(userId),
     spentAt,
     title,
     amount: +amount,
@@ -64,9 +74,13 @@ const createExpense = (body) => {
   return expense;
 };
 
+const updateExpense = (expense, data) => {
+  Object.assign(expense, data);
+};
+
 const removeExpense = (expenseId) => {
   expenses = expenses.filter(({ id }) => (
-    id.toString() !== expenseId
+    id !== Number(expenseId)
   ));
 };
 
@@ -78,6 +92,7 @@ module.exports = {
   filterExpenses,
   getById,
   createExpense,
+  updateExpense,
   removeExpense,
   removeAll,
 };

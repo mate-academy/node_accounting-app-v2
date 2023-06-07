@@ -42,7 +42,7 @@ const create = (req, res) => {
 
   const expense = expenseService.createExpense(req.body);
 
-  res.statusCode = 201;
+  res.status(201);
   res.send(expense);
 };
 
@@ -57,7 +57,7 @@ const update = (req, res) => {
     return;
   }
 
-  Object.assign(foundExpense, req.body);
+  expenseService.updateExpense(foundExpense, req.body);
 
   res.send(foundExpense);
 };
