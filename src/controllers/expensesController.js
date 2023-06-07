@@ -1,9 +1,8 @@
 'use strict';
 
-const expenseService = require('../services/expensesServices.js');
-const userServices = require('../services/usersServices');
-const { getMaxId } = require('../utils/helpers');
-const expensesService = require('../services/expensesServices');
+const userServices = require('../services/usersServices.js');
+const { getMaxId } = require('../utils/helpers.js');
+const expensesService = require('../services/expensesServices.js');
 
 const handleDate = (spentAt, from, to) => {
   return {
@@ -13,7 +12,7 @@ const handleDate = (spentAt, from, to) => {
   };
 };
 const getAll = (req, res) => {
-  let filteredExpenses = expenseService.getAll();
+  let filteredExpenses = expensesService.getAll();
   const { userId, categories, from, to } = req.query;
 
   if (userId) {
@@ -38,28 +37,26 @@ const getAll = (req, res) => {
     });
   }
 
-  res.send(filteredExpenses);
+  return res.send(filteredExpenses);
 };
 
 const createExpenses = (req, res) => {
   const { userId, spentAt, title, amount, category, note } = req.body;
 
   if (!userId || !spentAt || !title || !amount || !category || !note) {
-    res.sendStatus(400);
-
-    return;
+    return res.sendStatus(400);
   }
 
   const foundUser = userServices.foundUser(userId);
 
   if (!foundUser) {
-    res.sendStatus(400);
-
-    return;
+    return res.sendStatus(400);
   }
 
+  const expenses = expensesService.getAll();
+
   const newExpense = {
-    id: getMaxId(expensesService.getAll()),
+    id: getMaxId(expenses),
     userId,
     spentAt,
     title,
@@ -69,7 +66,8 @@ const createExpenses = (req, res) => {
   };
 
   expensesService.createExpenses(newExpense);
-  res.status(201).send(newExpense);
+
+  return res.status(201).send(newExpense);
 };
 
 const findById = (req, res) => {
@@ -77,36 +75,31 @@ const findById = (req, res) => {
   const foundExpense = expensesService.findById(expenseId);
 
   if (!foundExpense) {
-    res.sendStatus(404);
-
-    return;
+    return res.sendStatus(404);
   }
 
-  res.send(foundExpense);
+  return res.send(foundExpense);
 };
 
 const deleteById = (req, res) => {
   const { expenseId } = req.params;
-  let expenses = expensesService.getAll();
+  const expenses = expensesService.getAll();
   const filteredExpenses = expensesService.removeById(expenseId);
 
   if (filteredExpenses.length === expenses.length) {
-    res.sendStatus(404);
-
-    return;
+    return res.sendStatus(404);
   }
 
-  expenses = filteredExpenses;
-  res.sendStatus(204);
+  expensesService.changeAll(filteredExpenses);
+
+  return res.sendStatus(204);
 };
 
 const changeById = (req, res) => {
   const { expenseId } = req.params;
 
   if (!expenseId) {
-    res.sendStatus(400);
-
-    return;
+    return res.sendStatus(400);
   }
 
   const body = req.body;
@@ -114,12 +107,11 @@ const changeById = (req, res) => {
   const foundExpense = expensesService.findById(expenseId);
 
   if (!foundExpense) {
-    res.sendStatus(404);
-
-    return;
+    return res.sendStatus(404);
   }
   expensesService.changeById(foundExpense, body);
-  res.send(foundExpense);
+
+  return res.send(foundExpense);
 };
 
 module.exports = {

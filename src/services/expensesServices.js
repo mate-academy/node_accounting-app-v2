@@ -18,16 +18,16 @@ const removeById = (expenseId) => {
     .filter(expense => expense.id !== Number(expenseId));
 };
 
+const changeAll = (filteredExpenses) => {
+  expenses = filteredExpenses;
+};
+
 const changeById = (findExpense, body) => {
   Object.assign(findExpense, body);
-
-  return findExpense;
 };
 
 const reset = () => {
   expenses = [];
-
-  return expenses;
 };
 
 module.exports = {
@@ -36,5 +36,6 @@ module.exports = {
   findById,
   removeById,
   changeById,
+  changeAll,
   reset,
 };

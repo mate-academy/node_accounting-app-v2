@@ -2,11 +2,10 @@
 
 const express = require('express');
 const expensesController = require('../controllers/expensesController.js');
-const expensesService = require('../services/expensesServices.js');
 
 const router = express.Router();
 
-router.post('/', expensesService.createExpenses);
+router.post('/', expensesController.createExpenses);
 
 router.get('/', expensesController.getAll);
 

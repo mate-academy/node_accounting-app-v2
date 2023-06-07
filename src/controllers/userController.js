@@ -1,6 +1,6 @@
 'use strict';
 
-const { getMaxId } = require('../utils/helpers');
+const { getMaxId } = require('../utils/helpers.js');
 const usersServices = require('../services/usersServices.js');
 
 const getAllUsers = (req, res) => {
