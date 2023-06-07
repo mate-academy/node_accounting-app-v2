@@ -4,27 +4,7 @@ const userService = require('../services/users');
 const expensesService = require('../services/expenses');
 
 const getAllExpenses = (req, res) => {
-  const { userId, categories, from, to } = req.query;
-  let expenses = expensesService.getAll();
-
-  if (userId) {
-    expenses = expenses.filter((elem) => elem.userId === +userId);
-  }
-
-  if (categories) {
-    expenses = expenses.filter((elem) => elem.category === categories);
-  }
-
-  if (from && to) {
-    const fromDate = new Date(from);
-    const toDate = new Date(to);
-
-    expenses = expenses.filter(({ spentAt }) => {
-      const expanseDate = new Date(spentAt);
-
-      return fromDate <= expanseDate && toDate > expanseDate;
-    });
-  }
+  const expenses = expensesService.getAll(req.query);
 
   res.send(expenses);
 };
