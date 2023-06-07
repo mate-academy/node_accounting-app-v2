@@ -30,16 +30,12 @@ function getExpenses(userId, categories, from, to) {
 
   if (from && !to) {
     filteredExpenses = filteredExpenses
-      .filter(expense => (
-        expense.spentAt >= from
-      ));
+      .filter(expense => expense.spentAt >= from);
   }
 
   if (to && !from) {
     filteredExpenses = filteredExpenses
-      .filter(expense => (
-        expense.spentAt <= to
-      ));
+      .filter(expense => expense.spentAt <= to);
   }
 
   return filteredExpenses;
