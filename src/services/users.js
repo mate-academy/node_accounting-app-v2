@@ -20,7 +20,7 @@ class Users {
 
   createUser(name) {
     const newUser = {
-      id: this.users.length + 1,
+      id: Math.random(),
       name,
     };
 
@@ -37,7 +37,7 @@ class Users {
   updateById(userId, userName) {
     const user = this.getById(userId);
 
-    user.name = userName;
+    Object.assign(user, { name: userName });
 
     return user;
   }

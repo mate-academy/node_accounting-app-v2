@@ -13,8 +13,8 @@ const {
 
 usersRouter.get('/', getAll);
 usersRouter.get('/:userId', getOne);
-usersRouter.post('/', express.json(), createOne);
+usersRouter.post('/', createOne);
 usersRouter.delete('/:userId', removeUser);
-usersRouter.patch('/:userId', express.json(), updateOne);
+usersRouter.patch('/:userId', updateOne);
 
 module.exports = usersRouter;

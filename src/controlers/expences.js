@@ -1,6 +1,6 @@
 'use strict';
 
-const expenceServices = require('../services/expences');
+const expenceServices = require('../services/expenses');
 const userServices = require('../services/users');
 
 const getAll = (req, res) => {
@@ -8,8 +8,7 @@ const getAll = (req, res) => {
 
   const expenses = expenceServices.getAll(userId, categories, from, to);
 
-  res.statusCode = 200;
-  res.send(expenses);
+  res.status(200).send(expenses);
 };
 
 const getOne = (req, res) => {
@@ -29,8 +28,7 @@ const getOne = (req, res) => {
     return;
   }
 
-  res.statusCode = 200;
-  res.send(foundExpense);
+  res.status(200).send(foundExpense);
 };
 
 const create = (req, res) => {
@@ -46,8 +44,7 @@ const create = (req, res) => {
 
   const newExpence = expenceServices.createExpence(data);
 
-  res.statusCode = 201;
-  res.send(newExpence);
+  res.status(201).send(newExpence);
 };
 
 const remove = (req, res) => {
@@ -92,8 +89,7 @@ const update = (req, res) => {
 
   const updateExpense = expenceServices.updateById(expensesId, body);
 
-  res.statusCode = 200;
-  res.send(updateExpense);
+  res.status(200).send(updateExpense);
 };
 
 module.exports = {
