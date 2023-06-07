@@ -1,4 +1,5 @@
 'use strict';
+
 let users = [];
 let usersIdCount = 0;
 
@@ -29,12 +30,12 @@ function getById(userId) {
 }
 
 function update({ id, name }) {
-  const user = getById(id);
+  let user = getById(id);
 
   user = {
     ...user,
     name,
-  }
+  };
 
   return user;
 }
