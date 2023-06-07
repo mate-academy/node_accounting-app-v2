@@ -1,18 +1,10 @@
 'use strict';
 
+const { getNextId } = require('../helpers/helpers');
+
 let users = [];
 
-const getNextId = (array) => {
-  if (array.length === 0) {
-    return 1;
-  }
-
-  const maxId = Math.max(...array.map(({ id }) => id));
-
-  return maxId + 1;
-};
-
-const getUsers = () => {
+const getAllUsers = () => {
   return users;
 };
 
@@ -52,7 +44,7 @@ const removeAllUsers = () => {
 };
 
 module.exports = {
-  getAllUsers: getUsers,
+  getAllUsers,
   getUserById,
   createUser,
   updateUser,

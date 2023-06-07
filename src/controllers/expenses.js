@@ -43,8 +43,7 @@ const create = (req, res) => {
 
   const expense = expenseService.createExpense(req.body);
 
-  res.statusCode = 201;
-  res.send(expense);
+  res.status(201).send(expense);
 };
 
 const update = (req, res) => {
