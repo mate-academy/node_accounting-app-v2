@@ -10,4 +10,4 @@ router.get('/:expenceId', expencesController.getSingle);
 router.patch('/:expenceId', expencesController.update);
 router.delete('/:expenceId', expencesController.remove);
 
-module.exports = expencesRouter;
+module.exports = expencesController;
