@@ -1,6 +1,7 @@
 'use strict';
 
 const expensesServices = require('../services/expenses');
+const usersServices = require('../services/users');
 
 const getAll = (req, res) => {
   const expenses = expensesServices.filterExpenses(req.query);
@@ -31,7 +32,8 @@ const add = (req, res) => {
     note,
   } = req.body;
 
-  const isRequiredField = !spentAt
+  const isRequiredField = !userId
+    || !spentAt
     || !title
     || !amount
     || !category
@@ -39,6 +41,14 @@ const add = (req, res) => {
 
   if (isRequiredField) {
     res.status(400).send('One of the field is required');
+
+    return;
+  }
+
+  const foundUser = usersServices.getById(userId);
+
+  if (!foundUser) {
+    res.status(400).send('User not found');
 
     return;
   }
