@@ -9,7 +9,7 @@ const getAll = (req, res) => {
   res.send(filteredExpenses);
 };
 
-const getExpense = (req, res) => {
+const getExpenseById = (req, res) => {
   const { expenseId } = req.params;
 
   const foundExpense = expensesServices.getById(expenseId);
@@ -18,8 +18,7 @@ const getExpense = (req, res) => {
     return res.sendStatus(404);
   }
 
-  res.statusCode = 200;
-  res.send(foundExpense);
+  res.status(200).send(foundExpense);
 };
 
 const addExpense = (req, res) => {
@@ -33,11 +32,10 @@ const addExpense = (req, res) => {
 
   const newExpense = expensesServices.create(req.body);
 
-  res.statusCode = 201;
-  res.send(newExpense);
+  res.status(201).send(newExpense);
 };
 
-const update = (req, res) => {
+const updateExpenseById = (req, res) => {
   const { expenseId } = req.params;
 
   const foundExpense = expensesServices.getById(expenseId);
@@ -54,7 +52,7 @@ const update = (req, res) => {
   res.send(expense);
 };
 
-const remove = (req, res) => {
+const removeExpenseById = (req, res) => {
   const { expenseId } = req.params;
   const foundExpense = expensesServices.getById(expenseId);
 
@@ -68,8 +66,8 @@ const remove = (req, res) => {
 
 module.exports = {
   getAll,
-  getExpense,
+  getExpenseById,
   addExpense,
-  update,
-  remove,
+  updateExpenseById,
+  removeExpenseById,
 };

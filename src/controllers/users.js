@@ -8,7 +8,7 @@ const getAll = (req, res) => {
   res.send(users);
 };
 
-const getUser = (req, res) => {
+const getUserById = (req, res) => {
   const { userId } = req.params;
   const user = userServices.getById(userId);
 
@@ -28,11 +28,10 @@ const createUser = (req, res) => {
 
   const user = userServices.create(name);
 
-  res.statusCode = 201;
-  res.send(user);
+  res.status(201).send(user);
 };
 
-const updateUser = (req, res) => {
+const updateUserById = (req, res) => {
   const { userId } = req.params;
 
   const foundUser = userServices.getById(userId);
@@ -47,11 +46,11 @@ const updateUser = (req, res) => {
     return res.sendStatus(400);
   }
 
-  userServices.update(userId, name);
+  userServices.updateById(userId, name);
   res.send(foundUser);
 };
 
-const removeUser = (req, res) => {
+const removeUserById = (req, res) => {
   const { userId } = req.params;
   const foundUser = userServices.getById(userId);
 
@@ -59,14 +58,14 @@ const removeUser = (req, res) => {
     return res.sendStatus(404);
   }
 
-  userServices.remove(userId);
+  userServices.removeById(userId);
   res.sendStatus(204);
 };
 
 module.exports = {
   getAll,
-  getUser,
+  getUserById,
   createUser,
-  updateUser,
-  removeUser,
+  updateUserById,
+  removeUserById,
 };

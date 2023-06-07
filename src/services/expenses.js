@@ -2,6 +2,8 @@
 
 let expenses = [];
 
+let newId = expenses.length;
+
 const getFilteredExpenses = (data) => {
   let filteredExpenses = expenses;
 
@@ -14,8 +16,8 @@ const getFilteredExpenses = (data) => {
   }
 
   if (categories) {
-    filteredExpenses = filteredExpenses.filter(
-      (expense) => expense.category === categories
+    filteredExpenses = filteredExpenses.filter((expense) =>
+      categories.includes(expense.category)
     );
   }
 
@@ -35,14 +37,16 @@ const create = (data) => {
   const { title, amount, spentAt, category, userId, note } = data;
 
   const newExpense = {
-    id: expenses.length + 1,
+    id: newId,
     title,
-    amount: amount || 0,
-    spentAt: spentAt || new Date(Date.now()).toISOString(),
-    category: category || '',
-    userId: userId || 0,
-    note: note || '',
+    amount,
+    spentAt,
+    category,
+    userId,
+    note,
   };
+
+  newId += 1;
 
   expenses.push(newExpense);
 

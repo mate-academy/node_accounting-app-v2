@@ -2,6 +2,8 @@
 
 let users = [];
 
+let newId = users.length;
+
 const getAll = () => {
   return users;
 };
@@ -10,19 +12,19 @@ const getById = (userId) =>
   users.find((user) => user.id === Number(userId)) || null;
 
 const create = (name) => {
-  const id = users.length + 1;
-
   const newUser = {
-    id,
+    id: newId,
     name,
   };
+
+  newId += 1;
 
   users.push(newUser);
 
   return newUser;
 };
 
-const update = (id, name) => {
+const updateById = (id, name) => {
   const user = getById(id);
 
   Object.assign(user, {
@@ -32,7 +34,7 @@ const update = (id, name) => {
   return user;
 };
 
-const remove = (userId) =>
+const removeById = (userId) =>
   (users = users.filter((user) => user.id !== Number(userId)));
 
 const reset = () => {
@@ -43,7 +45,7 @@ module.exports = {
   getAll,
   getById,
   create,
-  update,
-  remove,
+  updateById,
+  removeById,
   reset,
 };
