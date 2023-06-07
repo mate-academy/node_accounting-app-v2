@@ -11,7 +11,7 @@ function getUsers() {
 }
 
 function getUserById(id) {
-  return users.find((user) => user.id === +id);
+  return users.find((user) => user.id === Number(id));
 }
 
 function createUser(name) {
@@ -26,7 +26,9 @@ function createUser(name) {
 }
 
 function deleteUser(id) {
-  users = users.filter(user => user.id === Number(id));
+  users = users.filter(user => user.id !== Number(id));
+
+  return users;
 }
 
 function updateUser(id, name) {

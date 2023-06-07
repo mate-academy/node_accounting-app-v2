@@ -48,7 +48,7 @@ function deleteUser(req, res) {
 };
 
 function updateUser(req, res) {
-  const user = userServices.getUserById(req.params.id.id);
+  const user = userServices.getUserById(req.params.id);
 
   if (!user) {
     res.sendStatus(404);
