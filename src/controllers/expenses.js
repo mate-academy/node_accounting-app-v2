@@ -1,4 +1,4 @@
-const expensesService = require('../servises/expenses');
+const expensesService = require('../services/expenses');
 
 const getAll = (req, res) => {
   const expenses = expensesService.getAll();
@@ -13,9 +13,11 @@ const create = (req, res) => {
 
   if (!newExpense) {
     res.sendStatus(400);
+
+    return;
   }
 
-  res.statusCode = 201;
+  res.status(200);
   res.send(newExpense);
 };
 
@@ -57,14 +59,14 @@ const update = (req, res) => {
     return;
   }
 
-  const result = expensesService.edit(foundExpense, dataToChange);
+  const result = expensesService.update(foundExpense, dataToChange);
 
-  if (result) {
-    res.statusCode = 200;
-    res.send(foundExpense);
-  } else {
+  if (!result) {
     res.sendStatus(400);
   }
+
+  res.statusCode = 200;
+  res.send(foundExpense);
 };
 
 module.exports = {

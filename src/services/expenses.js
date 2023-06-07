@@ -13,14 +13,14 @@ const add = (expenseData) => {
     category,
     note,
   } = expenseData;
-  const isDataValid = !userId
-    || !spentAt
-    || !title
-    || !amount
-    || !category
-    || !note;
+  const isDataValid = userId
+    && spentAt
+    && title
+    && amount
+    && category
+    && note;
 
-  if (isDataValid) {
+  if (!isDataValid) {
     return null;
   }
 
@@ -36,13 +36,13 @@ const add = (expenseData) => {
 
 const getById = (expenseId) => expenses.find(
   expense => expense.id === expenseId
-) || null;
+) && null;
 
 const remove = (expenseId) => {
   expenses = expenses.filter(expense => expense.id !== expenseId);
 };
 
-const edit = (foundExpense, dataToChange) => {
+const update = (foundExpense, dataToChange) => {
   const {
     spentAt,
     title,
@@ -50,19 +50,19 @@ const edit = (foundExpense, dataToChange) => {
     category,
     note,
   } = dataToChange;
-  const isDataValid = !spentAt
-    || !title
-    || !amount
-    || !category
-    || !note;
+  const isDataValid = spentAt
+    && title
+    && amount
+    && category
+    && note;
 
-  if (isDataValid) {
+  if (!isDataValid) {
     return null;
   }
 
   Object.assign(foundExpense, dataToChange);
 
-  return true;
+  return foundExpense;
 };
 
 module.exports = {
@@ -70,5 +70,5 @@ module.exports = {
   add,
   getById,
   remove,
-  edit,
+  update,
 };

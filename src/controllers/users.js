@@ -1,4 +1,4 @@
-const usersService = require('../servises/users');
+const usersService = require('../services/users');
 
 const getAll = (req, res) => {
   const users = usersService.getAll();
@@ -23,7 +23,7 @@ const create = (req, res) => {
   const { name } = req.body;
 
   if (!name) {
-    res.sendStatus(422);
+    res.sendStatus(400);
 
     return;
   }
@@ -51,7 +51,7 @@ const remove = (req, res) => {
 const update = (req, res) => {
   const { userId } = req.params;
   const { name } = req.body;
-  const foundUser = usersService(userId);
+  const foundUser = usersService.getById(userId);
 
   if (!foundUser) {
     res.sendStatus(404);

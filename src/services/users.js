@@ -17,14 +17,20 @@ const create = (name) => {
   };
 
   users.push(newUser);
+
+  return newUser;
 };
 
 const remove = (userId) => {
   users = users.filter(user => user.id !== userId);
+
+  return getById(userId);
 };
 
 const edit = (foundUser, name) => {
   Object.assign(foundUser, { name });
+
+  return foundUser;
 };
 
 module.exports = {
