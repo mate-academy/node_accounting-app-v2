@@ -25,8 +25,7 @@ const getOne = (req, res) => {
     return;
   }
 
-  res.statusCode = 200;
-  res.send(foundUser);
+  res.status(200).send(foundUser);
 };
 
 const createOne = (req, res) => {
@@ -40,8 +39,7 @@ const createOne = (req, res) => {
 
   const newUser = userServices.createUser(name);
 
-  res.statusCode = 201;
-  res.send(newUser);
+  res.status(201).send(newUser);
 };
 
 const removeUser = (req, res) => {
@@ -63,8 +61,7 @@ const removeUser = (req, res) => {
 
   userServices.removeUser(userId);
 
-  res.statusCode = 204;
-  res.send();
+  res.status(204).send();
 };
 
 const updateOne = (req, res) => {
@@ -77,9 +74,9 @@ const updateOne = (req, res) => {
     return;
   }
 
-  const foundUser = userServices.getById(userId);
+  const updateUser = userServices.getById(userId);
 
-  if (!foundUser) {
+  if (!updateUser) {
     res.sendStatus(404);
 
     return;
@@ -87,8 +84,7 @@ const updateOne = (req, res) => {
 
   userServices.updateById(userId, name);
 
-  res.statusCode = 200;
-  res.send(foundUser);
+  res.status(200).send(updateUser);
 };
 
 module.exports = {

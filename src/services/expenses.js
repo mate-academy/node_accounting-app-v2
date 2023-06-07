@@ -1,10 +1,12 @@
 'use strict';
 
 const expensesFiltration = require('../utils/expensesFiltration');
+const getUniqId = require('../utils/getId');
 
 class Expenses {
   constructor() {
     this.expensesFiltration = expensesFiltration;
+    this.getUniqId = getUniqId;
     this.expenses = [];
   }
 
@@ -13,8 +15,13 @@ class Expenses {
   }
 
   getAll(userId, category, from, to) {
-    // eslint-disable-next-line
-    this.expenses = this.expensesFiltration(this.expenses, userId, category, from, to);
+    this.expenses = this.expensesFiltration(
+      this.expenses,
+      userId,
+      category,
+      from,
+      to
+    );
 
     return this.expenses;
   }
@@ -28,7 +35,7 @@ class Expenses {
 
   createExpence(data) {
     const newExpense = {
-      id: Math.random(),
+      id: this.getUniqId(this.expenses),
       ...data,
     };
 

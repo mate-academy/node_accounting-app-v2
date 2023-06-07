@@ -1,9 +1,13 @@
 'use strict';
 
+const getUniqId = require('../utils/getId');
+
 class Users {
   constructor() {
     this.users = [];
+    this.getUniqId = getUniqId;
   }
+
   reset() {
     this.users = [];
   }
@@ -20,7 +24,7 @@ class Users {
 
   createUser(name) {
     const newUser = {
-      id: Math.random(),
+      id: this.getUniqId(this.users),
       name,
     };
 

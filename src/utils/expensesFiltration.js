@@ -9,10 +9,11 @@ function expensesFiltration(data, userId, category, from, to) {
     return !category || category.includes(expense.category);
   };
 
+  const fromDate = from ? new Date(from) : null;
+  const toDate = to ? new Date(to) : null;
+
   const filterByTime = (expense) => {
     const expenseDate = new Date(expense.spentAt);
-    const fromDate = from ? new Date(from) : null;
-    const toDate = to ? new Date(to) : null;
 
     return (!fromDate || expenseDate >= fromDate)
       && (!toDate || expenseDate <= toDate);
