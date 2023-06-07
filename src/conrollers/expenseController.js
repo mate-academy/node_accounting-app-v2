@@ -11,9 +11,7 @@ function getExpenses(req, res) {
 };
 
 function getExpenseById(req, res) {
-  const { expenseId } = req.params;
-
-  const foundExpense = expenseServices.getExpenseById(expenseId);
+  const foundExpense = expenseServices.getExpenseById(req.params.expenseId);
 
   if (!foundExpense) {
     res.sendStatus(404);
@@ -25,11 +23,18 @@ function getExpenseById(req, res) {
 };
 
 function createExpense(req, res) {
-  const { userId, spentAt, title, amount, category, note } = req.body;
+  const {
+    userId,
+    spentAt,
+    title,
+    amount,
+    category,
+    note,
+  } = req.body;
 
   const foundUser = userServices.getUserById(userId);
 
-  if (!foundUser || !title) {
+  if (!foundUser) {
     res.sendStatus(400);
 
     return;
@@ -49,8 +54,7 @@ function createExpense(req, res) {
 };
 
 function deleteExpense(req, res) {
-  const { expenseId } = req.params;
-  const expense = expenseServices.getExpenseById(expenseId);
+  const expense = expenseServices.getExpenseById(req.params.expenseId);
 
   if (!expense) {
     res.sendStatus(404);
@@ -58,14 +62,13 @@ function deleteExpense(req, res) {
     return;
   }
 
-  expenseServices.deleteExpense(expenseId);
+  expenseServices.deleteExpense(req.params.expenseId);
 
   res.sendStatus(204);
 };
 
 function updateExpense(req, res) {
-  const { expenseId } = req.params;
-  let expense = expenseServices.getExpenseById(expenseId);
+  let expense = expenseServices.getExpenseById(req.params.expenseId);
 
   if (!expense) {
     res.sendStatus(404);
