@@ -5,7 +5,7 @@ const expensesService = require('../services/expenses');
 
 const getAllExpenses = (req, res) => {
   const { userId, categories, from, to } = req.query;
-  let expenses = expensesService.getAllExpenses();
+  let expenses = expensesService.getAll();
 
   if (userId) {
     expenses = expenses.filter((elem) => elem.userId === +userId);
@@ -16,10 +16,11 @@ const getAllExpenses = (req, res) => {
   }
 
   if (from && to) {
+    const fromDate = new Date(from);
+    const toDate = new Date(to);
+
     expenses = expenses.filter(({ spentAt }) => {
       const expanseDate = new Date(spentAt);
-      const fromDate = new Date(from);
-      const toDate = new Date(to);
 
       return fromDate <= expanseDate && toDate > expanseDate;
     });
@@ -28,17 +29,17 @@ const getAllExpenses = (req, res) => {
   res.send(expenses);
 };
 
-const getOneExpense = (req, res) => {
-  const { expensesId } = req.params;
+const getExpenseById = (req, res) => {
+  const { expenseId } = req.params;
   const regex = /^\d+$/;
 
-  if (!regex.test(expensesId)) {
+  if (!regex.test(expenseId)) {
     res.sendStatus(400);
 
     return;
   }
 
-  const expense = expensesService.findExpensesById(expensesId);
+  const expense = expensesService.findById(expenseId);
 
   if (!expense) {
     res.sendStatus(404);
@@ -49,9 +50,9 @@ const getOneExpense = (req, res) => {
   res.send(expense);
 };
 
-const addExpense = (req, res) => {
+const createExpense = (req, res) => {
   const data = req.body;
-  const userExpense = userService.findUserById(data.userId);
+  const userExpense = userService.findById(data.userId);
 
   if (!Object.entries(data).length || !userExpense) {
     res.sendStatus(400);
@@ -59,24 +60,23 @@ const addExpense = (req, res) => {
     return;
   }
 
-  const newExpense = expensesService.createExpense(data);
+  const newExpense = expensesService.create(data);
 
-  res.statusCode = 201;
-  res.send(newExpense);
+  res.status(201).send(newExpense);
 };
 
 const updateExpense = (req, res) => {
-  const { expensesId } = req.params;
+  const { expenseId } = req.params;
   const body = req.body;
   const regex = /^\d+$/;
 
-  if (!regex.test(expensesId)) {
+  if (!regex.test(expenseId)) {
     res.sendStatus(400);
 
     return;
   }
 
-  const expense = expensesService.updateExpense(expensesId, body);
+  const expense = expensesService.update(expenseId, body);
 
   if (!expense) {
     res.sendStatus(404);
@@ -84,21 +84,20 @@ const updateExpense = (req, res) => {
     return;
   }
 
-  res.statusCode = 200;
-  res.send(expense);
+  res.status(200).send(expense);
 };
 
 const deleteExpense = (req, res) => {
-  const { expensesId } = req.params;
+  const { expenseId } = req.params;
   const regex = /^\d+$/;
 
-  if (!regex.test(expensesId)) {
+  if (!regex.test(expenseId)) {
     res.sendStatus(400);
 
     return;
   }
 
-  const foundExpense = expensesService.findExpensesById(expensesId);
+  const foundExpense = expensesService.findById(expenseId);
 
   if (!foundExpense) {
     res.sendStatus(404);
@@ -106,14 +105,14 @@ const deleteExpense = (req, res) => {
     return;
   }
 
-  expensesService.deleteExpense(expensesId);
+  expensesService.remove(expenseId);
   res.sendStatus(204);
 };
 
 module.exports = {
   getAllExpenses,
-  getOneExpense,
-  addExpense,
+  getExpenseById,
+  createExpense,
   updateExpense,
   deleteExpense,
 };

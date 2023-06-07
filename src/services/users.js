@@ -2,15 +2,15 @@
 
 let users = [];
 
-function getAllUsers() {
+function getAll() {
   return users;
 }
 
-function findUserById(userId) {
-  return users.find(({ id }) => +userId === id) || null;
+function findById(userId) {
+  return users.find(({ id }) => Number(userId) === id) || null;
 }
 
-function createUser(name) {
+function create(name) {
   const newUser = {
     id: users.length + 1,
     name,
@@ -21,8 +21,8 @@ function createUser(name) {
   return newUser;
 }
 
-function updateUser(userId, name) {
-  const user = findUserById(userId);
+function update(userId, name) {
+  const user = findById(userId);
 
   if (user) {
     Object.assign(user, { name });
@@ -31,8 +31,8 @@ function updateUser(userId, name) {
   return user;
 }
 
-function deleteUser(userId) {
-  users = users.filter(({ id }) => +userId !== id);
+function remove(userId) {
+  users = users.filter(({ id }) => Number(userId) !== id);
 }
 
 function clearUsers() {
@@ -40,10 +40,10 @@ function clearUsers() {
 }
 
 module.exports = {
-  getAllUsers,
-  findUserById,
-  createUser,
-  updateUser,
-  deleteUser,
+  getAll,
+  findById,
+  create,
+  update,
+  remove,
   clearUsers,
 };

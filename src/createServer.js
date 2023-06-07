@@ -11,10 +11,11 @@ const expenseRouter = require('./routes/expenses');
 function createServer() {
   const app = express();
 
-  app.use('/users', express.json(), userRouter.router);
-  app.use('/expenses', express.json(), expenseRouter.router);
+  app.use(express.json());
+  app.use('/users', userRouter.router);
+  app.use('/expenses', expenseRouter.router);
 
-  expensesService.clearExpanses();
+  expensesService.clearExpenses();
   userService.clearUsers();
 
   return app;

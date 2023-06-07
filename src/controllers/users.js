@@ -3,12 +3,12 @@
 const userService = require('../services/users');
 
 const getAllUser = (req, res) => {
-  const users = userService.getAllUsers();
+  const users = userService.getAll();
 
   res.send(users);
 };
 
-const getOneUser = (req, res) => {
+const getUserById = (req, res) => {
   const { userId } = req.params;
   const regex = /^\d+$/;
 
@@ -18,7 +18,7 @@ const getOneUser = (req, res) => {
     return;
   }
 
-  const user = userService.findUserById(userId);
+  const user = userService.findById(userId);
 
   if (!user) {
     res.sendStatus(404);
@@ -26,11 +26,10 @@ const getOneUser = (req, res) => {
     return;
   }
 
-  res.statusCode = 200;
-  res.send(user);
+  res.status(200).send(user);
 };
 
-const addUser = (req, res) => {
+const createUser = (req, res) => {
   const { name } = req.body;
 
   if (!name) {
@@ -39,10 +38,9 @@ const addUser = (req, res) => {
     return;
   }
 
-  const newUser = userService.createUser(name);
+  const newUser = userService.create(name);
 
-  res.statusCode = 201;
-  res.send(newUser);
+  res.status(201).send(newUser);
 };
 
 const deleteUser = (req, res) => {
@@ -55,19 +53,19 @@ const deleteUser = (req, res) => {
     return;
   }
 
-  const foundTodo = userService.findUserById(userId);
+  const foundUser = userService.findById(userId);
 
-  if (!foundTodo) {
+  if (!foundUser) {
     res.sendStatus(404);
 
     return;
   }
 
-  userService.deleteUser(userId);
+  userService.remove(userId);
   res.sendStatus(204);
 };
 
-const updateUser = (req, res) => {
+const updateUserById = (req, res) => {
   const { userId } = req.params;
   const { name } = req.body;
   const regex = /^\d+$/;
@@ -78,7 +76,7 @@ const updateUser = (req, res) => {
     return;
   }
 
-  const user = userService.updateUser(userId, name);
+  const user = userService.update(userId, name);
 
   if (!user) {
     res.sendStatus(404);
@@ -86,14 +84,13 @@ const updateUser = (req, res) => {
     return;
   }
 
-  res.statusCode = 200;
-  res.send(user);
+  res.status(200).send(user);
 };
 
 module.exports = {
   getAllUser,
-  getOneUser,
-  addUser,
+  getUserById,
+  createUser,
   deleteUser,
-  updateUser,
+  updateUserById,
 };

@@ -2,15 +2,15 @@
 
 let expenses = [];
 
-function getAllExpenses() {
+function getAll() {
   return expenses;
 }
 
-function findExpensesById(expensesId) {
-  return expenses.find(({ id }) => +expensesId === id);
+function findById(expensesId) {
+  return expenses.find(({ id }) => Number(expensesId) === id);
 }
 
-function createExpense(data) {
+function create(data) {
   const newExpense = {
     id: expenses.length + 1,
     ...data,
@@ -21,8 +21,8 @@ function createExpense(data) {
   return newExpense;
 }
 
-function updateExpense(expensesId, body) {
-  const expense = findExpensesById(expensesId);
+function update(expensesId, body) {
+  const expense = findById(expensesId);
 
   if (expense) {
     Object.assign(expense, body);
@@ -31,19 +31,19 @@ function updateExpense(expensesId, body) {
   return expense;
 }
 
-function deleteExpense(expensesId) {
-  expenses = expenses.filter(({ id }) => +expensesId !== id);
+function remove(expensesId) {
+  expenses = expenses.filter(({ id }) => Number(expensesId) !== id);
 }
 
-function clearExpanses() {
+function clearExpenses() {
   expenses = [];
 }
 
 module.exports = {
-  getAllExpenses,
-  findExpensesById,
-  createExpense,
-  updateExpense,
-  deleteExpense,
-  clearExpanses,
+  getAll,
+  findById,
+  create,
+  update,
+  remove,
+  clearExpenses,
 };

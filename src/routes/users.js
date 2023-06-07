@@ -1,19 +1,19 @@
 'use strict';
 
 const express = require('express');
-const userControler = require('../controllers/users');
+const userController = require('../controllers/users');
 
 const router = express.Router();
 
-router.get('/', userControler.getAllUser);
+router.get('/', userController.getAllUser);
 
-router.get('/:userId', userControler.getOneUser);
+router.get('/:userId', userController.getUserById);
 
-router.post('/', userControler.addUser);
+router.post('/', userController.createUser);
 
-router.patch('/:userId', userControler.updateUser);
+router.patch('/:userId', userController.updateUserById);
 
-router.delete('/:userId', userControler.deleteUser);
+router.delete('/:userId', userController.deleteUser);
 
 module.exports = {
   router,
