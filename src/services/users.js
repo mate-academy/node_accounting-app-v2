@@ -1,5 +1,7 @@
 'use strict';
 
+const { v4: uuidv4 } = require('uuid');
+
 let users = [];
 
 function getAllUsers() {
@@ -13,10 +15,8 @@ function findUserById(userId) {
 }
 
 function createUser(name) {
-  const newUserId = users.length + 1;
-
   const newUser = {
-    id: newUserId,
+    id: uuidv4(),
     name,
   };
 

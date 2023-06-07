@@ -10,7 +10,7 @@ const getAllUsers = (req, res) => {
 
 const getOneUser = (req, res) => {
   const { userId } = req.params;
-  const foundUser = userService.findUserById(+userId);
+  const foundUser = userService.findUserById(Number(userId));
 
   if (!foundUser) {
     res.sendStatus(404);
@@ -38,7 +38,7 @@ const addUser = (req, res) => {
 
 const removeUser = (req, res) => {
   const { userId } = req.params;
-  const foundUser = userService.findUserById(+userId);
+  const foundUser = userService.findUserById(Number(userId));
 
   if (!foundUser) {
     res.sendStatus(404);
@@ -46,13 +46,13 @@ const removeUser = (req, res) => {
     return;
   }
 
-  userService.removeUser(+userId);
+  userService.removeUser(Number(userId));
   res.sendStatus(204);
 };
 
 const updateUser = (req, res) => {
   const { userId } = req.params;
-  const foundUser = userService.findUserById(+userId);
+  const foundUser = userService.findUserById(Number(userId));
 
   if (!foundUser) {
     res.sendStatus(404);
@@ -69,7 +69,7 @@ const updateUser = (req, res) => {
   }
 
   userService.updateUser({
-    id: userId,
+    id: Number(userId),
     name,
   });
 

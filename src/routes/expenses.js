@@ -6,7 +6,7 @@ const expensesController = require('../controllers/expenses');
 const expensesRouter = express.Router();
 
 expensesRouter.get('/', expensesController.getAllExpenses);
-expensesRouter.get('/:expenseId', expensesController.getOneExpence);
+expensesRouter.get('/:expenseId', expensesController.getOneExpense);
 expensesRouter.post('/', expensesController.createExpense);
 expensesRouter.delete('/:expenseId', expensesController.removeExpense);
 

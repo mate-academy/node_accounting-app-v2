@@ -2,20 +2,47 @@
 
 let expenses = [];
 
-function getAllExpenses() {
+function getAllExpenses(data) {
+  const {
+    userId,
+    categories,
+    from,
+    to,
+  } = data;
+
+  if (userId) {
+    expenses = expenses.filter(expense => expense.userId === +userId);
+  }
+
+  if (categories) {
+    expenses = expenses.filter(({ category }) => (
+      categories.includes(category)
+    ));
+  }
+
+  if (from && to) {
+    expenses = expenses.filter(expense => {
+      const expenseDate = new Date(expense.spentAt);
+      const fromDate = new Date(from);
+      const toDate = new Date(to);
+
+      return expenseDate < toDate && fromDate <= expenseDate;
+    });
+  };
+
   return expenses;
 }
 
-function findExpensesById(expensesId) {
-  return expenses.find(({ id }) => id === expensesId);
+function findExpenseById(expenseId) {
+  return expenses.find(({ id }) => id === expenseId);
 }
 
-function createExpense(dataExpense) {
+function createExpense(expenseData) {
   const newExpenseId = expenses.length + 1;
 
   const newExpense = {
     id: newExpenseId,
-    ...dataExpense,
+    ...expenseData,
   };
 
   expenses.push(newExpense);
@@ -23,17 +50,17 @@ function createExpense(dataExpense) {
   return newExpense;
 }
 
-function removeExpense(expensesId) {
-  expenses = expenses.filter(({ id }) => id !== +expensesId);
+function removeExpense(expenseId) {
+  expenses = expenses.filter(({ id }) => id !== Number(expenseId));
 
   return expenses;
 }
 
-function updateExpense(expenseId, bodyExpense) {
-  const expense = findExpensesById(+expenseId);
+function updateExpense(expenseId, expenseBody) {
+  const expense = findExpenseById(Number(expenseId));
 
   if (expense) {
-    Object.assign(expense, bodyExpense);
+    Object.assign(expense, expenseBody);
   }
 
   return expense;
@@ -41,7 +68,7 @@ function updateExpense(expenseId, bodyExpense) {
 
 module.exports = {
   getAllExpenses,
-  findExpensesById,
+  findExpenseById,
   createExpense,
   removeExpense,
   updateExpense,
