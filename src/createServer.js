@@ -7,6 +7,11 @@ const { router: expensesRouter } = require('./routes/expenses');
 const { clearUsers } = require('./services/users');
 const { clearExpenses } = require('./services/expenses');
 
+function initializeData() {
+  clearUsers();
+  clearExpenses();
+}
+
 function createServer() {
   const app = express();
 
@@ -15,8 +20,7 @@ function createServer() {
   app.use('/users', usersRouter);
   app.use('/expenses', expensesRouter);
 
-  clearUsers();
-  clearExpenses();
+  initializeData();
 
   return app;
 }

@@ -11,7 +11,7 @@ const filterExpenses = (filters) => {
 
   if (userId) {
     tempExpenses = tempExpenses.filter(expense => (
-      String(expense.userId) === userId
+      expense.userId === Number(userId)
     ));
   }
 
