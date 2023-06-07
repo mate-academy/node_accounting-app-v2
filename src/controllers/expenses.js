@@ -14,7 +14,7 @@ const getOne = (req, res) => {
   const foundExpenses = expensesServices.getById(id);
 
   if (!foundExpenses) {
-    res.status(404).send('Expenses not found');
+    res.status(404).send('Expense not found');
 
     return;
   }
@@ -32,12 +32,8 @@ const add = (req, res) => {
     note,
   } = req.body;
 
-  const isRequiredField = !userId
-    || !spentAt
-    || !title
-    || !amount
-    || !category
-    || !note;
+  const isRequiredField = [userId, spentAt, title, amount, category, note]
+    .every(field => !field);
 
   if (isRequiredField) {
     res.status(400).send('One of the field is required');
@@ -70,7 +66,7 @@ const remove = (req, res) => {
   const foundExpenses = expensesServices.getById(id);
 
   if (!foundExpenses) {
-    res.status(404).send('Expenses not found');
+    res.status(404).send('Expense not found');
 
     return;
   }

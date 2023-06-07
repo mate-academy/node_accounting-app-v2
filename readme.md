@@ -14,7 +14,7 @@ They are well-described in a [documentation](https://app.swaggerhub.com/apis/YUR
 
   You can hide unneeded code editor:
   ![hide documentation code editor](./docs/swagger_initial.png)
-  Result:
+  Result: 
   ![result documentation](docs/swagger_result.png)
 </details>
 

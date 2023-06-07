@@ -1,6 +1,7 @@
 'use strict';
 
 let expenses = [];
+const { getMaxId } = require('../helpers/helpers');
 
 const filterExpenses = ({
   userId,
@@ -23,10 +24,11 @@ const filterExpenses = ({
   }
 
   if (from && to) {
+    const fromDate = new Date(from);
+    const toDate = new Date(to);
+
     filteredExpenses = filteredExpenses.filter(expense => {
       const expenseDate = new Date(expense.spentAt);
-      const fromDate = new Date(from);
-      const toDate = new Date(to);
 
       return expenseDate < toDate && fromDate <= expenseDate;
     });
@@ -43,7 +45,7 @@ function getById(id) {
 
 function create(userId, spentAt, title, amount, category, note) {
   const newExpense = {
-    id: expenses.length + 1,
+    id: getMaxId(expenses),
     userId,
     spentAt,
     title,

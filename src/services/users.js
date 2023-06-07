@@ -1,6 +1,7 @@
 'use strict';
 
 let users = [];
+const { getMaxId } = require('../helpers/helpers');
 
 function getAll() {
   return [...users];
@@ -11,14 +12,18 @@ function getById(id) {
     return null;
   }
 
-  const foundUser = users.find(user => String(user.id) === id);
+  const foundUser = users.find(user => user.id === Number(id));
 
-  return foundUser || null;
+  return foundUser;
 }
 
 function create(name) {
+  if (!name) {
+    return null;
+  }
+
   const newUser = {
-    id: users.length + 1,
+    id: getMaxId(users),
     name,
   };
 

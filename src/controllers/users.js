@@ -18,7 +18,7 @@ const getOne = (req, res) => {
     return;
   }
 
-  res.statusCode = 200;
+  res.status(200);
   res.send(foundUser);
 };
 
@@ -33,7 +33,7 @@ const add = (req, res) => {
 
   const newUser = usersServices.create(name);
 
-  res.statusCode = 201;
+  res.status(201);
   res.send(newUser);
 };
 
@@ -64,7 +64,7 @@ const update = (req, res) => {
   const name = req.body.name;
 
   if (typeof name !== 'string') {
-    res.sendStatus(422);
+    res.sendStatus(400);
 
     return;
   }
@@ -73,7 +73,7 @@ const update = (req, res) => {
     id,
     name,
   });
-  res.send(foundUser);
+  res.status(200).send(foundUser);
 };
 
 module.exports = {
