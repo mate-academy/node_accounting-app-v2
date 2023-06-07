@@ -2,8 +2,8 @@
 
 const express = require('express');
 const { getMaxId } = require('./utils/helpers');
-const Controller = require('./controller/controller.js');
-let users = [];
+const { router: usersRouter } = require('./routes/usersRoutes.js');
+const userServices = require('./services/usersServices.js');
 
 let expenses = [];
 
@@ -20,54 +20,9 @@ function createServer() {
 
   app.use(express.json());
 
-  app.get('/users', Controller.getAllUsers);
+  app.use('/users', usersRouter);
 
-  app.post('/users', Controller.createUser);
-
-  app.get('/users/:userId', (req, res) => {
-    const { userId } = req.params;
-    const foundUser = users.find(user => user.id === Number(userId));
-
-    if (!foundUser) {
-      res.sendStatus(404);
-
-      return;
-    }
-
-    res.send(foundUser);
-  });
-
-  app.delete('/users/:userId', (req, res) => {
-    const { userId } = req.params;
-    const filteredUsers = users.filter(user => user.id !== Number(userId));
-
-    if (users.length === filteredUsers.length) {
-      res.sendStatus(404);
-
-      return;
-    }
-
-    users = filteredUsers;
-    res.sendStatus(204);
-  });
-
-  app.patch('/users/:userId', (req, res) => {
-    const { userId } = req.params;
-    const foundUser = users.find(user => user.id === Number(userId));
-
-    if (!foundUser) {
-      res.sendStatus(404);
-
-      return;
-    }
-
-    const { name } = req.body;
-
-    Object.assign(foundUser, { name });
-    res.send(foundUser);
-  });
-
-  app.get('/', Controller.hello);
+  app.get('/', (req, res) => res.send('Hello'));
 
   app.post('/expenses', (req, res) => {
     const { userId, spentAt, title, amount, category, note } = req.body;
@@ -78,7 +33,7 @@ function createServer() {
       return;
     }
 
-    const foundUser = users.find(user => user.id === Number(userId));
+    const foundUser = userServices.foundUser(userId);
 
     if (!foundUser) {
       res.sendStatus(400);
@@ -180,8 +135,7 @@ function createServer() {
     Object.assign(foundExpense, body);
     res.send(foundExpense);
   });
-
-  users = [];
+  userServices.reset();
   expenses = [];
 
   return app;
