@@ -10,7 +10,7 @@ function createServer() {
 
   app.use(cors());
   app.use('/users', userRouter);
-  app.use('/users', expensRouter);
+  app.use('/expenses', expensRouter);
 
   return app;
 }
