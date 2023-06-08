@@ -8,15 +8,15 @@ const createUser = (newUser) => {
   users.push(newUser);
 };
 
-const foundUser = (userId) => {
+const findUserById = (userId) => {
   return users.find(user => user.id === Number(userId));
 };
 
-const changeAll = (filteredUsers) => {
+const updateUsersList = (filteredUsers) => {
   users = filteredUsers;
 };
 
-const changeOne = (findUser, name) => {
+const update = (findUser, name) => {
   Object.assign(findUser, { name });
 };
 
@@ -25,5 +25,10 @@ const reset = () => {
 };
 
 module.exports = {
-  getAll, createUser, foundUser, changeAll, changeOne, reset,
+  getAll,
+  createUser,
+  findUserById,
+  updateUsersList,
+  update,
+  reset,
 };

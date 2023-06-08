@@ -4,7 +4,7 @@ let expenses = [];
 
 const getAll = () => expenses;
 
-const createExpenses = (newExpense) => {
+const createExpense = (newExpense) => {
   expenses.push(newExpense);
 };
 
@@ -18,7 +18,7 @@ const removeById = (expenseId) => {
     .filter(expense => expense.id !== Number(expenseId));
 };
 
-const changeAll = (filteredExpenses) => {
+const updateUsersList = (filteredExpenses) => {
   expenses = filteredExpenses;
 };
 
@@ -32,10 +32,10 @@ const reset = () => {
 
 module.exports = {
   getAll,
-  createExpenses,
+  createExpense,
   findById,
   removeById,
   changeById,
-  changeAll,
+  updateUsersList,
   reset,
 };

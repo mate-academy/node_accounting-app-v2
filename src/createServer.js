@@ -15,8 +15,6 @@ function createServer() {
 
   app.use('/expenses', expensesRouter);
 
-  app.get('/', (req, res) => res.send('Hello'));
-
   userServices.reset();
   expensesService.reset();
 

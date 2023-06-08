@@ -1,16 +1,9 @@
 'use strict';
 
 const userServices = require('../services/usersServices.js');
-const { getMaxId } = require('../utils/helpers.js');
+const { getMaxId, handleDate } = require('../utils/helpers.js');
 const expensesService = require('../services/expensesServices.js');
 
-const handleDate = (spentAt, from, to) => {
-  return {
-    expenseDate: new Date(spentAt),
-    fromDate: new Date(from),
-    toDate: new Date(to),
-  };
-};
 const getAll = (req, res) => {
   let filteredExpenses = expensesService.getAll();
   const { userId, categories, from, to } = req.query;
@@ -40,14 +33,14 @@ const getAll = (req, res) => {
   return res.send(filteredExpenses);
 };
 
-const createExpenses = (req, res) => {
+const createExpense = (req, res) => {
   const { userId, spentAt, title, amount, category, note } = req.body;
 
   if (!userId || !spentAt || !title || !amount || !category || !note) {
     return res.sendStatus(400);
   }
 
-  const foundUser = userServices.foundUser(userId);
+  const foundUser = userServices.findUserById(userId);
 
   if (!foundUser) {
     return res.sendStatus(400);
@@ -65,7 +58,7 @@ const createExpenses = (req, res) => {
     note,
   };
 
-  expensesService.createExpenses(newExpense);
+  expensesService.createExpense(newExpense);
 
   return res.status(201).send(newExpense);
 };
@@ -90,7 +83,7 @@ const deleteById = (req, res) => {
     return res.sendStatus(404);
   }
 
-  expensesService.changeAll(filteredExpenses);
+  expensesService.updateUsersList(filteredExpenses);
 
   return res.sendStatus(204);
 };
@@ -116,7 +109,7 @@ const changeById = (req, res) => {
 
 module.exports = {
   getAll,
-  createExpenses,
+  createExpense,
   findById,
   deleteById,
   changeById,

@@ -29,7 +29,7 @@ const createUser = (req, res) => {
 
 const getOne = (req, res) => {
   const { userId } = req.params;
-  const foundUser = usersServices.foundUser(userId);
+  const foundUser = usersServices.findUserById(userId);
 
   if (!foundUser) {
     res.sendStatus(404);
@@ -53,13 +53,13 @@ const removeUser = (req, res) => {
     return;
   }
 
-  usersServices.changeAll(filteredUsers);
+  usersServices.updateUsersList(filteredUsers);
   res.sendStatus(204);
 };
 
 const changeUser = (req, res) => {
   const { userId } = req.params;
-  const foundUser = usersServices.foundUser(userId);
+  const foundUser = usersServices.findUserById(userId);
 
   if (!foundUser) {
     res.sendStatus(404);
@@ -69,10 +69,14 @@ const changeUser = (req, res) => {
 
   const { name } = req.body;
 
-  usersServices.changeOne(foundUser, name);
+  usersServices.update(foundUser, name);
   res.send(foundUser);
 };
 
 module.exports = {
-  createUser, getAllUsers, getOne, removeUser, changeUser,
+  createUser,
+  getAllUsers,
+  getOne,
+  removeUser,
+  changeUser,
 };
