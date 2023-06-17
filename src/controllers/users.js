@@ -33,8 +33,7 @@ const add = (req, res) => {
 
   const newUser = userServices.create(name);
 
-  res.statusCode = 201;
-  res.send(newUser);
+  res.status(201).res.send(newUser);
 };
 
 const remove = (req, res) => {

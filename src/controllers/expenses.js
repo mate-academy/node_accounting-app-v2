@@ -4,21 +4,10 @@ const expenseServices = require('../services/expenses');
 const userServices = require('../services/users');
 
 const getAll = (req, res) => {
-  const body = req.body;
+  const body = req.query;
   const expenses = expenseServices.getAll(body);
 
   res.send(expenses);
-  // const { expenseId } = req.params;
-
-  // const foundExpense = expenseServices.getById(expenseId);
-
-  // if (!foundExpense) {
-  //   res.sendStatus(404);
-
-  //   return;
-  // }
-
-  // res.send(foundExpense);
 };
 
 const getOne = (req, res) => {
@@ -50,8 +39,8 @@ const create = (req, res) => {
 
   const users = userServices.getAll();
   const allUsersId = users.map(({ id }) => id);
-  const hasUser = allUsersId.includes(userId);
-  const hasAllData = userId && title && spentAt;
+  const hasUser = allUsersId.includes(+userId);
+  const hasAllData = Number.isInteger(+userId) && title && spentAt;
 
   if (!hasUser || !hasAllData) {
     res.sendStatus(400);
@@ -61,8 +50,7 @@ const create = (req, res) => {
 
   const newExpense = expenseServices.create(req.body);
 
-  res.statusCode = 201;
-  res.send(newExpense);
+  res.status(201).send(newExpense);
 };
 
 const remove = (req, res) => {
@@ -82,8 +70,7 @@ const remove = (req, res) => {
     return;
   }
 
-  res.statusCode = 204;
-  res.send();
+  res.status(204).send();
 };
 
 const update = (req, res) => {
@@ -104,8 +91,7 @@ const update = (req, res) => {
     return;
   }
 
-  res.statusCode = 200;
-  res.send(foundExpense);
+  res.status(200).send(foundExpense);
 };
 
 module.exports = {

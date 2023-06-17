@@ -4,12 +4,10 @@ let users = [];
 
 const getMax = (array) => {
   if (array.length === 0) {
-    return 1;
+    return 0;
   }
 
-  const maxId = Math.max(...array.map(({ id }) => id));
-
-  return maxId + 1;
+  return Math.max(...array.map(({ id }) => id)) + 1;
 };
 
 function getAll() {
@@ -17,9 +15,7 @@ function getAll() {
 }
 
 function getById(userId) {
-  const foundUser = users.find(user => user.id === Number(userId));
-
-  return foundUser || null;
+  return users.find(user => user.id === +userId) || null;
 }
 
 function create(name) {
@@ -43,6 +39,7 @@ function removeMany(ids) {
   if (!ids.every(getById)) {
     throw new Error();
   }
+
   users = users.filter(user => !ids.includes(user.id));
 }
 

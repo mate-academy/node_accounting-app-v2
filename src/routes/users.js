@@ -16,17 +16,4 @@ usersRouter.delete('/:userId', userControlers.remove);
 
 usersRouter.patch('/:userId', express.json(), userControlers.update);
 
-// const hasAction = (action) => {
-//   return (req, next) => {
-//     if (req.query.action !== action) {
-//       next();
-//     } else {
-//       next('route');
-//     }
-//   };
-// };
-
-// usersRouter.patch('/users', hasAction('delete'), userControlers.removeMany);
-// usersRouter.patch('/users', hasAction('update'), userControlers.updateMany);
-
 module.exports = usersRouter;

@@ -4,42 +4,40 @@ let expenses = [];
 
 const getMax = (array) => {
   if (array.length === 0) {
-    return 1;
+    return 0;
   }
 
-  const maxId = Math.max(...array.map(({ id }) => id));
-
-  return maxId + 1;
+  return Math.max(...array.map(({ id }) => id)) + 1;
 };
 
-function getAll(userId, categories, from, to) {
+function getAll({ userId, categories, from, to }) {
+  let data = [...expenses];
+
   if (userId) {
-    expenses = expenses.filter(expence => expence.userId === userId);
+    data = expenses.filter(expence => expence.userId === +userId);
   }
 
   if (categories) {
-    expenses = expenses
+    data = expenses
       .filter(expence => expence.category === categories);
   }
 
   if (from && to) {
-    expenses = expenses.filter(expence => {
+    data = expenses.filter(expence => {
       const expanseDate = new Date(expence.spentAt);
-      const fromDate = new Date(from);
-      const toDate = new Date(to);
+      const fromDate = new Date(+from);
+      const toDate = new Date(+to);
 
-      return fromDate <= expanseDate && toDate > expanseDate;
+      return (fromDate <= expanseDate) && (toDate > expanseDate);
     });
   }
 
-  return expenses;
+  return data;
 }
 
 function getById(expenseId) {
-  const foundExpense = expenses
-    .find(expense => expense.id === Number(expenseId));
-
-  return foundExpense || null;
+  return expenses
+    .find(expense => expense.id === +expenseId) || null;
 }
 
 function create(data) {
