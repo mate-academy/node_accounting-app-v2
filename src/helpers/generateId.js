@@ -7,7 +7,7 @@ class GenerateId {
   }
 
   getId() {
-    if (this.freeIds.length > 0) {
+    if (this.freeIds.length !== 0) {
       return this.freeIds.shift();
     }
 

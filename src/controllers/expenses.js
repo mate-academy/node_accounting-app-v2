@@ -1,6 +1,6 @@
 'use strict';
 
-const { expensesId } = require('../helpers/getId');
+const { getExpensesId, addExpensesFreeId } = require('../helpers/getId');
 
 const getAll = (expenses) => {
   return (req, res) => {
@@ -55,7 +55,7 @@ const add = (expenses, users) => {
     }
 
     const expense = {
-      id: expensesId.getId(),
+      id: getExpensesId(),
       ...req.body,
     };
 
@@ -137,7 +137,7 @@ const remove = (expenses) => {
     }
 
     expenses.splice(index, 1);
-    expensesId.addFreeId(index);
+    addExpensesFreeId(index);
 
     res.sendStatus(204);
   };
