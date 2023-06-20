@@ -6,35 +6,31 @@ const getAll = (expenses) => {
   return (req, res) => {
     const { userId, categories, from, to } = req.query;
 
-    let filteredExpenses = expenses;
+    const filteredExpenses = expenses.filter(expense => {
+      if (!isNaN(userId) && expense.userId !== +userId) {
+        return false;
+      }
 
-    if (!isNaN(userId)) {
-      filteredExpenses = filteredExpenses.filter(
-        (expense) => expense.userId === +userId
-      );
-    }
+      if (categories) {
+        const arrayCategory = Array.isArray(categories)
+          ? categories.forEach((category) => category.toLowerCase())
+          : [categories.toLowerCase()];
 
-    if (categories) {
-      const arrayCategory = Array.isArray(categories)
-        ? categories.forEach((category) => category.toLowerCase())
-        : [categories.toLowerCase()];
+        if (!arrayCategory.includes(expense.category.toLowerCase())) {
+          return false;
+        }
+      }
 
-      filteredExpenses = filteredExpenses.filter((expense) =>
-        arrayCategory.includes(expense.category.toLowerCase())
-      );
-    }
+      if (from && (new Date(expense.spentAt)) <= (new Date(from))) {
+        return false;
+      }
 
-    if (from) {
-      filteredExpenses = filteredExpenses.filter(
-        ({ spentAt }) => (new Date(spentAt)) > (new Date(from))
-      );
-    }
+      if (to && (new Date(expense.spentAt)) >= (new Date(to))) {
+        return false;
+      }
 
-    if (to) {
-      filteredExpenses = filteredExpenses.filter(
-        ({ spentAt }) => (new Date(spentAt)) < (new Date(to))
-      );
-    }
+      return true;
+    });
 
     res.send(filteredExpenses);
   };
@@ -42,7 +38,7 @@ const getAll = (expenses) => {
 
 const add = (expenses, users) => {
   return (req, res) => {
-    const { userId, spentAt, title, amount, category, note } = req.body;
+    const { userId, spentAt, title, amount, category } = req.body;
 
     if (!userId || !spentAt || !title || !amount || !category) {
       res.sendStatus(400);
@@ -50,9 +46,9 @@ const add = (expenses, users) => {
       return;
     }
 
-    const foundedUser = users.find((user) => user.id === +userId);
+    const foundUser = users.find((user) => user.id === +userId);
 
-    if (!foundedUser) {
+    if (!foundUser) {
       res.sendStatus(400);
 
       return;
@@ -61,7 +57,6 @@ const add = (expenses, users) => {
     const expense = {
       id: expensesId.getId(),
       ...req.body,
-      note,
     };
 
     expenses.push(expense);
@@ -74,6 +69,25 @@ const getOne = (expenses) => {
   return (req, res) => {
     const { id } = req.params;
 
+    const foundExpense = expenses.find(
+      (expense) => expense.id === +id
+    );
+
+    if (!foundExpense) {
+      res.sendStatus(404);
+
+      return;
+    }
+
+    res.send(foundExpense);
+  };
+};
+
+const update = (expenses) => {
+  return (req, res) => {
+    const { id } = req.params;
+    const { spentAt, title, amount, category, note } = req.body;
+
     const foundedExpense = expenses.find(
       (expense) => expense.id === +id
     );
@@ -84,46 +98,27 @@ const getOne = (expenses) => {
       return;
     }
 
-    res.send(foundedExpense);
-  };
-};
-
-const update = (expenses) => {
-  return (req, res) => {
-    const { id } = req.params;
-    const { spentAt, title, amount, category, note } = req.body;
-
-    const foundededExpense = expenses.find(
-      (expense) => expense.id === +id
-    );
-
-    if (!foundededExpense) {
-      res.sendStatus(404);
-
-      return;
-    }
-
     if (spentAt) {
-      foundededExpense.spentAt = spentAt;
+      foundedExpense.spentAt = spentAt;
     }
 
     if (title) {
-      foundededExpense.title = title;
+      foundedExpense.title = title;
     }
 
     if (amount) {
-      foundededExpense.amount = amount;
+      foundedExpense.amount = amount;
     }
 
     if (category) {
-      foundededExpense.category = category;
+      foundedExpense.category = category;
     }
 
     if (note) {
-      foundededExpense.note = note;
+      foundedExpense.note = note;
     }
 
-    res.send(foundededExpense);
+    res.send(foundedExpense);
   };
 };
 

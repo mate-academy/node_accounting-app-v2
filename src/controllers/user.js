@@ -27,15 +27,15 @@ const getOne = (users) => {
   return (req, res) => {
     const { id } = req.params;
 
-    const foundedUser = users.find((user) => user.id === +id);
+    const foundUser = users.find((user) => user.id === +id);
 
-    if (!foundedUser) {
+    if (!foundUser) {
       res.sendStatus(404);
 
       return;
     }
 
-    res.send(foundedUser);
+    res.send(foundUser);
   };
 };
 
@@ -44,17 +44,17 @@ const update = (users) => {
     const { id } = req.params;
     const { name } = req.body;
 
-    const foundedUser = users.find((user) => user.id === +id);
+    const foundUser = users.find((user) => user.id === +id);
 
-    if (!foundedUser) {
+    if (!foundUser) {
       res.sendStatus(404);
 
       return;
     }
 
-    foundedUser.name = name;
+    foundUser.name = name;
 
-    res.send(foundedUser);
+    res.send(foundUser);
   };
 };
 
@@ -70,7 +70,7 @@ const remove = (users) => {
     }
 
     users.splice(index, 1);
-    userId.addFreeId(index);
+    // userId.addFreeId(index);
 
     res.sendStatus(204);
   };
