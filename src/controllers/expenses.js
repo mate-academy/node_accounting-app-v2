@@ -1,108 +1,157 @@
 'use strict';
 
-const expensesServices = require('../services/expenses');
+const { expensesId } = require('../helpers/getId');
 
-const add = (req, res) => {
-  const {
-    userId,
-    spentAt,
-    title,
-    amount,
-    category,
-    note,
-  } = req.body;
+const getAll = (expenses) => {
+  return (req, res) => {
+    const { userId, categories, from, to } = req.query;
 
-  try {
-    const newRecord = expensesServices.create({
-      userId,
-      spentAt,
-      title,
-      amount,
-      category,
-    }, note);
+    let filteredExpenses = expenses;
 
-    res.status(201).send(newRecord);
-  } catch (_) {
-    res.status(400).send('Bad request');
-  }
+    if (!isNaN(userId)) {
+      filteredExpenses = filteredExpenses.filter(
+        (expense) => expense.userId === +userId
+      );
+    }
+
+    if (categories) {
+      const arrayCategory = Array.isArray(categories)
+        ? categories.forEach((category) => category.toLowerCase())
+        : [categories.toLowerCase()];
+
+      filteredExpenses = filteredExpenses.filter((expense) =>
+        arrayCategory.includes(expense.category.toLowerCase())
+      );
+    }
+
+    if (from) {
+      filteredExpenses = filteredExpenses.filter(
+        ({ spentAt }) => (new Date(spentAt)) > (new Date(from))
+      );
+    }
+
+    if (to) {
+      filteredExpenses = filteredExpenses.filter(
+        ({ spentAt }) => (new Date(spentAt)) < (new Date(to))
+      );
+    }
+
+    res.send(filteredExpenses);
+  };
 };
 
-const getOne = (req, res) => {
-  const { recordId } = req.params;
-  const foundedRecord = expensesServices.getById(+recordId);
+const add = (expenses, users) => {
+  return (req, res) => {
+    const { userId, spentAt, title, amount, category, note } = req.body;
 
-  if (!foundedRecord) {
-    res.status(404).send({ error: 'Not found' });
+    if (!userId || !spentAt || !title || !amount || !category) {
+      res.sendStatus(400);
 
-    return;
-  }
+      return;
+    }
 
-  res.send(foundedRecord);
+    const foundedUser = users.find((user) => user.id === +userId);
+
+    if (!foundedUser) {
+      res.sendStatus(400);
+
+      return;
+    }
+
+    const expense = {
+      id: expensesId.getId(),
+      ...req.body,
+      note,
+    };
+
+    expenses.push(expense);
+
+    res.status(201).send(expense);
+  };
 };
 
-const remove = (req, res) => {
-  const { recordId } = req.params;
+const getOne = (expenses) => {
+  return (req, res) => {
+    const { id } = req.params;
 
-  const status = expensesServices.remove(+recordId);
+    const foundedExpense = expenses.find(
+      (expense) => expense.id === +id
+    );
 
-  if (!status) {
-    res.status(404).send({ error: 'Not found' });
+    if (!foundedExpense) {
+      res.sendStatus(404);
 
-    return;
-  }
+      return;
+    }
 
-  res.status(204).send({ response: 'Successfully delete' });
+    res.send(foundedExpense);
+  };
 };
 
-const update = (req, res) => {
-  const { recordId } = req.params;
-  const {
-    spentAt,
-    title,
-    amount,
-    category,
-    note,
-  } = req.body;
+const update = (expenses) => {
+  return (req, res) => {
+    const { id } = req.params;
+    const { spentAt, title, amount, category, note } = req.body;
 
-  const statusRecord = expensesServices.update(+recordId, {
-    spentAt,
-    title,
-    amount,
-    category,
-    note,
-  });
+    const foundededExpense = expenses.find(
+      (expense) => expense.id === +id
+    );
 
-  if (!statusRecord.status) {
-    res.status(statusRecord.statusCode).send();
+    if (!foundededExpense) {
+      res.sendStatus(404);
 
-    return;
-  }
+      return;
+    }
 
-  res.send(statusRecord.record);
+    if (spentAt) {
+      foundededExpense.spentAt = spentAt;
+    }
+
+    if (title) {
+      foundededExpense.title = title;
+    }
+
+    if (amount) {
+      foundededExpense.amount = amount;
+    }
+
+    if (category) {
+      foundededExpense.category = category;
+    }
+
+    if (note) {
+      foundededExpense.note = note;
+    }
+
+    res.send(foundededExpense);
+  };
 };
 
-const getAll = (req, res) => {
-  const {
-    userId,
-    categories,
-    from,
-    to,
-  } = req.query;
+const remove = (expenses) => {
+  return (req, res) => {
+    const { id } = req.params;
 
-  const records = expensesServices.getAll({
-    userId,
-    categories,
-    from,
-    to,
-  });
+    const index = expenses.findIndex(
+      (expense) => expense.id === +id
+    );
 
-  res.send(records);
+    if (index === -1) {
+      res.sendStatus(404);
+
+      return;
+    }
+
+    expenses.splice(index, 1);
+    expensesId.addFreeId(index);
+
+    res.sendStatus(204);
+  };
 };
 
 module.exports = {
   getAll,
-  getOne,
   add,
-  remove,
+  getOne,
   update,
+  remove,
 };

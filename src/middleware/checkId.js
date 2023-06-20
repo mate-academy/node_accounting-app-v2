@@ -1,8 +1,8 @@
 'use strict';
 
-function checkCorrectId(variable, statusCode) {
+function checkId(statusCode = 400) {
   return (req, res, next) => {
-    if (isNaN(req.params[variable])) {
+    if (isNaN(req.params.id)) {
       res.status(statusCode).send({ error: 'Bad request' });
 
       return;
@@ -13,5 +13,5 @@ function checkCorrectId(variable, statusCode) {
 }
 
 module.exports = {
-  checkCorrectId,
+  checkId: checkId,
 };
