@@ -18,7 +18,7 @@ router.get('/', (req, res) => {
 
   if (userId) {
     filteredExpenses = filteredExpenses
-      .filter(expense => expense.userId === +userId);
+      .filter(expense => expense.userId == userId);
   }
 
   if (from && to) {
@@ -87,8 +87,8 @@ router.get('/:id', (req, res) => {
 });
 
 router.patch('/:id', express.json(), (req, res) => {
-  const { expenseId } = req.params;
-  const foundExpense = expenses.find(expense => expense.id === +expenseId);
+  const { id } = req.params;
+  const foundExpense = expenses.find(expense => expense.id == id);
 
   if (!foundExpense) {
     res.sendStatus(404);
@@ -120,3 +120,5 @@ router.delete('/:id', (req, res) => {
 
   res.sendStatus(204);
 });
+
+module.exports = { router };
