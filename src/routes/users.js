@@ -13,7 +13,7 @@ router.post('/', (req, res) => {
   const { name } = req.body;
 
   if (!name) {
-    res.sendStatus(404);
+    res.sendStatus(400);
 
     return;
   }
@@ -25,14 +25,14 @@ router.post('/', (req, res) => {
 
   users.push(newUser);
 
-  res.sendStatus(201);
+  res.statusCode = 201;
   res.send(newUser);
 });
 
 router.get('/:userId', (req, res) => {
   const { userId } = req.params;
 
-  const findUser = users.find(user => user.id === userId);
+  const findUser = users.find(user => user.id === Number(userId));
 
   if (!findUser) {
     res.sendStatus(404);
@@ -45,7 +45,7 @@ router.get('/:userId', (req, res) => {
 
 router.delete('/:userId', (req, res) => {
   const { userId } = req.params;
-  const filteredUsers = users.filter(user => user.id !== userId);
+  const filteredUsers = users.filter(user => user.id !== Number(userId));
 
   if (users.length === filteredUsers.length) {
     res.sendStatus(404);
@@ -62,7 +62,7 @@ router.patch('/:userId', (req, res) => {
   const { userId } = req.params;
   const { name } = req.body;
 
-  const findUser = users.find(user => user.id === userId);
+  const findUser = users.find(user => user.id === Number(userId));
 
   if (!findUser) {
     res.sendStatus(404);

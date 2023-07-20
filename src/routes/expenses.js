@@ -16,7 +16,7 @@ router.get('/', (req, res) => {
 
   if (userId) {
     expenses = expenses.filter(expense => (
-      expense.userId === userId));
+      expense.userId === Number(userId)));
   }
 
   if (categories) {
@@ -56,15 +56,7 @@ router.post('/', (req, res) => {
     note,
   } = req.body;
 
-  /* const isAllValuesExist = userId && spentAt && title && amount && category;
-
-  if (!isAllValuesExist) {
-    res.sendStatus(400);
-
-    return;
-  } */
-
-  const findUser = users.find(user => user.id === userId);
+  const findUser = users.find(user => user.id === Number(userId));
 
   if (!findUser) {
     res.sendStatus(400);
@@ -84,14 +76,15 @@ router.post('/', (req, res) => {
 
   expenses.push(newExpense);
 
-  res.sendStatus(201);
+  res.statusCode = 201;
   res.send(newExpense);
 });
 
 router.get('/:expenseId', (req, res) => {
   const { expenseId } = req.params;
 
-  const findExpense = expenses.find(expense => expense.id === +expenseId);
+  const findExpense = expenses.find(expense => (
+    expense.id === Number(expenseId)));
 
   if (!findExpense) {
     res.sendStatus(404);
@@ -105,7 +98,8 @@ router.get('/:expenseId', (req, res) => {
 router.patch('/:expenseId', (req, res) => {
   const { expenseId } = req.params;
 
-  const findExpense = expenses.find(expense => expense.id === expenseId);
+  const findExpense = expenses.find(expense => (
+    expense.id === Number(expenseId)));
 
   if (!findExpense) {
     res.sendStatus(404);
@@ -126,7 +120,8 @@ router.patch('/:expenseId', (req, res) => {
 router.delete('/:expenseId', (req, res) => {
   const { expenseId } = req.params;
 
-  const filteredExpenses = expenses.filter(expense => expense.id !== expenseId);
+  const filteredExpenses = expenses.filter(expense => (
+    expense.id !== Number(expenseId)));
 
   if (filteredExpenses.length === expenses.length) {
     res.sendStatus(404);
