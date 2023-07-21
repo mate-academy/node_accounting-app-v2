@@ -3,27 +3,7 @@
 const express = require('express');
 const router = express.Router();
 
-let expenses = [
-  {
-    id: 1,
-    userId: 2,
-    spentAt: '2023-07-21T11:47:09.739Z',
-    title: 'testTitle1',
-    amount: 30,
-    category: 'testCategory',
-    note: 'testNote',
-  },
-  {
-    id: 2,
-    userId: 3,
-    spentAt: '2024-02-22T11:41:03.734Z',
-    title: 'testTitle2',
-    amount: 40,
-    category: 'testCategory2',
-    note: 'testNote2',
-  },
-
-];
+let expenses = [];
 
 router.get('/', (req, res) => {
   const { userId, categories, from, to } = req.query;
