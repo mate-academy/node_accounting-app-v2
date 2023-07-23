@@ -61,15 +61,15 @@ const remove = (req, res) => {
 
 const edit = (req, res) => {
   const { userId } = req.params;
-  const editData = req.body;
+  const { name } = req.body;
 
-  if (!userId || isNaN(Number(userId))) {
+  if (!userId || !name) {
     res.sendStatus(400);
 
     return;
   }
 
-  const editedUser = userService.edit(userId, editData);
+  const editedUser = userService.edit(userId, req.body);
 
   if (!editedUser) {
     res.sendStatus(404);

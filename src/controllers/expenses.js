@@ -72,18 +72,15 @@ const removeById = (req, res) => {
 const editById = (req, res) => {
   const { expenseId } = req.params;
   const dataToEdit = req.body;
-  const fieldThatCanBeEmpty = 'note';
+  const notAllowedPropsToEdit = ['id', 'userId'];
+
+  const hasNotAllowedProps = Object.entries(dataToEdit)
+    .some(([key]) => notAllowedPropsToEdit.includes(key));
 
   const isSomeFieldsEmpty = Object.entries(dataToEdit)
-    .some(([key, value]) => {
-      if (key === fieldThatCanBeEmpty) {
-        return false;
-      }
+    .some(([key, value]) => utils.isEmpty(value));
 
-      return utils.isEmpty(value);
-    });
-
-  if (isSomeFieldsEmpty) {
+  if (isSomeFieldsEmpty || hasNotAllowedProps) {
     res.sendStatus(400);
 
     return;
