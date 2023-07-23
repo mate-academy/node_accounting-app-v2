@@ -2,20 +2,16 @@
 
 const express = require('express');
 const router = express.Router();
-const { v4: uuidv4 } = require('uuid');
 
-let users = [{
-  'id': '1',
-  'name': 'Max',
-}];
+let users = [];
 
-router.get('/users', (req, res) => {
+router.get('/', (req, res) => {
   res.send(users);
 });
 
-router.get('/users/:userId', (req, res) => {
+router.get('/:userId', (req, res) => {
   const { userId } = req.params;
-  const foundUser = users.find(user => user.id === userId);
+  const foundUser = users.find(user => user.id === +userId);
 
   if (!foundUser) {
     res.sendStatus(404);
@@ -26,17 +22,17 @@ router.get('/users/:userId', (req, res) => {
   res.send(foundUser);
 });
 
-router.post('/users', express.json(), (req, res) => {
+router.post('/', (req, res) => {
   const { name } = req.body;
 
   if (!name) {
-    res.sendStatus(422);
+    res.sendStatus(400);
 
     return;
   }
 
   const newUser = {
-    id: uuidv4(),
+    id: Math.floor(Math.random() * 100) + 1,
     name,
   };
 
@@ -46,13 +42,13 @@ router.post('/users', express.json(), (req, res) => {
   res.send(newUser);
 });
 
-router.delete('/users/:userId', (req, res) => {
+router.delete('/:userId', (req, res) => {
   const { userId } = req.params;
 
-  const filteredUsers = users.filter(user => user.id !== userId);
+  const filteredUsers = users.filter(user => user.id !== +userId);
 
   if (filteredUsers.length === users.length) {
-    res.sendStatus(422);
+    res.sendStatus(404);
 
     return;
   }
@@ -62,11 +58,11 @@ router.delete('/users/:userId', (req, res) => {
   res.sendStatus(204);
 });
 
-router.patch('/users/:userId', (req, res) => {
+router.patch('/:userId', (req, res) => {
   const { userId } = req.params;
   const { name } = req.body;
 
-  const foundUser = users.find(user => user.id === userId);
+  const foundUser = users.find(user => user.id === +userId);
 
   if (!foundUser) {
     res.sendStatus(404);
