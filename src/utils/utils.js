@@ -3,9 +3,16 @@
 const getRandomId = (numberOfDigits) => {
   const NUMBER_LENGTH = 10;
 
-  return Math.random().toString().slice(2, NUMBER_LENGTH + 2);
+  return +Math.random().toString().slice(2, NUMBER_LENGTH + 2);
+};
+
+const isEmpty = (value) => {
+  return (value == null
+    || (typeof value === 'string'
+    && value.trim().length === 0));
 };
 
 module.exports = {
   getRandomId,
+  isEmpty,
 };

@@ -2,13 +2,6 @@
 
 const utils = require('../utils/utils.js');
 
-class User {
-  constructor(name) {
-    this.id = utils.getRandomId();
-    this.name = name;
-  }
-}
-
 let users = [];
 
 const getAll = () => {
@@ -16,13 +9,16 @@ const getAll = () => {
 };
 
 const getById = (userId) => {
-  const foundUser = users.find(user => user.id === userId);
+  const foundUser = users.find(user => user.id === +userId);
 
   return foundUser || null;
 };
 
 const create = (userName) => {
-  const newUser = new User(userName);
+  const newUser = {
+    id: utils.getRandomId(),
+    name: userName,
+  };
 
   users.push(newUser);
 
@@ -34,14 +30,14 @@ const remove = (userId) => {
     return false;
   }
 
-  users = users.filter(user => user.id !== userId);
+  users = users.filter(user => user.id !== +userId);
 
   return true;
 };
 
 const edit = (userId, newData) => {
   users = users.map(user => {
-    if (user.id !== userId) {
+    if (user.id !== +userId) {
       return user;
     }
 
@@ -59,4 +55,5 @@ module.exports = {
   getById,
   remove,
   edit,
+  users,
 };
