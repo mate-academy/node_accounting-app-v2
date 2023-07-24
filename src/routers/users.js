@@ -6,7 +6,7 @@ const router = express.Router();
 let users = [];
 
 router.get('/', (req, res) => {
-  res.send(users);
+  res.json(users);
 });
 
 router.get('/:userId', (req, res) => {
@@ -14,19 +14,21 @@ router.get('/:userId', (req, res) => {
   const foundUser = users.find(user => user.id === +userId);
 
   if (!foundUser) {
-    res.sendStatus(404);
+    res.status(404);
+    res.send('User not found');
 
     return;
   }
 
-  res.send(foundUser);
+  res.json(foundUser);
 });
 
 router.post('/', (req, res) => {
   const { name } = req.body;
 
   if (!name) {
-    res.sendStatus(400);
+    res.status(400);
+    res.send('User is not added');
 
     return;
   }
@@ -39,7 +41,7 @@ router.post('/', (req, res) => {
   users.push(newUser);
 
   res.statusCode = 201;
-  res.send(newUser);
+  res.json(newUser);
 });
 
 router.delete('/:userId', (req, res) => {
@@ -48,7 +50,8 @@ router.delete('/:userId', (req, res) => {
   const filteredUsers = users.filter(user => user.id !== +userId);
 
   if (filteredUsers.length === users.length) {
-    res.sendStatus(404);
+    res.status(404);
+    res.send('User for deleting not found');
 
     return;
   }
@@ -65,14 +68,15 @@ router.patch('/:userId', (req, res) => {
   const foundUser = users.find(user => user.id === +userId);
 
   if (!foundUser) {
-    res.sendStatus(404);
+    res.status(404);
+    res.send('User for updating not found');
 
     return;
   }
 
   Object.assign(foundUser, { name });
 
-  res.send(foundUser);
+  res.json(foundUser);
 });
 
 module.exports = {
