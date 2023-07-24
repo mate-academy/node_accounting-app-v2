@@ -5,7 +5,47 @@ const {
 } = require('../helpers/createFilterExpenseFactory');
 const { filterItems } = require('../utils/filterItems');
 
-let expenses = [];
+let expenses = [{
+  amount: 999,
+  category: 'Electronics',
+  id: 0,
+  note: 'I need a new laptop',
+  spentAt: '2022-11-19T11:01:43.462Z',
+  title: 'Buy a new laptop',
+  userId: 0,
+}, {
+  amount: 999,
+  category: 'TV',
+  id: 0,
+  note: 'I need a new laptop',
+  spentAt: '2022-05-19T11:01:43.462Z',
+  title: 'Buy a new laptop',
+  userId: 1,
+}, {
+  amount: 999,
+  category: 'BBaa',
+  id: 0,
+  note: 'I need a new laptop',
+  spentAt: '2022-02-19T11:01:43.462Z',
+  title: 'Buy a new laptop',
+  userId: 2,
+}, {
+  amount: 999,
+  category: 'Electronics',
+  id: 0,
+  note: 'I need a new laptop',
+  spentAt: '2012-10-19T11:01:43.462Z',
+  title: 'Buy a new laptop',
+  userId: 0,
+}, {
+  amount: 999,
+  category: 'Electronics',
+  id: 0,
+  note: 'I need a new laptop',
+  spentAt: '2022-10-09T11:01:43.462Z',
+  title: 'Buy a new laptop',
+  userId: 0,
+}];
 
 const expensesService = {
   getAll: async(userId, categories, from, to) => {
@@ -16,7 +56,11 @@ const expensesService = {
     }
 
     if (categories && categories.length) {
-      filters.push(createFilterExpenseFactory.byCategories(categories));
+      const query = Array.isArray(categories)
+        ? categories
+        : [categories];
+
+      filters.push(createFilterExpenseFactory.byCategories(query));
     }
 
     if (to) {

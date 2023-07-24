@@ -6,7 +6,15 @@ const createFilterExpenseFactory = {
   },
 
   byCategories: (categories) => {
-    return (expense) => categories.includes(expense.category);
+    const preparedQueryCategories = categories
+      .map(category => category.toLowerCase());
+
+    return (expense) => {
+      const preparedCategory = expense.category.toLowerCase();
+
+      return preparedQueryCategories
+        .includes(preparedCategory);
+    };
   },
 
   toDate: (to) => {
