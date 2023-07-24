@@ -14,8 +14,11 @@ const {
 
 const {
   expensesRouter,
-  init: expensesInit,
 } = require('./routes/expensesRouter');
+
+const {
+  init: expensesInit,
+} = require('./services/expenseServices');
 
 function createServer() {
   usersInit();
