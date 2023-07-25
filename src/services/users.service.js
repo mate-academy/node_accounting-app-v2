@@ -1,5 +1,7 @@
 'use strict';
 
+const { getNewId } = require('../helpers.js');
+
 let users = [];
 
 function getAll() {
@@ -13,7 +15,8 @@ function getById(userId) {
 }
 
 function create(name) {
-  const newId = users.length + 1;
+  const newId = getNewId(users);
+  // const newId = users.length + 1;
   const newUser = {
     id: newId,
     name,

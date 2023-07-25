@@ -1,8 +1,8 @@
 'use strict';
 
 const express = require('express');
-const { router: userRouter } = require('./routes/users.js');
-const { router: expensesRouter } = require('./routes/expenses.js');
+const { router: userRouter } = require('./routes/users.route.js');
+const { router: expensesRouter } = require('./routes/expenses.route.js');
 
 function createServer() {
   const app = express();
