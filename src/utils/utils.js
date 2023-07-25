@@ -12,7 +12,12 @@ const isEmpty = (value) => {
     && value.trim().length === 0));
 };
 
+const validateDate = (date) => {
+  return new Date(date).toString() !== 'Invalid Date';
+};
+
 module.exports = {
   getRandomId,
   isEmpty,
+  validateDate,
 };

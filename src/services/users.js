@@ -26,13 +26,7 @@ const create = (userName) => {
 };
 
 const remove = (userId) => {
-  if (!getById(userId)) {
-    return false;
-  }
-
   users = users.filter(user => user.id !== +userId);
-
-  return true;
 };
 
 const edit = (userId, newData) => {

@@ -69,13 +69,7 @@ const create = (expenseData) => {
 };
 
 const remove = (expenseId) => {
-  if (!getById(expenseId)) {
-    return false;
-  }
-
   expenses = expenses.filter(expense => expense.id !== +expenseId);
-
-  return true;
 };
 
 const edit = (expenseId, newData) => {

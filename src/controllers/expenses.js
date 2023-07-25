@@ -5,7 +5,23 @@ const userService = require('../services/users');
 const utils = require('../utils/utils.js');
 
 const getByQuery = (req, res) => {
-  const filteredExpenses = expenseService.getByParams(req.query);
+  const query = req.query;
+  const queryVariations = ['userId', 'category', 'from', 'to'];
+
+  const isValidQueries = Object.entries(query).every(
+    ([key, value]) => queryVariations.includes(key) && !utils.isEmpty(value)
+  );
+
+  if (!isValidQueries) {
+    res.status(400).send(
+      { message: `Invalid query, possible queries are `
+      + queryVariations.join(', ') }
+    );
+
+    return;
+  }
+
+  const filteredExpenses = expenseService.getByParams(query);
 
   res.send(filteredExpenses);
 };
@@ -14,7 +30,9 @@ const getById = (req, res) => {
   const { expenseId } = req.params;
 
   if (isNaN(Number(expenseId))) {
-    res.sendStatus(400);
+    res.status(400).send(
+      { message: 'Invalid expense ID, ID can be only number' }
+    );
 
     return;
   }
@@ -22,9 +40,10 @@ const getById = (req, res) => {
   const expense = expenseService.getById(expenseId);
 
   if (!expense) {
-    res.sendStatus(404);
+    res.status(404).send(
+      { message: 'Cannot found expense using provided ID' }
+    );
 
-    // eslint-disable-next-line no-useless-return
     return;
   }
 
@@ -32,18 +51,34 @@ const getById = (req, res) => {
 };
 
 const createNew = (req, res) => {
-  const reqData = req.body;
-  const isDateInvalid = new Date(reqData.spentAt).toString() === 'Invalid Date';
+  const { userId, spentAt } = req.body;
+  const isDateInvalid = utils.validateDate(spentAt);
   const requiredFields = ['userId', 'spentAt', 'title', 'amount', 'category'];
 
-  const isHasRequiredFields = requiredFields
-    .every(field => field in reqData && !utils.isEmpty(reqData[field]));
+  const isHasRequiredFields = requiredFields.every(
+    (field) => field in req.body && !utils.isEmpty(req.body[field])
+  );
 
-  if (isDateInvalid
-    || !isHasRequiredFields
-    || !userService.getById(reqData.userId)
-  ) {
-    res.sendStatus(400);
+  if (!isDateInvalid) {
+    res.status(400).send(
+      { message: 'Provided Date isn\'t valid' }
+    );
+
+    return;
+  }
+
+  if (!isHasRequiredFields) {
+    res.status(400).send(
+      { message: 'Request Body has not all required fields' }
+    );
+
+    return;
+  }
+
+  if (!userService.getById(userId)) {
+    res.status(404).send(
+      { message: 'Could find user with provided userId' }
+    );
 
     return;
   }
@@ -57,39 +92,59 @@ const createNew = (req, res) => {
 const removeById = (req, res) => {
   const { expenseId } = req.params;
 
-  const isSuccess = expenseService.remove(expenseId);
+  if (!expenseService.getById(expenseId)) {
+    res.status(404).send(
+      { message: 'Could find expense with provided userId' }
+    );
 
-  if (!isSuccess) {
-    res.sendStatus(404);
-
-    // eslint-disable-next-line no-useless-return
     return;
   }
 
+  expenseService.remove(expenseId);
   res.sendStatus(204);
 };
 
 const editById = (req, res) => {
   const { expenseId } = req.params;
   const dataToEdit = req.body;
-  const notAllowedPropsToEdit = ['id', 'userId'];
+  const { spentAt } = req.body;
+  const notAllowedFieldsToEdit = ['id', 'userId'];
 
   const hasNotAllowedProps = Object.entries(dataToEdit)
-    .some(([key]) => notAllowedPropsToEdit.includes(key));
+    .some(([key]) => notAllowedFieldsToEdit.includes(key));
 
   const isSomeFieldsEmpty = Object.entries(dataToEdit)
     .some(([key, value]) => utils.isEmpty(value));
 
-  if (isSomeFieldsEmpty || hasNotAllowedProps) {
-    res.sendStatus(400);
+  if (isSomeFieldsEmpty) {
+    res.status(400).send(
+      { message: 'Fields values cannot be empty' }
+    );
+
+    return;
+  }
+
+  if (hasNotAllowedProps) {
+    res.status(400).send(
+      { message: `Modifying 'id' and 'userID' are not allowed` }
+    );
 
     return;
   }
 
   if (!expenseService.getById(expenseId)) {
-    res.sendStatus(404);
+    res.status(404).send(
+      { message: 'Could find expense this provided ID' }
+    );
 
-    // eslint-disable-next-line no-useless-return
+    return;
+  }
+
+  if (spentAt && !utils.validateDate(spentAt)) {
+    res.status(400).send(
+      { message: `Edited field 'spendAt' is not valid` }
+    );
+
     return;
   }
 
