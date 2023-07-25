@@ -5,28 +5,28 @@ const usersService = require('../services/users');
 const getUsers = async(req, res) => {
   const users = await usersService.getUsers();
 
-  res.status(200).send(users);
+  res.status(200).json(users);
 };
 
 const addUser = async(req, res) => {
   const { name } = req.body;
 
   if (!name) {
-    res.sendStatus(400);
+    res.status(400).json({ message: 'Name is required' });
 
     return;
   }
 
   const user = await usersService.addUser(name);
 
-  res.status(201).send(user);
+  res.status(201).json(user);
 };
 
 const getUserById = async(req, res) => {
   const { userId } = req.params;
 
   if (!userId) {
-    res.sendStatus(400);
+    res.status(400).json({ message: 'Invalid ID' });
 
     return;
   }
@@ -34,19 +34,19 @@ const getUserById = async(req, res) => {
   const user = await usersService.getUserById(userId);
 
   if (!user) {
-    res.sendStatus(404);
+    res.status(404).json({ message: 'User not found' });
 
     return;
   }
 
-  res.status(200).send(user);
+  res.status(200).json(user);
 };
 
 const deleteUser = async(req, res) => {
   const { userId } = req.params;
 
   if (!userId) {
-    res.sendStatus(400);
+    res.status(400).json({ message: 'Invalid ID' });
 
     return;
   }
@@ -54,19 +54,19 @@ const deleteUser = async(req, res) => {
   const isDeleted = await usersService.deleteUser(userId);
 
   if (!isDeleted) {
-    res.sendStatus(404);
+    res.status(404).json({ message: 'User not found' });
 
     return;
   }
 
-  res.sendStatus(204);
+  res.status(204).json({ message: 'User deleted' });
 };
 
 const updateUser = async(req, res) => {
   const { userId } = req.params;
 
   if (!userId) {
-    res.sendStatus(400);
+    res.status(400).json({ message: 'Invalid ID' });
 
     return;
   }
@@ -74,7 +74,7 @@ const updateUser = async(req, res) => {
   const { name } = req.body;
 
   if (!name) {
-    res.sendStatus(400);
+    res.status(400).json({ message: 'Name is required' });
 
     return;
   }
@@ -82,12 +82,12 @@ const updateUser = async(req, res) => {
   const user = await usersService.updateUser(userId, name);
 
   if (!user) {
-    res.sendStatus(404);
+    res.status(404).json({ message: 'User not found' });
 
     return;
   }
 
-  res.status(200).send(user);
+  res.status(200).json(user);
 };
 
 module.exports = {

@@ -6,14 +6,14 @@ const usersService = require('../services/users');
 const getExpenses = async(req, res) => {
   const expenses = await expensesService.getExpenses(req.query);
 
-  res.status(200).send(expenses);
+  res.status(200).json(expenses);
 };
 
 const addExpense = async(req, res) => {
   const { userId, spentAt, title, amount, category, note } = req.body;
 
   if (!userId || !spentAt || !title || !amount || !category || !note) {
-    res.sendStatus(400);
+    res.status(400).json({ message: 'Missing required fields' });
 
     return;
   }
@@ -21,21 +21,21 @@ const addExpense = async(req, res) => {
   const user = await usersService.getUserById(userId);
 
   if (!user) {
-    res.sendStatus(400);
+    res.status(400).json({ message: 'User not found' });
 
     return;
   }
 
   const expense = await expensesService.addExpense(req.body);
 
-  res.status(201).send(expense);
+  res.status(201).json(expense);
 };
 
 const getExpenseById = async(req, res) => {
   const { expenseId } = req.params;
 
   if (!expenseId) {
-    res.sendStatus(400);
+    res.status(400).json({ message: 'Invalid ID' });
 
     return;
   }
@@ -43,19 +43,19 @@ const getExpenseById = async(req, res) => {
   const expense = await expensesService.getExpenseById(expenseId);
 
   if (!expense) {
-    res.sendStatus(404);
+    res.status(404).json({ message: 'Expense not found' });
 
     return;
   }
 
-  res.status(200).send(expense);
+  res.status(200).json(expense);
 };
 
 const deleteExpense = async(req, res) => {
   const { expenseId } = req.params;
 
   if (!expenseId) {
-    res.sendStatus(400);
+    res.status(400).json({ message: 'Invalid ID' });
 
     return;
   }
@@ -63,19 +63,19 @@ const deleteExpense = async(req, res) => {
   const isDeleted = await expensesService.deleteExpense(expenseId);
 
   if (!isDeleted) {
-    res.sendStatus(404);
+    res.status(404).json({ message: 'Expense not found' });
 
     return;
   }
 
-  res.sendStatus(204);
+  res.status(204).json({ message: 'Expense deleted' });
 };
 
 const updateExpense = async(req, res) => {
   const { expenseId } = req.params;
 
   if (!expenseId) {
-    res.sendStatus(400);
+    res.status(400).json({ message: 'Invalid ID' });
 
     return;
   }
@@ -83,7 +83,7 @@ const updateExpense = async(req, res) => {
   const expense = await expensesService.getExpenseById(expenseId);
 
   if (!expense) {
-    res.sendStatus(404);
+    res.status(404).json({ message: 'Expense not found' });
 
     return;
   }
@@ -106,7 +106,7 @@ const updateExpense = async(req, res) => {
     expense.note = note;
   }
 
-  res.status(200).send(expense);
+  res.status(200).json(expense);
 };
 
 module.exports = {
