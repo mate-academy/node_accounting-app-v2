@@ -121,7 +121,8 @@ router.delete('/:expenseId', (req, res) => {
   const { expenseId } = req.params;
 
   const filteredExpenses = expenses.filter(expense => (
-    expense.id !== Number(expenseId)));
+    expense.id !== Number(expenseId)
+  ));
 
   if (filteredExpenses.length === expenses.length) {
     res.sendStatus(404);
