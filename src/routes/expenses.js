@@ -99,7 +99,8 @@ router.patch('/:expenseId', (req, res) => {
   const { expenseId } = req.params;
 
   const findExpense = expenses.find(expense => (
-    expense.id === Number(expenseId)));
+    expense.id === Number(expenseId)
+  ));
 
   if (!findExpense) {
     res.sendStatus(404);
