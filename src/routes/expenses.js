@@ -16,7 +16,8 @@ router.get('/', (req, res) => {
 
   if (userId) {
     expenses = expenses.filter(expense => (
-      expense.userId === Number(userId)));
+      expense.userId === Number(userId)
+    ));
   }
 
   if (categories) {
