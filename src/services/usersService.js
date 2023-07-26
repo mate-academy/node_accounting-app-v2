@@ -15,7 +15,7 @@ class UserService {
     return users;
   };
   getOne(userId) {
-    return users.find(user => +user.id === +userId) || null;
+    return users.find(({ id }) => id === +userId) || null;
   };
   create(name) {
     const newUser = {
@@ -27,8 +27,8 @@ class UserService {
 
     return newUser;
   };
-  remove(id) {
-    users = users.filter((user) => +user.id !== +id);
+  remove(userId) {
+    users = users.filter(({ id }) => id !== +userId);
   };
   update(userId, name) {
     const existingUser = this.getOne(userId);

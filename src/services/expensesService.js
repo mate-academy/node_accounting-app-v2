@@ -54,7 +54,7 @@ class ExpenseService {
     return newExpense;
   };
   remove(expenseId) {
-    expenses = expenses.filter(({ id }) => +id !== +expenseId
+    expenses = expenses.filter(({ id }) => id !== +expenseId
     );
   };
   update(expenseId, newData) {
