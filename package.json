@@ -8,7 +8,7 @@
     "dev": "nodemon main.js",
     "test:only": "mocha",
     "test": "npm run lint && npm run test:only",
-    "test:watch": "mocha --watch",
+    "test:watch": "mocha --watch --timeout 10000",
     "lint": "eslint .",
     "lint:fix": "npm run lint -- --fix"
   },

@@ -140,6 +140,9 @@ describe('User', () => {
           name,
         });
 
+      // eslint-disable-next-line no-console
+      // console.log(createdUser);
+
       const newName = 'Jane Doe';
 
       const response = await api
