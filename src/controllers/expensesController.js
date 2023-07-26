@@ -1,10 +1,12 @@
 'use strict';
 
-const { expensesService } = require('../services/expensesService');
-const { userService } = require('../services/userService');
+const { UserService } = require('../services/user.service');
+const { ExpensesService } = require('../services/expense.service');
 
 const expensesController = {
+
   getAll: async(req, res) => {
+    const expensesService = new ExpensesService();
     const { userId, categories, from, to } = req.query;
 
     const expenses = await expensesService
@@ -14,6 +16,7 @@ const expensesController = {
   },
 
   getByOne: async(req, res) => {
+    const expensesService = new ExpensesService();
     const { expenseId } = req.params;
 
     const expense = await expensesService.getById(Number(expenseId));
@@ -28,6 +31,8 @@ const expensesController = {
   },
 
   create: async(req, res) => {
+    const expensesService = new ExpensesService();
+    const userService = new UserService();
     const newExpense = req.body;
 
     if (!newExpense.title) {
@@ -51,6 +56,7 @@ const expensesController = {
   },
 
   remove: async(req, res) => {
+    const expensesService = new ExpensesService();
     const { expenseId } = req.params;
 
     const expense = await expensesService.getById(Number(expenseId));
@@ -66,6 +72,7 @@ const expensesController = {
   },
 
   update: async(req, res) => {
+    const expensesService = new ExpensesService();
     const { expenseId } = req.params;
     const newExpense = req.body;
 

@@ -1,15 +1,22 @@
 'use strict';
 
-const { userService } = require('../services/userService');
+const { UserService } = require('../services/user.service');
+// const { usersA } = require('../services/user.service');
+// const { userService } = require('../services/userService');
+
+// const { userService } = require('../services/userService');
 
 const userController = {
   getAll: async(req, res) => {
+    const userService = new UserService();
+    // const service = new userService();
     const users = await userService.getAll();
 
     res.send(users);
   },
 
   create: async(req, res) => {
+    const userService = new UserService();
     const { name } = req.body;
 
     if (!name) {
@@ -26,6 +33,7 @@ const userController = {
   },
 
   getOne: async(req, res) => {
+    const userService = new UserService();
     const { userId } = req.params;
     const user = await userService.getById(Number(userId));
 
@@ -39,6 +47,7 @@ const userController = {
   },
 
   remove: async(req, res) => {
+    const userService = new UserService();
     const { userId } = req.params;
 
     const user = await userService.getById(Number(userId));
@@ -53,6 +62,7 @@ const userController = {
   },
 
   update: async(req, res) => {
+    const userService = new UserService();
     const { userId } = req.params;
     const { name } = req.body;
 
