@@ -16,7 +16,8 @@ router.get('/', (req, res) => {
 
   if (userId) {
     expenses = expenses.filter(expense => (
-      expense.userId === Number(userId)));
+      expense.userId === Number(userId)
+    ));
   }
 
   if (categories) {
@@ -85,7 +86,8 @@ router.get('/:expenseId', (req, res) => {
   const { expenseId } = req.params;
 
   const findExpense = expenses.find(expense => (
-    expense.id === Number(expenseId)));
+    expense.id === Number(expenseId)
+  ));
 
   if (!findExpense) {
     res.status(404);
@@ -101,7 +103,8 @@ router.patch('/:expenseId', (req, res) => {
   const { expenseId } = req.params;
 
   const findExpense = expenses.find(expense => (
-    expense.id === Number(expenseId)));
+    expense.id === Number(expenseId)
+  ));
 
   if (!findExpense) {
     res.status(404);
@@ -124,7 +127,8 @@ router.delete('/:expenseId', (req, res) => {
   const { expenseId } = req.params;
 
   const filteredExpenses = expenses.filter(expense => (
-    expense.id !== Number(expenseId)));
+    expense.id !== Number(expenseId)
+  ));
 
   if (filteredExpenses.length === expenses.length) {
     res.status(404);
