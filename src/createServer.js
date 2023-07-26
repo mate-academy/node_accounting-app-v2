@@ -1,13 +1,24 @@
 'use strict';
 
-// const express = require('express');
+const express = require('express');
+const cors = require('cors');
+const { router: usersRouter } = require('./routes/users.routes');
+const { router: expensesRouter } = require('./routes/expenses.routes');
+const expensesServices = require('./services/expenses.services');
+const usersServices = require('./services/users.services');
 
 function createServer() {
-  // Use express to create a server
-  // Add a routes to the server
-  // Return the server (express app)
+  const app = express();
+
+  app.use(cors());
+
+  usersServices.clearUsers();
+  expensesServices.clearExpenses();
+
+  app.use('/users', express.json(), usersRouter);
+  app.use('/expenses', express.json(), expensesRouter);
+
+  return app;
 }
 
-module.exports = {
-  createServer,
-};
+module.exports = { createServer };
