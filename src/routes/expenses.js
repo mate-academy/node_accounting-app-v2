@@ -43,7 +43,7 @@ router.get('/', (req, res) => {
     ));
   }
 
-  res.send(expenses);
+  res.json(expenses);
 });
 
 router.post('/', (req, res) => {
@@ -59,7 +59,8 @@ router.post('/', (req, res) => {
   const findUser = users.find(user => user.id === Number(userId));
 
   if (!findUser) {
-    res.sendStatus(400);
+    res.status(400);
+    res.send('Expense is not added');
 
     return;
   }
@@ -77,7 +78,7 @@ router.post('/', (req, res) => {
   expenses.push(newExpense);
 
   res.statusCode = 201;
-  res.send(newExpense);
+  res.json(newExpense);
 });
 
 router.get('/:expenseId', (req, res) => {
@@ -87,12 +88,13 @@ router.get('/:expenseId', (req, res) => {
     expense.id === Number(expenseId)));
 
   if (!findExpense) {
-    res.sendStatus(404);
+    res.status(404);
+    res.send('Expense not found');
 
     return;
   }
 
-  res.send(findExpense);
+  res.json(findExpense);
 });
 
 router.patch('/:expenseId', (req, res) => {
@@ -102,7 +104,8 @@ router.patch('/:expenseId', (req, res) => {
     expense.id === Number(expenseId)));
 
   if (!findExpense) {
-    res.sendStatus(404);
+    res.status(404);
+    res.send('Expense for updating not found');
 
     return;
   }
@@ -114,7 +117,7 @@ router.patch('/:expenseId', (req, res) => {
 
   Object.assign(findExpense, updatedExpense);
 
-  res.send(findExpense);
+  res.json(findExpense);
 });
 
 router.delete('/:expenseId', (req, res) => {
@@ -124,7 +127,8 @@ router.delete('/:expenseId', (req, res) => {
     expense.id !== Number(expenseId)));
 
   if (filteredExpenses.length === expenses.length) {
-    res.sendStatus(404);
+    res.status(404);
+    res.send('Expense for deleting is not found');
 
     return;
   }
