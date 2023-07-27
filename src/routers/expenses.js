@@ -164,13 +164,13 @@ router.delete('/:expenseId', (req, res) => {
 
 router.patch('/:expenseId', (req, res) => {
   const { expenseId } = req.params;
-  // const {
-  //   spentAt,
-  //   title,
-  //   amount,
-  //   category,
-  //   note,
-  // } = req.body;
+  const {
+    spentAt,
+    title,
+    amount,
+    category,
+    note,
+  } = req.body;
 
   const requestedExpense = expenses.find(
     expense => expense.id === Number(expenseId));
@@ -182,54 +182,40 @@ router.patch('/:expenseId', (req, res) => {
     return;
   }
 
-  // if (typeof title !== 'string') {
-  //   res.status(400);
-  //   res.send('title in required');
+  if (title && typeof title !== 'string') {
+    res.status(400);
+    res.send('title in required');
 
-  //   return;
-  // }
+    return;
+  }
 
-  // if (typeof userId !== 'number') {
-  //   res.status(400);
-  //   res.send('userId in required');
+  if (spentAt && isNaN(new Date(spentAt))) {
+    res.status(400);
+    res.send('spentAt must be date');
 
-  //   return;
-  // }
+    return;
+  }
 
-  // if (!spentAt) {
-  //   res.status(400);
-  //   res.send('spentAt in required');
+  if (amount && typeof amount !== 'number') {
+    res.status(400);
+    res.send('amount in required');
 
-  //   return;
-  // }
+    return;
+  }
 
-  // if (isNaN(new Date(spentAt))) {
-  //   res.status(400);
-  //   res.send('spentAt must be date');
+  if (category && typeof category !== 'string') {
+    res.status(406);
+    res.send('category in required');
 
-  //   return;
-  // }
+    return;
+  }
 
-  // if (typeof amount !== 'number') {
-  //   res.status(400);
-  //   res.send('amount in required');
+  if (note && typeof note !== 'string') {
+    res.status(407);
+    res.send('note must be a string');
 
-  //   return;
-  // }
-
-  // if (typeof category !== 'string') {
-  //   res.status(400);
-  //   res.send('category in required');
-
-  //   return;
-  // }
-
-  // if (note && typeof note !== 'string') {
-  //   res.status(400);
-  //   res.send('note must be a string');
-
-  //   return;
-  // }
+    return;
+  }
 
   const updatedExpense = {
     ...requestedExpense,
