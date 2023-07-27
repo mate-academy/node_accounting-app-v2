@@ -1,7 +1,7 @@
 'use strict';
 
 function createId() {
-  return Number((Math.random() * 1000 * 1000 * 1000).toFixed());
+  return Number(new Date());
 }
 
 function isDateInBoundaries(date, from, to) {
