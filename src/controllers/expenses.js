@@ -6,10 +6,10 @@ const utils = require('../utils/utils.js');
 
 const getByQuery = (req, res) => {
   const query = req.query;
-  const queryVariations = ['userId', 'category', 'from', 'to'];
+  const queryVariations = ['userId', 'categories', 'from', 'to'];
 
   const isValidQueries = Object.entries(query).every(
-    ([key, value]) => queryVariations.includes(key) && !utils.isEmpty(value)
+    ([key, value]) => queryVariations.includes(key)
   );
 
   if (!isValidQueries) {
@@ -76,7 +76,7 @@ const createNew = (req, res) => {
   }
 
   if (!userService.getById(userId)) {
-    res.status(404).send(
+    res.status(400).send(
       { message: 'Could find user with provided userId' }
     );
 

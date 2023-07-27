@@ -9,9 +9,9 @@ const getAll = () => {
 };
 
 const getById = (expenseId) => {
-  const foundUser = expenses.find(expense => expense.id === +expenseId);
+  const foundExpense = expenses.find(expense => expense.id === +expenseId);
 
-  return foundUser || null;
+  return foundExpense || null;
 };
 
 const getByParams = (params) => {

@@ -10,13 +10,14 @@ const getAll = (req, res) => {
 
 const getById = (req, res) => {
   const { userId } = req.params;
-  const foundUser = userService.getById(userId);
 
   if (isNaN(Number(userId))) {
-    res.status(400).send({ message: 'Invalid ID' });
+    res.status(404).send({ message: 'Invalid ID' });
 
     return;
   }
+
+  const foundUser = userService.getById(userId);
 
   if (!foundUser) {
     res.status(404).send({ message: 'User was not found' });
