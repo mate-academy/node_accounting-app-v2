@@ -6,6 +6,10 @@ const { users } = require('./users.js');
 
 let expenses = [];
 
+const setInitialExpenses = () => {
+  expenses = [];
+}
+
 router.get('/', (req, res) => {
   const {
     userId,
@@ -48,14 +52,14 @@ router.post('/', express.json(), (req, res) => {
     title,
     spentAt,
     category,
-    note
+    note,
   } = req.body;
 
   const foundUser = users.find(user => user.id === +userId);
 
   if (!foundUser) {
-    res.status(400);
-    res.send({});
+    res.statusCode = 400;
+    res.send('Error... user is not found@');
 
     return;
   }
@@ -81,7 +85,8 @@ router.get('/:id', (req, res) => {
   const foundExpense = expenses.find(expense => expense.id === +id);
 
   if (!foundExpense) {
-    res.sendStatus(404);
+    res.statusCode = 404;
+    res.send('Error... User not found!')
 
     return;
   }
@@ -95,7 +100,8 @@ router.patch('/:id', express.json(), (req, res) => {
   const foundExpense = expenses.find(expense => expense.id === +id);
 
   if (!foundExpense) {
-    res.sendStatus(404);
+    res.statusCode = 404;
+    res.send('Error... expense is not found!')
 
     return;
   }
@@ -116,7 +122,8 @@ router.delete('/:id', (req, res) => {
   const foundExpense = expenses.find(expense => expense.id !== +id);
 
   if (!foundExpense) {
-    res.sendStatus(404);
+    res.statusCode = 404;
+    res.send('Error... expense is not found!')
 
     return;
   }
@@ -126,4 +133,4 @@ router.delete('/:id', (req, res) => {
   res.sendStatus(204);
 });
 
-module.exports = { router };
+module.exports = { router, setInitialExpenses };

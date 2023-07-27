@@ -5,6 +5,10 @@ const router = express.Router();
 
 let users = [];
 
+const setInitialUsers = () => {
+ users = [];
+}
+
 router.get('/', (req, res) => {
   res.send(users);
 });
@@ -15,7 +19,8 @@ router.get('/:id', (req, res) => {
   const foundUser = users.find(user => user.id === +id);
 
   if (!foundUser) {
-    res.sendStatus(404)
+    res.statusCode = 404;
+    res.send('Error... user is not found');
 
     return;
   }
@@ -29,7 +34,8 @@ router.delete('/:id', (req, res) => {
   const foundUser = users.find(user => user.id === +id);
 
   if (!foundUser) {
-    res.sendStatus(404)
+    res.statusCode = 404;
+    res.send('Error... User is not found!');
 
     return;
   }
@@ -43,7 +49,8 @@ router.post('/', express.json(), (req, res) => {
   const { name } = req.body;
 
   if (!name) {
-    res.sendStatus(400);
+    res.statusCode = 400;
+    res.send('Error... Name is required!');
 
     return;
   }
@@ -62,12 +69,20 @@ router.post('/', express.json(), (req, res) => {
 router.patch('/:id', express.json(), (req, res) => {
   const { name } = req.body;
 
+  if (!name) {
+    res.statusCode = 400;
+    res.send('Error... Name is required!');
+
+    return;
+  }
+
   const { id } = req.params;
 
   const foundUser = users.find(user => user.id === +id);
 
   if (!name) {
-    res.sendStatus(400);
+    res.statusCode = 400;
+    res.send('Error... Name is required!');
 
     return;
   }
@@ -79,4 +94,5 @@ router.patch('/:id', express.json(), (req, res) => {
 module.exports = {
   router,
   users,
+  setInitialUsers,
 };
