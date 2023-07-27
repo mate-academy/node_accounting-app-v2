@@ -2,7 +2,6 @@
 
 const express = require('express');
 const router = express.Router();
-// const { v4: uuidv4 } = require('uuid');
 
 let users = [];
 
@@ -29,7 +28,6 @@ router.post('/', (req, res) => {
   }
 
   const newUser = {
-    // id: uuidv4(),
     id: Math.floor(Math.random() * 100 + 1),
     name,
   };

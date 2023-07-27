@@ -87,7 +87,6 @@ router.post('/', (req, res) => {
 
   if (!foundUser) {
     res.status(400);
-    // res.json(users);
     res.send(`User is not found`);
 
     return;
