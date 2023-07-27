@@ -5,21 +5,12 @@ const { userService } = require('../services/users.js');
 
 const getExpenses = (req, res) => {
   const { userId, from, to, categories } = req.query;
-  // const isAnyFilter = userId || from || to || categories;
 
-  // if (isAnyFilter) {
   const expenses = expensesService.getFiltered(
     userId, from, to, categories,
   );
 
-  // console.log(expenses);
-
   res.send(expenses);
-  // } else {
-  //   const expenses = expensesService.getAll();
-
-  //   res.send(expenses);
-  // }
 };
 
 const getOne = (req, res) => {
