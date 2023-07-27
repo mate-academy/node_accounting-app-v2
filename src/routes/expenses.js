@@ -18,7 +18,7 @@ router.get('/', (req, res) => {
 
   if (userId) {
     filteredExpenses = filteredExpenses
-      .filter(expense => expense.userId == userId);
+      .filter(expense => expense.userId === +userId);
   }
 
   if (from && to) {
@@ -51,10 +51,12 @@ router.post('/', express.json(), (req, res) => {
     note
   } = req.body;
 
-  const foundUser = users.find(user => user.id == userId);
+  const foundUser = users.find(user => user.id === +userId);
 
-  if (!title || !userId || !amount || !spentAt || !category || !note || !foundUser) {
-    res.sendStatus(400);
+  if (!foundUser) {
+    res.status(400);
+    res.send({});
+
     return;
   }
 
@@ -66,20 +68,21 @@ router.post('/', express.json(), (req, res) => {
     category,
     note,
     userId,
-  }
+  };
 
   expenses.push(newExpense);
-
   res.statusCode = 201;
   res.send(newExpense);
 });
 
 router.get('/:id', (req, res) => {
   const { id } = req.params;
-  const foundExpense = expenses.find(expense => expense.id == id);
+
+  const foundExpense = expenses.find(expense => expense.id === +id);
 
   if (!foundExpense) {
     res.sendStatus(404);
+
     return;
   }
 
@@ -88,7 +91,8 @@ router.get('/:id', (req, res) => {
 
 router.patch('/:id', express.json(), (req, res) => {
   const { id } = req.params;
-  const foundExpense = expenses.find(expense => expense.id == id);
+
+  const foundExpense = expenses.find(expense => expense.id === +id);
 
   if (!foundExpense) {
     res.sendStatus(404);
@@ -109,14 +113,15 @@ router.patch('/:id', express.json(), (req, res) => {
 router.delete('/:id', (req, res) => {
   const { id } = req.params;
 
-  const foundExpense = expenses.find(expense => expense.id == id);
+  const foundExpense = expenses.find(expense => expense.id !== +id);
 
   if (!foundExpense) {
-    res.sendStatus(404)
+    res.sendStatus(404);
+
     return;
   }
 
-  expenses = expenses.filter(expense => expense.id != id);
+  expenses = expenses.filter(expense => expense.id !== +id);
 
   res.sendStatus(204);
 });
