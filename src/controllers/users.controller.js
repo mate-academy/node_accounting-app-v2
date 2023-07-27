@@ -13,7 +13,7 @@ const getOne = (req, res) => {
   const foundUser = userService.getById(userId);
 
   if (!foundUser) {
-    res.sendStatus(404);
+    res.status(404).json({ error: 'User not found' });
 
     return;
   }
@@ -25,7 +25,13 @@ const add = (req, res) => {
   const { name } = req.body;
 
   if (!name) {
-    res.sendStatus(400);
+    res.status(400).json({ error: 'Name field is required' });
+
+    return;
+  }
+
+  if (!name) {
+    res.status(400).json({ error: 'Name field is required' });
 
     return;
   }
@@ -41,7 +47,7 @@ const remove = (req, res) => {
   const foundUser = userService.getById(userId);
 
   if (!foundUser) {
-    res.sendStatus(404);
+    res.status(404).json({ error: 'User not found' });
 
     return;
   }
@@ -55,7 +61,7 @@ const update = (req, res) => {
   const foundUser = userService.getById(userId);
 
   if (!foundUser) {
-    res.sendStatus(404);
+    res.status(404).json({ error: 'User not found' });
 
     return;
   }
@@ -63,7 +69,13 @@ const update = (req, res) => {
   const { name } = req.body;
 
   if (typeof name !== 'string') {
-    res.sendStatus(422);
+    res.status(422).json({ error: 'Invalid "name" field' });
+
+    return;
+  }
+
+  if (!name.trim()) {
+    res.status(422).json({ error: 'Missing "name" field' });
 
     return;
   }

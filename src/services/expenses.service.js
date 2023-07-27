@@ -2,7 +2,7 @@
 
 let expenses = [];
 
-function getAll({
+function getAllByFilter({
   userId,
   from,
   to,
@@ -102,5 +102,5 @@ function update({ id, ...updates }) {
 }
 
 module.exports = {
-  getAll, getById, create, remove, update,
+  getAllByFilter, getById, create, remove, update,
 };

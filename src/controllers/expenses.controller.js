@@ -11,7 +11,7 @@ const getAll = (req, res) => {
     categories,
   } = req.query;
 
-  const expenses = expensesService.getAll({
+  const expenses = expensesService.getAllByFilter({
     userId,
     from,
     to,
@@ -26,7 +26,7 @@ const getOne = (req, res) => {
   const foundExpense = expensesService.getById(expenseId);
 
   if (!foundExpense) {
-    res.sendStatus(404);
+    res.status(404).json({ error: 'Expense not found' });
 
     return;
   }
@@ -45,13 +45,15 @@ const add = (req, res) => {
   const foundUser = userService.getById(userId);
 
   if (!foundUser) {
-    res.sendStatus(400);
+    res.status(400).json({ error: 'User not found' });
 
     return;
   }
 
   if (!userId || !title) {
-    res.sendStatus(422);
+    res.status(422).json({
+      error: 'Both "userId" and "title" fields are required',
+    });
 
     return;
   }
@@ -67,7 +69,7 @@ const remove = (req, res) => {
   const foundExpense = expensesService.getById(expenseId);
 
   if (!foundExpense) {
-    res.sendStatus(404);
+    res.status(404).json({ error: 'Expense not found' });
 
     return;
   }
@@ -82,7 +84,7 @@ const update = (req, res) => {
   const foundExpense = expensesService.getById(expenseId);
 
   if (!foundExpense) {
-    res.sendStatus(404);
+    res.status(404).json({ error: 'Expense not found' });
 
     return;
   }
