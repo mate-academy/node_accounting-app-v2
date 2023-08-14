@@ -22,9 +22,9 @@ const createExpense = (req, res) => {
   res.status(201).send(newExpense);
 };
 
-const getOneExpense = (req, res) => {
+const getExpense = (req, res) => {
   const { expenseId } = req.params;
-  const foundExpense = expenseServices.getExpenseById(+expenseId);
+  const foundExpense = expenseServices.getExpenseById(expenseId);
 
   if (!foundExpense) {
     res.sendStatus(404);
@@ -38,7 +38,7 @@ const getOneExpense = (req, res) => {
 const removeExpense = (req, res) => {
   const { expenseId } = req.params;
 
-  const existingExpense = expenseServices.getExpenseById(+expenseId);
+  const existingExpense = expenseServices.getExpenseById(expenseId);
 
   if (!existingExpense) {
     res.sendStatus(404);
@@ -46,7 +46,7 @@ const removeExpense = (req, res) => {
     return;
   }
 
-  expenseServices.removeExpense(+expenseId);
+  expenseServices.removeExpense(expenseId);
 
   res.sendStatus(204);
 };
@@ -55,7 +55,7 @@ const updateExpense = (req, res) => {
   const expense = req.body;
   const { expenseId } = req.params;
 
-  const existingExpense = expenseServices.getExpenseById(+expenseId);
+  const existingExpense = expenseServices.getExpenseById(expenseId);
 
   if (!existingExpense) {
     res.status(404).send({ message: 'Expanse not found' });
@@ -63,7 +63,7 @@ const updateExpense = (req, res) => {
     return;
   };
 
-  const updatedExpense = expenseServices.updateExpense(+expenseId, expense);
+  const updatedExpense = expenseServices.updateExpense(expenseId, expense);
 
   res.send(updatedExpense);
 };
@@ -71,7 +71,7 @@ const updateExpense = (req, res) => {
 module.exports = {
   getAll,
   createExpense,
-  getOneExpense,
+  getOneExpense: getExpense,
   removeExpense,
   updateExpense,
 };

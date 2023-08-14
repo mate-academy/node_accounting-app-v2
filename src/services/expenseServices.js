@@ -1,6 +1,7 @@
 'use strict';
 
 const { getUserById } = require('./userServices');
+const uuid4 = require('uuid4');
 
 let expenses = [];
 
@@ -24,7 +25,7 @@ const validateData = (req) => {
 
   const user = getUserById(req.userId);
 
-  if (!user || !hasRequiredFields || !requiredFields.length) {
+  if (!user || !hasRequiredFields) {
     return false;
   };
 
@@ -37,7 +38,7 @@ const validateData = (req) => {
   } = req;
 
   if (
-    typeof userId !== 'number'
+    typeof userId !== 'string'
     || typeof amount !== 'number'
     || typeof title !== 'string'
     || typeof category !== 'string'
@@ -57,7 +58,7 @@ const getAllExpenses = ({
 }) => {
   expenses = expenses.filter(expense => {
     const userIdMatch = userId
-      ? +expense.userId === +userId
+      ? expense.userId === userId
       : true;
 
     const categoryMatch = categories
@@ -82,12 +83,8 @@ const create = ({
   category,
   note,
 }) => {
-  const maxId = expenses.length > 0
-    ? Math.max(...expenses.map(({ id }) => id))
-    : 0;
-
   const newExpense = {
-    id: maxId + 1,
+    id: uuid4(),
     userId,
     spentAt,
     title,
@@ -102,15 +99,15 @@ const create = ({
 };
 
 const getExpenseById = (expenseId) => {
-  return expenses.find(({ id }) => id === +expenseId) || null;
+  return expenses.find(({ id }) => id === expenseId) || null;
 };
 
 const removeExpense = (expenseId) => {
-  expenses = expenses.filter(({ id }) => +id !== +expenseId);
+  expenses = expenses.filter(({ id }) => id !== expenseId);
 };
 
 const updateExpense = (expenseId, newData) => {
-  const expenseToUpdate = getExpenseById(+expenseId);
+  const expenseToUpdate = getExpenseById(expenseId);
 
   Object.assign(expenseToUpdate, newData);
 
