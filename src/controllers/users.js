@@ -19,8 +19,7 @@ const addNewUser = (req, res) => {
 
   const newUser = UserModel.addUser({ name });
 
-  res.statusCode = 201;
-  res.send(newUser);
+  res.status(201).send(newUser);
 };
 
 const getOneUser = (req, res) => {
