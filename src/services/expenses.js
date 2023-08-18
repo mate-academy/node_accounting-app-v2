@@ -1,6 +1,7 @@
 'use strict';
 
 let expenses = [];
+let currentId = 1;
 
 const getAll = ({ userId, categories, from, to }) => {
   if (categories) {
@@ -33,11 +34,8 @@ const getById = (expenseId) => {
 };
 
 const create = ({ userId, spentAt, title, amount, category, note }) => {
-  const expIds = expenses.map(exp => exp.id);
-  const newId = Math.max(expIds) + 1;
-
   const newExpence = {
-    id: newId,
+    id: currentId,
     userId,
     spentAt,
     title,
@@ -47,6 +45,7 @@ const create = ({ userId, spentAt, title, amount, category, note }) => {
   };
 
   expenses.push(newExpence);
+  currentId++;
 
   return newExpence;
 };

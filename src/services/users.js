@@ -1,6 +1,7 @@
 'use strict';
 
 let users = [];
+let currentId = 1;
 
 const getAll = () => {
   return users;
@@ -15,15 +16,13 @@ const getById = (userId) => {
 };
 
 const create = (name) => {
-  const ids = users.map(user => user.id);
-  const newId = Math.max(ids) + 1;
-
   const newUser = {
-    id: newId,
+    id: currentId,
     name,
   };
 
   users.push(newUser);
+  currentId++;
 
   return newUser;
 };
