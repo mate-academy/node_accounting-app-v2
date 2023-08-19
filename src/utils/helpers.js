@@ -10,12 +10,12 @@ const validateExpenseBody = (reqBody) => {
   const { userId, spentAt, title, amount, category, note } = reqBody;
 
   if (
-    isNaN(userId)
-    || !checkDate(spentAt)
+    Number.isNaN(userId)
+    || Number.isNaN(amount)
     || typeof title !== 'string'
-    || isNaN(amount)
     || typeof category !== 'string'
     || typeof note !== 'string'
+    || !checkDate(spentAt)
   ) {
     return false;
   }
@@ -26,9 +26,10 @@ const validateExpenseBody = (reqBody) => {
 const filterExpenses = (expenses, queries) => {
   const { from, to, userId, categories } = queries;
 
-  return expenses.filter(expense => {
+  return expenses.filter((expense) => {
     switch (true) {
-      case userId && +expense.userId !== +userId:
+      case userId
+        && Number.parseInt(expense.userId) !== Number.parseInt(userId):
       case categories && !categories.includes(expense.category):
       case from && new Date(expense.spentAt) < new Date(from):
       case to && new Date(expense.spentAt) > new Date(to):

@@ -9,13 +9,13 @@ const resetUsers = () => {
 };
 
 const isUser = (userId) => {
-  return users.some(user => user.id === userId);
+  return users.some((user) => user.id === userId);
 };
 
 const validateId = (req, res, next) => {
   const { id } = req.params;
 
-  if (!id || isNaN(+id)) {
+  if (!id || Number.isNaN(Number.parseInt(id))) {
     res.sendStatus(400);
 
     return;
@@ -50,7 +50,7 @@ const createNewUser = (req, res) => {
 const getUser = (req, res) => {
   const { id } = req.params;
 
-  const foundUser = users.find((user) => user.id === +id);
+  const foundUser = users.find((user) => user.id === Number.parseInt(id));
 
   if (!foundUser) {
     res.sendStatus(404);
@@ -62,7 +62,7 @@ const getUser = (req, res) => {
 const deleteUser = (req, res) => {
   const { id } = req.params;
 
-  const userIndex = users.findIndex((user) => user.id === +id);
+  const userIndex = users.findIndex((user) => user.id === Number.parseInt(id));
 
   if (userIndex < 0) {
     res.sendStatus(404);
@@ -82,13 +82,13 @@ const updateUser = (req, res) => {
     return;
   }
 
-  const userIndex = users.findIndex((user) => user.id === +id);
+  const userIndex = users.findIndex((user) => user.id === Number.parseInt(id));
 
   if (userIndex < 0) {
     res.sendStatus(404);
   } else {
     users.splice(userIndex, 1, {
-      id: +id,
+      id: Number.parseInt(id),
       name,
     });
     res.json(users[userIndex]);

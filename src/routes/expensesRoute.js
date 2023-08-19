@@ -14,11 +14,12 @@ const expensesRoute = express.Router();
 
 expensesRoute.use('/:id', validateId);
 
-expensesRoute.get('/', getAllExpenses);
-expensesRoute.post('/', createNewExpense);
-expensesRoute.get('/:id', getExpense);
-expensesRoute.delete('/:id', deleteExpense);
-expensesRoute.patch('/:id', updateExpense);
+expensesRoute
+  .get('/', getAllExpenses)
+  .post('/', createNewExpense)
+  .get('/:id', getExpense)
+  .delete('/:id', deleteExpense)
+  .patch('/:id', updateExpense);
 
 module.exports = {
   expensesRoute,

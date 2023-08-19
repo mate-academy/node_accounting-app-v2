@@ -14,11 +14,12 @@ const userRouter = express.Router();
 
 userRouter.use('/:id', validateId);
 
-userRouter.get('/', getAllUsers);
-userRouter.post('/', createNewUser);
-userRouter.get('/:id', getUser);
-userRouter.delete('/:id', deleteUser);
-userRouter.patch('/:id', updateUser);
+userRouter
+  .get('/', getAllUsers)
+  .post('/', createNewUser)
+  .get('/:id', getUser)
+  .delete('/:id', deleteUser)
+  .patch('/:id', updateUser);
 
 module.exports = {
   userRouter,

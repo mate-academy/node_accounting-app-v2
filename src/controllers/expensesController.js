@@ -45,7 +45,9 @@ const createNewExpense = (req, res) => {
 const getExpense = (req, res) => {
   const { id } = req.params;
 
-  const foundExpense = expenses.find((user) => user.id === +id);
+  const foundExpense = expenses.find(
+    (expense) => expense.id === Number.parseInt(id)
+  );
 
   if (!foundExpense) {
     res.sendStatus(404);
@@ -57,7 +59,9 @@ const getExpense = (req, res) => {
 const deleteExpense = (req, res) => {
   const { id } = req.params;
 
-  const expenseIndex = expenses.findIndex((user) => user.id === +id);
+  const expenseIndex = expenses.findIndex(
+    (expense) => expense.id === Number.parseInt(id)
+  );
 
   if (expenseIndex < 0) {
     res.sendStatus(404);
@@ -76,7 +80,9 @@ const updateExpense = (req, res) => {
     return;
   }
 
-  const expenseIndex = expenses.findIndex((user) => user.id === +id);
+  const expenseIndex = expenses.findIndex(
+    (expense) => expense.id === Number.parseInt(id)
+  );
 
   const updatedExpense = {
     ...expenses[expenseIndex],
