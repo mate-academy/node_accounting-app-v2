@@ -6,34 +6,6 @@ function createServer() {
   let users = [];
   let expenses = [];
 
-  // let users = [{
-  //   id: '0', name: 'Nate',
-  // }, {
-  //   id: '1', name: 'Leo',
-  // }];
-
-  // let expenses = [
-  //   {
-  //     id: '0',
-  //     userId: '0',
-  //     spentAt: '2023-08-18T15:47:26.134Z',
-  //     title: 'Exp1',
-  //     amount: 2,
-  //     category: 'string',
-  //     note: 'string',
-  //   },
-
-  //   {
-  //     id: '1',
-  //     userId: '1',
-  //     spentAt: '2023-08-18T15:47:26.134Z',
-  //     title: 'Exp2',
-  //     amount: 3,
-  //     category: 'string2',
-  //     note: 'string',
-  //   },
-  // ];
-
   const app = express();
 
   app.use(express.json());
