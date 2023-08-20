@@ -3,18 +3,17 @@
 const express = require('express');
 
 function createServer() {
-  // Use express to create a server
-  // Add a routes to the server
-  // Return the server (express app)
   const router = express.Router();
   const app = express();
 
   let users = [];
   let expenses = [];
 
-  app.get('/users', (req, res) => res.send(users));
+  app.use(router);
 
-  app.get('/users/:userId', (req, res) => {
+  router.get('/users', (req, res) => res.send(users));
+
+  router.get('/users/:userId', (req, res) => {
     const { userId } = req.params;
 
     if (isNaN(+userId)) {
@@ -34,7 +33,7 @@ function createServer() {
     res.send(foundUser);
   });
 
-  app.post('/users', express.json(), (req, res) => {
+  router.post('/users', express.json(), (req, res) => {
     res.setHeader('Content-Type', 'application/json');
 
     const { name } = req.body;
@@ -56,7 +55,7 @@ function createServer() {
     res.send(newUser);
   });
 
-  app.delete('/users/:userId', express.json(), (req, res) => {
+  router.delete('/users/:userId', express.json(), (req, res) => {
     res.setHeader('Content-Type', 'application/json');
 
     const { userId } = req.params;
@@ -79,7 +78,7 @@ function createServer() {
     res.sendStatus(204);
   });
 
-  app.patch('/users/:userId', express.json(), (req, res) => {
+  router.patch('/users/:userId', express.json(), (req, res) => {
     res.setHeader('Content-Type', 'application/json');
 
     const { userId } = req.params;
@@ -117,44 +116,52 @@ function createServer() {
     res.send(users.find(user => user.id === +userId));
   });
 
-  app.get('/expenses', (req, res) => {
+  router.get('/expenses', (req, res) => {
     const {
       userId,
-      category,
+      categories,
       from,
       to,
     } = req.query;
 
-    if (!userId && !category && !from && !to) {
+    if (!userId && !categories && !from && !to) {
       res.send(expenses);
 
       return;
     }
 
-    if (userId.length > 0) {
+    if (userId && userId.length > 0) {
       const foundedUser = users.find(user => user.id === +userId);
-      const foundedExpenses = expenses.find(expense => (
-        expense.userId === foundedUser.id
-      ));
+
+      if (!foundedUser) {
+        res.sendStatus(404);
+
+        return;
+      }
+
+      const foundedExpenses = !categories
+        ? expenses.filter(expense => expense.userId === +userId)
+        : expenses.filter(expense => expense.category === categories);
 
       res.statusCode = 200;
-      res.send([foundedExpenses]);
+      res.send(foundedExpenses);
 
       return;
     }
 
-    if (category.length > 0) {
-      res.sendStatus(200);
-    }
-
     if (from.length > 0 && to.length > 0) {
-      res.sendStatus(200);
+      const foundedExpenses = expenses.filter(expense => (
+        expense.spentAt > from && expense.spentAt <= to
+      ));
+
+      res.statusCode = 200;
+      res.send(foundedExpenses);
     }
 
     res.sendStatus(400);
   });
 
-  app.get('/expenses/:expenseId', (req, res) => {
+  router.get('/expenses/:expenseId', (req, res) => {
     const { expenseId } = req.params;
 
     if (isNaN(+expenseId)) {
@@ -174,7 +181,7 @@ function createServer() {
     res.send(foundexpense);
   });
 
-  app.post('/expenses', express.json(), (req, res) => {
+  router.post('/expenses', express.json(), (req, res) => {
     res.setHeader('Content-Type', 'application/json');
 
     if (!req.body) {
@@ -216,7 +223,7 @@ function createServer() {
     res.send(newExpense);
   });
 
-  app.patch('/expenses/:expenseId', express.json(), (req, res) => {
+  router.patch('/expenses/:expenseId', express.json(), (req, res) => {
     res.setHeader('Content-Type', 'application/json');
 
     const { expenseId } = req.params;
@@ -256,7 +263,7 @@ function createServer() {
     res.send(newExpense);
   });
 
-  app.delete('/expenses/:expenseId', express.json(), (req, res) => {
+  router.delete('/expenses/:expenseId', express.json(), (req, res) => {
     res.setHeader('Content-Type', 'application/json');
 
     const { expenseId } = req.params;
