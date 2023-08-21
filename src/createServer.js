@@ -2,21 +2,33 @@
 'use strict';
 
 const express = require('express');
+const {
+  getAllUsers,
+  clearUsers,
+  getUserById,
+  deleteUser,
+  createUser,
+  updateUser,
+} = require('./services/users');
 
 function createServer() {
   const app = express();
-  let users = [];
-  let expenses = [];
 
   app.use(express.json());
 
+  clearUsers();
+
+  let expenses = [];
+
   app.get('/users', (req, res) => {
+    const users = getAllUsers();
+
     res.send(users);
   });
 
   app.get('/users/:id', (req, res) => {
     const { id } = req.params;
-    const foundUser = users.find(user => user.id === parseInt(id));
+    const foundUser = getUserById(parseInt(id));
 
     if (!foundUser) {
       res.sendStatus(404);
@@ -36,12 +48,7 @@ function createServer() {
       return;
     }
 
-    const newUser = {
-      id: users.length + 1,
-      name,
-    };
-
-    users.push(newUser);
+    const newUser = createUser(name);
 
     res.statusCode = 201;
     res.send(newUser);
@@ -49,20 +56,21 @@ function createServer() {
 
   app.delete('/users/:id', (req, res) => {
     const { id } = req.params;
-    const filteredUsers = users.filter(user => user.id !== parseInt(id));
 
-    if (filteredUsers.length === users.length) {
+    if (!getUserById(id)) {
       res.sendStatus(404);
+
+      return;
     }
 
-    users = filteredUsers;
+    deleteUser(id);
 
     res.sendStatus(204);
   });
 
   app.patch('/users/:id', express.json(), (req, res) => {
     const { id } = req.params;
-    const foundUser = users.find(user => user.id === parseInt(id));
+    const foundUser = getUserById(parseInt(id));
 
     if (!foundUser) {
       res.sendStatus(404);
@@ -78,7 +86,10 @@ function createServer() {
       return;
     }
 
-    Object.assign(foundUser, { name });
+    updateUser({
+      id: parseInt(id),
+      name,
+    });
 
     res.send(foundUser);
   });
@@ -139,7 +150,7 @@ function createServer() {
       return;
     }
 
-    const userExists = users.some(user => user.id === userId);
+    const userExists = getUserById(userId);
 
     if (!userExists) {
       res.sendStatus(400);
