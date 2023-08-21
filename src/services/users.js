@@ -1,14 +1,7 @@
 'use strict';
 
-const generateId = () => {
-  if (users.length < 1) {
-    return 1;
-  }
-
-  const maxId = Math.max(...users.map(user => user.id));
-
-  return maxId + 1;
-};
+const { v4: uuidv4 } = require('uuid');
+// const { generateId } = require('../helpers/generateId');
 
 let users = [];
 
@@ -21,8 +14,10 @@ function getById(userId) {
 }
 
 function create(name) {
+  const randomId = uuidv4();
+
   const newUser = {
-    id: generateId(),
+    id: +randomId.replace(/[\D]+/g, ''),
     name,
   };
 

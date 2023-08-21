@@ -1,14 +1,7 @@
 'use strict';
 
-const generateId = () => {
-  if (expenses.length < 1) {
-    return 1;
-  }
-
-  const maxId = Math.max(...expenses.map(expense => expense.id));
-
-  return maxId + 1;
-};
+const { v4: uuidv4 } = require('uuid');
+// const { generateId } = require('../helpers/generateId');
 
 let expenses = [];
 
@@ -45,8 +38,10 @@ function getById(expenseId) {
 function create({
   userId, spentAt, title, amount, category, note,
 }) {
+  const randomId = uuidv4();
+
   const newExpense = {
-    id: generateId(),
+    id: +randomId.replace(/[\D]+/g, ''),
     userId,
     spentAt,
     title,
