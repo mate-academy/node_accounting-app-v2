@@ -1,11 +1,5 @@
 'use strict';
 
-function getMaxId(array) {
-  const ids = array.map(user => user.id);
-
-  return Math.max(...ids);
-}
-
 let users = [];
 
 function getAll() {
@@ -20,7 +14,7 @@ function getById(userId) {
 
 function create(name) {
   const newUser = {
-    id: getMaxId(users) + 1,
+    id: users.length + 1,
     name,
   };
 
