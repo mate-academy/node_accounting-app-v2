@@ -2,7 +2,7 @@
   "name": "node_accounting-app",
   "version": "1.0.0",
   "description": "Node.js accounting app",
-  "main": "src/index.js",
+  "main": "main.js",
   "scripts": {
     "start": "node main.js",
     "dev": "nodemon main.js",
