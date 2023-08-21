@@ -16,7 +16,7 @@ function getUser(userId) {
 
 function createUser(name) {
   const newUser = {
-    id: createId(users.length),
+    id: createId(users),
     name,
   };
 
