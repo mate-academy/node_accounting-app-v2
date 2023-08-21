@@ -12,7 +12,7 @@ function createServer() {
 
   const app = express();
 
-  app.get('/expenses', (req, res) => {
+  const getAllExpenses = (req, res) => {
     const selectedUserId = +req.query.userId;
     const { categories, from, to } = req.query;
 
@@ -24,9 +24,9 @@ function createServer() {
     });
 
     res.status(200).send(filteredExpenses);
-  });
+  };
 
-  app.get('/expenses/:expenseId', (req, res) => {
+  const getExpenseById = (req, res) => {
     const expenseId = +req.params.expenseId;
 
     if (isNaN(expenseId)) {
@@ -44,9 +44,9 @@ function createServer() {
     }
 
     res.status(200).send(expenseById);
-  });
+  };
 
-  app.post('/expenses', express.json(), (req, res) => {
+  const createExpense = (req, res) => {
     const {
       userId,
       spentAt,
@@ -82,9 +82,9 @@ function createServer() {
     expenses.push(newExpense);
 
     res.status(201).send(newExpense);
-  });
+  };
 
-  app.patch('/expenses/:expenseId', express.json(), (req, res) => {
+  const updateExpense = (req, res) => {
     const expenseId = +req.params.expenseId;
 
     const expenseToUpdate = helpers.getElementById(expenses, expenseId);
@@ -112,9 +112,9 @@ function createServer() {
     });
 
     res.status(200).send(expenseToUpdate);
-  });
+  };
 
-  app.delete('/expenses/:expenseId', (req, res) => {
+  const deleteExpense = (req, res) => {
     const expenseId = +req.params.expenseId;
 
     const isExists = helpers.isElementExists(expenses, expenseId);
@@ -128,13 +128,13 @@ function createServer() {
     expenses = helpers.deleteElementById(expenses, expenseId);
 
     res.sendStatus(204);
-  });
+  };
 
-  app.get('/users', (req, res) => {
+  const getAllUsers = (req, res) => {
     res.status(200).send(users);
-  });
+  };
 
-  app.get('/users/:userId', (req, res) => {
+  const getUserById = (req, res) => {
     const userId = +req.params.userId;
 
     if (isNaN(userId)) {
@@ -152,9 +152,9 @@ function createServer() {
     }
 
     res.status(200).send(userById);
-  });
+  };
 
-  app.post('/users', express.json(), (req, res) => {
+  const createUser = (req, res) => {
     const { name } = req.body;
 
     if (!name) {
@@ -166,9 +166,9 @@ function createServer() {
     const newUser = userServices.addUser(users, name);
 
     res.status(201).send(newUser);
-  });
+  };
 
-  app.delete('/users/:userId', (req, res) => {
+  const deleteUser = (req, res) => {
     const userId = +req.params.userId;
 
     if (!helpers.isElementExists(users, userId)) {
@@ -180,9 +180,9 @@ function createServer() {
     users = helpers.deleteElementById(users, userId);
 
     res.sendStatus(204);
-  });
+  };
 
-  app.patch('/users/:userId', express.json(), (req, res) => {
+  const updateUser = (req, res) => {
     const userId = +req.params.userId;
 
     if (!helpers.isElementExists(users, userId)) {
@@ -202,7 +202,27 @@ function createServer() {
     const updatedUser = userServices.updateUserById(users, userId, name);
 
     res.status(200).send(updatedUser);
-  });
+  };
+
+  app.get('/expenses', getAllExpenses);
+
+  app.get('/expenses/:expenseId', getExpenseById);
+
+  app.post('/expenses', express.json(), createExpense);
+
+  app.patch('/expenses/:expenseId', express.json(), updateExpense);
+
+  app.delete('/expenses/:expenseId', deleteExpense);
+
+  app.get('/users', getAllUsers);
+
+  app.get('/users/:userId', getUserById);
+
+  app.post('/users', express.json(), createUser);
+
+  app.delete('/users/:userId', deleteUser);
+
+  app.patch('/users/:userId', express.json(), updateUser);
 
   return app;
 }
