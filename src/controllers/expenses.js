@@ -86,7 +86,9 @@ function update(req, res) {
   }
 
   Object.assign(foundExpenses, {
-    ...req['body'],
+    title: title || foundExpenses.title,
+    category: category || foundExpenses.category,
+    note: note || foundExpenses.note,
   });
 
   res.send({ ...foundExpenses });

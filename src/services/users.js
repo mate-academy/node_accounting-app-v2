@@ -27,12 +27,8 @@ function setFilteredUsers(filtered) {
 }
 
 function create(name) {
-  const newId = users.length > 0
-    ? Math.max(...users.map(user => user.id)) + 1
-    : 1000;
-
   const newUser = {
-    id: newId,
+    id: +new Date(),
     name: name,
   };
 

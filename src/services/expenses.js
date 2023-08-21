@@ -58,12 +58,8 @@ function setFilteredExpenses(filteredExpenses) {
 }
 
 function create({ userId, title, amount, category, note, spentAt }) {
-  const newId = expenses.length > 0
-    ? Math.max(...expenses.map(expense => expense.id)) + 1
-    : 0;
-
   const newExpens = {
-    id: newId,
+    id: +new Date(),
     userId,
     spentAt,
     title,
