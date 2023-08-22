@@ -11,14 +11,22 @@ const {
   updateUser,
 } = require('./services/users');
 
+const {
+  getFilteredExpenses,
+  getExpenseById,
+  createExpense,
+  deleteExpense,
+  updateExpense,
+  clearExpenses,
+} = require('./services/expenses');
+
 function createServer() {
   const app = express();
 
   app.use(express.json());
 
   clearUsers();
-
-  let expenses = [];
+  clearExpenses();
 
   app.get('/users', (req, res) => {
     const users = getAllUsers();
@@ -95,42 +103,16 @@ function createServer() {
   });
 
   app.get('/expenses', (req, res) => {
-    const { userId } = req.query;
-    const { from, to } = req.query;
-    const { categories } = req.query;
-    let filteredExpenses = [...expenses];
+    const query = req.query;
 
-    if (userId) {
-      filteredExpenses = filteredExpenses.filter(expense => expense.userId === parseInt(userId));
-    }
-
-    if (from && to) {
-      const fromDate = new Date(from);
-      const toDate = new Date(to);
-
-      if (isNaN(fromDate) || isNaN(toDate)) {
-        res.sendStatus(400);
-
-        return;
-      }
-
-      filteredExpenses = filteredExpenses.filter(expense => {
-        const expenseDate = new Date(expense.spentAt);
-
-        return expenseDate >= fromDate && expenseDate <= toDate;
-      });
-    }
-
-    if (categories) {
-      filteredExpenses = filteredExpenses.filter(expense => expense.category === categories);
-    }
+    const filteredExpenses = getFilteredExpenses(query);
 
     res.send(filteredExpenses);
   });
 
   app.get('/expenses/:id', (req, res) => {
     const { id } = req.params;
-    const foundExpense = expenses.find(expense => expense.id === parseInt(id));
+    const foundExpense = getExpenseById(parseInt(id));
 
     if (!foundExpense) {
       res.sendStatus(404);
@@ -158,17 +140,7 @@ function createServer() {
       return;
     }
 
-    const newExpense = {
-      id: expenses.length + 1,
-      userId,
-      spentAt,
-      title,
-      amount,
-      category,
-      note,
-    };
-
-    expenses.push(newExpense);
+    const newExpense = createExpense(userId, spentAt, title, amount, category, note);
 
     res.statusCode = 201;
     res.send(newExpense);
@@ -176,22 +148,21 @@ function createServer() {
 
   app.delete('/expenses/:id', (req, res) => {
     const { id } = req.params;
-    const filteredExpenses = expenses.filter(expense => expense.id !== parseInt(id));
 
-    if (filteredExpenses.length === expenses.length) {
+    if (!getExpenseById(id)) {
       res.sendStatus(404);
 
       return;
     }
 
-    expenses = filteredExpenses;
+    deleteExpense(id);
 
     res.sendStatus(204);
   });
 
   app.patch('/expenses/:id', express.json(), (req, res) => {
     const { id } = req.params;
-    const foundExpense = expenses.find(expense => expense.id === parseInt(id));
+    const foundExpense = getExpenseById(id);
 
     if (!foundExpense) {
       res.sendStatus(404);
@@ -201,9 +172,9 @@ function createServer() {
 
     const { body } = req;
 
-    Object.assign(foundExpense, body);
+    const updatedExpense = updateExpense(id, body);
 
-    res.send(foundExpense);
+    res.send(updatedExpense);
   });
 
   return app;
