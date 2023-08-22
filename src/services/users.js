@@ -36,7 +36,7 @@ const addUser = (name) => {
 const updateUser = (userId, name) => {
   const updatesUser = getUser(userId);
 
-  if (!updateUser) {
+  if (!updatesUser) {
     return null;
   }
 

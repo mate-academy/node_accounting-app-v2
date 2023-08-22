@@ -13,16 +13,16 @@ const getExpenses = (searchParams) => {
   let foundExpenses = expenses;
 
   if (userId) {
-    foundExpenses = expenses.filter(expense => expense.userId === +userId);
+    foundExpenses = foundExpenses.filter(expense => expense.userId === +userId);
   }
 
   if (categories) {
-    foundExpenses = expenses
+    foundExpenses = foundExpenses
       .filter(expense => categories.includes(expense.category));
   }
 
   if (from && to) {
-    foundExpenses = expenses
+    foundExpenses = foundExpenses
       .filter(expense => expense.spentAt >= from && expense.spentAt <= to);
   }
 
@@ -48,8 +48,10 @@ const deleteExpense = (expenseId) => {
 };
 
 const addExpense = (expenseData) => {
+  const maxId = expenses.reduce((max, expense) => Math.max(max, expense.id), 0);
+
   const newExpense = {
-    id: expenses.length + 1,
+    id: maxId + 1,
     ...expenseData,
   };
 
