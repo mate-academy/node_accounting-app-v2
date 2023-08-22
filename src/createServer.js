@@ -5,7 +5,7 @@ const express = require('express');
 
 const userServices = require('./services/users.js');
 const expensesServices = require('./services/expenses.js');
-const { usersRouter } = require('./routes/usersrouter.js');
+const { usersRouter } = require('./routes/usersRouter.js');
 const { expensesRouter } = require('./routes/expensesRouter.js');
 
 function createServer() {
