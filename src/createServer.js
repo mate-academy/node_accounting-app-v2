@@ -2,33 +2,22 @@
 
 const express = require('express');
 const cors = require('cors');
-const userController = require('./controllers/users.js');
-const expenseController = require('./controllers/expenses.js');
+
+const { router: userRouter } = require('./routes/user.router');
+const { router: expenseRouter } = require('./routes/expense.router');
+const userService = require('./services/user.service');
+const expenseService = require('./services/expense.service');
 
 function createServer() {
   const app = express();
 
   app.use(cors());
 
-  app.get('/users', userController.getAll);
+  userService.removeAllUsers();
+  expenseService.removeAllExpenses();
 
-  app.get('/users/:userId', userController.getOne);
-
-  app.post('/users', express.json(), userController.add);
-
-  app.delete('/users/:userId', userController.remove);
-
-  app.patch('/users/:userId', express.json(), userController.update);
-
-  app.get('/expenses', expenseController.getAll);
-
-  app.get('/expenses/:expenseId', expenseController.getOne);
-
-  app.post('/expenses', express.json(), expenseController.add);
-
-  app.delete('/expenses/:expenseId', expenseController.remove);
-
-  app.patch('/expenses/:expenseId', express.json(), expenseController.update);
+  app.use('/users', express.json(), userRouter);
+  app.use('/expenses', express.json(), expenseRouter);
 
   return app;
 }

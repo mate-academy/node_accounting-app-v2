@@ -2,17 +2,15 @@
 
 let expenses = [];
 
-function getAll(params) {
-  const {
-    userId,
-    categories,
-    from,
-    to,
-  } = params;
-
+function getAll({
+  userId,
+  categories,
+  from,
+  to,
+}) {
   if (userId) {
     expenses = expenses.filter(
-      (expense) => expense.userId === userId,
+      (expense) => expense.userId === +userId,
     );
   }
 
@@ -38,21 +36,19 @@ function getAll(params) {
 }
 
 function getExpenseById(expenseId) {
-  const foundExpense = expenses.find(({ id }) => id === expenseId);
+  const foundExpense = expenses.find(({ id }) => id === +expenseId);
 
   return foundExpense || null;
 }
 
-function createExpense(params) {
-  const {
-    userId,
-    spentAt,
-    title,
-    amount,
-    category,
-    note,
-  } = params;
-
+function createExpense({
+  userId,
+  spentAt,
+  title,
+  amount,
+  category,
+  note,
+}) {
   const newExpense = {
     id: +Date.now(),
     userId,
@@ -70,7 +66,7 @@ function createExpense(params) {
 
 function removeExpense(expenseId) {
   expenses = expenses.filter(
-    expense => expense.id !== expenseId,
+    expense => expense.id !== +expenseId,
   );
 }
 
@@ -91,10 +87,15 @@ function updateExpense(expenseId, params) {
   return currentExpense;
 }
 
+function removeAllExpenses() {
+  expenses = [];
+}
+
 module.exports = {
   getAll,
   getExpenseById,
   createExpense,
   removeExpense,
   updateExpense,
+  removeAllExpenses,
 };

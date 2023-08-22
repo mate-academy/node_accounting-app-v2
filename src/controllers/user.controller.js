@@ -1,6 +1,6 @@
 'use strict';
 
-const userService = require('../services/users.js');
+const userService = require('../services/user.service');
 
 const getAll = (req, res) => {
   const users = userService.getAll();
@@ -11,12 +11,6 @@ const getAll = (req, res) => {
 const getOne = (req, res) => {
   const { userId } = req.params;
   const foundUser = userService.getUserById(userId);
-
-  if (typeof userId !== 'number') {
-    res.sendStatus(400);
-
-    return;
-  }
 
   if (!foundUser) {
     res.sendStatus(404);
@@ -30,7 +24,7 @@ const getOne = (req, res) => {
 const add = (req, res) => {
   const { name } = req.body;
 
-  if (typeof name !== 'string') {
+  if (!name) {
     res.sendStatus(400);
 
     return;
@@ -38,8 +32,7 @@ const add = (req, res) => {
 
   const newUser = userService.createUser(name);
 
-  res.sendStatus(201);
-  res.send(newUser);
+  res.status(201).send(newUser);
 };
 
 const remove = (req, res) => {
@@ -59,6 +52,7 @@ const remove = (req, res) => {
 
 const update = (req, res) => {
   const { userId } = req.params;
+  const { name: editedName } = req.body;
   const foundUser = userService.getUserById(userId);
 
   if (!foundUser) {
@@ -67,15 +61,13 @@ const update = (req, res) => {
     return;
   }
 
-  const { name } = req.body;
-
-  if (typeof name !== 'string') {
-    res.sendStatus(404);
+  if (typeof editedName !== 'string' || !editedName) {
+    res.sendStatus(400);
 
     return;
   }
 
-  userService.updateUser(userId, name);
+  userService.updateUser(foundUser, editedName);
 
   res.send(foundUser);
 };
