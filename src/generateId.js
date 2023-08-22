@@ -9,6 +9,6 @@ function generateId(arr) {
   const nextId = Math.max(...ids) + 1;
 
   return nextId;
-}
+};
 
 module.exports = { generateId };

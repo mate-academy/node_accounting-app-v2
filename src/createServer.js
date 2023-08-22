@@ -2,34 +2,21 @@
 
 const express = require('express');
 const cors = require('cors');
-const {
-  getUserById, getAllUsers, createNewUser, removeUser, updateUser,
-} = require('./users');
-const {
-  getAllExpenses, getExpense, createNewExpense, removeExpense, updateExpense,
-} = require('./expenses');
+const { usersRouter } = require('./routes/usersRouter');
+const { expensesRouter } = require('./routes/expensesRouter');
+const { userService } = require('./services/userService');
+const { expensesService } = require('./services/expensesService');
 
 function createServer() {
-  const app = express().use(cors());
+  const app = express()
+    .use(express.json())
+    .use(cors());
 
-  app.users = [];
-  app.expenses = [];
+  expensesService.clearExpenses();
+  userService.clearUsers();
 
-  app.getUser = (userId) => {
-    return app.users.find(user => user.id === +userId);
-  };
-
-  getAllUsers(app);
-  getUserById(app);
-  createNewUser(app);
-  removeUser(app);
-  updateUser(app);
-
-  getAllExpenses(app);
-  getExpense(app);
-  createNewExpense(app);
-  removeExpense(app);
-  updateExpense(app);
+  app.use('/users', usersRouter);
+  app.use('/expenses', expensesRouter);
 
   return app;
 }
