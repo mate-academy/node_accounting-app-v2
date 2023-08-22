@@ -5,7 +5,7 @@ const { getNewId } = require('../utils');
 let expenses = [];
 
 function getFiltered(userIdStr, dateFromStr, dateToStr, categories) {
-  let filteredExpenses = expenses;
+  let filteredExpenses = [...expenses];
 
   if (userIdStr) {
     const userId = +userIdStr;

@@ -30,8 +30,7 @@ const createUser = (req, res) => {
 
   const newUser = userService.create(name);
 
-  res.statusCode = 201;
-  res.send(newUser);
+  res.status(201).send(newUser);
 };
 
 const updateUser = (req, res) => {
