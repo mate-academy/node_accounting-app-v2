@@ -3,8 +3,8 @@
 const express = require('express');
 const expensesRouter = require('./routers/expenses');
 const usersRouter = require('./routers/users');
-const { clearExpenses } = require('./controllers/expenses');
-const { clearUsers } = require('./controllers/users');
+const { clearExpenses } = require('./services/expenses');
+const { clearUsers } = require('./services/users');
 
 function createServer() {
   const app = express();
@@ -12,8 +12,10 @@ function createServer() {
   clearExpenses();
   clearUsers();
 
-  app.use('/users', express.json(), usersRouter);
-  app.use('/expenses', express.json(), expensesRouter);
+  app.use(express.json());
+
+  app.use('/users', usersRouter);
+  app.use('/expenses', expensesRouter);
 
   return app;
 };

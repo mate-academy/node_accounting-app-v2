@@ -1,16 +1,20 @@
 'use strict';
 
-let users = [];
-
-const getUserById = (id) => {
-  return users.find(user => user.id === +id);
-};
+const {
+  getAll,
+  getUserById,
+  create,
+  remove,
+  update,
+} = require('../services/users');
 
 const getAllUsers = (req, res) => {
+  const users = getAll();
+
   res.send(users);
 };
 
-const getById = (req, res) => {
+const getOne = (req, res) => {
   const { userId } = req.params;
   const foundUser = getUserById(userId);
 
@@ -32,33 +36,13 @@ const addUser = (req, res) => {
     return;
   }
 
-  const newUser = {
-    id: users.length + 1,
-    name,
-  };
-
-  users.push(newUser);
+  const newUser = create(name);
 
   res.statusCode = 201;
   res.send(newUser);
 };
 
 const removeUser = (req, res) => {
-  const { userId } = req.params;
-  const filteredUsers = users.filter(user => user.id !== +userId);
-
-  if (filteredUsers.length === users.length) {
-    res.sendStatus(404);
-
-    return;
-  }
-
-  users = filteredUsers;
-
-  res.sendStatus(204);
-};
-
-const updateUser = (req, res) => {
   const { userId } = req.params;
   const foundUser = getUserById(userId);
 
@@ -68,7 +52,21 @@ const updateUser = (req, res) => {
     return;
   }
 
+  remove(userId);
+  res.sendStatus(204);
+};
+
+const updateUser = (req, res) => {
+  const { userId } = req.params;
   const { name } = req.body;
+
+  const foundUser = getUserById(userId);
+
+  if (!foundUser) {
+    res.sendStatus(404);
+
+    return;
+  }
 
   if (typeof name !== 'string') {
     res.sendStatus(422);
@@ -76,24 +74,20 @@ const updateUser = (req, res) => {
     return;
   }
 
-  Object.assign(foundUser, { name });
+  update({
+    id: userId, name,
+  });
 
   res.statusCode = 200;
 
   res.send(foundUser);
 };
 
-const clearUsers = () => {
-  users.length = 0;
-};
-
 module.exports = {
   getAllUsers,
-  getById,
+  getOne,
   addUser,
   removeUser,
   updateUser,
   getUserById,
-  clearUsers,
-  users,
 };

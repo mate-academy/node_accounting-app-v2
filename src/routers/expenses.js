@@ -18,6 +18,6 @@ expensesRouter.post('/', addExpense);
 
 expensesRouter.delete('/:expenseId', removeExpense);
 
-expensesRouter.patch('/:id', updateExpense);
+expensesRouter.patch('/:expenseId', updateExpense);
 
 module.exports = expensesRouter;
