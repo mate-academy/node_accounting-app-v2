@@ -32,11 +32,12 @@ const createUser = (req, res) => {
 
 const getUser = (req, res) => {
   const { id } = req.params;
-  const foundUser = getById(id);
 
-  if (typeof id !== 'number') {
+  if (!Number(id)) {
     res.sendStatus(400);
   }
+
+  const foundUser = getById(id);
 
   if (!foundUser) {
     res.sendStatus(404);
