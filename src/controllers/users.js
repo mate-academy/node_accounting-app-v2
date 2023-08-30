@@ -33,7 +33,7 @@ const createUser = (req, res) => {
 const getUser = (req, res) => {
   const { id } = req.params;
 
-  if (!Number(id)) {
+  if (typeof id !== 'number') {
     res.sendStatus(400);
   }
 
