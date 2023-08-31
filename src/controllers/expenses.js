@@ -34,8 +34,7 @@ function createExpense(req, res) {
   } = req.body;
 
   if (!userId || !spentAt || !title || !amount || !category || !note) {
-    res.statusCode = 400;
-    res.send('Some fields were missed');
+    res.status(400).send('Some fields were missed');
 
     return;
   }
