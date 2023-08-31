@@ -39,6 +39,8 @@ const createExpense = (req, res) => {
 
   if (!userId || !amount || !category || !note) {
     res.sendStatus(400);
+
+    return;
   }
 
   const newExpences = create({
@@ -51,10 +53,19 @@ const createExpense = (req, res) => {
 
 const getExpense = (req, res) => {
   const { id } = req.params;
+
+  if (!Number(id)) {
+    res.sendStatus(400);
+
+    return;
+  }
+
   const foundExpenses = getById(id);
 
   if (!foundExpenses) {
     res.sendStatus(404);
+
+    return;
   }
 
   res.sendStatus(200);
@@ -63,10 +74,19 @@ const getExpense = (req, res) => {
 
 const deleteExpense = (req, res) => {
   const { id } = req.params;
+
+  if (!Number(id)) {
+    res.sendStatus(400);
+
+    return;
+  }
+
   const foundExpenses = getById(id);
 
   if (!foundExpenses) {
     res.sendStatus(404);
+
+    return;
   }
 
   remove(id);
@@ -77,14 +97,25 @@ const deleteExpense = (req, res) => {
 const updateExpense = (res, req) => {
   const { id } = req.params;
   const reqBody = req.body;
+
+  if (!Number(id)) {
+    res.sendStatus(400);
+
+    return;
+  }
+
   const foundExpenses = getById(id);
 
   if (!foundExpenses) {
     res.sendStatus(404);
+
+    return;
   }
 
   if (Object.keys(reqBody).length === 0) {
     res.sendStatus(400);
+
+    return;
   }
 
   res.sendStatus(200);

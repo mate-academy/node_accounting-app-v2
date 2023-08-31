@@ -11,7 +11,7 @@ const getAll = () => {
 };
 
 const getById = (id) => {
-  const foundExpenses = expenses.find(expens => expens.id === id);
+  const foundExpenses = expenses.find(expens => expens.id === Number(id));
 
   return foundExpenses || null;
 };
