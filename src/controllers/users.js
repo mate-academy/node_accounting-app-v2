@@ -10,67 +10,74 @@ const getAll = (req, res) => {
 
 const getOne = (req, res) => {
   const { userId } = req.params;
-  const foundUser = userService.getById(userId);
 
-  if (!foundUser) {
-    res.statusCode = 404;
-    res.send('User not found');
+  try {
+    const foundUser = userService.getById(userId);
 
-    return;
+    if (!foundUser) {
+      res.status(404).send('User not found');
+
+      return;
+    }
+
+    res.status(200).send(foundUser);
+  } catch (error) {
+    res.status(500).send('Internal Server Error');
   }
-
-  res.statusCode = 200;
-  res.send(foundUser);
 };
 
 const add = (req, res) => {
   const { name } = req.body;
 
   if (!name) {
-    res.statusCode = 400;
-    res.send('Fill all fileds');
+    res.status(400).send('Fill all fields');
 
     return;
   }
 
   const newUser = userService.create(name);
 
-  res.statusCode = 201;
-  res.send(newUser);
+  res.status(201).send(newUser);
 };
 
 const update = (req, res) => {
   const { userId } = req.params;
-  const foundUser = userService.getById(userId);
 
-  if (!foundUser) {
-    res.statusCode = 404;
-    res.end('User not found');
+  try {
+    const foundUser = userService.getById(userId);
 
-    return;
+    if (!foundUser) {
+      res.status(404).send('User not found');
+
+      return;
+    }
+
+    const { name } = req.body;
+    const updatedUser = userService.update(userId, name);
+
+    res.send(updatedUser);
+  } catch (error) {
+    res.status(500).send('Internal Server Error');
   }
-
-  const { name } = req.body;
-
-  const updatedUser = userService.update(userId, name);
-
-  res.send(updatedUser);
 };
 
 const remove = (req, res) => {
   const { userId } = req.params;
-  const foundUser = userService.getById(userId);
 
-  if (!foundUser) {
-    res.statusCode = 404;
-    res.end('User not found');
+  try {
+    const foundUser = userService.getById(userId);
 
-    return;
+    if (!foundUser) {
+      res.status(404).send('User not found');
+
+      return;
+    }
+
+    userService.remove(userId);
+    res.status(204).send();
+  } catch (error) {
+    res.status(500).send('Internal Server Error');
   }
-
-  userService.remove(userId);
-
-  res.sendStatus(204).send();
 };
 
 module.exports = {

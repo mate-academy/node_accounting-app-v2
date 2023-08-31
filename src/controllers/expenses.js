@@ -3,9 +3,9 @@
 const expenseService = require('../services/expenses.js');
 const userService = require('../services/users.js');
 
-const getAll = (req, res) => {
+const getAllExpenses = (req, res) => {
   const query = req.query;
-  const expenses = expenseService.getAll(query);
+  const expenses = expenseService.getAllExpenses(query);
 
   res.send(expenses);
 };
@@ -27,8 +27,7 @@ const add = (req, res) => {
   const { userId, spentAt, title, amount, category, note } = req.body;
 
   if (!title || !userId || !category || !note || !amount || !spentAt) {
-    res.statusCode = 400;
-    res.send('Fill all fields');
+    res.status(400).send('Fill all fields');
 
     return;
   }
@@ -36,8 +35,7 @@ const add = (req, res) => {
   const foundUser = userService.getById(userId);
 
   if (!foundUser) {
-    res.statusCode = 400;
-    res.send('User is not found');
+    res.status(400).send('User is not found');
 
     return;
   }
@@ -51,8 +49,7 @@ const add = (req, res) => {
     note,
   });
 
-  res.statusCode = 201;
-  res.send(newExpense);
+  res.status(201).send(newExpense);
 };
 
 const updateExpense = (req, res) => {
@@ -60,8 +57,7 @@ const updateExpense = (req, res) => {
   const foundExpense = expenseService.getById(expenseId);
 
   if (!foundExpense) {
-    res.statusCode = 404;
-    res.send('Expense is not found');
+    res.status(404).send('Expense is not found');
 
     return;
   }
@@ -70,8 +66,7 @@ const updateExpense = (req, res) => {
 
   const updatedExpense = expenseService.update(expenseId, body);
 
-  res.statusCode = 200;
-  res.send(updatedExpense);
+  res.status(200).send(updatedExpense);
 };
 
 const remove = (req, res) => {
@@ -79,8 +74,7 @@ const remove = (req, res) => {
   const foundExpense = expenseService.getById(expenseId);
 
   if (!foundExpense) {
-    res.statusCode = 404;
-    res.send('Not Found');
+    res.status(404).send('Not Found');
 
     return;
   }
@@ -91,7 +85,7 @@ const remove = (req, res) => {
 };
 
 module.exports = {
-  getAll,
+  getAllExpenses,
   getOne,
   add,
   updateExpense,

@@ -2,16 +2,19 @@
 
 const express = require('express');
 const expensesRouter = express.Router();
-const expenceController = require('../controllers/expenses.js');
 
-expensesRouter.get('/', expenceController.getAll);
+// The typographical error is found where 'expenceController' is used.
+// Please correct it to 'expenseController'. Fix all typos
+const expenseController = require('../controllers/expenses.js');
 
-expensesRouter.get('/:expenseId', expenceController.getOne);
+expensesRouter.get('/', expenseController.getAll);
 
-expensesRouter.post('/', expenceController.add);
+expensesRouter.get('/:expenseId', expenseController.getOne);
 
-expensesRouter.patch('/:expenseId', expenceController.updateExpense);
+expensesRouter.post('/', expenseController.add);
 
-expensesRouter.delete('/:expenseId', expenceController.remove);
+expensesRouter.patch('/:expenseId', expenseController.updateExpense);
+
+expensesRouter.delete('/:expenseId', expenseController.remove);
 
 module.exports = { expensesRouter };
