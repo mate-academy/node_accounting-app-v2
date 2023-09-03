@@ -9,9 +9,7 @@ function getAll() {
 };
 
 function getById(id) {
-  const userFound = users.find(user => user.id === Number(id));
-
-  return userFound || null;
+  return users.find(user => user.id === +id);
 };
 
 function create(name) {
