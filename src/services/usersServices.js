@@ -1,6 +1,6 @@
 'use strict';
 
-const { unicId } = require('../helpers/helpers');
+const { uniqueUserId } = require('../helpers/helpers');
 
 let users = [];
 
@@ -15,7 +15,7 @@ function getById(id) {
 };
 
 function create(name) {
-  const id = unicId('user');
+  const id = uniqueUserId('user');
 
   users.push({
     id, name,

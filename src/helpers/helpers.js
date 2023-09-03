@@ -1,18 +1,26 @@
 'use strict';
 
 let idUser = 0;
-let idExpenses = 0;
 
-const unicId = (name) => {
-  if (name === 'user') {
-    idUser++;
 
-    return idUser;
+const uniqueUserId = (name) => {
+  switch (name) {
+    case 'user':
+      idUser++;
+
+      return idUser;
+    case 'expenses':
+      idExpenses++;
+
+      return idExpenses;
   }
-
-  idExpenses++;
-
-  return idExpenses;
 };
 
-module.exports = { unicId };
+let idExpenses = 0;
+const uniqueExpenseId = (name) => {
+  idExpenses++;
+
+      return idExpenses;
+};
+
+module.exports = { uniqueUserId, uniqueExpenseId };

@@ -12,9 +12,9 @@ const {
 const router = express.Router();
 
 router.get('/', getExpenses);
-router.post('/', express.json(), createExpense);
+router.post('/', createExpense);
 router.get('/:id', getExpense);
 router.delete('/:id', deleteExpense);
-router.patch('/:id', express.json(), updateExpense);
+router.patch('/:id', updateExpense);
 
 module.exports = router;

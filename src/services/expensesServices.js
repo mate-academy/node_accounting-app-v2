@@ -1,6 +1,6 @@
 'use strict';
 
-const { unicId } = require('../helpers/helpers');
+const { uniqueExpenseId } = require('../helpers/helpers');
 
 let expenses = [];
 
@@ -15,7 +15,7 @@ const getById = (id) => {
 };
 
 const create = ({ userId, amount, category, note, title, spentAt }) => {
-  const id = unicId('expenses');
+  const id = uniqueExpenseId('expenses');
 
   const newExpenses = {
     id,
