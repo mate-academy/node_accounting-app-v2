@@ -1,11 +1,18 @@
 'use strict';
 
-let number = 0;
+let idUser = 0;
+let idExpenses = 0;
 
-const unicId = () => {
-  number++;
+const unicId = (name) => {
+  if (name === 'user') {
+    idUser++;
 
-  return number;
+    return idUser;
+  }
+
+  idExpenses++;
+
+  return idExpenses;
 };
 
 module.exports = { unicId };

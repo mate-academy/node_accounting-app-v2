@@ -15,7 +15,7 @@ function getById(id) {
 };
 
 function create(name) {
-  const id = unicId();
+  const id = unicId('user');
 
   users.push({
     id, name,
@@ -27,17 +27,15 @@ function create(name) {
 };
 
 function remove(id) {
-  users = users.filter(user => user.id !== id);
+  users = users.filter(user => user.id !== Number(id));
 };
 
 function update({ id, name }) {
   const foundUser = getById(id);
 
-  Object.assign(foundUser, {
-    id, name,
+  return Object.assign(foundUser, {
+    name,
   });
-
-  return foundUser;
 };
 
 module.exports = {

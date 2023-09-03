@@ -2,8 +2,6 @@
 
 const { unicId } = require('../helpers/helpers');
 
-const currentDate = new Date();
-
 let expenses = [];
 
 const getAll = () => {
@@ -16,13 +14,14 @@ const getById = (id) => {
   return foundExpenses || null;
 };
 
-const create = ({ userId, amount, category, note }) => {
-  const id = unicId();
+const create = ({ userId, amount, category, note, title, spentAt }) => {
+  const id = unicId('expenses');
 
   const newExpenses = {
     id,
     userId,
-    spentAt: currentDate.toISOString(),
+    title,
+    spentAt,
     amount,
     category,
     note,
@@ -34,15 +33,13 @@ const create = ({ userId, amount, category, note }) => {
 };
 
 const remove = (id) => {
-  expenses = expenses.filter(expens => expens.id !== id);
+  expenses = expenses.filter(expens => expens.id !== Number(id));
 };
 
 const update = (body, id) => {
   const foundUser = getById(id);
 
-  Object.assign(foundUser, body);
-
-  return foundUser;
+  return Object.assign(foundUser, body);
 };
 
 module.exports = {

@@ -11,14 +11,11 @@ const {
 const getUsers = (req, res) => {
   const users = getAll();
 
-  res.sendStatus(200);
-  res.end(users);
+  res.status(200).send(users);
 };
 
-const createUser = (req, res) => {
+async function createUser(req, res) {
   const { name } = req.body;
-
-  process.stdout.write(name);
 
   if (!name) {
     res.sendStatus(400);
@@ -26,10 +23,9 @@ const createUser = (req, res) => {
     return;
   }
 
-  const newUser = create(name);
+  const newUser = await create(name);
 
-  res.sendStatus(201);
-  res.end(newUser);
+  res.status(201).send(newUser);
 };
 
 const getUser = (req, res) => {
@@ -49,8 +45,7 @@ const getUser = (req, res) => {
     return;
   }
 
-  res.sendStatus(200);
-  res.end(foundUser);
+  res.status(200).send(foundUser);
 };
 
 const deleteUser = (req, res) => {
@@ -72,10 +67,9 @@ const deleteUser = (req, res) => {
 
   remove(id);
   res.sendStatus(204);
-  res.end();
 };
 
-const updateUser = (res, req) => {
+const updateUser = (req, res) => {
   const { id } = req.params;
 
   if (!Number(id)) {
@@ -94,17 +88,18 @@ const updateUser = (res, req) => {
 
   const { name } = req.body;
 
-  if (typeof name !== 'string') {
+  if (!name && typeof name !== 'string') {
     res.sendStatus(400);
 
     return;
   }
 
-  update({
-    id, name,
+  const updateHaveUser = update({
+    id,
+    name,
   });
-  res.sendStatus(200);
-  res.end();
+
+  res.status(200).send(updateHaveUser);
 };
 
 module.exports = {
