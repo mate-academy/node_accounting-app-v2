@@ -9,9 +9,7 @@ const getAll = () => {
 };
 
 const getById = (id) => {
-  const foundExpenses = expenses.find(expens => expens.id === Number(id));
-
-  return foundExpenses || null;
+  return expenses.find(expens => expens.id === +id);
 };
 
 const create = ({ userId, amount, category, note, title, spentAt }) => {
@@ -42,6 +40,10 @@ const update = (body, id) => {
   return Object.assign(foundUser, body);
 };
 
+function removeAll() {
+  expenses = [];
+};
+
 module.exports = {
-  getAll, getById, create, remove, update,
+  getAll, getById, create, remove, update, removeAll,
 };

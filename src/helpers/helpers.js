@@ -2,7 +2,6 @@
 
 let idUser = 0;
 
-
 const uniqueUserId = (name) => {
   switch (name) {
     case 'user':
@@ -17,10 +16,13 @@ const uniqueUserId = (name) => {
 };
 
 let idExpenses = 0;
+
 const uniqueExpenseId = (name) => {
   idExpenses++;
 
-      return idExpenses;
+  return idExpenses;
 };
 
-module.exports = { uniqueUserId, uniqueExpenseId };
+module.exports = {
+  uniqueUserId, uniqueExpenseId,
+};

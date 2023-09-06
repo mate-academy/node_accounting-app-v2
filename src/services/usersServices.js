@@ -36,6 +36,10 @@ function update({ id, name }) {
   });
 };
 
+function removeAll() {
+  users = [];
+};
+
 module.exports = {
-  getAll, getById, create, remove, update,
+  getAll, getById, create, remove, update, removeAll,
 };

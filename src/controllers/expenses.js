@@ -13,36 +13,33 @@ const getExpenses = (req, res) => {
   const body = req.query;
   const expenses = getAll();
   const keysBody = Object.keys(body);
-  let copyExpenses = [...expenses];
 
   if (keysBody.length > 0) {
-    for (let i = 0; i < keysBody.length; i++) {
-      switch (keysBody[i]) {
-        case 'userId':
-          copyExpenses = copyExpenses
-            .filter(expens => expens.id === body.userId);
-          break;
-        case 'categories':
-          copyExpenses = copyExpenses
-            .filter(expens => expens.categories === body.categories);
-          break;
-        case 'from':
-          copyExpenses = copyExpenses
-            .filter(expens => new Date(body.from) <= new Date(expens.spentAt));
-          break;
-        case 'to':
-          copyExpenses = copyExpenses
-            .filter(user => new Date(user.spentAt) <= new Date(body.to));
-          break;
-      }
-    }
+    const filteredExpenses = expenses.filter(expense => {
+      return keysBody.every(key => {
+        switch (key) {
+          case 'userId':
+            return expense.userId === +body.userId;
+          case 'categories':
+            return expense.category === body.categories;
+          case 'from':
+            const fromDate = new Date(body.from);
 
-    res.status(200).send(copyExpenses);
+            return new Date(expense.spentAt) >= fromDate;
+          case 'to':
+            const toDate = new Date(body.to);
 
-    return;
+            return new Date(expense.spentAt) <= toDate;
+          default:
+            return true;
+        }
+      });
+    });
+
+    res.status(200).send(filteredExpenses);
+  } else {
+    res.status(200).send(expenses);
   }
-
-  res.status(200).send(expenses);
 };
 
 const createExpense = (req, res) => {
@@ -50,7 +47,7 @@ const createExpense = (req, res) => {
   const foundUser = getUser(userId);
 
   if (!foundUser || !amount || !category || !note || !title || !spentAt) {
-    res.sendStatus(400);
+    res.status(400).send('Bad');
 
     return;
   }
