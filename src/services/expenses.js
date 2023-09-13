@@ -2,7 +2,7 @@
 
 let expenses = [];
 
-function getExpenses() {
+function resetExpenses() {
   expenses = [];
 
   return expenses;
@@ -74,7 +74,7 @@ function update({ expenseId, data }) {
 }
 
 module.exports = {
-  getExpenses,
+  resetExpenses,
   getAll,
   getById,
   create,

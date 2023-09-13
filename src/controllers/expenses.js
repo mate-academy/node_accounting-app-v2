@@ -1,12 +1,12 @@
 'use strict';
 
-const expensesServise = require('../services/expenses.js');
-const usersServise = require('../services/users.js');
+const expensesService = require('../services/expenses.js');
+const usersService = require('../services/users.js');
 
 const getAll = (req, res) => {
   const query = req.query;
 
-  const expenses = expensesServise.getAll(query);
+  const expenses = expensesService.getAll(query);
 
   res.send(expenses);
 };
@@ -20,7 +20,7 @@ const getOne = (req, res) => {
     return;
   }
 
-  const getExpensesById = expensesServise.getById(expenseId);
+  const getExpensesById = expensesService.getById(expenseId);
 
   if (!getExpensesById) {
     res.sendStatus(404);
@@ -32,9 +32,9 @@ const getOne = (req, res) => {
 };
 
 const add = (req, res) => {
-  const expense = req.body;
-
-  const getUsersById = usersServise.getById(expense.userId);
+  const { userId } = req.body;
+  
+  const getUsersById = usersServise.getById(userId);
 
   if (!getUsersById) {
     res.sendStatus(400);
@@ -42,7 +42,7 @@ const add = (req, res) => {
     return;
   }
 
-  const newExpense = expensesServise.create(expense);
+  const newExpense = expensesService.create(expense);
 
   res.statusCode = 201;
   res.send(newExpense);
@@ -57,7 +57,7 @@ const remove = (req, res) => {
     return;
   }
 
-  const getExpensesById = expensesServise.getById(expenseId);
+  const getExpensesById = expensesService.getById(expenseId);
 
   if (!getExpensesById) {
     res.sendStatus(404);
@@ -65,7 +65,7 @@ const remove = (req, res) => {
     return;
   }
 
-  expensesServise.remove(expenseId);
+  expensesService.remove(expenseId);
   res.sendStatus(204);
 };
 
@@ -78,7 +78,7 @@ const update = (req, res) => {
     return;
   }
 
-  const getExpensesById = expensesServise.getById(expenseId);
+  const getExpensesById = expensesService.getById(expenseId);
 
   if (!getExpensesById) {
     res.sendStatus(404);
@@ -88,7 +88,7 @@ const update = (req, res) => {
 
   const data = req.body;
 
-  const updatedExpense = expensesServise.update({
+  const updatedExpense = expensesService.update({
     expenseId,
     data,
   });

@@ -2,7 +2,7 @@
 
 let users = [];
 
-function getUsers() {
+function restUsers() {
   users = [];
 
   return users;
@@ -19,7 +19,7 @@ function getById(userId) {
 }
 
 function create(name) {
-  const maxId = Math.max(users.map(user => user.id), 0);
+  const maxId = Math.max(...users.map(user => user.id), 0);
 
   const newUser = {
     id: maxId + 1,
@@ -44,7 +44,7 @@ function update({ id, name }) {
 }
 
 module.exports = {
-  getUsers,
+  resetUsers,
   getAll,
   getById,
   create,

@@ -1,9 +1,9 @@
 'use strict';
 
-const usersServise = require('../services/users.js');
+const usersService = require('../services/users.js');
 
 const getAll = (req, res) => {
-  const users = usersServise.getAll();
+  const users = usersService.getAll();
 
   res.send(users);
 };
@@ -17,7 +17,7 @@ const getOne = (req, res) => {
     return;
   }
 
-  const getUsersById = usersServise.getById(userId);
+  const getUsersById = usersService.getById(userId);
 
   if (!getUsersById) {
     res.sendStatus(404);
@@ -37,7 +37,7 @@ const add = (req, res) => {
     return;
   }
 
-  const newUser = usersServise.create(name);
+  const newUser = usersService.create(name);
 
   res.statusCode = 201;
   res.send(newUser);
@@ -52,7 +52,7 @@ const remove = (req, res) => {
     return;
   }
 
-  const getUsersById = usersServise.getById(userId);
+  const getUsersById = usersService.getById(userId);
 
   if (!getUsersById) {
     res.sendStatus(404);
@@ -60,7 +60,7 @@ const remove = (req, res) => {
     return;
   }
 
-  usersServise.remove(userId);
+  usersService.remove(userId);
   res.sendStatus(204);
 };
 
@@ -73,7 +73,7 @@ const update = (req, res) => {
     return;
   }
 
-  const getUsersById = usersServise.getById(userId);
+  const getUsersById = usersService.getById(userId);
 
   if (!getUsersById) {
     res.sendStatus(404);
@@ -89,7 +89,7 @@ const update = (req, res) => {
     return;
   }
 
-  const updatedUser = usersServise.update({
+  const updatedUser = usersService.update({
     id: userId,
     name,
   });
