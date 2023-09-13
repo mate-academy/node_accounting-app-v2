@@ -2,7 +2,7 @@
 
 let users = [];
 
-function restUsers() {
+function resetUsers() {
   users = [];
 
   return users;
