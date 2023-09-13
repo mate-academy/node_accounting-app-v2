@@ -33,8 +33,8 @@ const getOne = (req, res) => {
 
 const add = (req, res) => {
   const { userId } = req.body;
-  
-  const getUsersById = usersServise.getById(userId);
+
+  const getUsersById = usersService.getById(userId);
 
   if (!getUsersById) {
     res.sendStatus(400);
