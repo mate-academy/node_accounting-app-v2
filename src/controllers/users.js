@@ -11,7 +11,7 @@ const getAll = (req, res) => {
 const getOne = (req, res) => {
   const { userId } = req.params;
 
-  if (typeof userId !== 'string') {
+  if (!userId) {
     res.statusMessage = 'Param "ID" is required';
     res.sendStatus(400);
 
@@ -33,7 +33,7 @@ const getOne = (req, res) => {
 const add = (req, res) => {
   const { name } = req.body;
 
-  if (typeof name !== 'string') {
+  if (!name) {
     res.statusMessage = 'Param "name" is required';
     res.sendStatus(400);
 
@@ -50,7 +50,7 @@ const add = (req, res) => {
 const remove = (req, res) => {
   const { userId } = req.params;
 
-  if (typeof userId !== 'string') {
+  if (!userId) {
     res.statusMessage = 'Param "ID" is required';
     res.sendStatus(400);
 
@@ -77,14 +77,14 @@ const update = (req, res) => {
   const { userId } = req.params;
   const { name } = req.body;
 
-  if (typeof userId !== 'string') {
+  if (!userId) {
     res.statusMessage = 'Param "ID" is required';
     res.sendStatus(400);
 
     return;
   }
 
-  if (typeof name !== 'string') {
+  if (!name) {
     res.statusMessage = 'Param "name" is required';
     res.sendStatus(400);
 

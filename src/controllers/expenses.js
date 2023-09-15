@@ -12,7 +12,7 @@ const getAll = (req, res) => {
 const getOne = (req, res) => {
   const { expenseId } = req.params;
 
-  if (typeof expenseId !== 'string') {
+  if (!expenseId) {
     res.statusMessage = 'Param "ID" is required';
     res.sendStatus(400);
 
