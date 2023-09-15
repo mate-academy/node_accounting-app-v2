@@ -7,16 +7,15 @@ const expenseServices = require('./services/expenses');
 const { userRouter } = require('./routes/users');
 const { expenseRouter } = require('./routes/expenses');
 
-const jsonMiddleware = express.json();
-
 function createServer() {
   const app = express();
 
   userServices.removeAllUsers();
   expenseServices.removeAllExpenses();
 
-  app.use('/users', jsonMiddleware, userRouter);
-  app.use('/expenses', jsonMiddleware, expenseRouter);
+  app.use(express.json());
+  app.use('/users', userRouter);
+  app.use('/expenses', expenseRouter);
 
   return app;
 }
