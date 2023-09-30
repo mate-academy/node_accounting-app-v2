@@ -57,7 +57,6 @@ const create = (req, res) => {
     && isUserExist;
 
   if (!allValueExist) {
-    res.statusCode = 400;
     res.sendStatus(400);
   }
 
@@ -81,7 +80,6 @@ const update = (req, res) => {
   console.log(newValues);
 
   if (!newValues) {
-    res.statusCode = 400;
     res.sendStatus(400);
 
     return;
@@ -90,7 +88,6 @@ const update = (req, res) => {
   const expense = expensesServices.getByIdExpense(id);
 
   if (!expense) {
-    res.statusCode = 404;
     res.sendStatus(404);
 
     return;

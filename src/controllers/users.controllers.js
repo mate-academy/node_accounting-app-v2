@@ -28,7 +28,6 @@ const create = (req, res) => {
   const { name } = req.body;
 
   if (!name) {
-    res.statusCode = 400;
     res.sendStatus(400);
   }
 
@@ -44,14 +43,12 @@ const update = (req, res) => {
   const user = usersServices.getByIdUser(id);
 
   if (!user) {
-    res.statusCode = 404;
     res.sendStatus(404);
 
     return;
   }
 
   if (typeof name !== 'string') {
-    res.statusCode = 400;
     res.sendStatus(400);
 
     return;
@@ -66,7 +63,6 @@ const remove = (req, res) => {
   const { id } = req.params;
 
   if (!id) {
-    res.statusCode = 400;
     res.sendStatus(400);
 
     return;
@@ -75,7 +71,6 @@ const remove = (req, res) => {
   const user = usersServices.getByIdUser(id);
 
   if (!user) {
-    res.statusCode = 404;
     res.sendStatus(404);
 
     return;
@@ -83,7 +78,6 @@ const remove = (req, res) => {
 
   usersServices.deleteUser(id);
 
-  res.statusCode = 204;
   res.sendStatus(204);
 };
 
