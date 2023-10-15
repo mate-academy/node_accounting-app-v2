@@ -12,49 +12,13 @@ const REQUIRE_KEYS = {
   note: 'string',
 };
 
-const hasRequiredProps = (expense, res) => {
-  for (const prop in expense) {
-    if (!expense.hasOwnProperty(prop)) {
-      res.send('Your data is empty. Please, specify all required fields');
-
-      return false;
-    }
-  }
-
-  if (
-    typeof expense === 'object'
-    && !Array.isArray(expense)
-    && expense !== null
-  ) {
-    for (const key in REQUIRE_KEYS) {
-      if (REQUIRE_KEYS.hasOwnProperty(key)) {
-        if (!(key in expense)) {
-          res.send(`You have missed this field: ${key}`);
-
-          return false;
-        }
-
-        if (typeof expense[key] !== typeof REQUIRE_KEYS[key]) {
-          res.send(`
-            The type of ${key} isn't equal to ${typeof REQUIRE_KEYS[key]}
-          `);
-
-          return false;
-        }
-      }
-    }
-
-    return true;
-  } else {
-    return false;
-  }
-};
-
-const createExpense = (expense) => {
-  expenses.push({
-    ...expense,
+const createExpense = (expenseData) => {
+  const expense = {
+    ...expenseData,
     id: generateId(),
-  });
+  };
+
+  expenses.push(expense);
 
   return expense;
 };
@@ -67,7 +31,46 @@ const getExpenseById = (id) => {
   return expenses.find(expense => expense.id === id);
 };
 
-const removeExpense = (id) => {
+const getExpenseByQuery = (query) => {
+  const {
+    userId,
+    categories,
+    from,
+    to,
+  } = query;
+
+  let expensesByQuery = [...expenses];
+
+  if (categories) {
+    expensesByQuery = expensesByQuery.filter(exp => (
+      exp.category === categories
+    ));
+  }
+
+  if (userId) {
+    expensesByQuery = expensesByQuery.filter(exp => +exp.userId === +userId);
+  }
+
+  if (from) {
+    const dateFrom = new Date(from).valueOf();
+
+    expensesByQuery = expensesByQuery.filter(exp => (
+      new Date(exp.spentAt).valueOf() > dateFrom
+    ));
+  }
+
+  if (to) {
+    const dateTo = new Date(to).valueOf();
+
+    expensesByQuery = expensesByQuery.filter(exp => (
+      new Date(exp.spentAt).valueOf() < dateTo
+    ));
+  }
+
+  return expensesByQuery;
+};
+
+const deleteExpense = (id) => {
   expenses = expenses.filter(expense => expense.id !== id);
 };
 
@@ -83,11 +86,16 @@ const updateExpense = (expense, expenseData) => {
   return expense;
 };
 
+const clear = () => {
+  expenses.length = 0;
+};
+
 module.exports = {
   createExpense,
   getExpenses,
   getExpenseById,
-  removeExpense,
+  getExpenseByQuery,
+  deleteExpense,
   updateExpense,
-  hasRequiredProps,
+  clear,
 };

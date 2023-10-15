@@ -1,6 +1,7 @@
 'use strict';
 
 const express = require('express');
+const users = require('../services/users.service');
 const expenses = require('../services/expenses.service');
 
 const router = express.Router();
@@ -16,16 +17,19 @@ router.param('id', (req, res, next, id) => {
   }
 });
 
-router.get('/', (_, res) => {
+router.get('/', (req, res) => {
+  const { query } = req;
   const expensesFromServer = expenses.getExpenses();
 
-  if (!expensesFromServer.length) {
-    res.sendStatus(404);
+  if (!Object.keys(query).length) {
+    res.send(expensesFromServer);
 
     return;
   }
 
-  res.send(expensesFromServer);
+  const expensesByQuery = expenses.getExpenseByQuery(query);
+
+  res.send(expensesByQuery);
 });
 
 router.get('/:id', (req, res) => {
@@ -42,19 +46,44 @@ router.get('/:id', (req, res) => {
 });
 
 router.post('/', express.json(), (req, res) => {
-  const expense = req.body;
+  const {
+    userId,
+    spentAt,
+    title,
+    amount,
+    category,
+    note,
+  } = req.body;
 
-  if (!expenses.hasRequiredProps(expense, res)) {
+  const isUserExist = users.getUserById(userId);
+  const allValuesExist = userId
+    && spentAt
+    && title
+    && amount
+    && category
+    && note
+    && isUserExist;
+
+  if (!allValuesExist) {
+    res.sendStatus(400);
+
     return;
   }
 
-  expenses.createExpense(expense);
+  const expense = expenses.createExpense(req.body);
 
-  res.sendStatus(201);
+  res.status(201).send(expense);
 });
 
 router.delete('/:id', (req, res) => {
   const { id } = req.params;
+
+  if (!id) {
+    res.sendStatus(400);
+
+    return;
+  }
+
   const expense = expenses.getExpenseById(id);
 
   if (!expense) {
@@ -63,7 +92,7 @@ router.delete('/:id', (req, res) => {
     return;
   }
 
-  expenses.removeExpense(id);
+  expenses.deleteExpense(id);
 
   res.sendStatus(204);
 });

@@ -33,10 +33,15 @@ const updateUser = (user, name) => {
   return user;
 };
 
+const clear = () => {
+  users.length = 0;
+};
+
 module.exports = {
   createUser,
   getUsers,
   getUserById,
   removeUser,
   updateUser,
+  clear,
 };

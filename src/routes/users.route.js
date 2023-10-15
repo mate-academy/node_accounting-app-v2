@@ -17,19 +17,18 @@ router.param('id', (req, res, next, id) => {
 });
 
 router.get('/', (_, res) => {
-  const usersFromServer = users.getUsers();
-
-  if (!usersFromServer.length) {
-    res.sendStatus(404);
-
-    return;
-  }
-
-  res.send(usersFromServer);
+  res.send(users.getUsers());
 });
 
 router.get('/:id', (req, res) => {
   const { id } = req.params;
+
+  if (!id) {
+    res.sendStatus(400);
+
+    return;
+  }
+
   const user = users.getUserById(id);
 
   if (!user) {
@@ -42,17 +41,17 @@ router.get('/:id', (req, res) => {
 });
 
 router.post('/', express.json(), (req, res) => {
-  const { name = 'Mykola' } = req.body;
+  const { name } = req.body;
 
   if (!name) {
-    res.sendStatus(422);
+    res.sendStatus(400);
 
     return;
   }
 
-  users.createUser(name);
+  const user = users.createUser(name);
 
-  res.sendStatus(201);
+  res.status(201).send(user);
 });
 
 router.delete('/:id', (req, res) => {
