@@ -23,7 +23,7 @@ const createExpense = ({
   const newExpense = {
     id: getNewId(expenses),
     userId,
-    spentAt,
+    spentAt: new Date(spentAt),
     title,
     amount,
     category,
@@ -74,8 +74,8 @@ function filterExpenses(data, {
     const toDate = new Date(to);
 
     filteredExpenses = filteredExpenses.filter(expense => (
-      new Date(expense.spentAt) >= fromDate
-      && new Date(expense.spentAt) <= toDate
+      expense.spentAt >= fromDate
+      && expense.spentAt <= toDate
     ));
   }
 
