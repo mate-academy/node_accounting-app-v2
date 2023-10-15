@@ -74,28 +74,6 @@ const remove = (req, res) => {
   res.sendStatus(204);
 };
 
-// const removeMany = (req, res, next) => {
-//   if (req.query.action !== 'delete') {
-//     next();
-//     // return;
-//   }
-
-//   const { ids } = req.body;
-
-//   if (!Array.isArray(ids)) {
-//     res.sendStatus(422);
-//     // return;
-//   }
-
-//   if (!ids.every((id) => userService.getById(id))) {
-//     throw new Error();
-//   }
-
-//   userService.removeMany(ids);
-//   res.sendStatus(204);
-//   // return;
-// };
-
 module.exports = {
   get,
   getOne,

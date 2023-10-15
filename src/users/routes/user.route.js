@@ -15,17 +15,4 @@ router.put('/:id', userController.update);
 
 router.delete('/:id', userController.remove);
 
-// const isAction = (action) => {
-//   return (req, res, next) => {
-//     if (req.query.action === action) {
-//       next();
-//     } else {
-//       next('route');
-//     }
-//   };
-// };
-
-// router.patch('/', isAction('delete'), userController.removeMany);
-// router.patch('/', isAction('update'), userController.updateMany);
-
 module.exports = router;

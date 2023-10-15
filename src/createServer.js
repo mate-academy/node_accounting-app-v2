@@ -13,9 +13,6 @@ function createServer() {
   app.use('/users', express.json(), userRouter);
 
   return app;
-  // Use express to create a server
-  // Add a routes to the server
-  // Return the server (express app)
 }
 
 module.exports = {
