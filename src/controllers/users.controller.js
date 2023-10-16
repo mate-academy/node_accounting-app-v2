@@ -13,7 +13,7 @@ const getUser = (req, res) => {
   const foundUser = usersService.getUserById(userId);
 
   if (!foundUser) {
-    res.sendStatus(404);
+    res.status(404).send('User Not Found');
 
     return;
   }
@@ -25,15 +25,14 @@ const createUser = (req, res) => {
   const { name } = req.body;
 
   if (!name) {
-    res.sendStatus(400);
+    res.status(400).send('Username Not Found');
 
     return;
   }
 
   const newUser = usersService.createUser(name);
 
-  res.statusCode = 201;
-  res.send(newUser);
+  res.status(201).send(newUser);
 };
 
 const removeUser = (req, res) => {
@@ -41,7 +40,7 @@ const removeUser = (req, res) => {
   const foundUser = usersService.getUserById(userId);
 
   if (!foundUser) {
-    res.sendStatus(404);
+    res.status(404).send('User Not Found');
 
     return;
   }
@@ -57,13 +56,13 @@ const updateUser = (req, res) => {
   const foundUser = usersService.getUserById(userId);
 
   if (!foundUser) {
-    res.sendStatus(404);
+    res.status(404).send('User Not Found');
 
     return;
   }
 
   if (!name) {
-    res.sendStatus(400);
+    res.status(404).send('Username Not Found');
   }
 
   usersService.updateUser(userId, name);

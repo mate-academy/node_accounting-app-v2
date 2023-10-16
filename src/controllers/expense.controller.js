@@ -13,7 +13,7 @@ const getOneExpense = (req, res) => {
   const { expenseId } = req.params;
 
   if (!expenseId) {
-    res.sendStatus(400);
+    res.status(400).send('Data Not Found');
 
     return;
   }
@@ -21,7 +21,7 @@ const getOneExpense = (req, res) => {
   const foundExpense = expenseService.getExpenseById(expenseId);
 
   if (!foundExpense) {
-    res.sendStatus(404);
+    res.status(404).send('Expense Not Found');
 
     return;
   }
@@ -39,7 +39,7 @@ const createExpense = (req, res) => {
   } = req.body;
 
   if (!userId || !title || !spentAt || !amount || !category) {
-    res.sendStatus(400);
+    res.status(400).send('Not all data is provided');
 
     return;
   }
@@ -47,7 +47,7 @@ const createExpense = (req, res) => {
   const foundUser = usersService.getUserById(userId);
 
   if (!foundUser) {
-    res.sendStatus(400);
+    res.status(400).send('User Not Found');
 
     return;
   }
@@ -63,7 +63,7 @@ const removeExpense = (req, res) => {
   const foundExpense = expenseService.getExpenseById(expenseId);
 
   if (!foundExpense) {
-    res.sendStatus(404);
+    res.status(404).send('Expense Not Found');
 
     return;
   }
@@ -77,30 +77,12 @@ const updateExpense = (req, res) => {
   const foundExpense = expenseService.getExpenseById(expenseId);
 
   if (!foundExpense) {
-    res.sendStatus(404);
+    res.status(404).send('Expense Not Found');
 
     return;
   }
 
   const updateData = { ...req.body };
-
-  if ('id' in updateData) {
-    delete updateData['id'];
-  };
-
-  if ('userId' in updateData) {
-    delete updateData['userId'];
-  }
-
-  if ('spentAt' in updateData) {
-    updateData['spentAt'] = new Date(updateData['spentAt']);
-  }
-
-  if (Object.keys(updateData).length === 0) {
-    res.sendStatus(400);
-
-    return;
-  }
 
   expenseService.updateExpense(expenseId, updateData);
   res.send(foundExpense);
