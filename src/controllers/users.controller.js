@@ -1,39 +1,47 @@
 'use strict';
 
-const userService = require('./../services/users.service');
+const {
+  BAD_REQUEST,
+  CREATED_SUCCESS,
+  NOT_FOUND,
+  NO_CONTENT_SUCCESS,
+} = require('../../constants/statusCodes');
+const usersService = require('./../services/users.service');
 
-const get = (req, res) => {
-  res.send(userService.getAll());
+const getAll = (req, res) => {
+  const users = usersService.getAll();
+
+  res.send(users);
 };
 
 const create = (req, res) => {
   const { name } = req.body;
 
   if (!name) {
-    res.sendStatus(400);
+    res.sendStatus(BAD_REQUEST);
 
     return;
   }
 
-  const user = {
+  const newUser = {
     name,
-    id: +new Date(),
+    id: Number(new Date()),
   };
 
-  userService.add(user);
+  const user = usersService.add(newUser);
 
-  res.statusCode = 201;
+  res.statusCode = CREATED_SUCCESS;
 
   res.send(user);
 };
 
-const getOne = (req, res) => {
-  const id = +req.params.id;
+const getById = (req, res) => {
+  const id = Number(req.params.id);
 
-  const user = userService.getById(id);
+  const user = usersService.getById(id);
 
   if (!user) {
-    res.sendStatus(404);
+    res.sendStatus(NOT_FOUND);
 
     return;
   }
@@ -41,38 +49,44 @@ const getOne = (req, res) => {
   res.send(user);
 };
 
-const deleteOne = (req, res) => {
-  const id = +req.params.id;
+const remove = (req, res) => {
+  const id = Number(req.params.id);
 
-  if (!userService.getById(id)) {
-    res.sendStatus(404);
+  const user = usersService.getById(id);
+
+  if (!user) {
+    res.sendStatus(NOT_FOUND);
 
     return;
   }
 
-  userService.removeById(id);
+  usersService.remove(id);
 
-  res.sendStatus(204);
+  res.sendStatus(NO_CONTENT_SUCCESS);
 };
 
 const update = (req, res) => {
-  const id = +req.params.id;
+  const id = Number(req.params.id);
 
-  if (!userService.getById(id)) {
-    res.sendStatus(404);
+  const user = usersService.getById(id);
+
+  if (!user) {
+    res.sendStatus(NOT_FOUND);
 
     return;
   }
 
   const { name } = req.body;
 
-  res.send(userService.updateById(id, name));
+  const updatedUser = usersService.updateById(id, name);
+
+  res.send(updatedUser);
 };
 
 module.exports = {
-  get,
+  getAll,
   create,
-  getOne,
-  deleteOne,
+  getById,
+  remove,
   update,
 };

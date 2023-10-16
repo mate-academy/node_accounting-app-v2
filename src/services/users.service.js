@@ -8,13 +8,15 @@ const getAll = () => {
 
 const add = user => {
   users.push(user);
+
+  return user;
 };
 
 const getById = id => {
   return users.find(user => user.id === id) || null;
 };
 
-const removeById = id => {
+const remove = id => {
   users = users.filter(user => user.id !== id);
 };
 
@@ -34,6 +36,6 @@ module.exports = {
   getAll,
   add,
   getById,
-  removeById,
+  remove,
   updateById,
 };

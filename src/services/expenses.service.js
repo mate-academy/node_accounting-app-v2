@@ -8,13 +8,15 @@ const getAll = () => {
 
 const add = expense => {
   expenses.push(expense);
+
+  return expense;
 };
 
 const getById = id => {
   return expenses.find(expense => expense.id === id) || null;
 };
 
-const removeById = id => {
+const remove = id => {
   expenses = expenses.filter(expense => expense.id !== id);
 };
 
@@ -34,6 +36,6 @@ module.exports = {
   getAll,
   add,
   getById,
-  removeById,
+  remove,
   updateById,
 };
