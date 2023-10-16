@@ -39,35 +39,33 @@ const getExpenseByQuery = (query) => {
     to,
   } = query;
 
-  let expensesByQuery = [...expenses];
-
-  if (categories) {
-    expensesByQuery = expensesByQuery.filter(exp => (
-      exp.category === categories
-    ));
-  }
-
-  if (userId) {
-    expensesByQuery = expensesByQuery.filter(exp => +exp.userId === +userId);
-  }
-
-  if (from) {
+  return expenses.filter(({
+    category,
+    userId: id,
+    spentAt,
+  }) => {
+    const spentDate = new Date(spentAt).valueOf();
     const dateFrom = new Date(from).valueOf();
-
-    expensesByQuery = expensesByQuery.filter(exp => (
-      new Date(exp.spentAt).valueOf() > dateFrom
-    ));
-  }
-
-  if (to) {
     const dateTo = new Date(to).valueOf();
 
-    expensesByQuery = expensesByQuery.filter(exp => (
-      new Date(exp.spentAt).valueOf() < dateTo
-    ));
-  }
+    if (categories && category !== categories) {
+      return false;
+    }
 
-  return expensesByQuery;
+    if (userId && +id !== +userId) {
+      return false;
+    }
+
+    if (from && spentDate < dateFrom) {
+      return false;
+    }
+
+    if (to && spentDate > dateTo) {
+      return false;
+    }
+
+    return true;
+  });
 };
 
 const deleteExpense = (id) => {
