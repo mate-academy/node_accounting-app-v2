@@ -1,6 +1,5 @@
 'use strict';
 
-// const expenseServices = require('./sevices/expenses.service');
 const userServices = require('../src/sevices/users.service');
 const userRouter = require('../src/routes/user.routes');
 const expensesRouter = require('../src/routes/expenses.routes');

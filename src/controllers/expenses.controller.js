@@ -80,7 +80,9 @@ const update = (req, res) => {
 
   const { body } = req;
 
-  expencesServices.update(body);
+  Object.assign(expense, body);
+
+  expencesServices.update(expense);
 
   res.send(expense);
 };
