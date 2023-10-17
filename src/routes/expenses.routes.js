@@ -2,7 +2,7 @@
 
 const express = require('express');
 const expensesRouter = express.Router();
-const controller = require('../controllersTest/expenses.controller');
+const controller = require('../controllers/expenses.controller');
 
 expensesRouter.get('/', controller.getExpenses);
 expensesRouter.get('/:id', controller.getOneExpense);
