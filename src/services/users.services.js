@@ -2,32 +2,34 @@
 
 let users = [];
 
-const getAll = () => {
-  return users;
-};
+const getAll = () => users;
 
-const getById = (id) => {
+const getById = id => {
   return users.find(user => user.id === id) || null;
 };
 
-const add = (user) => {
+const add = user => {
   users.push(user);
 };
 
-const remove = (id) => {
+const remove = id => {
   users = users.filter(user => user.id !== id);
 };
 
-const update = (id, body) => {
+const update = (id, name) => {
   const user = getById(id);
 
   if (!user) {
     return;
   }
 
-  Object.assign(user, body);
+  Object.assign(user, { name });
 
   return user;
+};
+
+const clear = () => {
+  users.length = 0;
 };
 
 module.exports = {
@@ -36,4 +38,5 @@ module.exports = {
   remove,
   getById,
   update,
+  clear,
 };

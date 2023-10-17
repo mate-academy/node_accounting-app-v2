@@ -1,14 +1,14 @@
 'use strict';
 
-const service = require('../services/users.service');
-const { v4: uuidv4 } = require('uuid');
+const service = require('../services/users.services');
 
 const getAllUsers = (req, res) => {
+  res.statusCode = 200;
   res.send(service.getAll());
 };
 
 const getUser = (req, res) => {
-  const { id } = req.params;
+  const id = +req.params.id;
 
   if (!id) {
     res.sendStatus(400);
@@ -24,6 +24,7 @@ const getUser = (req, res) => {
     return;
   }
 
+  res.statusCode = 200;
   res.send(user);
 };
 
@@ -37,7 +38,7 @@ const postUser = (req, res) => {
   }
 
   const newUser = {
-    id: uuidv4(),
+    id: +new Date(),
     name,
   };
 
@@ -47,7 +48,7 @@ const postUser = (req, res) => {
 };
 
 const deleteUser = (req, res) => {
-  const { id } = req.params;
+  const id = +req.params.id;
   const user = service.getById(id);
 
   if (!user) {
@@ -61,7 +62,7 @@ const deleteUser = (req, res) => {
 };
 
 const updateUser = (req, res) => {
-  const { id } = req.params;
+  const id = +req.params.id;
   const { name } = req.body;
 
   if (!name || !id) {
