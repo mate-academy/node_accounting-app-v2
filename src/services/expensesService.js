@@ -2,26 +2,41 @@
 
 let expenses = [];
 
-const getAll = () => expenses;
+const clearExpenses = () => {
+  expenses = [];
+};
 
-const addUser = name => {
-  const user = {
+const getAll = ({ userId, categories, from, to }) => {
+  if (!userId && !categories && !from && !to) {
+    return expenses;
+  }
+
+  return expenses.filter((expense) => {
+    return (userId ? +userId === expense.userId : true)
+      && (categories ? categories.includes(expense.category) : true)
+      && (from ? +new Date(expense.spentAt) > +new Date(from) : true)
+      && (to ? +new Date(expense.spentAt) < +new Date(to) : true);
+  });
+};
+
+const addExpense = (expenseData) => {
+  const expense = {
     id: +new Date(),
-    name,
+    ...expenseData,
   };
 
-  expenses.push(user);
+  expenses.push(expense);
 
-  return user;
+  return expense;
 };
 
 const getById = id => {
-  return expenses.find(user => id === user.id) || null;
+  return expenses.find(expense => id === expense.id) || null;
 };
 
 const deleteById = id => {
   if (getById(id)) {
-    expenses = expenses.filter(user => user.id !== id);
+    expenses = expenses.filter(expense => expense.id !== id);
 
     return true;
   }
@@ -29,20 +44,22 @@ const deleteById = id => {
   return false;
 };
 
-const updateById = ({ id, name }) => {
-  const user = getById(id);
+const updateById = (expenseData) => {
+  const { id } = expenseData;
+  const expense = getById(id);
 
-  if (user) {
-    user.name = name;
+  if (expense) {
+    Object.assign(expense, expenseData);
 
-    return user;
+    return expense;
   }
 };
 
 module.exports = {
   getAll,
-  addUser,
+  addExpense,
   getById,
   deleteById,
   updateById,
+  clearExpenses,
 };
