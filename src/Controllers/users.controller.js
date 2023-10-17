@@ -3,23 +3,23 @@
 const service = require('../services/users.service');
 const { v4: uuidv4 } = require('uuid');
 
-const get = (req, res) => {
+const getAllUsers = (req, res) => {
   res.send(service.getAll());
 };
 
 const getUser = (req, res) => {
   const { id } = req.params;
 
-  const user = service.getById(id);
-
-  if (!user) {
-    res.sendStatus(404);
+  if (!id) {
+    res.sendStatus(400);
 
     return;
   }
 
-  if (!id) {
-    res.sendStatus(400);
+  const user = service.getById(id);
+
+  if (!user) {
+    res.sendStatus(404);
 
     return;
   }
@@ -61,9 +61,10 @@ const deleteUser = (req, res) => {
 };
 
 const updateUser = (req, res) => {
-  const { id, name } = req.params;
+  const { id } = req.params;
+  const { name } = req.body;
 
-  if (!req.body || !id) {
+  if (!name || !id) {
     res.sendStatus(400);
 
     return;
@@ -81,7 +82,7 @@ const updateUser = (req, res) => {
 };
 
 module.exports = {
-  get,
+  getAllUsers,
   getUser,
   postUser,
   deleteUser,
