@@ -28,7 +28,7 @@ const remove = id => {
   users = users.filter(user => user.id !== id);
 };
 
-const clear = () => {
+const clearUsers = () => {
   users.length = 0;
 };
 
@@ -38,5 +38,5 @@ module.exports = {
   add,
   remove,
   update,
-  clear,
+  clearUsers,
 };

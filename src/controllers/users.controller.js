@@ -3,7 +3,7 @@
 const service = require('../services/users.services');
 
 const getUser = (req, res) => {
-  const id = +req.params.id;
+  const id = Number(req.params.id);
 
   if (!id) {
     res.sendStatus(400);
@@ -32,7 +32,7 @@ const postUser = (req, res) => {
   const { name } = req.body;
 
   const newUser = {
-    id: +new Date(),
+    id: Number(new Date()),
     name,
   };
 
@@ -48,7 +48,7 @@ const postUser = (req, res) => {
 };
 
 const updateUser = (req, res) => {
-  const id = +req.params.id;
+  const id = Number(req.params.id);
   const { name } = req.body;
 
   if (!name || !id) {
@@ -70,7 +70,7 @@ const updateUser = (req, res) => {
 };
 
 const deleteUser = (req, res) => {
-  const id = +req.params.id;
+  const id = Number(req.params.id);
   const user = service.getById(id);
 
   if (!user) {
