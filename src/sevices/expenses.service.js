@@ -29,6 +29,10 @@ const create = ({ userId, amount, category, note, title, spentAt }) => {
 const update = (id, body) => {
   const expense = getById(id);
 
+  if (!expense) {
+    return;
+  }
+
   Object.assign(expense, body);
 
   return expense;

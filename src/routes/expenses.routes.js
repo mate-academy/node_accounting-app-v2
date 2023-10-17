@@ -2,14 +2,14 @@
 
 const express = require('express');
 
-const expencesServices = require('../controllers/expenses.controller');
+const expencesController = require('../controllers/expenses.controller');
 
 const router = express.Router();
 
-router.get('/', expencesServices.getAll);
-router.get('/:id', expencesServices.getOne);
-router.post('/', express.json(), expencesServices.create);
-router.patch('/:id', express.json(), expencesServices.update);
-router.delete('/:id', expencesServices.remove);
+router.get('/', expencesController.getAll);
+router.get('/:id', expencesController.getOne);
+router.post('/', express.json(), expencesController.create);
+router.patch('/:id', express.json(), expencesController.update);
+router.delete('/:id', expencesController.remove);
 
 module.exports = router;

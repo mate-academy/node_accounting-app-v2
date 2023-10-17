@@ -6,7 +6,6 @@ const expensesRouter = require('../src/routes/expenses.routes');
 const expensesServises = require('../src/sevices/expenses.service');
 
 const express = require('express');
-const PORT = 5000;
 
 function createServer() {
   const app = express();
@@ -23,7 +22,3 @@ function createServer() {
 module.exports = {
   createServer,
 };
-
-const server = createServer();
-
-server.listen(PORT, () => { });

@@ -31,8 +31,14 @@ const getAll = (req, res) => {
 };
 
 const getOne = (req, res) => {
-  const { expenseId } = req.params;
-  const findExpense = expencesServices.getById(expenseId);
+  const id = +req.params.id;
+  const findExpense = expencesServices.getById(id);
+
+  if (!id) {
+    res.sendStatus(400);
+
+    return;
+  }
 
   if (!findExpense) {
     res.sendStatus(404);
@@ -67,10 +73,24 @@ const create = (req, res) => {
   res.send(newExpense);
 };
 
-const update = (req, res) => {
-  const { expenseId } = req.params;
+const remove = (req, res) => {
+  const id = +req.params.id;
+  const findExpense = expencesServices.getById(id);
 
-  const expense = expencesServices.getById(expenseId);
+  if (!findExpense) {
+    res.sendStatus(404);
+
+    return;
+  }
+
+  expencesServices.remove(id);
+  res.sendStatus(204);
+};
+
+const update = (req, res) => {
+  const id = +req.params.id;
+
+  const expense = expencesServices.getById(id);
 
   if (!expense) {
     res.sendStatus(404);
@@ -78,25 +98,7 @@ const update = (req, res) => {
     return;
   }
 
-  const { body } = req;
-
-  expencesServices.update(body);
-
-  res.send(expense);
-};
-
-const remove = (req, res) => {
-  const { expenseId } = req.params;
-  const findExpense = expencesServices.getById(expenseId);
-
-  if (findExpense) {
-    res.sendStatus(404);
-
-    return;
-  }
-
-  expencesServices.remove(expenseId);
-  res.sendStatus(204);
+  res.send(expencesServices.update(id, req.body));
 };
 
 module.exports = {
