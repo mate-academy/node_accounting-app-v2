@@ -7,9 +7,11 @@ const get = (req, res) => {
 };
 
 const getOne = (req, res) => {
-  const { id } = req.params;
+  const id = +req.params.id;
 
   const user = userService.getById(id);
+
+  res.setHeader('Content-type', 'application/json');
 
   if (!user) {
     res.sendStatus(404);
@@ -24,7 +26,9 @@ const create = (req, res) => {
   const { name } = req.body;
 
   if (!name) {
-    res.sendStatus(422);
+    res.sendStatus(400);
+
+    return;
   }
 
   const user = userService.create(name);
@@ -35,19 +39,14 @@ const create = (req, res) => {
 };
 
 const update = (req, res) => {
-  const { id } = req.params;
+  const id = +req.params.id;
   const { name } = req.body;
 
   const user = userService.getById(id);
 
-  if (!user) {
+  if (!user
+    || typeof name !== 'string') {
     res.sendStatus(404);
-
-    return;
-  }
-
-  if (typeof name !== 'string') {
-    res.sendStatus(422);
 
     return;
   }
@@ -61,7 +60,7 @@ const update = (req, res) => {
 };
 
 const remove = (req, res) => {
-  const { id } = req.params;
+  const id = +req.params.id;
 
   if (!userService.getById(id)) {
     res.sendStatus(404);

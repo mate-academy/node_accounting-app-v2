@@ -1,20 +1,25 @@
 'use strict';
 
-const uuidv4 = require('uuid').v4;
 let users = [];
 
 const getAll = () => {
-  return users;
+  return users || [];
 };
 
-const getById = (id) => {
+const clearState = () => {
+  users = [];
+};
+
+const getUserById = (id) => {
   return users.find(user => user.id === id) || null;
 };
 
 const create = (name) => {
   const user = {
     name,
-    id: uuidv4(),
+    id: users.reduce((acc, item) => {
+      return acc > item.id ? acc : item.id;
+    }, 0) + 1,
   };
 
   users.push(user);
@@ -23,7 +28,7 @@ const create = (name) => {
 };
 
 const update = ({ id, name }) => {
-  const user = getById(id);
+  const user = getUserById(id);
 
   Object.assign(user, { name });
 
@@ -34,23 +39,11 @@ const remove = (id) => {
   users = users.filter(user => user.id !== id);
 };
 
-const updateMany = (usersToUpdate) => {
-  for (const { id, name } of usersToUpdate) {
-    const user = getById(id);
-
-    if (!user) {
-      continue;
-    }
-
-    Object.assign(user, { name });
-  }
-};
-
 module.exports = {
   getAll,
-  getById,
+  getById: getUserById,
   create,
   update,
   remove,
-  updateMany,
+  clearState,
 };
