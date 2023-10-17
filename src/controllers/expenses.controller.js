@@ -2,6 +2,9 @@
 
 const service = require('../services/expenses.services');
 const { getById: getUserById } = require('../services/users.services');
+const {
+  OK, BAD_REQUEST, NOT_EXIST, CREATED, SUCCES_NO_CONTENT,
+} = require('../statusCodes');
 
 const getAllExpenses = (req, res) => {
   const {
@@ -17,19 +20,17 @@ const getAllExpenses = (req, res) => {
   let expenses = service.getAll();
 
   if (userId) {
-    expenses = expenses.filter(expense => expense.userId === +userId);
+    expenses = expenses.filter(expense => expense.userId === Number(userId));
   }
 
   if (from) {
-    expenses = expenses.filter(expense => {
-      return new Date(expense.spentAt).valueOf() >= new Date(from).valueOf();
-    });
+    expenses = expenses.filter(expense =>
+      new Date(expense.spentAt).valueOf() >= new Date(from).valueOf());
   }
 
   if (to) {
-    expenses = expenses.filter(expense => {
-      return new Date(expense.spentAt).valueOf() <= new Date(to).valueOf();
-    });
+    expenses = expenses.filter(expense =>
+      new Date(expense.spentAt).valueOf() <= new Date(to).valueOf());
   }
 
   if (categories.length) {
@@ -38,28 +39,29 @@ const getAllExpenses = (req, res) => {
     );
   }
 
-  res.statusCode = 200;
+  res.statusCode = OK;
   res.send(expenses);
 };
 
 const getExpense = (req, res) => {
-  const id = +req.params.id;
-  const searcedExpense = service.getById(id);
+  const id = Number(req.params.id);
 
   if (!id) {
-    res.sendStatus(400);
+    res.sendStatus(BAD_REQUEST);
 
     return;
   }
 
-  if (!searcedExpense) {
-    res.sendStatus(404);
+  const searchedExpense = service.getById(id);
+
+  if (!searchedExpense) {
+    res.sendStatus(NOT_EXIST);
 
     return;
   }
 
-  res.statusCode = 200;
-  res.send(searcedExpense);
+  res.statusCode = OK;
+  res.send(searchedExpense);
 };
 
 const post = (req, res) => {
@@ -72,14 +74,14 @@ const post = (req, res) => {
     note,
   } = req.body;
 
-  if (!getUserById(+userId)) {
-    res.sendStatus(400);
+  if (!getUserById(Number(userId))) {
+    res.sendStatus(BAD_REQUEST);
 
     return;
   }
 
   const newExpense = {
-    id: +new Date(),
+    id: Number(new Date()),
     userId,
     spentAt,
     title,
@@ -89,36 +91,36 @@ const post = (req, res) => {
   };
 
   service.add(newExpense);
-  res.statusCode = 201;
+  res.statusCode = CREATED;
   res.send(newExpense);
 };
 
 const removeExpense = (req, res) => {
-  const id = +req.params.id;
+  const id = Number(req.params.id);
   const expenseToRemove = service.getById(id);
 
   if (!expenseToRemove) {
-    res.sendStatus(404);
+    res.sendStatus(NOT_EXIST);
 
     return;
   }
 
   service.remove(id);
-  res.sendStatus(204);
+  res.sendStatus(SUCCES_NO_CONTENT);
 };
 
 const updateExpense = (req, res) => {
-  const id = +req.params.id;
+  const id = Number(req.params.id);
   const body = req.body;
 
   if (!id || !body) {
-    res.sendStatus(400);
+    res.sendStatus(BAD_REQUEST);
 
     return;
   }
 
   if (!service.getById(id)) {
-    res.sendStatus(404);
+    res.sendStatus(NOT_EXIST);
 
     return;
   }

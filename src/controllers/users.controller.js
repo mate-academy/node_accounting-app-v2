@@ -1,78 +1,87 @@
 'use strict';
 
 const service = require('../services/users.services');
+const {
+  OK,
+  BAD_REQUEST,
+  NOT_EXIST,
+  CREATED,
+  SUCCES_NO_CONTENT,
+} = require('../statusCodes');
 
 const getAllUsers = (req, res) => {
-  res.statusCode = 200;
+  res.statusCode = OK;
   res.send(service.getAll());
 };
 
 const getUser = (req, res) => {
-  const id = +req.params.id;
-  const searcedUser = service.getById(id);
+  const id = Number(req.params.id);
 
   if (!id) {
-    res.statusCode(400);
+    res.statusCode(BAD_REQUEST);
 
     return;
   }
 
-  if (!searcedUser) {
-    res.sendStatus(404);
+  const searchedUser = service.getById(id);
+
+  if (!searchedUser) {
+    res.sendStatus(NOT_EXIST);
 
     return;
   }
 
-  res.statusCode = 200;
-  res.send(searcedUser);
+  res.statusCode = OK;
+  res.send(searchedUser);
 };
 
 const post = (req, res) => {
   const { name } = req.body;
 
   if (!name) {
-    res.sendStatus(400);
+    res.sendStatus(BAD_REQUEST);
 
     return;
   }
 
   const newUser = {
-    id: +new Date(),
+    id: Number(new Date()),
     name,
   };
 
   service.add(newUser);
-  res.statusCode = 201;
+  res.statusCode = CREATED;
   res.send(newUser);
 };
 
 const removeUser = (req, res) => {
-  const id = +req.params.id;
+  const id = Number(req.params.id);
   const userToRemove = service.getById(id);
 
   if (!userToRemove) {
-    res.sendStatus(404);
+    res.sendStatus(NOT_EXIST);
 
     return;
   }
 
   service.remove(id);
-  res.sendStatus(204);
+  res.sendStatus(SUCCES_NO_CONTENT);
 };
 
 const updateUser = (req, res) => {
   const { name } = req.body;
-  const id = +req.params.id;
-  const userToUpdate = service.update(id, name);
+  const id = Number(req.params.id);
 
   if (!name || !id) {
-    res.statusCode(400);
+    res.statusCode(BAD_REQUEST);
 
     return;
   }
 
+  const userToUpdate = service.update(id, name);
+
   if (!userToUpdate) {
-    res.sendStatus(404);
+    res.sendStatus(NOT_EXIST);
 
     return;
   }
