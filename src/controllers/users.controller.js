@@ -1,9 +1,16 @@
 'use strict';
 
+const {
+  OK,
+  CREATED,
+  NO_CONTENT,
+  BAD_REQUEST,
+  NOT_FOUND,
+} = require('../../constants/statusCodes');
 const service = require('../services/users.services');
 
 const getAllUsers = (req, res) => {
-  res.statusCode = 200;
+  res.statusCode = OK;
   res.send(service.getAll());
 };
 
@@ -11,7 +18,7 @@ const getUser = (req, res) => {
   const id = Number(req.params.id);
 
   if (!id) {
-    res.sendStatus(400);
+    res.sendStatus(BAD_REQUEST);
 
     return;
   }
@@ -19,12 +26,12 @@ const getUser = (req, res) => {
   const user = service.getById(id);
 
   if (!user) {
-    res.sendStatus(404);
+    res.sendStatus(NOT_FOUND);
 
     return;
   }
 
-  res.statusCode = 200;
+  res.statusCode = OK;
   res.send(user);
 };
 
@@ -32,7 +39,7 @@ const postUser = (req, res) => {
   const { name } = req.body;
 
   if (!name) {
-    res.sendStatus(400);
+    res.sendStatus(BAD_REQUEST);
 
     return;
   }
@@ -43,7 +50,7 @@ const postUser = (req, res) => {
   };
 
   service.add(newUser);
-  res.statusCode = 201;
+  res.statusCode = CREATED;
   res.send(newUser);
 };
 
@@ -52,13 +59,13 @@ const deleteUser = (req, res) => {
   const user = service.getById(id);
 
   if (!user) {
-    res.sendStatus(404);
+    res.sendStatus(NOT_FOUND);
 
     return;
   }
 
   service.remove(id);
-  res.sendStatus(204);
+  res.sendStatus(NO_CONTENT);
 };
 
 const updateUser = (req, res) => {
@@ -66,7 +73,7 @@ const updateUser = (req, res) => {
   const { name } = req.body;
 
   if (!name || !id) {
-    res.sendStatus(400);
+    res.sendStatus(BAD_REQUEST);
 
     return;
   }
@@ -74,7 +81,7 @@ const updateUser = (req, res) => {
   const updatedUser = service.update(id, name);
 
   if (!updatedUser) {
-    res.sendStatus(404);
+    res.sendStatus(NOT_FOUND);
 
     return;
   }
