@@ -9,27 +9,11 @@ const getAll = ({
   from,
   to,
 }) => {
-  let currentExpenses = expenses;
-
-  if (userId) {
-    currentExpenses = currentExpenses
-      .filter(exp => exp.userId === +userId);
-  }
-
-  if (categories) {
-    currentExpenses = currentExpenses
-      .filter(exp => categories.includes(exp.category));
-  }
-
-  if (from) {
-    currentExpenses = currentExpenses
-      .filter(exp => exp.spentAt >= from);
-  }
-
-  if (to) {
-    currentExpenses = currentExpenses
-      .filter(exp => exp.spentAt <= to);
-  }
+  const currentExpenses = expenses
+    .filter(exp => (userId ? exp.userId === +userId : true)
+      && (categories ? categories.includes(exp.category) : true)
+      && (from ? new Date(exp.spentAt) >= new Date(from) : true)
+      && (to ? new Date(exp.spentAt) <= new Date(to) : true));
 
   return currentExpenses;
 };
