@@ -8,7 +8,7 @@ const getAllUsers = (req, res) => {
 };
 
 const getUser = (req, res) => {
-  const id = +req.params.id;
+  const id = Number(req.params.id);
 
   if (!id) {
     res.sendStatus(400);
@@ -38,7 +38,7 @@ const postUser = (req, res) => {
   }
 
   const newUser = {
-    id: +new Date(),
+    id: Number(new Date()),
     name,
   };
 
@@ -48,7 +48,7 @@ const postUser = (req, res) => {
 };
 
 const deleteUser = (req, res) => {
-  const id = +req.params.id;
+  const id = Number(req.params.id);
   const user = service.getById(id);
 
   if (!user) {
@@ -62,7 +62,7 @@ const deleteUser = (req, res) => {
 };
 
 const updateUser = (req, res) => {
-  const id = +req.params.id;
+  const id = Number(req.params.id);
   const { name } = req.body;
 
   if (!name || !id) {

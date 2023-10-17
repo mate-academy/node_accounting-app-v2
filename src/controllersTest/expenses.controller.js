@@ -8,20 +8,18 @@ const getExpenses = (req, res) => {
     userId,
     from,
     to,
+    categories,
   } = req.query;
-
-  const normalizedUrl = new URL('http://localhost:3000/' + req.url);
-  const categories = normalizedUrl.searchParams.getAll('categories');
 
   let expenses = service.getAll();
 
   if (userId) {
     expenses = expenses.filter(
-      expense => expense.userId === +userId
+      expense => expense.userId === Number(userId)
     );
   }
 
-  if (categories.length) {
+  if (categories) {
     expenses = expenses.filter(
       expense => categories.includes(expense.category)
     );
@@ -53,14 +51,14 @@ const postExpense = (req, res) => {
     note,
   } = req.body;
 
-  if (!userService.getById(+userId)) {
+  if (!userService.getById(Number(userId))) {
     res.sendStatus(400);
 
     return;
   }
 
   const newExpense = {
-    id: +new Date(),
+    id: Number(new Date()),
     userId,
     spentAt,
     title,
@@ -75,14 +73,15 @@ const postExpense = (req, res) => {
 };
 
 const getOneExpense = (req, res) => {
-  const id = +req.params.id;
-  const expense = service.getById(id);
+  const id = Number(req.params.id);
 
   if (!id) {
     res.sendStatus(400);
 
     return;
   }
+
+  const expense = service.getById(id);
 
   if (!expense) {
     res.sendStatus(404);
@@ -95,7 +94,7 @@ const getOneExpense = (req, res) => {
 };
 
 const deleteExpense = (req, res) => {
-  const id = +req.params.id;
+  const id = Number(req.params.id);
   const expense = service.getById(id);
 
   if (!expense) {
@@ -109,7 +108,7 @@ const deleteExpense = (req, res) => {
 };
 
 const updateExpense = (req, res) => {
-  const id = +req.params.id;
+  const id = Number(req.params.id);
 
   if (!id || !req.body) {
     res.sendStatus(400);

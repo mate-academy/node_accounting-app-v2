@@ -1,8 +1,8 @@
 'use strict';
 
 const express = require('express');
-const { usersRouter } = require('./routes/users.routes');
-const { expensesRouter } = require('./routes/expenses.routes');
+const { usersRouter } = require('./routesTest/users.routes');
+const { expensesRouter } = require('./routesTest/expenses.routes');
 const { clear: clearExpenses } = require('./services/expenses.services');
 const { clear: clearUsers } = require('./services/users.services');
 
