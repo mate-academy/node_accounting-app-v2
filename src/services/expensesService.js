@@ -11,28 +11,32 @@ function resetExpenses() {
 
 function getFilteredExpenses({
   userId: queryUserId,
-  categories: queryCategories,
+  categories: queryCategories = [],
   from: queryFrom,
   to: queryTo,
 }) {
   let filteredExpenses = expenses;
 
-  if (queryUserId) {
-    filteredExpenses = expenses.filter(({ userId }) => userId === queryUserId);
-  }
+  if (queryUserId || queryCategories.length || queryFrom || queryTo) {
+    filteredExpenses = expenses.filter(({ userId, category, spentAt }) => {
+      if (queryUserId && queryUserId !== userId) {
+        return false;
+      }
 
-  if (queryCategories) {
-    filteredExpenses = expenses.filter(({ category }) => (
-      queryCategories.includes(category)
-    ));
-  }
+      if (queryCategories.length && !queryCategories.includes(category)) {
+        return false;
+      }
 
-  if (queryFrom) {
-    filteredExpenses = expenses.filter(({ spentAt }) => spentAt >= queryFrom);
-  }
+      if (queryFrom && spentAt < queryFrom) {
+        return false;
+      }
 
-  if (queryTo) {
-    filteredExpenses = expenses.filter(({ spentAt }) => spentAt <= queryTo);
+      if (queryTo && spentAt > queryTo) {
+        return false;
+      }
+
+      return true;
+    });
   }
 
   return filteredExpenses;
