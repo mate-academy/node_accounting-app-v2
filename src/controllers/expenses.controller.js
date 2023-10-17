@@ -3,6 +3,7 @@
 const expensesService = require('../services/expenses.services');
 const userService = require('../services/users.services');
 const { expensesFilter } = require('../utils/expensesFilter');
+const idGenerator = require('../utils/idGenerator');
 
 const getAll = (req, res) => {
   const {
@@ -44,7 +45,7 @@ const post = (req, res) => {
   }
 
   const newExpense = {
-    id: Date.now(),
+    id: idGenerator(expensesService.getAll()),
     userId,
     ...rest,
   };
@@ -60,6 +61,15 @@ const update = (req, res) => {
 
   if (!expense) {
     res.sendStatus(404);
+
+    return;
+  }
+
+  const hasAllValues = Object.values(req.body)
+    .every(value => value !== undefined);
+
+  if (!hasAllValues) {
+    res.sendStatus(400);
 
     return;
   }

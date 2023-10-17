@@ -1,6 +1,7 @@
 'use strict';
 
 const userService = require('../services/users.services');
+const idGenerator = require('../utils/idGenerator');
 
 const getAll = (req, res) => {
   res.send(userService.getAll());
@@ -30,7 +31,7 @@ const add = (req, res) => {
   }
 
   const user = {
-    id: +new Date(),
+    id: idGenerator(userService.getAll()),
     name,
   };
 
