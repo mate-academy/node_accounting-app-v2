@@ -6,7 +6,7 @@ const {
   NO_CONTENT,
   BAD_REQUEST,
   NOT_FOUND,
-} = require('../../constants/statusCodes');
+} = require('../constants/statusCodes');
 const service = require('../services/users.services');
 
 const getAllUsers = (req, res) => {
