@@ -1,6 +1,6 @@
 'use strict';
 
-const { idGenerator } = require('./idGenerator');
+const { idGenerator } = require('../utils/idGenerator');
 
 let expenses = [];
 
@@ -47,10 +47,15 @@ const remove = (id) => {
   return true;
 };
 
+const removeAll = () => {
+  expenses = [];
+};
+
 module.exports = {
   getAll,
   getById,
   add,
   update,
   remove,
+  removeAll,
 };

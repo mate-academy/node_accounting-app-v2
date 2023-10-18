@@ -2,7 +2,7 @@
 
 const filterByUserId = (expenses, userId) => {
   if (userId) {
-    return expenses.filter(item => item.userId === +userId);
+    return expenses.filter(item => item.userId === Number(userId));
   }
 
   return expenses;

@@ -5,7 +5,7 @@ const expensesController = require('../controllers/expenses.controller');
 
 const router = express.Router();
 
-router.get('/', expensesController.get);
+router.get('/', expensesController.getAll);
 router.get('/:id', expensesController.getOne);
 
 router.post('/', expensesController.add);

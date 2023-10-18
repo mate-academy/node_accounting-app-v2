@@ -1,10 +1,10 @@
 'use strict';
 
-const { idGenerator } = require('./idGenerator');
+const { idGenerator } = require('../utils/idGenerator');
 
 let users = [];
 
-const isUserExist = (id) => {
+const getIsUserExist = (id) => {
   return users.some(user => user.id === id);
 };
 
@@ -40,9 +40,9 @@ const update = (id, nameToUpdate) => {
 };
 
 const remove = (id) => {
-  const isUserExists = users.some(user => user.id === id);
+  const getIsUserExists = users.some(user => user.id === id);
 
-  if (!isUserExists) {
+  if (!getIsUserExists) {
     return false;
   }
 
@@ -51,11 +51,16 @@ const remove = (id) => {
   return true;
 };
 
+const removeAll = () => {
+  users = [];
+};
+
 module.exports = {
-  isUserExist,
+  getIsUserExist,
   getAll,
   getById,
   add,
   update,
   remove,
+  removeAll,
 };

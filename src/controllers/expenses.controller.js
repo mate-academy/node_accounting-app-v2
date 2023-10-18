@@ -1,8 +1,9 @@
 'use strict';
 
 const expensesService = require('../services/expenses.service');
-const { filterExpensesByQuery } = require('../services/filterExpensesByQuery');
-const { isUserExist } = require('../services/users.service');
+const { filterExpensesByQuery } = require('../helpers/filterExpensesByQuery');
+const { getIsUserExist } = require('../services/users.service');
+const responseCodes = require('../constants/responseCodes');
 
 const REQUIRED_KEYS_TO_CREATE
   = ['userId', 'spentAt', 'title', 'amount', 'category'];
@@ -10,7 +11,7 @@ const REQUIRED_KEYS_TO_CREATE
 const REQUIRED_KEYS_TO_UPDATE
   = ['spentAt', 'title', 'amount', 'category', 'note'];
 
-const get = (req, res) => {
+const getAll = (req, res) => {
   let expenses = expensesService.getAll();
 
   if (req.query && expenses.length) {
@@ -26,7 +27,7 @@ const getOne = (req, res) => {
   const expense = expensesService.getById(+id);
 
   if (!expense) {
-    res.sendStatus(404);
+    res.sendStatus(responseCodes.NOT_FOUND);
 
     return;
   }
@@ -37,27 +38,26 @@ const getOne = (req, res) => {
 const add = (req, res) => {
   const expenses = req.body;
 
-  const isObjectValid = (object, keys) => {
-    return keys.every(key => Boolean(object[key]));
-  };
+  const isObjectValid = REQUIRED_KEYS_TO_CREATE
+    .every(key => Boolean(expenses[key]));
 
-  if (!isObjectValid(expenses, REQUIRED_KEYS_TO_CREATE)) {
-    res.sendStatus(400);
+  if (!isObjectValid) {
+    res.sendStatus(responseCodes.BAD_REQUEST);
 
     return;
   }
 
-  const isUser = isUserExist(expenses.userId);
+  const isUser = getIsUserExist(expenses.userId);
 
   if (!isUser) {
-    res.sendStatus(400);
+    res.sendStatus(responseCodes.BAD_REQUEST);
 
     return;
   }
 
   const newExpense = expensesService.add(expenses);
 
-  res.statusCode = 201;
+  res.statusCode = responseCodes.CREATED;
   res.send(newExpense);
 };
 
@@ -65,8 +65,8 @@ const update = (req, res) => {
   const { id } = req.params;
   const expenses = req.body;
 
-  if (!req.body) {
-    res.sendStatus(400);
+  if (!expenses) {
+    res.sendStatus(responseCodes.BAD_REQUEST);
 
     return;
   }
@@ -75,7 +75,7 @@ const update = (req, res) => {
     .every(key => REQUIRED_KEYS_TO_UPDATE.includes(key));
 
   if (!isDataValid) {
-    res.sendStatus(400);
+    res.sendStatus(responseCodes.BAD_REQUEST);
 
     return;
   }
@@ -83,12 +83,12 @@ const update = (req, res) => {
   const updatedExpense = expensesService.update(+id, expenses);
 
   if (!updatedExpense) {
-    res.sendStatus(404);
+    res.sendStatus(responseCodes.NOT_FOUND);
 
     return;
   }
 
-  res.statusCode = 200;
+  res.statusCode = responseCodes.SUCCESS;
   res.send(updatedExpense);
 };
 
@@ -98,7 +98,7 @@ const remove = (req, res) => {
   const isExpenseDeleted = expensesService.remove(+id);
 
   if (!isExpenseDeleted) {
-    res.sendStatus(404);
+    res.sendStatus(responseCodes.NOT_FOUND);
 
     return;
   }
@@ -107,7 +107,7 @@ const remove = (req, res) => {
 };
 
 module.exports = {
-  get,
+  getAll,
   getOne,
   add,
   update,
