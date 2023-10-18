@@ -11,11 +11,12 @@ const getAllExpenses = (req, res) => {
     userId,
     from,
     to,
+    categories,
   } = req.query;
 
-  const normalizedUrl = new URL('http://localhost:3000/' + req.url);
+  // const normalizedUrl = new URL('http://localhost:3000/' + req.url);
 
-  const categories = normalizedUrl.searchParams.getAll('categories');
+  // const categories = normalizedUrl.searchParams.getAll('categories');
 
   let expenses = service.getAll();
 
@@ -33,7 +34,7 @@ const getAllExpenses = (req, res) => {
       new Date(expense.spentAt).valueOf() <= new Date(to).valueOf());
   }
 
-  if (categories.length) {
+  if (categories) {
     expenses = expenses.filter(
       expense => categories.includes(expense.category)
     );
