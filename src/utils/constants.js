@@ -1,12 +1,13 @@
 'use strict';
 
-const ERRORS = {
+const STATUS_MESSAGES = {
   BAD_REQUEST: 400,
   NOT_FOUND: 404,
+  OPERATION_SUCCESSFUL: 200,
   NEW_RESOURCE_CREATED: 201,
-  NO_MESSAGE_BODY: 204,
+  ITEM_DELETED: 204,
 };
 
 module.exports = {
-  ERRORS,
+  STATUS_MESSAGES,
 };

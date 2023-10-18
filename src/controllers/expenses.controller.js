@@ -1,8 +1,8 @@
 'use strict';
 
-const { ERRORS } = require('../utils/constants');
-const expensesService = require('../services/expenses.service');
+const { STATUS_MESSAGES } = require('../utils/constants');
 const usersService = require('../services/users.service');
+const expensesService = require('../services/expenses.service');
 
 const getAll = (req, res) => {
   const {
@@ -12,9 +12,7 @@ const getAll = (req, res) => {
   } = req.query;
 
   const normalizedURL = new URL('http://localhost:3000/' + req.url);
-
   const categories = normalizedURL.searchParams.getAll('categories');
-
   let expenses = expensesService.getAll();
 
   if (userId) {
@@ -33,20 +31,28 @@ const getAll = (req, res) => {
         && Number(new Date(expense.spentAt)) <= Number(new Date(to)));
   }
 
+  res.statusCode = STATUS_MESSAGES.OPERATION_SUCCESSFUL;
   res.send(expenses);
 };
 
 const getOne = (req, res) => {
   const id = Number(req.params.id);
 
-  const expense = expensesService.getById(id);
-
-  if (!expense) {
-    res.sendStatus(ERRORS.NOT_FOUND);
+  if (!id) {
+    res.sendStatus(STATUS_MESSAGES.BAD_REQUEST);
 
     return;
   }
 
+  const expense = expensesService.getById(id);
+
+  if (!expense) {
+    res.sendStatus(STATUS_MESSAGES.NOT_FOUND);
+
+    return;
+  }
+
+  res.statusCode = STATUS_MESSAGES.OPERATION_SUCCESSFUL;
   res.send(expense);
 };
 
@@ -63,7 +69,7 @@ const create = (req, res) => {
   const user = usersService.getById(Number(userId));
 
   if (!user) {
-    res.sendStatus(ERRORS.BAD_REQUEST);
+    res.sendStatus(STATUS_MESSAGES.BAD_REQUEST);
 
     return;
   }
@@ -80,41 +86,53 @@ const create = (req, res) => {
 
   const expense = expensesService.add(newExpense);
 
-  res.statusCode = ERRORS.NEW_RESOURCE_CREATED;
-
+  res.statusCode = STATUS_MESSAGES.NEW_RESOURCE_CREATED;
   res.send(expense);
 };
 
 const update = (req, res) => {
   const id = Number(req.params.id);
 
+  if (!id || !req.body) {
+    res.sendStatus(STATUS_MESSAGES.BAD_REQUEST);
+
+    return;
+  }
+
   const expense = expensesService.getById(id);
 
   if (!expense) {
-    res.sendStatus(ERRORS.NOT_FOUND);
+    res.sendStatus(STATUS_MESSAGES.NOT_FOUND);
 
     return;
   }
 
   const updatedExpense = expensesService.updateById(id, req.body);
 
+  res.statusCode = STATUS_MESSAGES.OPERATION_SUCCESSFUL;
   res.send(updatedExpense);
 };
 
 const remove = (req, res) => {
   const id = Number(req.params.id);
 
+  if (!id) {
+    res.sendStatus(STATUS_MESSAGES.BAD_REQUEST);
+
+    return;
+  }
+
   const expense = expensesService.getById(id);
 
   if (!expense) {
-    res.sendStatus(ERRORS.NOT_FOUND);
+    res.sendStatus(STATUS_MESSAGES.NOT_FOUND);
 
     return;
   }
 
   expensesService.remove(id);
 
-  res.sendStatus(ERRORS.NO_MESSAGE_BODY);
+  res.sendStatus(STATUS_MESSAGES.ITEM_DELETED);
 };
 
 module.exports = {
