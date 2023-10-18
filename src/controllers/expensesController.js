@@ -22,17 +22,15 @@ const getExpenses = (req, res) => {
   }
 
   if (from) {
-    const date = new Date(from);
-
-    expenses = expenses
-      .filter(expense => new Date(expense.spentAt) > date);
+    expenses = expenses.filter(
+      expense => new Date(expense.spentAt) > new Date(from)
+    );
   }
 
   if (to) {
-    const date = new Date(to);
-
-    expenses = expenses
-      .filter(expense => new Date(expense.spentAt) < date);
+    expenses = expenses.filter(
+      expense => new Date(expense.spentAt) < new Date(to)
+    );
   }
 
   if (categories) {
