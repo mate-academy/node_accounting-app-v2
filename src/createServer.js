@@ -1,12 +1,18 @@
 'use strict';
 
 const express = require('express');
+const {
+  addExpense,
+  deleteExpense,
+  updateById,
+} = require('./servises/expresesServise');
 
 let users = [];
-// const expenses = [];
+let expenses = [];
 
 function createServer() {
   users = [];
+  expenses = [];
 
   const app = express();
 
@@ -74,12 +80,9 @@ function createServer() {
     res.status(204).end();
   });
 
-  app.patch('users/:id', express.json(), (req, res) => {
+  app.patch('/users/:id', express.json(), (req, res) => {
     const { name } = req.body;
     const { id } = req.params;
-
-    // eslint-disable-next-line no-console
-    console.log('hello ');
 
     const user = users.find(oneUser => oneUser.id === +id);
 
@@ -97,11 +100,70 @@ function createServer() {
 
     Object.assign(user, { name });
 
-    // userForUpdate.name = name;
     res.statusCode = 200;
     res.send(user);
+  });
 
-    // res.status(200).json(userForUpdate);
+  app.get('/expenses', (req, res) => {
+    res.json(expenses);
+  });
+
+  app.post('/expenses', express.json(), (req, res) => {
+    const { userId, title, amount, category, note, spentAt } = req.body;
+
+    const userExists = users.find(user => user.id === +userId);
+
+    if (
+      typeof userId !== 'number'
+      || typeof spentAt !== 'string'
+      || typeof title !== 'string'
+      || typeof amount !== 'number'
+      || typeof category !== 'string'
+      || typeof note !== 'string'
+      || !userExists
+    ) {
+      res.status(400).end();
+    } else {
+      res.status(201).json(addExpense(req.body));
+    }
+  });
+
+  app.delete('/expenses/:id', (req, res) => {
+    const { id } = req.params;
+
+    const filteredExpenses = deleteExpense(id);
+
+    if (!filteredExpenses) {
+      res.status(404).end();
+
+      return;
+    }
+
+    expenses.length = 0;
+    expenses.push(...filteredExpenses);
+
+    res.status(204).end();
+  });
+
+  app.patch('/expenses/:id', express.json(), (req, res) => {
+    const { id } = req.params;
+
+    if (Number.isNaN(+id)) {
+      res.status(400).end();
+
+      return;
+    }
+
+    const expense = updateById({
+      ...req.body,
+      id: +id,
+    });
+
+    if (!expense) {
+      res.status(404).end();
+    } else {
+      res.status(200).json(expense);
+    }
   });
 
   return app;
