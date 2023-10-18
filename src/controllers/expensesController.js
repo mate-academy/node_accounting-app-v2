@@ -65,9 +65,7 @@ const createExpense = (req, res) => {
     note,
   } = req.body;
 
-  const user = usersService.getUser(userId);
-
-  if (!user) {
+  if (!usersService.getUser(userId)) {
     res.sendStatus(400);
 
     return;
