@@ -70,10 +70,18 @@ const create = (req, res) => {
     note,
   } = req.body;
 
+  if (!title || !userId || !category || !note || !amount || !spentAt) {
+    res.sendStatus(400);
+    res.send('Fill all fields');
+
+    return;
+  }
+
   const foundUser = usersServices.getById(userId);
 
-  if (!foundUser || !userId || !title) {
+  if (!foundUser) {
     res.sendStatus(400);
+    res.send('User is not found');
 
     return;
   }
@@ -108,23 +116,19 @@ const remove = (req, res) => {
 const update = (req, res) => {
   const expenseId = +req.params.id;
 
-  if (!expenseId || !req.body) {
-    res.sendStatus(400);
-
-    return;
-  }
-
   const foundExpense = expensesServices.getById(expenseId);
 
   if (!foundExpense) {
     res.sendStatus(404);
+    res.send('Expense is not found');
 
     return;
   }
 
   const updatedExpense = expensesServices.update(expenseId, req.body);
 
-  res.send(updatedExpense);
+  res.sendStatus(200);
+  res.send((updatedExpense));
 };
 
 module.exports = {

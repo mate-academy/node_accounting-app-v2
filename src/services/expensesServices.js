@@ -10,13 +10,20 @@ const getById = (expenseId) => {
   return expenses.find(expense => +expense.id === +expenseId) || null;
 };
 
-const create = (expense) => {
+const create = ({ userId, spentAt, title, amount, category, note }) => {
   const newExpense = {
-    id: undefined,
-    ...expense,
+    id: +new Date(),
+    userId,
+    spentAt,
+    title,
+    amount,
+    category,
+    note,
   };
 
   expenses.push(newExpense);
+
+  return newExpense;
 };
 
 const remove = (expenseId) => {

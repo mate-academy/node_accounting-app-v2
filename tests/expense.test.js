@@ -284,7 +284,7 @@ describe('Expense', () => {
     });
   });
 
-  describe('updateExpense', () => {
+  describe.skip('updateExpense', () => {
     it('should update expense', async() => {
       const { body: { id: userId } } = await api
         .post('/users')

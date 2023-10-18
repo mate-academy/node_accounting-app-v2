@@ -71,7 +71,7 @@ const update = (req, res) => {
     return;
   }
 
-  const updatedUser = usersServices.updateUser(userId, name);
+  const updatedUser = usersServices.update(userId, name);
 
   if (!updatedUser) {
     res.sendStatus(404);
