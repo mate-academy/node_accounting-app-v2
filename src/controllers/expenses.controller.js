@@ -14,10 +14,6 @@ const getAllExpenses = (req, res) => {
     categories,
   } = req.query;
 
-  // const normalizedUrl = new URL('http://localhost:3000/' + req.url);
-
-  // const categories = normalizedUrl.searchParams.getAll('categories');
-
   let expenses = service.getAll();
 
   if (userId) {
