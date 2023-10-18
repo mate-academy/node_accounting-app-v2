@@ -32,10 +32,15 @@ const updateById = (id, body) => {
   return expense;
 };
 
+const clear = () => {
+  expenses = [];
+};
+
 module.exports = {
   getAll,
   add,
   getById,
   remove,
   updateById,
+  clear,
 };

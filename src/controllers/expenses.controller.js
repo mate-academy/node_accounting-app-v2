@@ -7,18 +7,23 @@ const {
   NO_CONTENT_SUCCESS,
 } = require('../../constants/statusCodes');
 const expensesService = require('./../services/expenses.service');
-const userService = require('./../services/users.service');
+const usersService = require('./../services/users.service');
 
 const getAll = (req, res) => {
   const {
     userId,
     from,
     to,
+    categories,
   } = req.query;
 
-  const normalizedURL = new URL('http://localhost:3000/' + req.url);
+  let categoriesArray;
 
-  const categories = normalizedURL.searchParams.getAll('categories');
+  if (categories) {
+    categoriesArray = Array.isArray(categories)
+      ? [...categories]
+      : [categories];
+  }
 
   let expenses = expensesService.getAll();
 
@@ -26,16 +31,21 @@ const getAll = (req, res) => {
     expenses = expenses.filter(expense => expense.userId === Number(userId));
   }
 
-  if (categories.length) {
+  if (categoriesArray && categoriesArray.length) {
     expenses = expenses
-      .filter(expense => categories.includes(expense.category));
+      .filter(expense => categoriesArray.includes(expense.category));
   }
 
-  if (from && to) {
+  if (from) {
     expenses = expenses
       .filter(expense =>
-        Number(new Date(expense.spentAt)) >= Number(new Date(from))
-        && Number(new Date(expense.spentAt)) <= Number(new Date(to)));
+        Number(new Date(expense.spentAt)) >= Number(new Date(from)));
+  }
+
+  if (to) {
+    expenses = expenses
+      .filter(expense =>
+        Number(new Date(expense.spentAt)) <= Number(new Date(to)));
   }
 
   res.send(expenses);
@@ -51,7 +61,7 @@ const create = (req, res) => {
     note,
   } = req.body;
 
-  const user = userService.getById(Number(userId));
+  const user = usersService.getById(Number(userId));
 
   if (!user) {
     res.sendStatus(BAD_REQUEST);
