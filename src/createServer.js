@@ -4,7 +4,7 @@ const express = require('express');
 const {
   addExpense,
   deleteExpense,
-  updateById,
+  updateById, getExpenseById,
 } = require('./servises/expresesServise');
 
 let users = [];
@@ -105,7 +105,49 @@ function createServer() {
   });
 
   app.get('/expenses', (req, res) => {
-    res.json(expenses);
+    const { userId, categories, from, to } = req.query;
+    const isDateInRange = (date, startDate, endDate) => {
+      return (!startDate || date >= startDate) && (!endDate || date <= endDate);
+    };
+
+    const getAll = () => {
+      const startDate = from ? new Date(from) : null;
+      const endDate = to ? new Date(to) : null;
+
+      const filteredExpenses = expenses.filter(expense => {
+        const expenseUserId = expense.userId;
+        const expenseCategory = expense.category;
+        const expenseDate = new Date(expense.spentAt);
+
+        return (!userId || userId === expenseUserId)
+          && (!categories || categories.includes(expenseCategory))
+          && isDateInRange(expenseDate, startDate, endDate);
+      });
+
+      return filteredExpenses;
+    };
+
+    res.status(200).json(getAll());
+  });
+
+  app.get('/expenses/:id', (req, res) => {
+    const { id } = req.params;
+
+    if (Number.isNaN(+id)) {
+      res.status(400).end();
+
+      return;
+    }
+
+    const expense = getExpenseById(+id);
+
+    if (!expense) {
+      res.status(404).end();
+
+      return;
+    }
+
+    res.status(200).json(expense);
   });
 
   app.post('/expenses', express.json(), (req, res) => {
