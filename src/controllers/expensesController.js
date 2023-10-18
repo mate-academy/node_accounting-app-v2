@@ -88,9 +88,7 @@ const createExpense = (req, res) => {
 const deleteExpense = (req, res) => {
   const { id } = req.params;
 
-  const expense = expensesService.getExpense(+id);
-
-  if (!expense) {
+  if (!expensesService.getExpense(+id)) {
     res.sendStatus(404);
 
     return;

@@ -32,16 +32,13 @@ const createUser = (req, res) => {
     return;
   }
 
-  const user = usersService.createUser(name);
-
-  res.status(201).send(user);
+  res.status(201).send(usersService.createUser(name));
 };
 
 const deleteUser = (req, res) => {
   const { id } = req.params;
-  const user = usersService.getUser(+id);
 
-  if (!user) {
+  if (!usersService.getUser(+id)) {
     res.sendStatus(404);
 
     return;
@@ -54,9 +51,8 @@ const deleteUser = (req, res) => {
 const updateUser = (req, res) => {
   const { id } = req.params;
   const { name } = req.body;
-  const user = usersService.getUser(+id);
 
-  if (!user) {
+  if (!usersService.getUser(+id)) {
     res.sendStatus(404);
 
     return;
