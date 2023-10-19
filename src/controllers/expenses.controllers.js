@@ -2,6 +2,7 @@
 
 const expensesService = require('../services/expenses.service');
 const usersService = require('../services/users.service');
+const variable = require('../variables/constants');
 
 const getAll = (req, res) => {
   res.send(expensesService.getExpenses(req.query));
@@ -12,7 +13,7 @@ const getExpense = (req, res) => {
   const expense = expensesService.getById(id);
 
   if (!expense) {
-    res.sendStatus(404);
+    res.sendStatus(variable.NOT_FOUND);
 
     return;
   }
@@ -31,13 +32,13 @@ const addExpense = (req, res) => {
   } = req.body;
 
   if (!usersService.getById(userId)) {
-    res.sendStatus(400);
+    res.sendStatus(variable.BAD_REQUEST);
 
     return;
   }
 
   const expense = {
-    id: +new Date(),
+    id: Number(new Date()),
     userId,
     spentAt,
     title,
@@ -48,22 +49,22 @@ const addExpense = (req, res) => {
 
   expensesService.add(expense);
 
-  res.statusCode = 201;
+  res.statusCode = variable.CREATED;
   res.send(expense);
 };
 
 const deleteExpense = (req, res) => {
   const { id } = req.params;
-  const isExpense = expensesService.getById(+id);
+  const expense = expensesService.getById(id);
 
-  if (!isExpense) {
-    res.sendStatus(404);
+  if (!expense) {
+    res.sendStatus(variable.NOT_FOUND);
 
     return;
   }
 
-  expensesService.remove(+id);
-  res.sendStatus(204);
+  expensesService.remove(id);
+  res.sendStatus(variable.DELETED);
 };
 
 const updateExpense = (req, res) => {
@@ -72,13 +73,13 @@ const updateExpense = (req, res) => {
   const expense = expensesService.getById(id);
 
   if (!expense) {
-    res.sendStatus(404);
+    res.sendStatus(variable.NOT_FOUND);
 
     return;
   }
 
   expensesService.update(id, toUpdate);
-  res.statusCode = 200;
+  res.statusCode = variable.SUCCESSFUL;
 
   res.send(expense);
 };

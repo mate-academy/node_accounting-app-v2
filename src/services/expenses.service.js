@@ -8,8 +8,12 @@ const getExpenses = ({ userId, categories, from, to }) => {
   }
 
   if (categories) {
+    const categoriesCheck = Array.isArray(categories)
+      ? categories
+      : [categories];
+
     expenses = expenses
-      .filter(expense => categories.includes(expense.category));
+      .filter(expense => categoriesCheck.includes(expense.category));
   }
 
   if (from) {
@@ -23,14 +27,14 @@ const getExpenses = ({ userId, categories, from, to }) => {
   return expenses;
 };
 
-const getById = id => expenses.find(expense => +expense.id === +id);
+const getById = id => expenses.find(expense => expense.id === Number(id));
 
 const add = (expense) => {
   expenses.push(expense);
 };
 
 const update = (id, toupdate) => {
-  const expense = getById(+id);
+  const expense = getById(id);
 
   if (!expense) {
     return;
@@ -42,7 +46,7 @@ const update = (id, toupdate) => {
 };
 
 const remove = (id) => {
-  expenses = expenses.filter(person => person.id !== id);
+  expenses = expenses.filter(person => person.id !== Number(id));
 };
 
 const clear = () => {

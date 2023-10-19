@@ -5,17 +5,17 @@ let users = [];
 const getAll = () => users;
 
 const getById = (id) => {
-  return users.find(user => user.id === id) || null;
+  return users.find(user => user.id === Number(id)) || null;
 };
 
 const add = (user) => users.push(user);
 
 const remove = id => {
-  users = users.filter(person => person.id !== id);
+  users = users.filter(person => person.id !== Number(id));
 };
 
 const update = (id, name) => {
-  const user = getById(+id);
+  const user = getById(id);
 
   if (!user) {
     return;
