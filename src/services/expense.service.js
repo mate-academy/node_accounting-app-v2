@@ -1,34 +1,6 @@
 'use strict';
 
-let expenses = [
-  // {
-  //   id: 1,
-  //   userId: 2,
-  //   spentAt: new Date().toString(),
-  //   title: 'TV',
-  //   amount: 2000,
-  //   category: 'RTV',
-  //   note: 'new TV',
-  // },
-  // {
-  //   id: 2,
-  //   userId: 3,
-  //   spentAt: new Date().toString(),
-  //   title: 'Bread',
-  //   amount: 5,
-  //   category: 'Food',
-  //   note: 'food',
-  // },
-  // {
-  //   id: 3,
-  //   userId: 1,
-  //   spentAt: new Date().toString(),
-  //   title: 'Shampoo',
-  //   amount: 25,
-  //   category: 'Chemistry',
-  //   note: 'chemistry',
-  // },
-];
+let expenses = [];
 
 const getAll = () => {
   return expenses;

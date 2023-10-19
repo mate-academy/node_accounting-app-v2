@@ -1,16 +1,6 @@
 'use strict';
 
-let users = [
-  // {
-  //   id: 1, name: 'Anna',
-  // },
-  // {
-  //   id: 2, name: 'Vanna',
-  // },
-  // {
-  //   id: 3, name: 'Hanna',
-  // },
-];
+let users = [];
 
 const getAll = () => {
   return users;
