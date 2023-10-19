@@ -5,7 +5,7 @@ const userService = require('../../users/services/user.service.js');
 
 const getAll = (req, res) => {
   res.send(expenseService.getAll(
-    +req.query.userId,
+    Number(req.query.userId),
     req.query.categories,
     req.query.from ? new Date(req.query.from) : undefined,
     req.query.to ? new Date(req.query.to) : undefined,
@@ -13,7 +13,7 @@ const getAll = (req, res) => {
 };
 
 const getById = (req, res) => {
-  const id = +req.params.id;
+  const id = Number(req.params.id);
 
   const expense = expenseService.getById(id);
 
@@ -31,13 +31,13 @@ const defineParamsType = (body) => {
     ...body,
     userId: body.userId === undefined
       ? undefined
-      : +body.userId,
+      : Number(body.userId),
     spentAt: body.spentAt === undefined
       ? undefined
       : new Date(body.spentAt),
     amount: body.amount === undefined
       ? undefined
-      : +body.amount,
+      : Number(body.amount),
   };
 };
 
@@ -72,7 +72,7 @@ const create = (req, res) => {
 };
 
 const update = (req, res) => {
-  const id = +req.params.id;
+  const id = Number(req.params.id);
   const {
     userId,
     spentAt,
@@ -116,7 +116,7 @@ const update = (req, res) => {
 };
 
 const remove = (req, res) => {
-  const id = +req.params.id;
+  const id = Number(req.params.id);
 
   if (!expenseService.getById(id)) {
     res.sendStatus(404);

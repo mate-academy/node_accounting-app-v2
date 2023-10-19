@@ -7,7 +7,7 @@ const get = (req, res) => {
 };
 
 const getOne = (req, res) => {
-  const id = +req.params.id;
+  const id = Number(req.params.id);
 
   const user = userService.getById(id);
 
@@ -39,7 +39,7 @@ const create = (req, res) => {
 };
 
 const update = (req, res) => {
-  const id = +req.params.id;
+  const id = Number(req.params.id);
   const { name } = req.body;
 
   const user = userService.getById(id);
@@ -60,7 +60,7 @@ const update = (req, res) => {
 };
 
 const remove = (req, res) => {
-  const id = +req.params.id;
+  const id = Number(req.params.id);
 
   if (!userService.getById(id)) {
     res.sendStatus(404);
