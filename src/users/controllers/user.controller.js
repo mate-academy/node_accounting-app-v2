@@ -2,7 +2,7 @@
 
 const userService = require('../services/user.service.js');
 
-const get = (req, res) => {
+const getAll = (req, res) => {
   res.send(userService.getAll());
 };
 
@@ -74,7 +74,7 @@ const remove = (req, res) => {
 };
 
 module.exports = {
-  get,
+  get: getAll,
   getOne,
   create,
   update,
