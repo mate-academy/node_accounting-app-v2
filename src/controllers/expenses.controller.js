@@ -14,8 +14,12 @@ const getExpenses = (req, res) => {
   }
 
   if (categories) {
+    const categoriesIsArray = Array.isArray(categories)
+      ? categories
+      : [categories];
+
     expenses = expenses.filter(expense =>
-      categories.includes(expense.category));
+      categoriesIsArray.includes(expense.category));
   }
 
   if (from) {
