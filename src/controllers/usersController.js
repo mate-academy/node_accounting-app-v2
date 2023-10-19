@@ -22,7 +22,9 @@ const post = async(req, res) => {
     return;
   }
 
-  res.status(CREATED).json(usersService.addUser(name));
+  const newUser = usersService.addUser(name);
+
+  res.status(CREATED).json(newUser);
 };
 
 const getById = async(req, res) => {
