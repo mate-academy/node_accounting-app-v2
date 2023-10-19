@@ -6,7 +6,7 @@ const getAll = (req, res) => {
   res.send(userService.getAll());
 };
 
-const getOne = (req, res) => {
+const getById = (req, res) => {
   const id = Number(req.params.id);
 
   const user = userService.getById(id);
@@ -75,7 +75,7 @@ const remove = (req, res) => {
 
 module.exports = {
   get: getAll,
-  getOne,
+  getOne: getById,
   create,
   update,
   remove,
