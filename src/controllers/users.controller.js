@@ -1,8 +1,9 @@
 'use strict';
 
 const service = require('../services/users.service');
+const statusCodes = require('../vars/statusCodes');
 
-const get = (req, res) => {
+const getAll = (req, res) => {
   res.send(service.getAll());
 };
 
@@ -10,7 +11,7 @@ const post = (req, res) => {
   const { name } = req.body;
 
   if (!name) {
-    res.sendStatus(400);
+    res.sendStatus(statusCodes.BAD_REQUEST);
 
     return;
   }
@@ -22,22 +23,22 @@ const post = (req, res) => {
 
   service.add(newUser);
 
-  res.statusCode = 201;
+  res.statusCode = statusCodes.CREATED;
 
   res.send(newUser);
 };
 
-const getUser = (req, res) => {
-  const searchedUser = service.getById(+req.params.id);
-
-  if (!searchedUser) {
-    res.sendStatus(404);
+const getById = (req, res) => {
+  if (!req.params.id) {
+    res.sendStatus(statusCodes.BAD_REQUEST);
 
     return;
   }
 
-  if (!req.params.id) {
-    res.sendStatus(400);
+  const searchedUser = service.getById(Number(req.params.id));
+
+  if (!searchedUser) {
+    res.sendStatus(statusCodes.NOT_FOUND);
 
     return;
   }
@@ -45,30 +46,30 @@ const getUser = (req, res) => {
   res.send(searchedUser);
 };
 
-const removeUser = (req, res) => {
-  const hasUser = service.getById(+req.params.id);
+const remove = (req, res) => {
+  const searchedUser = service.getById(Number(req.params.id));
 
-  if (!hasUser) {
-    res.sendStatus(404);
+  if (!searchedUser) {
+    res.sendStatus(statusCodes.NOT_FOUND);
 
     return;
   }
 
-  service.remove(+req.params.id);
-  res.sendStatus(204);
+  service.remove(Number(req.params.id));
+  res.sendStatus(statusCodes.DELETED);
 };
 
-const updateUser = (req, res) => {
+const update = (req, res) => {
   if (!req.body || !req.params.id) {
-    res.sendStatus(400);
+    res.sendStatus(statusCodes.BAD_REQUEST);
 
     return;
   }
 
-  const userToUpdate = service.update(+req.params.id, req.body.name);
+  const userToUpdate = service.update(Number(req.params.id), req.body.name);
 
   if (!userToUpdate) {
-    res.sendStatus(404);
+    res.sendStatus(statusCodes.NOT_FOUND);
 
     return;
   }
@@ -77,9 +78,9 @@ const updateUser = (req, res) => {
 };
 
 module.exports = {
-  get,
+  getAll,
   post,
-  getUser,
-  removeUser,
-  updateUser,
+  getById,
+  remove,
+  update,
 };

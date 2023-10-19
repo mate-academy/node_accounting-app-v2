@@ -9,15 +9,15 @@ const add = expense => {
 };
 
 const getById = id => (
-  expenses.find(expense => +expense.id === +id)
+  expenses.find(expense => Number(expense.id) === Number(id))
 );
 
 const remove = id => {
-  expenses = expenses.filter(expense => expense.id !== +id);
+  expenses = expenses.filter(expense => expense.id !== Number(id));
 };
 
 const update = (id, requestBody) => {
-  const expense = getById(+id);
+  const expense = getById(Number(id));
 
   if (!expense) {
     return;

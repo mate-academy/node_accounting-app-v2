@@ -5,13 +5,13 @@ const controller = require('../controllers/expenses.controller');
 
 const expensesRouter = express.Router();
 
-expensesRouter.get('/', controller.get);
+expensesRouter.get('/', controller.getAll);
 
 expensesRouter.post('/', controller.post);
 
-expensesRouter.get('/:id', controller.getExpense);
+expensesRouter.get('/:id', controller.getById);
 
-expensesRouter.delete('/:id', controller.removeExpense);
+expensesRouter.delete('/:id', controller.remove);
 
 expensesRouter.patch('/:id', controller.updateExpense);
 
