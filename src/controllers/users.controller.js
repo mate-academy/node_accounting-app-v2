@@ -1,5 +1,6 @@
 'use strict';
 
+const status = require('../utils/constants');
 const userService = require('../services/users.services');
 const idGenerator = require('../utils/idGenerator');
 
@@ -13,19 +14,19 @@ const getById = (req, res) => {
   const user = userService.getById(+id);
 
   if (!user) {
-    res.sendStatus(404);
+    res.sendStatus(status.NOT_FOUND);
 
     return;
   }
 
-  res.status(200).send(user);
+  res.status(status.OK).send(user);
 };
 
 const add = (req, res) => {
   const { name } = req.body;
 
   if (!name) {
-    res.sendStatus(400);
+    res.sendStatus(status.BAD_REQUEST);
 
     return;
   }
@@ -37,22 +38,23 @@ const add = (req, res) => {
 
   userService.add(user);
 
-  res.status(201).send(user);
+  res.status(status.CREATED).send(user);
 };
 
 const updateUser = (req, res) => {
   const { name } = req.body;
   const { id } = req.params;
-  const userToUpdate = userService.update(+id, name);
 
   if (!id) {
-    res.statusCode(400);
+    res.statusCode(status.BAD_REQUEST);
 
     return;
   }
 
+  const userToUpdate = userService.update(+id, name);
+
   if (!userToUpdate) {
-    res.sendStatus(404);
+    res.sendStatus(status.NOT_FOUND);
 
     return;
   }
@@ -66,14 +68,14 @@ const deleteById = (req, res) => {
   const user = userService.getById(+id);
 
   if (!user) {
-    res.sendStatus(404);
+    res.sendStatus(status.NOT_FOUND);
 
     return;
   }
 
   userService.remove(+id);
 
-  res.sendStatus(204);
+  res.sendStatus(status.NO_CONTENT);
 };
 
 module.exports = {

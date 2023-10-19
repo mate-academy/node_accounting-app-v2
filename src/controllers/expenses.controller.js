@@ -1,47 +1,45 @@
 'use strict';
 
+const status = require('../utils/constants');
 const expensesService = require('../services/expenses.services');
 const userService = require('../services/users.services');
 const { expensesFilter } = require('../utils/expensesFilter');
 const idGenerator = require('../utils/idGenerator');
 
-const getAll = (req, res) => {
-  const {
-    userId,
-    from,
-    to,
-    categories,
-  } = req.query;
+const REQUIRED_KEYS_TO_UPDATE
+  = ['spentAt', 'title', 'amount', 'category', 'note'];
 
-  const expenses = expensesFilter(userId, from, to, categories);
+const getAll = (req, res) => {
+  const expenses = expensesFilter(req.query);
 
   res.send(expenses);
 };
 
 const getById = (req, res) => {
   const { id } = req.params;
-  const searcedExpense = expensesService.getById(+id);
 
   if (!id) {
-    res.sendStatus(400);
+    res.sendStatus(status.BAD_REQUEST);
 
     return;
   }
+
+  const searcedExpense = expensesService.getById(+id);
 
   if (!searcedExpense) {
-    res.sendStatus(404);
+    res.sendStatus(status.NOT_FOUND);
 
     return;
   }
 
-  res.status(200).send(searcedExpense);
+  res.status(status.OK).send(searcedExpense);
 };
 
 const post = (req, res) => {
   const { userId, ...rest } = req.body;
 
   if (!userService.getById(userId)) {
-    return res.sendStatus(400);
+    return res.sendStatus(status.BAD_REQUEST);
   }
 
   const newExpense = {
@@ -52,7 +50,7 @@ const post = (req, res) => {
 
   expensesService.add(newExpense);
 
-  res.status(201).send(newExpense);
+  res.status(status.CREATED).send(newExpense);
 };
 
 const update = (req, res) => {
@@ -60,16 +58,16 @@ const update = (req, res) => {
   const expense = expensesService.getById(+id);
 
   if (!expense) {
-    res.sendStatus(404);
+    res.sendStatus(status.NOT_FOUND);
 
     return;
   }
 
-  const hasAllValues = Object.values(req.body)
-    .every(value => value !== undefined);
+  const isDataValid = Object.keys(req.body)
+    .every(key => REQUIRED_KEYS_TO_UPDATE.includes(key));
 
-  if (!hasAllValues) {
-    res.sendStatus(400);
+  if (!isDataValid) {
+    res.sendStatus(res.BAD_REQUEST);
 
     return;
   }
@@ -85,14 +83,14 @@ const deleteById = (req, res) => {
   const expense = expensesService.getById(+id);
 
   if (!expense) {
-    res.sendStatus(404);
+    res.sendStatus(status.NOT_FOUND);
 
     return;
   }
 
   expensesService.deleteById(+id);
 
-  res.sendStatus(204);
+  res.sendStatus(status.NO_CONTENT);
 };
 
 module.exports = {

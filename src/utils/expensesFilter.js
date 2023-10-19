@@ -16,20 +16,27 @@ function isDateBefore(dateToCheck, referenceDate) {
   return dateA < dateB;
 }
 
-const expensesFilter = (
+const expensesFilter = ({
   userId,
   from,
   to,
-  categories
-) => {
+  categories,
+}) => {
   let expenses = expensesService.getAll();
 
   if (userId) {
-    expenses = expenses.filter(expense => expense.userId === +userId);
+    expenses = expenses
+      .filter(expense => expense.userId === Number(userId));
   }
 
   if (categories) {
-    expenses = expenses.filter(({ category }) => categories.includes(category));
+    if (Array.isArray(categories)) {
+      expenses = expenses
+        .filter(({ category }) => categories.includes(category));
+    } else {
+      expenses = expenses
+        .filter(({ category }) => category === categories);
+    }
   }
 
   if (from) {
