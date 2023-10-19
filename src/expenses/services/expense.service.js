@@ -8,33 +8,35 @@ const clearState = () => {
   expenses = [];
 };
 
-const getAll = (userId, categories, from, to) => {
+const getAll = ({ userId, categories, from, to }) => {
   let newExpences = [...expenses];
-
-  // Object.assign(user, { name });
 
   if (userId) {
     newExpences = newExpences.filter(
-      expence => expence.userId === userId
+      expence => expence.userId === Number(userId)
     );
   }
 
   if (categories) {
+    const categoriesList = Array.isArray(categories)
+      ? categories
+      : [categories];
+
     newExpences = newExpences.filter(
-      expense => categories
+      expense => categoriesList
         .includes(expense.category)
     );
   }
 
   if (from) {
     newExpences = newExpences.filter(
-      expense => from <= expense.spentAt
+      expense => new Date(from) <= expense.spentAt
     );
   }
 
   if (to) {
     newExpences = newExpences.filter(
-      expense => to >= expense.spentAt
+      expense => new Date(to) >= expense.spentAt
     );
   }
 
@@ -45,21 +47,15 @@ const getById = (id) => {
   return expenses.find(expense => expense.id === id) || null;
 };
 
-const create = (
-  userId,
-  spentAt,
-  title,
-  amount,
-  category,
-  note,) => {
+const create = (body) => {
   const expense = {
     id: helper.getId(expenses),
-    userId,
-    spentAt,
-    title,
-    amount,
-    category,
-    note,
+    userId: Number(body.userId),
+    spentAt: body.spentAt ? new Date(body.spentAt) : undefined,
+    title: body.title,
+    amount: Number(body.amount),
+    category: body.category,
+    note: body.note,
   };
 
   expenses.push(expense);
@@ -67,32 +63,10 @@ const create = (
   return expense;
 };
 
-const update = (id, userId, spentAt, title, amount, category, note) => {
-  const expense = getById(+id);
+const update = (params) => {
+  const expense = getById(Number(params.id));
 
-  if (userId !== undefined) {
-    expense.userId = userId;
-  }
-
-  if (spentAt !== undefined) {
-    expense.spentAt = spentAt;
-  }
-
-  if (title !== undefined) {
-    expense.title = title;
-  }
-
-  if (amount !== undefined) {
-    expense.amount = amount;
-  }
-
-  if (category !== undefined) {
-    expense.category = category;
-  }
-
-  if (note !== undefined) {
-    expense.note = note;
-  }
+  Object.assign(expense, params);
 
   return expense;
 };

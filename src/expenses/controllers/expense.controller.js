@@ -5,12 +5,7 @@ const userService = require('../../users/services/user.service.js');
 const statusesConstants = require('../../statusesConstants.js');
 
 const getAll = (req, res) => {
-  res.send(expenseService.getAll(
-    Number(req.query.userId),
-    req.query.categories,
-    req.query.from ? new Date(req.query.from) : undefined,
-    req.query.to ? new Date(req.query.to) : undefined,
-  ));
+  res.send(expenseService.getAll(req.query));
 };
 
 const getById = (req, res) => {
@@ -27,44 +22,15 @@ const getById = (req, res) => {
   res.send(expense);
 };
 
-const defineParamsType = (body) => {
-  return {
-    ...body,
-    userId: body.userId === undefined
-      ? undefined
-      : Number(body.userId),
-    spentAt: body.spentAt === undefined
-      ? undefined
-      : new Date(body.spentAt),
-    amount: body.amount === undefined
-      ? undefined
-      : Number(body.amount),
-  };
-};
-
 const create = (req, res) => {
-  const {
-    userId,
-    spentAt,
-    title,
-    amount,
-    category,
-    note,
-  } = defineParamsType(req.body);
-
-  if (!userService.getById(userId)) {
+  if (!userService.getById(Number(req.body.userId))) {
     res.sendStatus(statusesConstants.BAD_REQUEST);
 
     return;
   }
 
   const expense = expenseService.create(
-    userId,
-    spentAt,
-    title,
-    amount,
-    category,
-    note,
+    req.body
   );
 
   res.statusCode = statusesConstants.CREATED;
@@ -80,9 +46,8 @@ const update = (req, res) => {
     title,
     amount,
     category,
-    note,
   }
-    = defineParamsType(req.body);
+    = req.body;
 
   const expense = expenseService.getById(id);
 
@@ -92,10 +57,10 @@ const update = (req, res) => {
     return;
   }
 
-  if (typeof userId !== 'number'
-    && typeof spentAt !== 'object'
+  if (typeof userId !== 'string'
+    && typeof spentAt !== 'string'
     && typeof title !== 'string'
-    && typeof amount !== 'number'
+    && typeof amount !== 'string'
     && typeof category !== 'string'
   ) {
     res.sendStatus(statusesConstants.NOT_FOUND);
@@ -103,14 +68,10 @@ const update = (req, res) => {
     return;
   }
 
-  const updatedExpense = expenseService.update(
+  const updatedExpense = expenseService.update({
     id,
-    userId,
-    spentAt,
-    title,
-    amount,
-    category,
-    note,
+    ...req.body,
+  }
   );
 
   res.send(updatedExpense);
