@@ -12,10 +12,23 @@ const getAll = ({ userId, categories, from, to }) => {
   }
 
   return expenses.filter((expense) => {
-    return (userId ? +userId === expense.userId : true)
-      && (categories ? categories.includes(expense.category) : true)
-      && (from ? +new Date(expense.spentAt) > +new Date(from) : true)
-      && (to ? +new Date(expense.spentAt) < +new Date(to) : true);
+    if (userId && +userId !== expense.userId) {
+      return false;
+    }
+
+    if (categories && !categories.includes(expense.category)) {
+      return false;
+    }
+
+    if (from && +new Date(expense.spentAt) < +new Date(from)) {
+      return false;
+    }
+
+    if (from && +new Date(expense.spentAt) > +new Date(to)) {
+      return false;
+    }
+
+    return true;
   });
 };
 

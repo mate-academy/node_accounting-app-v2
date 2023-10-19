@@ -2,44 +2,53 @@
 
 const expensesService = require('../services/expensesService');
 const usersService = require('../services/usersService');
+const {
+  BAD_REQUEST,
+  NOT_FOUND,
+  CREATED,
+  SUCCESS,
+  NO_CONTENT,
+} = require('../utils/statusCodes');
 
 const timestampRegex = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z$/;
 
-const get = async(req, res) => {
-  res.status(200).json(expensesService.getAll(req.query));
+const isPostData = ({
+  userId,
+  spentAt,
+  title,
+  amount,
+  category,
+  note,
+}) => {
+  return typeof userId !== 'number'
+    || typeof spentAt !== 'string'
+    || typeof title !== 'string'
+    || typeof amount !== 'number'
+    || typeof category !== 'string'
+    || typeof note !== 'string'
+    || !usersService.getById(userId)
+    || !timestampRegex.test(spentAt);
+};
+
+const getAll = async(req, res) => {
+  res.status(SUCCESS).json(expensesService.getAll(req.query));
 };
 
 const post = async(req, res) => {
-  const {
-    userId,
-    spentAt,
-    title,
-    amount,
-    category,
-    note,
-  } = req.body;
-
-  if (typeof userId !== 'number'
-      || typeof spentAt !== 'string'
-      || typeof title !== 'string'
-      || typeof amount !== 'number'
-      || typeof category !== 'string'
-      || typeof note !== 'string'
-      || !usersService.getById(userId)
-      || !timestampRegex.test(spentAt)) {
-    res.status(400).end();
+  if (isPostData(req.body)) {
+    res.status(BAD_REQUEST).end();
 
     return;
   }
 
-  res.status(201).json(expensesService.addExpense(req.body));
+  res.status(CREATED).json(expensesService.addExpense(req.body));
 };
 
-const getOne = async(req, res) => {
+const getById = async(req, res) => {
   const { id } = req.params;
 
   if (Number.isNaN(+id)) {
-    res.status(400).end();
+    res.status(BAD_REQUEST).end();
 
     return;
   }
@@ -47,51 +56,53 @@ const getOne = async(req, res) => {
   const expense = expensesService.getById(+id);
 
   if (!expense) {
-    res.status(404).end();
+    res.status(NOT_FOUND).end();
 
     return;
   }
 
-  res.status(200).json(expense);
+  res.status(SUCCESS).json(expense);
 };
 
-const deleteOne = async(req, res) => {
+const remove = async(req, res) => {
   const { id } = req.params;
 
   if (!expensesService.deleteById(+id)) {
-    res.status(404).end();
+    res.status(NOT_FOUND).end();
 
     return;
   }
 
-  res.status(204).end();
+  res.status(NO_CONTENT).end();
 };
 
-const patchOne = async(req, res) => {
+const update = async(req, res) => {
   const { id } = req.params;
 
   if (Number.isNaN(+id)) {
-    res.status(400).end();
+    res.status(BAD_REQUEST).end();
 
     return;
   }
 
-  // eslint-disable-next-line object-curly-newline
-  const expense = expensesService.updateById({ ...req.body, id: +id });
+  const expense = expensesService.updateById({
+    ...req.body,
+    id: +id,
+  });
 
   if (!expense) {
-    res.status(404).end();
+    res.status(NOT_FOUND).end();
 
     return;
   }
 
-  res.status(200).json(expense);
+  res.status(SUCCESS).json(expense);
 };
 
 module.exports = {
-  get,
+  getAll,
   post,
-  getOne,
-  deleteOne,
-  patchOne,
+  getById,
+  remove,
+  update,
 };

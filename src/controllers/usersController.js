@@ -1,28 +1,35 @@
 'use strict';
 
 const usersService = require('../services/usersService');
+const {
+  BAD_REQUEST,
+  NOT_FOUND,
+  CREATED,
+  SUCCESS,
+  NO_CONTENT,
+} = require('../utils/statusCodes');
 
-const get = async(req, res) => {
-  res.status(200).json(usersService.getAll());
+const getAll = async(req, res) => {
+  res.status(SUCCESS).json(usersService.getAll());
 };
 
 const post = async(req, res) => {
   const { name } = req.body;
 
   if (!name) {
-    res.status(400).end();
+    res.status(BAD_REQUEST).end();
 
     return;
   }
 
-  res.status(201).json(usersService.addUser(name));
+  res.status(CREATED).json(usersService.addUser(name));
 };
 
-const getOne = async(req, res) => {
+const getById = async(req, res) => {
   const { id } = req.params;
 
   if (Number.isNaN(+id)) {
-    res.status(400).end();
+    res.status(BAD_REQUEST).end();
 
     return;
   }
@@ -30,52 +37,54 @@ const getOne = async(req, res) => {
   const user = usersService.getById(+id);
 
   if (!user) {
-    res.status(404).end();
+    res.status(NOT_FOUND).end();
 
     return;
   }
 
-  res.status(200).json(user);
+  res.status(SUCCESS).json(user);
 };
 
-const deleteOne = async(req, res) => {
+const remove = async(req, res) => {
   const { id } = req.params;
 
   if (!usersService.deleteById(+id)) {
-    res.status(404).end();
+    res.status(NOT_FOUND).end();
 
     return;
   }
 
-  res.status(204).end();
+  res.status(NO_CONTENT).end();
 };
 
-const patchOne = async(req, res) => {
+const update = async(req, res) => {
   const { id } = req.params;
   const { name } = req.body;
 
   if (typeof name !== 'string' || Number.isNaN(+id)) {
-    res.status(400).end();
+    res.status(BAD_REQUEST).end();
 
     return;
   }
 
-  // eslint-disable-next-line object-curly-newline
-  const user = usersService.updateById({ id: +id, name });
+  const user = usersService.updateById({
+    id: +id,
+    name,
+  });
 
   if (!user) {
-    res.status(404).end();
+    res.status(NOT_FOUND).end();
 
     return;
   }
 
-  res.status(200).json(user);
+  res.status(SUCCESS).json(user);
 };
 
 module.exports = {
-  get,
+  getAll,
   post,
-  getOne,
-  deleteOne,
-  patchOne,
+  getById,
+  remove,
+  update,
 };
