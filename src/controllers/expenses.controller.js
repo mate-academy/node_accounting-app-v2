@@ -2,8 +2,9 @@
 
 const expensesService = require('../services/expenses.service');
 const usersSevice = require('../services/users.service');
+const statusCodes = require('../constants/statusCodes');
 
-const get = (req, res) => {
+const getAll = (req, res) => {
   const {
     userId,
     categories,
@@ -14,12 +15,16 @@ const get = (req, res) => {
   let expenses = expensesService.getAllExpenses();
 
   if (userId) {
-    expenses = expenses.filter(expense => expense.userId === +(userId));
+    expenses = expenses.filter(expense => expense.userId === Number(userId));
   }
 
   if (categories) {
+    const checkedCategories = Array.isArray(categories)
+      ? categories
+      : [categories];
+
     expenses = expenses
-      .filter(expense => categories.includes(expense.category));
+      .filter(expense => checkedCategories.includes(expense.category));
   }
 
   if (from) {
@@ -39,13 +44,13 @@ const get = (req, res) => {
   res.send(expenses);
 };
 
-const getOne = (req, res) => {
+const getById = (req, res) => {
   const { id } = req.params;
 
   const expense = expensesService.getExpenseById(id);
 
   if (!expense) {
-    res.sendStatus(404);
+    res.sendStatus(statusCodes.NOT_FOUND);
 
     return;
   }
@@ -54,31 +59,17 @@ const getOne = (req, res) => {
 };
 
 const post = (req, res) => {
-  const {
-    userId,
-    spentAt,
-    title,
-    amount,
-    category,
-    note,
-  } = req.body;
+  const { userId } = req.body;
 
   if (!usersSevice.getUserById(userId)) {
-    res.sendStatus(400);
+    res.sendStatus(statusCodes.BAD_REQUEST);
 
     return;
   }
 
-  const newExpense = expensesService.addExpense(
-    userId,
-    spentAt,
-    title,
-    amount,
-    category,
-    note
-  );
+  const newExpense = expensesService.addExpense(req.body);
 
-  res.status(201);
+  res.status(statusCodes.CREATED);
   res.send(newExpense);
 };
 
@@ -87,7 +78,7 @@ const patch = (req, res) => {
   const expenseToUpdate = req.body;
 
   if (!id || !expenseToUpdate) {
-    res.sendStatus(400);
+    res.sendStatus(statusCodes.BAD_REQUEST);
 
     return;
   }
@@ -95,7 +86,7 @@ const patch = (req, res) => {
   const expense = expensesService.updateExpense(id, expenseToUpdate);
 
   if (!expense) {
-    res.sendStatus(404);
+    res.sendStatus(statusCodes.NOT_FOUND);
 
     return;
   }
@@ -107,18 +98,18 @@ const remove = (req, res) => {
   const { id } = req.params;
 
   if (!expensesService.getExpenseById(id)) {
-    res.sendStatus(404);
+    res.sendStatus(statusCodes.NOT_FOUND);
 
     return;
   }
 
   expensesService.deleteExpense(id);
-  res.sendStatus(204);
+  res.sendStatus(statusCodes.NO_CONTENT);
 };
 
 module.exports = {
-  get,
-  getOne,
+  getAll,
+  getById,
   post,
   patch,
   remove,

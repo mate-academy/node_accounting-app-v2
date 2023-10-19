@@ -1,17 +1,18 @@
 'use strict';
 
 const usersSevice = require('../services/users.service');
+const statusCodes = require('../constants/statusCodes');
 
-const get = (req, res) => {
+const getAll = (req, res) => {
   res.send(usersSevice.getAllUsers());
 };
 
-const getOne = (req, res) => {
+const getById = (req, res) => {
   const { id } = req.params;
   const user = usersSevice.getUserById(id);
 
   if (!user) {
-    res.sendStatus(404);
+    res.sendStatus(statusCodes.NOT_FOUND);
 
     return;
   }
@@ -23,14 +24,14 @@ const post = (req, res) => {
   const { name } = req.body;
 
   if (!name) {
-    res.sendStatus(400);
+    res.sendStatus(statusCodes.BAD_REQUEST);
 
     return;
   }
 
   const newUser = usersSevice.addUser(name);
 
-  res.status(201);
+  res.status(statusCodes.CREATED);
   res.send(newUser);
 };
 
@@ -39,7 +40,7 @@ const patch = async(req, res) => {
   const { name } = req.body;
 
   if (!id || !name) {
-    res.sendStatus(400);
+    res.sendStatus(statusCodes.BAD_REQUEST);
 
     return;
   }
@@ -47,7 +48,7 @@ const patch = async(req, res) => {
   const user = usersSevice.getUserById(id);
 
   if (!user) {
-    res.sendStatus(404);
+    res.sendStatus(statusCodes.NOT_FOUND);
 
     return;
   }
@@ -61,18 +62,18 @@ const remove = (req, res) => {
   const { id } = req.params;
 
   if (!usersSevice.getUserById(id)) {
-    res.sendStatus(404);
+    res.sendStatus(statusCodes.NOT_FOUND);
 
     return;
   }
 
   usersSevice.deleteUser(id);
-  res.sendStatus(204);
+  res.sendStatus(statusCodes.NO_CONTENT);
 };
 
 module.exports = {
-  get,
-  getOne,
+  getAll,
+  getById,
   post,
   patch,
   remove,

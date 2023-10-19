@@ -5,12 +5,12 @@ let users = [];
 const getAllUsers = () => users;
 
 const getUserById = (id) => {
-  return users.find(user => +id === user.id) || null;
+  return users.find(user => Number(id) === user.id) || null;
 };
 
 const addUser = (name) => {
   const user = {
-    id: +new Date(),
+    id: Number(new Date()),
     name,
   };
 
@@ -32,7 +32,7 @@ const updateUser = (id, name) => {
 };
 
 const deleteUser = (id) => {
-  users = users.filter(user => user.id !== +id);
+  users = users.filter(user => user.id !== Number(id));
 };
 
 const clearUsers = () => {

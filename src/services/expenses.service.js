@@ -5,18 +5,13 @@ let expenses = [];
 const getAllExpenses = () => expenses;
 
 const getExpenseById = (id) => {
-  return expenses.find(expense => expense.id === +id) || null;
+  return expenses.find(expense => expense.id === Number(id)) || null;
 };
 
-const addExpense = (userId, spentAt, title, amount, category, note) => {
+const addExpense = (exprense) => {
   const expense = {
-    id: +new Date(),
-    userId,
-    spentAt,
-    title,
-    amount,
-    category,
-    note,
+    id: Number(new Date()),
+    ...exprense,
   };
 
   expenses.push(expense);
@@ -37,7 +32,7 @@ const updateExpense = (id, expenseToUpdate) => {
 };
 
 const deleteExpense = (id) => {
-  expenses = expenses.filter(expense => expense.id !== +id);
+  expenses = expenses.filter(expense => expense.id !== Number(id));
 };
 
 const clearExpenses = () => {
