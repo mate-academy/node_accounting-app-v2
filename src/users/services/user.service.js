@@ -10,7 +10,7 @@ const clearState = () => {
   users = [];
 };
 
-const getUserById = (id) => {
+const getById = (id) => {
   return users.find(user => user.id === id) || null;
 };
 
@@ -28,7 +28,7 @@ const create = (name) => {
 };
 
 const update = ({ id, name }) => {
-  const user = getUserById(id);
+  const user = getById(id);
 
   Object.assign(user, { name });
 
@@ -41,7 +41,7 @@ const remove = (id) => {
 
 module.exports = {
   getAll,
-  getById: getUserById,
+  getById: getById,
   create,
   update,
   remove,
