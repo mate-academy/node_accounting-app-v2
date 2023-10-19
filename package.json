@@ -25,6 +25,20 @@
     "supertest": "^6.3.0"
   },
   "dependencies": {
-    "express": "^4.18.2"
-  }
+    "express": "^4.18.2",
+    "cors": "^2.8.5"
+  },
+  "directories": {
+    "doc": "docs",
+    "test": "tests"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yuliiaant/node_accounting-app-v2.git"
+  },
+  "keywords": [],
+  "bugs": {
+    "url": "https://github.com/yuliiaant/node_accounting-app-v2/issues"
+  },
+  "homepage": "https://github.com/yuliiaant/node_accounting-app-v2#readme"
 }
