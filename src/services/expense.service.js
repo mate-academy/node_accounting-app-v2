@@ -5,11 +5,13 @@ let expenses = [];
 
 const getAll = ({ userId, categories, from, to }) => {
   if (categories) {
-    expenses = expenses.filter(expense => categories.includes(expense.category));
+    const categoriesArray = Array.isArray(categories) ? categories : [categories];
+
+    expenses = expenses.filter(expense => categoriesArray.includes(expense.category));
   }
 
   if (userId) {
-    expenses = expenses.filter((expense) => +expense.userId === +userId);
+    expenses = expenses.filter((expense) => Number(expense.userId) === Number(userId));
   }
 
   if (from) {
