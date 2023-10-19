@@ -2,68 +2,67 @@
 
 const { ExpenseServises } = require('../services/expenses.service');
 const { UserServices } = require('../services/users.service');
+const { STATUS_CODE } = require('../utils/constants');
 
 const getExpenses = (req, res) => {
-  const { userId, from, to } = req.query;
-
-  const url = new URL(req.url, 'http://localhost:3000/' + req.url);
-  const categories = url.searchParams.getAll('categories');
+  const { userId, from, to, categories } = req.query;
 
   let expenses = ExpenseServises.getExpenses();
 
   if (userId) {
-    expenses = expenses.filter(exp => exp.userId === +userId);
+    expenses = expenses.filter(expense => expense.userId === Number(userId));
   }
 
-  if (categories.length) {
-    expenses = expenses.filter(exp => categories.includes(exp.category));
+  if (categories) {
+    expenses = expenses.filter(expense =>
+      categories.includes(expense.category));
   }
 
   if (from) {
-    expenses = expenses.filter(exp => {
-      return (new Date(exp.spentAt) >= new Date(from));
+    expenses = expenses.filter(expense => {
+      return (new Date(expense.spentAt) >= new Date(from));
     });
   }
 
   if (to) {
-    expenses = expenses.filter(exp => {
-      return (new Date(exp.spentAt) <= new Date(to));
+    expenses = expenses.filter(expense => {
+      return (new Date(expense.spentAt) <= new Date(to));
     });
   }
 
-  res.statusCode = 200;
+  res.statusCode = STATUS_CODE.OK;
   res.send(expenses);
 };
 
 const getExpense = (req, res) => {
   const { id } = req.params;
 
-  const expense = ExpenseServises.findExpense(+id);
+  const expense = ExpenseServises.findExpense(Number(id));
 
   if (!expense) {
-    res.sendStatus(404);
+    res.sendStatus(STATUS_CODE.NOT_FOUND);
 
     return;
   }
 
-  res.statusCode = 200;
+  res.statusCode = STATUS_CODE.OK;
   res.send(expense);
 };
 
 const deleteExpense = (req, res) => {
   const { id } = req.params;
 
-  const expense = ExpenseServises.findExpense(+id);
+  const expense = ExpenseServises.findExpense(Number(id));
 
   if (!expense) {
-    res.sendStatus(404);
+    res.sendStatus(STATUS_CODE.NOT_FOUND);
 
     return;
   }
 
-  ExpenseServises.deleteExpense(+id);
+  ExpenseServises.deleteExpense(Number(id));
 
-  res.sendStatus(204);
+  res.sendStatus(STATUS_CODE.NO_CONTENT);
 };
 
 const createExpense = (req, res) => {
@@ -77,13 +76,13 @@ const createExpense = (req, res) => {
   } = req.body;
 
   if (!title) {
-    res.sendStatus(400);
+    res.sendStatus(STATUS_CODE.BAD_REQUEST);
 
     return;
   }
 
-  if (!UserServices.findUser(+userId)) {
-    res.sendStatus(400);
+  if (!UserServices.findUser(Number(userId))) {
+    res.sendStatus(STATUS_CODE.BAD_REQUEST);
 
     return;
   }
@@ -100,17 +99,17 @@ const createExpense = (req, res) => {
 
   ExpenseServises.createExpense(expense);
 
-  res.statusCode = 201;
+  res.statusCode = STATUS_CODE.CREATED_SUCCESS;
   res.send(expense);
 };
 
 const updateExpense = (req, res) => {
   const { id } = req.params;
 
-  const expense = ExpenseServises.findExpense(+id);
+  const expense = ExpenseServises.findExpense(Number(id));
 
   if (!expense) {
-    res.sendStatus(404);
+    res.sendStatus(STATUS_CODE.NOT_FOUND);
 
     return;
   }
