@@ -7,10 +7,10 @@ const getAll = () => {
 };
 
 const getUser = (id) => {
-  return users.find(item => item.id === +id);
+  return users.find(item => item.id === Number(id));
 };
 
-const newUser = (name) => {
+const addNewUser = (name) => {
   const user = {
     id: +new Date().getTime(),
     name,
@@ -22,7 +22,17 @@ const newUser = (name) => {
 };
 
 const removeUser = (id) => {
-  users = users.filter(item => item.id !== +id);
+  users = users.filter(item => item.id !== Number(id));
+};
+
+const updateUser = (id, name) => {
+  const user = getUser(id);
+
+  if (!user) {
+    return;
+  }
+
+  return Object.assign(user, { name });
 };
 
 const clear = () => {
@@ -32,7 +42,8 @@ const clear = () => {
 module.exports = {
   getAll,
   getUser,
-  newUser,
+  addNewUser,
   removeUser,
   clear,
+  updateUser,
 };

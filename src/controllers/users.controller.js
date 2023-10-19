@@ -1,6 +1,7 @@
 'use strict';
 
 const usersServise = require('../servises/users.service');
+const STATUS = require('../variables');
 
 const getAll = (req, res) => {
   const users = usersServise.getAll();
@@ -14,7 +15,7 @@ const findUserById = (req, res) => {
   const user = usersServise.getUser(id);
 
   if (!user) {
-    res.sendStatus(404);
+    res.sendStatus(STATUS.ERROR_NOT_FOUND);
 
     return;
   }
@@ -25,14 +26,14 @@ const createUser = (req, res) => {
   const { name } = req.body;
 
   if (!name) {
-    res.sendStatus(400);
+    res.sendStatus(STATUS.ERROR_BAD_REQUEST);
 
     return;
   }
 
-  const user = usersServise.newUser(name);
+  const user = usersServise.addNewUser(name);
 
-  res.statusCode = 201;
+  res.statusCode = STATUS.SUCCESSFUL_CREATED;
   res.send(user);
 };
 
@@ -41,35 +42,34 @@ const deleteUser = (req, res) => {
 
   const user = usersServise.getUser(id);
 
-  usersServise.removeUser(id);
-
   if (!user) {
-    res.sendStatus(404);
+    res.sendStatus(STATUS.ERROR_NOT_FOUND);
 
     return;
   }
-  res.sendStatus(204);
+
+  usersServise.removeUser(id);
+
+  res.sendStatus(STATUS.SUCCESSFUL_NO_CONTENT);
 };
 
 const updateUser = (req, res) => {
   const { id } = req.params;
   const { name } = req.body;
-
-  const user = usersServise.getUser(id);
+  const user = usersServise.updateUser(id, name);
 
   if (!user) {
-    res.sendStatus(404);
+    res.sendStatus(STATUS.ERROR_NOT_FOUND);
 
     return;
   }
 
   if (typeof name !== 'string') {
-    res.sendStatus(422);
+    res.sendStatus(STATUS.ERROR_UNPROCESSABLE_ENTITY);
 
     return;
   }
 
-  Object.assign(user, { name });
   res.send(user);
 };
 

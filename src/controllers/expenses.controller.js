@@ -2,6 +2,7 @@
 
 const usersServise = require('../servises/users.service');
 const expenseService = require('../servises/expenses.service');
+const STATUS = require('../variables');
 
 const getAllExpenses = (req, res) => {
   const { query } = req;
@@ -16,14 +17,14 @@ const createExpence = (req, res) => {
   const user = usersServise.getUser(body.userId);
 
   if (!user) {
-    res.sendStatus(400);
+    res.sendStatus(STATUS.ERROR_BAD_REQUEST);
 
     return;
   }
 
-  const expense = expenseService.newExpense(body);
+  const expense = expenseService.addNewExpense(body);
 
-  res.statusCode = 201;
+  res.statusCode = STATUS.SUCCESSFUL_CREATED;
 
   res.send(expense);
 };
@@ -34,7 +35,7 @@ const findExpenceById = (req, res) => {
   const expense = expenseService.getExpense(id);
 
   if (!expense) {
-    res.sendStatus(404);
+    res.sendStatus(STATUS.ERROR_NOT_FOUND);
 
     return;
   }
@@ -47,29 +48,34 @@ const removeExpence = (req, res) => {
 
   const expense = expenseService.getExpense(id);
 
-  expenseService.removeExpense(id);
-
   if (!expense) {
-    res.sendStatus(404);
+    res.sendStatus(STATUS.ERROR_NOT_FOUND);
 
     return;
   }
-  res.sendStatus(204);
+
+  expenseService.removeExpense(id);
+
+  res.sendStatus(STATUS.SUCCESSFUL_NO_CONTENT);
 };
 
 const updateExpence = (req, res) => {
   const { id } = req.params;
   const { body } = req;
 
-  const expense = expenseService.getExpense(id);
-
-  if (!expense) {
-    res.sendStatus(404);
+  if (!id || !body) {
+    res.sendStatus(STATUS.ERROR_BAD_REQUEST);
 
     return;
   }
 
-  Object.assign(expense, body);
+  const expense = expenseService.updateExpense(id, body);
+
+  if (!expense) {
+    res.sendStatus(STATUS.ERROR_NOT_FOUND);
+
+    return;
+  }
 
   res.send(expense);
 };
