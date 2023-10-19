@@ -67,7 +67,7 @@ const create = (req, res) => {
     note,
   );
 
-  res.statusCode = 201;
+  res.statusCode = statusesConstants.CREATED;
 
   res.send(expense);
 };
@@ -120,14 +120,14 @@ const remove = (req, res) => {
   const id = Number(req.params.id);
 
   if (!expenseService.getById(id)) {
-    res.sendStatus(404);
+    res.sendStatus(statusesConstants.NOT_FOUND);
 
     return;
   }
 
   expenseService.remove(id);
 
-  res.sendStatus(204);
+  res.sendStatus(statusesConstants.NO_CONTENT);
 };
 
 module.exports = {
