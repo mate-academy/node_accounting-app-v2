@@ -9,33 +9,37 @@ const getAll = (req, res) => {
     userId,
     from,
     to,
+    categories,
   } = req.query;
 
-  const normalizedURL = new URL('http://localhost:3000/' + req.url);
-  const categories = normalizedURL.searchParams.getAll('categories');
   let expenses = expensesService.getAll();
 
   if (userId) {
     expenses = expenses.filter(expense => expense.userId === Number(userId));
   }
 
-  if (categories.length) {
+  if (categories) {
     expenses = expenses
       .filter(expense => categories.includes(expense.category));
   }
 
-  if (from && to) {
-    expenses = expenses
-      .filter(expense =>
-        Number(new Date(expense.spentAt)) >= Number(new Date(from))
-        && Number(new Date(expense.spentAt)) <= Number(new Date(to)));
+  if (from) {
+    expenses = expenses.filter(expense => (
+      new Date(expense.spentAt) >= new Date(from))
+    );
+  }
+
+  if (to) {
+    expenses = expenses.filter(expense => (
+      new Date(expense.spentAt) <= new Date(to))
+    );
   }
 
   res.statusCode = STATUS_MESSAGES.OPERATION_SUCCESSFUL;
   res.send(expenses);
 };
 
-const getOne = (req, res) => {
+const getById = (req, res) => {
   const id = Number(req.params.id);
 
   if (!id) {
@@ -137,7 +141,7 @@ const remove = (req, res) => {
 
 module.exports = {
   getAll,
-  getOne,
+  getById,
   create,
   update,
   remove,

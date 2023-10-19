@@ -32,10 +32,15 @@ const remove = (id) => {
   expenses = expenses.filter(expense => expense.id !== id);
 };
 
+const clearExpenses = () => {
+  expenses = [];
+};
+
 module.exports = {
   getAll,
   getById,
   add,
   updateById,
   remove,
+  clearExpenses,
 };

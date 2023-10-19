@@ -10,7 +10,7 @@ const getAll = (req, res) => {
   res.send(users);
 };
 
-const getOne = (req, res) => {
+const getById = (req, res) => {
   const id = Number(req.params.id);
 
   if (!id) {
@@ -98,7 +98,7 @@ const remove = (req, res) => {
 
 module.exports = {
   getAll,
-  getOne,
+  getById,
   create,
   update,
   remove,

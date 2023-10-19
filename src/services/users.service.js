@@ -32,10 +32,15 @@ const remove = (id) => {
   users = users.filter(user => user.id !== id);
 };
 
+const clearUsers = () => {
+  users = [];
+};
+
 module.exports = {
   getAll,
   getById,
   add,
   updateById,
   remove,
+  clearUsers,
 };
