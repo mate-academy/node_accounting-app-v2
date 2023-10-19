@@ -12,10 +12,10 @@ const add = expense => {
   return expense;
 };
 
-const getById = (id) => {
-  const exp = expenses.find(expense => expense.id === +id);
+const getById = (expenseId) => {
+  const expense = expenses.find(({ id }) => id === +expenseId);
 
-  return exp;
+  return expense;
 };
 
 const remove = (id) => {

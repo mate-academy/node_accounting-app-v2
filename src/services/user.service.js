@@ -6,10 +6,10 @@ const getAll = () => {
   return users;
 };
 
-const getById = (id) => {
-  const us = users.find(user => user.id === +id);
+const getById = (userId) => {
+  const user = users.find(({ id }) => id === +userId);
 
-  return us;
+  return user;
 };
 
 const create = (name) => {
