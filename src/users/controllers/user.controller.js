@@ -1,6 +1,7 @@
 'use strict';
 
 const userService = require('../services/user.service.js');
+const statusesConstants = require('../../statusesConstants.js');
 
 const getAll = (req, res) => {
   res.send(userService.getAll());
@@ -14,7 +15,7 @@ const getById = (req, res) => {
   res.setHeader('Content-type', 'application/json');
 
   if (!user) {
-    res.sendStatus(404);
+    res.sendStatus(statusesConstants.NOT_FOUND);
 
     return;
   }
@@ -26,14 +27,14 @@ const create = (req, res) => {
   const { name } = req.body;
 
   if (!name) {
-    res.sendStatus(400);
+    res.sendStatus(statusesConstants.BAD_REQUEST);
 
     return;
   }
 
   const user = userService.create(name);
 
-  res.statusCode = 201;
+  res.statusCode = statusesConstants.CREATED;
 
   res.send(user);
 };
@@ -46,7 +47,7 @@ const update = (req, res) => {
 
   if (!user
     || typeof name !== 'string') {
-    res.sendStatus(404);
+    res.sendStatus(statusesConstants.NOT_FOUND);
 
     return;
   }
@@ -63,14 +64,14 @@ const remove = (req, res) => {
   const id = Number(req.params.id);
 
   if (!userService.getById(id)) {
-    res.sendStatus(404);
+    res.sendStatus(statusesConstants.NOT_FOUND);
 
     return;
   }
 
   userService.remove(id);
 
-  res.sendStatus(204);
+  res.sendStatus(statusesConstants.NO_CONTENT);
 };
 
 module.exports = {

@@ -2,6 +2,7 @@
 
 const expenseService = require('../services/expense.service.js');
 const userService = require('../../users/services/user.service.js');
+const statusesConstants = require('../../statusesConstants.js');
 
 const getAll = (req, res) => {
   res.send(expenseService.getAll(
@@ -18,7 +19,7 @@ const getById = (req, res) => {
   const expense = expenseService.getById(id);
 
   if (!expense) {
-    res.sendStatus(404);
+    res.sendStatus(statusesConstants.NOT_FOUND);
 
     return;
   }
@@ -52,7 +53,7 @@ const create = (req, res) => {
   } = defineParamsType(req.body);
 
   if (!userService.getById(userId)) {
-    res.sendStatus(400);
+    res.sendStatus(statusesConstants.BAD_REQUEST);
 
     return;
   }
@@ -86,7 +87,7 @@ const update = (req, res) => {
   const expense = expenseService.getById(id);
 
   if (!expense) {
-    res.sendStatus(404);
+    res.sendStatus(statusesConstants.NOT_FOUND);
 
     return;
   }
@@ -97,7 +98,7 @@ const update = (req, res) => {
     && typeof amount !== 'number'
     && typeof category !== 'string'
   ) {
-    res.sendStatus(404);
+    res.sendStatus(statusesConstants.NOT_FOUND);
 
     return;
   }

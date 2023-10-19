@@ -11,6 +11,8 @@ const clearState = () => {
 const getAll = (userId, categories, from, to) => {
   let newExpences = [...expenses];
 
+  // Object.assign(user, { name });
+
   if (userId) {
     newExpences = newExpences.filter(
       expence => expence.userId === userId
