@@ -28,13 +28,13 @@ const post = async(req, res) => {
 const getById = async(req, res) => {
   const { id } = req.params;
 
-  if (Number.isNaN(+id)) {
+  if (Number.isNaN(Number(id))) {
     res.status(BAD_REQUEST).end();
 
     return;
   }
 
-  const user = usersService.getById(+id);
+  const user = usersService.getById(Number(id));
 
   if (!user) {
     res.status(NOT_FOUND).end();
@@ -48,7 +48,7 @@ const getById = async(req, res) => {
 const remove = async(req, res) => {
   const { id } = req.params;
 
-  if (!usersService.deleteById(+id)) {
+  if (!usersService.deleteById(Number(id))) {
     res.status(NOT_FOUND).end();
 
     return;
@@ -61,14 +61,14 @@ const update = async(req, res) => {
   const { id } = req.params;
   const { name } = req.body;
 
-  if (typeof name !== 'string' || Number.isNaN(+id)) {
+  if (typeof name !== 'string' || Number.isNaN(Number(id))) {
     res.status(BAD_REQUEST).end();
 
     return;
   }
 
   const user = usersService.updateById({
-    id: +id,
+    id: Number(id),
     name,
   });
 

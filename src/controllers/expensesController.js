@@ -12,7 +12,7 @@ const {
 
 const timestampRegex = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z$/;
 
-const isPostData = ({
+const hasPostData = ({
   userId,
   spentAt,
   title,
@@ -35,25 +35,27 @@ const getAll = async(req, res) => {
 };
 
 const post = async(req, res) => {
-  if (isPostData(req.body)) {
+  if (hasPostData(req.body)) {
     res.status(BAD_REQUEST).end();
 
     return;
   }
 
-  res.status(CREATED).json(expensesService.addExpense(req.body));
+  const newExpense = expensesService.addExpense(req.body);
+
+  res.status(CREATED).json(newExpense);
 };
 
 const getById = async(req, res) => {
   const { id } = req.params;
 
-  if (Number.isNaN(+id)) {
+  if (Number.isNaN(Number(id))) {
     res.status(BAD_REQUEST).end();
 
     return;
   }
 
-  const expense = expensesService.getById(+id);
+  const expense = expensesService.getById(Number(id));
 
   if (!expense) {
     res.status(NOT_FOUND).end();
@@ -67,7 +69,7 @@ const getById = async(req, res) => {
 const remove = async(req, res) => {
   const { id } = req.params;
 
-  if (!expensesService.deleteById(+id)) {
+  if (!expensesService.deleteById(Number(id))) {
     res.status(NOT_FOUND).end();
 
     return;
@@ -79,7 +81,7 @@ const remove = async(req, res) => {
 const update = async(req, res) => {
   const { id } = req.params;
 
-  if (Number.isNaN(+id)) {
+  if (Number.isNaN(Number(id))) {
     res.status(BAD_REQUEST).end();
 
     return;
@@ -87,7 +89,7 @@ const update = async(req, res) => {
 
   const expense = expensesService.updateById({
     ...req.body,
-    id: +id,
+    id: Number(id),
   });
 
   if (!expense) {
