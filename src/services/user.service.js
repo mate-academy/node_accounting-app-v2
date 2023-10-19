@@ -2,15 +2,17 @@
 
 let users = [];
 
-const getAllUsers = () => {
+const getAll = () => {
   return users;
 };
 
-const getUserById = (id) => {
-  return users.find(user => user.id === +id);
+const getById = (id) => {
+  const us = users.find(user => user.id === +id);
+
+  return us;
 };
 
-const createUser = (name) => {
+const create = (name) => {
   const user = {
     id: +new Date(),
     name,
@@ -21,15 +23,15 @@ const createUser = (name) => {
   return user;
 };
 
-const updateUser = (id, name) => {
-  const update = getUserById(id);
+const update = (id, name) => {
+  const user = getById(id);
 
-  Object.assign(update, { name });
+  Object.assign(user, { name });
 
-  return update;
+  return user;
 };
 
-const removeUser = (id) => {
+const remove = (id) => {
   users = users.filter(user => user.id !== +id);
 };
 
@@ -38,10 +40,10 @@ const clear = () => {
 };
 
 module.exports = {
-  getAllUsers,
-  getUserById,
-  createUser,
-  updateUser,
-  removeUser,
+  getAll,
+  getById,
+  create,
+  update,
+  remove,
   clear,
 };

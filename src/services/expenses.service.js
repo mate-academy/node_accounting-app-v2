@@ -2,24 +2,28 @@
 
 let expenses = [];
 
-const getAllExpenses = () => {
+const getAll = () => {
   return expenses;
 };
 
-const addExpenses = (expense) => {
-  return expenses.push(expense);
+const add = expense => {
+  expenses.push(expense);
+
+  return expense;
 };
 
-const getExpensesById = (id) => {
-  return expenses.find(expense => expense.id === +id);
+const getById = (id) => {
+  const exp = expenses.find(expense => expense.id === +id);
+
+  return exp;
 };
 
-const removeExpenses = (id) => {
+const remove = (id) => {
   expenses = expenses.filter(expense => expense.id !== +id);
 };
 
-const updateExpenses = (id, body) => {
-  const expense = getExpensesById(id);
+const update = (id, body) => {
+  const expense = getById(id);
 
   if (!expense) {
     return;
@@ -35,10 +39,10 @@ const clear = () => {
 };
 
 module.exports = {
-  getAllExpenses,
-  addExpenses,
-  getExpensesById,
-  removeExpenses,
-  updateExpenses,
+  getAll,
+  add,
+  getById,
+  remove,
+  update,
   clear,
 };

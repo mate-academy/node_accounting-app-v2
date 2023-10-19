@@ -48,9 +48,9 @@ const getAll = (req, res) => {
 const getOne = (req, res) => {
   const { id } = req.params;
 
-  const getOneExpenses = expensesService.getExpensesById(id);
+  const getOneExpenses = expensesService.getById(id);
 
-  if (!id) {
+  if (!getOneExpenses) {
     res.sendStatus(404);
 
     return;
@@ -67,11 +67,11 @@ const create = (req, res) => {
     amount,
     category,
     note,
-  } = req.params;
+  } = req.body;
 
-  const getUser = userService.getUserById(userId);
+  const user = userService.getById(userId);
 
-  if (!title || !getUser) {
+  if (!user) {
     res.sendStatus(400);
 
     return;
@@ -79,7 +79,7 @@ const create = (req, res) => {
 
   const newExpense = {
     id: +new Date(),
-    userId: getUser,
+    userId,
     spentAt,
     title,
     amount,
@@ -87,7 +87,7 @@ const create = (req, res) => {
     note,
   };
 
-  const expense = expensesService.addExpenses(newExpense);
+  const expense = expensesService.add(newExpense);
 
   res.statusCode = 201;
 
@@ -97,13 +97,13 @@ const create = (req, res) => {
 const remove = (req, res) => {
   const { id } = req.params;
 
-  if (!expensesService.getExpensesById(id)) {
+  if (!expensesService.getById(id)) {
     res.sendStatus(404);
 
     return;
   }
 
-  expensesService.removeExpenses(id);
+  expensesService.remove(id);
 
   res.sendStatus(204);
 };
@@ -111,7 +111,7 @@ const remove = (req, res) => {
 const update = (req, res) => {
   const { id } = req.params;
 
-  const getOneExpenses = expensesService.getExpensesById(id);
+  const getOneExpenses = expensesService.getById(id);
 
   if (!getOneExpenses) {
     res.sendStatus(404);
@@ -119,7 +119,7 @@ const update = (req, res) => {
     return;
   }
 
-  const updatedExpense = expensesService.updatedExpense(id, req.body);
+  const updatedExpense = expensesService.update(id, req.body);
 
   res.send(updatedExpense);
 };
