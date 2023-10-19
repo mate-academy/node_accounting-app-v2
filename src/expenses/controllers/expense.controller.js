@@ -12,7 +12,7 @@ const getAll = (req, res) => {
   ));
 };
 
-const getOne = (req, res) => {
+const getById = (req, res) => {
   const id = +req.params.id;
 
   const expense = expenseService.getById(id);
@@ -131,7 +131,7 @@ const remove = (req, res) => {
 
 module.exports = {
   get: getAll,
-  getOne,
+  getOne: getById,
   create,
   update,
   remove,
