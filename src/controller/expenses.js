@@ -2,6 +2,9 @@
 
 const expensesServices = require('../services/expensesServices');
 const usersServices = require('../services/usersServices');
+const {
+  NO_CONTENT, NOT_FOUND, BAD_REQUEST, STATUS_OK, STATUS_CREATED,
+} = require('../utils/constants');
 
 const getAll = (req, res) => {
   const {
@@ -31,19 +34,23 @@ const getAll = (req, res) => {
   }
 
   if (categories) {
+    const categoriesArray = Array.isArray(categories)
+      ? categories
+      : [categories];
+
     expenses = expenses
-      .filter(expense => categories.includes(expense.category));
+      .filter(expense => categoriesArray.includes(expense.category));
   }
 
-  res.statusCode = 200;
+  res.statusCode = STATUS_OK;
   res.send(expenses);
 };
 
 const getById = (req, res) => {
-  const expenseId = +req.params.id;
+  const expenseId = Number(req.params.id);
 
   if (!expenseId) {
-    res.sendStatus(400);
+    res.sendStatus(BAD_REQUEST);
 
     return;
   }
@@ -51,12 +58,12 @@ const getById = (req, res) => {
   const foundExpense = expensesServices.getById(expenseId);
 
   if (!foundExpense) {
-    res.sendStatus(404);
+    res.sendStatus(NOT_FOUND);
 
     return;
   }
 
-  res.statusCode = 200;
+  res.statusCode = STATUS_OK;
   res.send(foundExpense);
 };
 
@@ -71,7 +78,7 @@ const create = (req, res) => {
   } = req.body;
 
   if (!title || !userId || !category || !note || !amount || !spentAt) {
-    res.sendStatus(400);
+    res.sendStatus(BAD_REQUEST);
     res.send('Fill all fields');
 
     return;
@@ -80,7 +87,7 @@ const create = (req, res) => {
   const foundUser = usersServices.getById(userId);
 
   if (!foundUser) {
-    res.sendStatus(400);
+    res.sendStatus(BAD_REQUEST);
     res.send('User is not found');
 
     return;
@@ -95,31 +102,31 @@ const create = (req, res) => {
     note,
   });
 
-  res.statusCode = 201;
+  res.statusCode = STATUS_CREATED;
   res.send(newExpense);
 };
 
 const remove = (req, res) => {
-  const expenseId = +req.params.id;
+  const expenseId = Number(req.params.id);
   const foundExpense = expensesServices.getById(expenseId);
 
   if (!foundExpense) {
-    res.sendStatus(404);
+    res.sendStatus(NOT_FOUND);
 
     return;
   }
 
   expensesServices.remove(expenseId);
-  res.sendStatus(204);
+  res.sendStatus(NO_CONTENT);
 };
 
 const update = (req, res) => {
-  const expenseId = +req.params.id;
+  const expenseId = Number(req.params.id);
 
   const foundExpense = expensesServices.getById(expenseId);
 
   if (!foundExpense) {
-    res.sendStatus(404);
+    res.sendStatus(NOT_FOUND);
     res.send('Expense is not found');
 
     return;
@@ -127,7 +134,7 @@ const update = (req, res) => {
 
   const updatedExpense = expensesServices.update(expenseId, req.body);
 
-  res.sendStatus(200);
+  res.statusCode = STATUS_OK;
   res.send((updatedExpense));
 };
 

@@ -1,40 +1,42 @@
 'use strict';
 
 const usersServices = require('../services/usersServices');
+const {
+  NO_CONTENT, NOT_FOUND, BAD_REQUEST, STATUS_OK, STATUS_CREATED,
+} = require('../utils/constants');
 
 const getAll = (req, res) => {
   const users = usersServices.getAll();
 
-  res.statusCode = 200;
+  res.statusCode = STATUS_OK;
   res.send(users);
 };
 
 const getById = (req, res) => {
-  const userId = +req.params.id;
+  const userId = Number(req.params.id);
 
-  try {
-    const foundUser = usersServices.getById(userId);
-
-    if (!foundUser) {
-      res.statusCode = 404;
-      res.send('User not found');
-
-      return;
-    }
-
-    res.statusCode = 200;
-    res.send(foundUser);
-  } catch (error) {
-    res.statusCode = 500;
-    res.send('Internal Server Error');
+  if (!userId) {
+    res.sendStatus(BAD_REQUEST);
   }
+
+  const foundUser = usersServices.getById(userId);
+
+  if (!foundUser) {
+    res.sendStatus(NOT_FOUND);
+    res.send('User not found');
+
+    return;
+  }
+
+  res.statusCode = STATUS_OK;
+  res.send(foundUser);
 };
 
 const create = (req, res) => {
   const { name } = req.body;
 
   if (!name) {
-    res.sendStatus(400);
+    res.sendStatus(BAD_REQUEST);
     res.send('Fill all fields');
 
     return;
@@ -42,31 +44,31 @@ const create = (req, res) => {
 
   const newUser = usersServices.create(name);
 
-  res.statusCode = 201;
+  res.statusCode = STATUS_CREATED;
   res.send(newUser);
 };
 
 const remove = (req, res) => {
-  const userId = +req.params.id;
+  const userId = Number(req.params.id);
 
   const user = usersServices.getById(userId);
 
   if (!user) {
-    res.sendStatus(404);
+    res.sendStatus(NOT_FOUND);
 
     return;
   }
 
   usersServices.remove(userId);
-  res.sendStatus(204);
+  res.sendStatus(NO_CONTENT);
 };
 
 const update = (req, res) => {
-  const userId = +req.params.id;
+  const userId = Number(req.params.id);
   const { name } = req.body;
 
   if (!name || !userId) {
-    res.sendStatus(400);
+    res.sendStatus(BAD_REQUEST);
 
     return;
   }
@@ -74,7 +76,7 @@ const update = (req, res) => {
   const updatedUser = usersServices.update(userId, name);
 
   if (!updatedUser) {
-    res.sendStatus(404);
+    res.sendStatus(NOT_FOUND);
 
     return;
   }
