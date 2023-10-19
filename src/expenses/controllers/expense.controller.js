@@ -3,7 +3,7 @@
 const expenseService = require('../services/expense.service.js');
 const userService = require('../../users/services/user.service.js');
 
-const get = (req, res) => {
+const getAll = (req, res) => {
   res.send(expenseService.getAll(
     +req.query.userId,
     req.query.categories,
@@ -130,7 +130,7 @@ const remove = (req, res) => {
 };
 
 module.exports = {
-  get,
+  get: getAll,
   getOne,
   create,
   update,
