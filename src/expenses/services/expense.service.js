@@ -1,5 +1,7 @@
 'use strict';
 
+const helper = require('../../helper');
+
 let expenses = [];
 
 const clearState = () => {
@@ -49,9 +51,7 @@ const create = (
   category,
   note,) => {
   const expense = {
-    id: expenses.reduce((acc, item) => {
-      return acc > item.id ? acc : item.id;
-    }, 0) + 1,
+    id: helper.getId(expenses),
     userId,
     spentAt,
     title,

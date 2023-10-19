@@ -1,5 +1,7 @@
 'use strict';
 
+const helper = require('../../helper');
+
 let users = [];
 
 const getAll = () => {
@@ -17,9 +19,7 @@ const getById = (id) => {
 const create = (name) => {
   const user = {
     name,
-    id: users.reduce((acc, item) => {
-      return acc > item.id ? acc : item.id;
-    }, 0) + 1,
+    id: helper.getId(users),
   };
 
   users.push(user);
