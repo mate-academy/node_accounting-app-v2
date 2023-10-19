@@ -1,6 +1,7 @@
 'use strict';
 
 const userService = require('../services/user.service');
+const httpStatusCodes = require('../utils/httpStatusCodes');
 
 const getAll = (req, res) => {
   res.send(userService.getAll());
@@ -11,7 +12,7 @@ const getById = (req, res) => {
   const searchedUser = userService.getById(id);
 
   if (!searchedUser) {
-    res.sendStatus(404);
+    res.sendStatus(httpStatusCodes.NOT_FOUND);
 
     return;
   }
@@ -23,14 +24,14 @@ const create = (req, res) => {
   const { name } = req.body;
 
   if (!name) {
-    res.sendStatus(400);
+    res.sendStatus(httpStatusCodes.BAD_REQUEST);
 
     return;
   }
 
   const newUser = userService.create(name);
 
-  res.statusCode = 201;
+  res.statusCode = httpStatusCodes.CREATED;
   res.send(newUser);
 };
 
@@ -41,13 +42,13 @@ const update = (req, res) => {
   const user = userService.getById(id);
 
   if (!user) {
-    res.sendStatus(404);
+    res.sendStatus(httpStatusCodes.NOT_FOUND);
 
     return;
   }
 
   if (typeof name !== 'string') {
-    res.sendStatus(422);
+    res.sendStatus(httpStatusCodes.UNPROCESSABLE_ENTITY);
 
     return;
   }
@@ -64,13 +65,13 @@ const remove = (req, res) => {
   const user = userService.getById(id);
 
   if (!user) {
-    res.sendStatus(404);
+    res.sendStatus(httpStatusCodes.NOT_FOUND);
 
     return;
   }
 
   userService.remove(id);
-  res.sendStatus(204);
+  res.sendStatus(httpStatusCodes.NO_CONTENT);
 };
 
 module.exports = {

@@ -1,29 +1,30 @@
+/* eslint-disable max-len */
 'use strict';
 
 let expenses = [];
 
 const getAll = ({ userId, categories, from, to }) => {
   if (categories) {
-    expenses = expenses.filter((expense) => {
-      return categories.includes(expense.category);
-    });
+    expenses = expenses.filter(expense => categories.includes(expense.category));
   }
 
   if (userId) {
     expenses = expenses.filter((expense) => +expense.userId === +userId);
   }
 
-  if (from && to) {
-    expenses = expenses.filter((expense) => {
-      return expense.spentAt >= from && expense.spentAt <= to;
-    });
+  if (from) {
+    expenses = expenses.filter((expense) => expense.spentAt >= from);
+  }
+
+  if (to) {
+    expenses = expenses.filter((expense) => expense.spentAt <= to);
   }
 
   return expenses;
 };
 
 const getById = (id) => {
-  return expenses.find(({ id: expensesId }) => +expensesId === +id);
+  return expenses.find(({ id: expensesId }) => Number(expensesId) === Number(id));
 };
 
 const create = ({
@@ -58,7 +59,7 @@ const update = (id, body) => {
 };
 
 const remove = (id) => {
-  expenses = expenses.filter(({ id: expenseId }) => +expenseId !== +id);
+  expenses = expenses.filter(({ id: expenseId }) => Number(expenseId) !== Number(id));
 };
 
 const removeAll = () => {

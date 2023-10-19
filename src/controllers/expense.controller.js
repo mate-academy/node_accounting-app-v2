@@ -2,6 +2,7 @@
 
 const expenseService = require('../services/expense.service');
 const userService = require('../services/user.service');
+const httpStatusCodes = require('../utils/httpStatusCodes');
 
 const getAll = (req, res) => {
   const query = req.query;
@@ -14,7 +15,7 @@ const getById = (req, res) => {
   const searchedExpense = expenseService.getById(id);
 
   if (!searchedExpense) {
-    res.sendStatus(404);
+    res.sendStatus(httpStatusCodes.NOT_FOUND);
 
     return;
   }
@@ -32,13 +33,13 @@ const create = (req, res) => {
     || !category
     || !note
   ) {
-    res.sendStatus(400);
+    res.sendStatus(httpStatusCodes.BAD_REQUEST);
 
     return;
   }
 
   if (!userService.getById(userId)) {
-    res.sendStatus(400);
+    res.sendStatus(httpStatusCodes.BAD_REQUEST);
 
     return;
   }
@@ -52,7 +53,7 @@ const create = (req, res) => {
     note,
   });
 
-  res.statusCode = 201;
+  res.statusCode = httpStatusCodes.CREATED;
   res.send(newExpense);
 };
 
@@ -63,14 +64,14 @@ const update = (req, res) => {
   const expense = expenseService.getById(id);
 
   if (!expense) {
-    res.sendStatus(404);
+    res.sendStatus(httpStatusCodes.NOT_FOUND);
 
     return;
   }
 
   const updatedExpense = expenseService.update(id, body);
 
-  res.statusCode = 200;
+  res.statusCode = httpStatusCodes.OK;
   res.send(updatedExpense);
 };
 
@@ -79,13 +80,13 @@ const remove = (req, res) => {
   const expense = expenseService.getById(id);
 
   if (!expense) {
-    res.sendStatus(404);
+    res.sendStatus(httpStatusCodes.NOT_FOUND);
 
     return;
   }
 
   expenseService.remove(id);
-  res.sendStatus(204);
+  res.sendStatus(httpStatusCodes.NO_CONTENT);
 };
 
 module.exports = {
