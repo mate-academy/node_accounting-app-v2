@@ -63,7 +63,7 @@ const update = (req, res) => {
     title,
     amount,
     category)) {
-    res.sendStatus(statusesConstants.NOT_FOUND);
+    res.sendStatus(statusesConstants.NO_CONTENT);
 
     return;
   }
