@@ -63,7 +63,7 @@ const update = (req, res) => {
     title,
     amount,
     category)) {
-    res.sendStatus(statusesConstants.NO_CONTENT);
+    res.sendStatus(statusesConstants.BAD_REQUEST);
 
     return;
   }
