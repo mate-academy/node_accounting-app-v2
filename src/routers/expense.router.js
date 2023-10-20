@@ -13,12 +13,12 @@ const expensesRouter = express.Router();
 
 expensesRouter.get('/', getAllExpenses);
 
-expensesRouter.get('/:expenseId', getExpenseById);
+expensesRouter.get('/:id', getExpenseById);
 
 expensesRouter.post('/', createExpense);
 
-expensesRouter.delete('/:expenseId', removeExpense);
+expensesRouter.delete('/:id', removeExpense);
 
-expensesRouter.patch('/:expenseId', updateExpense);
+expensesRouter.patch('/:id', updateExpense);
 
 module.exports = expensesRouter;

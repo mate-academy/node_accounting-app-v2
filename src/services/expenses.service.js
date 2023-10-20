@@ -7,7 +7,7 @@ const getExpenses = () => {
 };
 
 const getExpense = (id) => {
-  return expenses.find(expense => expense.id === +id) || null;
+  return expenses.find(expense => expense.id === Number(id)) || null;
 };
 
 const addExpense = ({
@@ -29,7 +29,7 @@ const addExpense = ({
 };
 
 const deleteExpense = (id) => {
-  expenses = expenses.filter(expense => expense.id !== +id);
+  expenses = expenses.filter(expense => expense.id !== Number(id));
 };
 
 const updateExpenseById = (id, body) => {

@@ -8,6 +8,7 @@ const {
   getExpenses,
   updateExpenseById,
 } = require('../services/expenses.service');
+const STATUS_CODES = require('../constants/statusCodes');
 
 const getAllExpenses = (req, res) => {
   const { userId, from, to, categories } = req.query;
@@ -15,7 +16,7 @@ const getAllExpenses = (req, res) => {
 
   if (userId) {
     preparedExpenses = preparedExpenses
-      .filter(expense => expense.userId === +userId);
+      .filter(expense => expense.userId === Number(userId));
   }
 
   if (from) {
@@ -36,19 +37,19 @@ const getAllExpenses = (req, res) => {
 
   if (categories) {
     preparedExpenses = preparedExpenses
-      .filter(expense => expense.category === categories);
+      .filter(expense => categories.includes(expense.category));
   }
 
   res.send(preparedExpenses);
 };
 
 const getExpenseById = (req, res) => {
-  const { expenseId } = req.params;
+  const { id } = req.params;
 
-  const foundExpense = getExpense(expenseId);
+  const foundExpense = getExpense(id);
 
   if (!foundExpense) {
-    res.sendStatus(404);
+    res.sendStatus(STATUS_CODES.NOT_FOUND);
 
     return;
   }
@@ -63,13 +64,13 @@ const createExpense = (req, res) => {
   const foundUser = getUserById(userId);
 
   if (userId && !foundUser) {
-    res.sendStatus(400);
+    res.sendStatus(STATUS_CODES.BAD_REQUEST);
 
     return;
   }
 
   if (!title) {
-    res.sendStatus(400);
+    res.sendStatus(STATUS_CODES.BAD_REQUEST);
 
     return;
   }
@@ -83,38 +84,38 @@ const createExpense = (req, res) => {
     note,
   });
 
-  res.statusCode = 201;
+  res.statusCode = STATUS_CODES.CREATED;
 
   res.send(newExpense);
 };
 
 const removeExpense = (req, res) => {
-  const { expenseId } = req.params;
-  const foundExpense = getExpense(expenseId);
+  const { id } = req.params;
+  const foundExpense = getExpense(id);
 
   if (!foundExpense) {
-    res.sendStatus(404);
+    res.sendStatus(STATUS_CODES.NOT_FOUND);
 
     return;
   }
 
-  deleteExpense(expenseId);
-  res.sendStatus(204);
+  deleteExpense(id);
+  res.sendStatus(STATUS_CODES.NO_CONTENT);
 };
 
 const updateExpense = (req, res) => {
-  const { expenseId } = req.params;
-  const expense = getExpense(expenseId);
+  const { id } = req.params;
+  const expense = getExpense(id);
 
   if (!expense) {
-    res.sendStatus(404);
+    res.sendStatus(STATUS_CODES.NOT_FOUND);
 
     return;
   }
 
   const { body } = req;
 
-  updateExpenseById(expenseId, body);
+  updateExpenseById(id, body);
 
   res.send(expense);
 };

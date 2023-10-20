@@ -7,6 +7,7 @@ const {
   removeUser,
   updateUser,
 } = require('../services/users.service');
+const STATUS_CODES = require('../constants/statusCodes');
 
 const getUsers = (req, res) => {
   const users = getAllUsers();
@@ -15,11 +16,11 @@ const getUsers = (req, res) => {
 };
 
 const getUser = (req, res) => {
-  const { userId } = req.params;
-  const foundUser = getUserById(userId);
+  const { id } = req.params;
+  const foundUser = getUserById(id);
 
   if (!foundUser) {
-    res.sendStatus(404);
+    res.sendStatus(STATUS_CODES.NOT_FOUND);
 
     return;
   }
@@ -31,54 +32,54 @@ const addUser = (req, res) => {
   const { name } = req.body;
 
   if (!name) {
-    res.sendStatus(400);
+    res.sendStatus(STATUS_CODES.BAD_REQUEST);
 
     return;
   }
 
   const newUser = createUser(name);
 
-  res.statusCode = 201;
+  res.statusCode = STATUS_CODES.CREATED;
   res.send(newUser);
 };
 
 const deleteUser = (req, res) => {
-  const { userId } = req.params;
-  const foundUser = getUserById(userId);
+  const { id } = req.params;
+  const foundUser = getUserById(id);
 
   if (!foundUser) {
-    res.sendStatus(404);
+    res.sendStatus(STATUS_CODES.NOT_FOUND);
 
     return;
   }
 
-  removeUser(userId);
-  res.sendStatus(204);
+  removeUser(id);
+  res.sendStatus(STATUS_CODES.NO_CONTENT);
 };
 
 const updateUserById = (req, res) => {
-  const { userId } = req.params;
+  const { id } = req.params;
   const { name } = req.body;
 
-  const foundUser = getUserById(userId);
+  const foundUser = getUserById(id);
 
   if (!foundUser) {
-    res.sendStatus(404);
+    res.sendStatus(STATUS_CODES.NOT_FOUND);
 
     return;
   }
 
   if (typeof name !== 'string') {
-    res.sendStatus(422);
+    res.sendStatus(STATUS_CODES.UNPROCESSABLE_ENTITY);
 
     return;
   }
 
   updateUser({
-    id: userId, name,
+    id: id, name,
   });
 
-  res.statusCode = 200;
+  res.statusCode = STATUS_CODES.SUCCESS;
 
   res.send(foundUser);
 };

@@ -12,12 +12,12 @@ const usersRouter = express.Router();
 
 usersRouter.get('/', getUsers);
 
-usersRouter.get('/:userId', getUser);
+usersRouter.get('/:id', getUser);
 
 usersRouter.post('/', addUser);
 
-usersRouter.delete('/:userId', deleteUser);
+usersRouter.delete('/:id', deleteUser);
 
-usersRouter.patch('/:userId', updateUserById);
+usersRouter.patch('/:id', updateUserById);
 
 module.exports = usersRouter;
