@@ -9,7 +9,7 @@ const getAll = (req, res) => {
   return users;
 };
 
-const getOne = (req, res) => {
+const getById = (req, res) => {
   const { id } = req.params;
 
   const user = usersService.getById(id);
@@ -71,7 +71,7 @@ const remove = (req, res) => {
 
 module.exports = {
   getAll,
-  getOne,
+  getById,
   create,
   update,
   remove,

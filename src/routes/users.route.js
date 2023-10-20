@@ -7,7 +7,7 @@ const userRouter = express.Router();
 
 userRouter.get('/', usersController.getAll);
 
-userRouter.get('/:id', usersController.getOne);
+userRouter.get('/:id', usersController.getById);
 
 userRouter.post('/', usersController.create);
 

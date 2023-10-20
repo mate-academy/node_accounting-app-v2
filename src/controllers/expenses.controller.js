@@ -12,10 +12,10 @@ const getAll = (req, res) => {
     categories,
   } = req.query;
 
-  let categoriesArray;
+  let category;
 
   if (categories) {
-    categoriesArray = Array.isArray(categories)
+    category = Array.isArray(categories)
       ? [...categories]
       : [categories];
   }
@@ -26,9 +26,9 @@ const getAll = (req, res) => {
     expenses = expenses.filter(expense => expense.userId === Number(userId));
   }
 
-  if (categoriesArray && categoriesArray.length) {
+  if (category && category.length) {
     expenses = expenses
-      .filter(expense => categoriesArray.includes(expense.category));
+      .filter(expense => category.includes(expense.category));
   }
 
   if (from) {
@@ -46,7 +46,7 @@ const getAll = (req, res) => {
   res.send(expenses);
 };
 
-const getOne = (req, res) => {
+const getById = (req, res) => {
   const { id } = req.params;
 
   const expense = expensesService.getById(id);
@@ -63,11 +63,7 @@ const getOne = (req, res) => {
 const create = (req, res) => {
   const {
     userId,
-    title,
-    spentAt,
-    amount,
-    category,
-    note,
+    ...params
   } = req.body;
 
   const user = userService.getById(userId);
@@ -80,12 +76,8 @@ const create = (req, res) => {
 
   const newExpense = {
     id: +new Date(),
+    ...params,
     userId,
-    spentAt,
-    title,
-    amount,
-    category,
-    note,
   };
 
   const expense = expensesService.add(newExpense);
@@ -127,7 +119,7 @@ const update = (req, res) => {
 
 module.exports = {
   getAll,
-  getOne,
+  getById,
   create,
   remove,
   update,

@@ -13,13 +13,13 @@ const add = expense => {
 };
 
 const getById = (expenseId) => {
-  const expense = expenses.find(({ id }) => id === +expenseId);
+  const expense = expenses.find(({ id }) => id === Number(expenseId));
 
   return expense;
 };
 
 const remove = (id) => {
-  expenses = expenses.filter(expense => expense.id !== +id);
+  expenses = expenses.filter(expense => expense.id !== Number(id));
 };
 
 const update = (id, body) => {

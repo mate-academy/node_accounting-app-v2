@@ -7,7 +7,7 @@ const getAll = () => {
 };
 
 const getById = (userId) => {
-  const user = users.find(({ id }) => id === +userId);
+  const user = users.find(({ id }) => id === Number(userId));
 
   return user;
 };
@@ -32,7 +32,7 @@ const update = (id, name) => {
 };
 
 const remove = (id) => {
-  users = users.filter(user => user.id !== +id);
+  users = users.filter(user => user.id !== Number(id));
 };
 
 const clear = () => {
