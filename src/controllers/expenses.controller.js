@@ -65,16 +65,7 @@ const getById = (req, res) => {
 };
 
 const create = (req, res) => {
-  const {
-    userId,
-    spentAt,
-    title,
-    amount,
-    category,
-    note,
-  } = req.body;
-
-  const user = usersService.getById(Number(userId));
+  const user = usersService.getById(Number(req.body.userId));
 
   if (!user) {
     res.sendStatus(STATUS_MESSAGES.BAD_REQUEST);
@@ -84,12 +75,7 @@ const create = (req, res) => {
 
   const newExpense = {
     id: Number(new Date()),
-    userId,
-    spentAt,
-    title,
-    amount,
-    category,
-    note,
+    ...req.body,
   };
 
   const expense = expensesService.add(newExpense);
