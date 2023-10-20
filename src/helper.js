@@ -15,7 +15,7 @@ const isExpense = (
   if (typeof userId !== 'string'
     && typeof spentAt !== 'string'
     && typeof title !== 'string'
-    && typeof amount !== 'string'
+    && typeof amount !== 'number'
     && typeof category !== 'string'
   ) {
     return true;
