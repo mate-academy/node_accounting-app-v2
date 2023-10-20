@@ -12,7 +12,7 @@ const isExpense = (
   amount,
   category,
 ) => {
-  if (typeof userId !== 'string'
+  if (typeof userId !== 'number'
     && typeof spentAt !== 'string'
     && typeof title !== 'string'
     && typeof amount !== 'number'
