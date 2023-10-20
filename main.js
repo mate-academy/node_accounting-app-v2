@@ -1,9 +1,11 @@
 'use strict';
 
 const { createServer } = require('./src/createServer');
+const { PORT } = require('./src/utils/constants');
 
-createServer()
-  .listen(3000, () => {
-    // eslint-disable-next-line no-console
-    console.log('Server is running on localhost:3000');
-  });
+const server = createServer();
+
+server.listen(PORT, () => {
+  // eslint-disable-next-line no-console
+  console.log('Server is running on localhost:3000');
+});
