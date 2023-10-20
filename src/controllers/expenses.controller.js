@@ -19,8 +19,12 @@ const getAll = (req, res) => {
   }
 
   if (categories) {
+    const categoriesArray = Array.isArray(categories)
+      ? categories
+      : [categories];
+
     expenses = expenses
-      .filter(expense => categories.includes(expense.category));
+      .filter(expense => categoriesArray.includes(expense.category));
   }
 
   if (from) {
