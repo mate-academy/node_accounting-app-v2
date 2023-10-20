@@ -31,7 +31,7 @@ function createUser(data) {
 }
 
 function deleteUser(userId) {
-  deleteItemById(users, userId);
+  users = deleteItemById(users, userId);
 }
 
 function updateUser(data) {

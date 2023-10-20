@@ -3,7 +3,7 @@
 const { Router } = require('express');
 const {
   get,
-  getOne,
+  getById,
   remove,
   patch,
   post,
@@ -12,7 +12,7 @@ const {
 const usersRouter = Router();
 
 usersRouter.get('/', get);
-usersRouter.get('/:id', getOne);
+usersRouter.get('/:id', getById);
 usersRouter.post('/', post);
 usersRouter.delete('/:id', remove);
 usersRouter.patch('/:id', patch);

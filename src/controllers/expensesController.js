@@ -5,6 +5,7 @@ const {
   createExpense,
   deleteExpense,
   updateExpense,
+  getAllExpenses,
   getFilteredExpenses,
 } = require('../services/expensesService');
 const {
@@ -16,28 +17,29 @@ const {
 const { validateId } = require('../utils/validateId');
 const { getUserById } = require('../services/usersService');
 const { prepareIdFromReq } = require('../utils/prepareIdFromReq');
+const { validateUserDataToPost } = require('../utils/validateUserDataToPost');
+const { ensureArray } = require('../utils/ensureArray');
 
-function get(req, res) {
-  const userId = +req.query.userId;
-  const user = req.query.userId ? getUserById(userId) : true;
+function getAll(req, res) {
+  const userId = Number(req.query.userId);
 
-  if (!user) {
+  if (userId && !getUserById(userId)) {
     res.sendStatus(INVALID_PARAMETERS_CODE);
 
     return;
   }
 
-  const expenses = getFilteredExpenses(
-    {
-      ...req.query,
-      userId,
-    },
-  );
+  const categories = ensureArray(req.query.categories);
+  const expenses = Object.values(req.query).length
+    ? getFilteredExpenses({
+      ...req.query, userId, categories,
+    })
+    : getAllExpenses();
 
   res.send(expenses);
 }
 
-function getOne(req, res) {
+function getById(req, res) {
   const id = prepareIdFromReq(req);
 
   if (validateId(id)) {
@@ -58,16 +60,11 @@ function getOne(req, res) {
 }
 
 function post(req, res) {
-  const dataToPost = {
-    ...req.body,
-  };
+  const dataToPost = req.body;
 
   if (
     !getUserById(dataToPost.userId)
-    || !dataToPost.spentAt
-    || !dataToPost.title
-    || !dataToPost.amount
-    || !dataToPost.category
+    || !validateUserDataToPost(dataToPost)
   ) {
     res.sendStatus(INVALID_PARAMETERS_CODE);
 
@@ -130,8 +127,8 @@ function patch(req, res) {
 }
 
 module.exports = {
-  get,
-  getOne,
+  getAll,
+  getById,
   post,
   remove,
   patch,

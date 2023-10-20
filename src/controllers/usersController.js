@@ -22,7 +22,7 @@ function get(req, res) {
   res.send(users);
 }
 
-function getOne(req, res) {
+function getById(req, res) {
   const id = prepareIdFromReq(req);
 
   if (validateId(id)) {
@@ -110,7 +110,7 @@ function post(req, res) {
 
 module.exports = {
   get,
-  getOne,
+  getById,
   remove,
   patch,
   post,

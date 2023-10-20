@@ -2,8 +2,8 @@
 
 const { Router } = require('express');
 const {
-  get,
-  getOne,
+  getAll,
+  getById,
   post,
   remove,
   patch,
@@ -11,8 +11,8 @@ const {
 
 const expensesRouter = Router();
 
-expensesRouter.get('/', get);
-expensesRouter.get('/:id', getOne);
+expensesRouter.get('/', getAll);
+expensesRouter.get('/:id', getById);
 expensesRouter.post('/', post);
 expensesRouter.delete('/:id', remove);
 expensesRouter.patch('/:id', patch);

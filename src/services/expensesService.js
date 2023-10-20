@@ -9,9 +9,13 @@ function resetExpenses() {
   expenses = [];
 }
 
+function getAllExpenses() {
+  return expenses;
+}
+
 function getFilteredExpenses({
   userId: queryUserId,
-  categories: queryCategories = [],
+  categories: queryCategories,
   from: queryFrom,
   to: queryTo,
 }) {
@@ -59,7 +63,7 @@ function createExpense(data) {
 }
 
 function deleteExpense(id) {
-  deleteItemById(expenses, id);
+  expenses = deleteItemById(expenses, id);
 }
 
 function updateExpense(data) {
@@ -67,6 +71,7 @@ function updateExpense(data) {
 }
 
 module.exports = {
+  getAllExpenses,
   resetExpenses,
   getFilteredExpenses,
   getExpenseById,
