@@ -41,7 +41,7 @@ const remove = (id) => {
 
 module.exports = {
   getAll,
-  getById: getById,
+  getById,
   create,
   update,
   remove,
