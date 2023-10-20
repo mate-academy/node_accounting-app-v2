@@ -46,8 +46,7 @@ const update = (req, res) => {
     title,
     amount,
     category,
-  }
-    = req.body;
+  } = req.body;
 
   const expense = expenseService.getById(id);
 
