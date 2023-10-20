@@ -71,8 +71,7 @@ const update = (req, res) => {
   const updatedExpense = expenseService.update({
     id,
     ...req.body,
-  }
-  );
+  });
 
   res.send(updatedExpense);
 };
