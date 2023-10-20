@@ -18,7 +18,7 @@ const createUser = (name) => {
 };
 
 const getUserById = (id) => {
-  return users.find((item) => item.id === Number(id));
+  return users.find((user) => user.id === Number(id));
 };
 
 const removeUser = (id) => {
