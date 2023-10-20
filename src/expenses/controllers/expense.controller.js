@@ -30,13 +30,15 @@ const create = (req, res) => {
     return;
   }
 
-  const expense = expenseService.create(
-    req.body
-  );
+  try {
+    const expense = expenseService.create(req.body);
 
-  res.statusCode = statusesConstants.CREATED;
+    res.statusCode = statusesConstants.CREATED;
 
-  res.send(expense);
+    res.send(expense);
+  } catch (err) {
+    res.sendStatus(statusesConstants.BAD_REQUEST);
+  }
 };
 
 const update = (req, res) => {

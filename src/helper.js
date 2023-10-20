@@ -22,7 +22,37 @@ const isExpense = (
   }
 };
 
+const toNumber = (param) => {
+  if (param == null) {
+    return param;
+  }
+
+  const numberValue = Number(param);
+
+  if (Number.isNaN(numberValue)) {
+    throw new Error(`Incorrect number: ${param}`);
+  }
+
+  return numberValue;
+};
+
+const toDate = (param) => {
+  if (param == null) {
+    return param;
+  }
+
+  const dateValue = new Date(param);
+
+  if (!(dateValue instanceof Date) || isNaN(dateValue)) {
+    throw new Error(`Incorrect date: ${param}`);
+  }
+
+  return dateValue;
+};
+
 module.exports = {
   getId,
   isExpense,
+  toNumber,
+  toDate,
 };

@@ -50,10 +50,10 @@ const getById = (id) => {
 const create = (body) => {
   const expense = {
     id: helper.getId(expenses),
-    userId: Number(body.userId),
-    spentAt: body.spentAt ? new Date(body.spentAt) : undefined,
+    userId: helper.toNumber(body.userId),
+    spentAt: helper.toDate(body.spentAt),
     title: body.title,
-    amount: Number(body.amount),
+    amount: helper.toNumber(body.amount),
     category: body.category,
     note: body.note,
   };
