@@ -3,6 +3,7 @@
 const expenseService = require('../services/expense.service.js');
 const userService = require('../../users/services/user.service.js');
 const statusesConstants = require('../../statusesConstants.js');
+const helper = require('../../helper.js');
 
 const getAll = (req, res) => {
   res.send(expenseService.getAll(req.query));
@@ -56,12 +57,12 @@ const update = (req, res) => {
     return;
   }
 
-  if (typeof userId !== 'string'
-    && typeof spentAt !== 'string'
-    && typeof title !== 'string'
-    && typeof amount !== 'string'
-    && typeof category !== 'string'
-  ) {
+  if (helper.isExpense(
+    userId,
+    spentAt,
+    title,
+    amount,
+    category)) {
     res.sendStatus(statusesConstants.NOT_FOUND);
 
     return;
