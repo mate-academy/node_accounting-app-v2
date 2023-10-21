@@ -1,12 +1,12 @@
 'use strict';
 
 const express = require('express');
-const users = [];
-const expenses = [];
-let userId = 0;
-let expenseId = 0;
 
-function createServer() {
+function createServer(initialUsers = [], initialExpenses = []) {
+  const users = [...initialUsers];
+  const expenses = [...initialExpenses];
+  let userId = 0;
+  let expenseId = 0;
   const app = express();
 
   app.use(express.json());
@@ -41,11 +41,11 @@ function createServer() {
     res.status(200).json(user);
   });
 
-  app.put('/users/:id', (req, res) => {
+  app.patch('/users/:id', (req, res) => {
     const user = users.find(u => u.id === parseInt(req.params.id));
 
     if (!user) {
-      return res.status(404).send();
+      return res.status(404).send({ message: 'Not found' });
     }
 
     const { name } = req.body;
