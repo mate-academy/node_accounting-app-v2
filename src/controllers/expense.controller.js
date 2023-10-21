@@ -1,10 +1,18 @@
 /* eslint-disable no-console */
 'use strict';
 
+const {
+  STATUS_CODE_OK,
+  STATUS_CODE_CREATED,
+  STATUS_CODE_NO_CONTENT,
+  STATUS_CODE_BAD_REQUEST,
+  STATUS_CODE_NOT_FOUND,
+} = require('../constants');
+
 const expenseService = require('../services/expense.service');
 const userService = require('../services/user.service');
 
-const get = (req, res) => {
+const getAll = (req, res) => {
   const {
     userId,
     categories,
@@ -15,33 +23,39 @@ const get = (req, res) => {
   let filteredExpenses = expenseService.getAll();
 
   if (userId) {
-    filteredExpenses = expenseService.getAllByUserId(+userId, filteredExpenses);
+    filteredExpenses = filteredExpenses
+      .filter(expense => expense.userId === +userId);
   }
 
   if (categories) {
-    filteredExpenses = expenseService
-      .getAllByCategory(categories, filteredExpenses);
+    filteredExpenses = filteredExpenses.filter(
+      ({ category }) => categories.includes(category)
+    );
   }
 
   if (from) {
-    filteredExpenses = expenseService.getAllByDateFrom(from, filteredExpenses);
+    filteredExpenses = filteredExpenses.filter(
+      ({ spentAt }) => new Date(spentAt).valueOf() >= new Date(from).valueOf()
+    );
   }
 
   if (to) {
-    filteredExpenses = expenseService.getAllByDateTo(to, filteredExpenses);
+    filteredExpenses = filteredExpenses.filter(
+      ({ spentAt }) => new Date(spentAt).valueOf() <= new Date(to).valueOf()
+    );
   }
 
-  res.statusCode = 200;
+  res.statusCode = STATUS_CODE_OK;
   res.send(filteredExpenses);
 };
 
-const getOne = (req, res) => {
-  const expenseId = +req.url.slice(1);
+const getById = (req, res) => {
+  const expenseId = Number(req.params.id);
 
   const expense = expenseService.getById(expenseId);
 
   if (!expense) {
-    res.sendStatus(404);
+    res.sendStatus(STATUS_CODE_NOT_FOUND);
 
     return;
   }
@@ -49,23 +63,23 @@ const getOne = (req, res) => {
   const user = userService.getById(expense.userId);
 
   if (!user && !expense.userId) {
-    res.sendStatus(400);
+    res.sendStatus(STATUS_CODE_BAD_REQUEST);
 
     return;
   }
 
-  res.statusCode = 200;
+  res.statusCode = STATUS_CODE_OK;
   res.send(expense);
 };
 
 const update = (req, res) => {
-  const expenseId = +req.url.slice(1);
+  const expenseId = Number(req.params.id);
   const body = req.body;
 
   const expense = expenseService.getById(expenseId);
 
   if (!expense || !body) {
-    res.sendStatus(404);
+    res.sendStatus(STATUS_CODE_NOT_FOUND);
 
     return;
   }
@@ -73,7 +87,7 @@ const update = (req, res) => {
   const user = userService.getById(expense.userId);
 
   if (!user) {
-    res.sendStatus(400);
+    res.sendStatus(STATUS_CODE_BAD_REQUEST);
 
     return;
   }
@@ -83,56 +97,54 @@ const update = (req, res) => {
     body,
   );
 
-  res.statusCode = 200;
+  res.statusCode = STATUS_CODE_OK;
   res.send(updatedExpense);
 };
 
 const create = (req, res) => {
-  const { title, amount, category, note, userId, spentAt } = req.body;
+  const {
+    title,
+    amount,
+    category,
+    userId,
+  } = req.body;
 
   if (!title || !amount || !category || !userId) {
-    res.sendStatus(400);
+    res.sendStatus(STATUS_CODE_BAD_REQUEST);
 
     return;
   }
 
   if (!userService.getById(+userId)) {
-    res.sendStatus(400);
+    res.sendStatus(STATUS_CODE_BAD_REQUEST);
 
     return;
   }
 
-  const expense = expenseService.create({
-    title,
-    amount,
-    category,
-    note,
-    userId,
-    spentAt,
-  });
+  const expense = expenseService.create(req.body);
 
-  res.statusCode = 201;
+  res.statusCode = STATUS_CODE_CREATED;
   res.send(expense);
 };
 
 const remove = (req, res) => {
-  const expenseId = req.url.slice(1);
+  const expenseId = Number(req.params.id);
 
   if (!expenseService.getById(+expenseId)) {
-    res.sendStatus(404);
+    res.sendStatus(STATUS_CODE_NOT_FOUND);
 
     return;
   }
 
   expenseService.deleteExpense(+expenseId);
 
-  res.sendStatus(204);
+  res.sendStatus(STATUS_CODE_NO_CONTENT);
 };
 
 module.exports = {
   update,
-  get,
-  getOne,
+  getAll,
+  getById,
   create,
   remove,
 };

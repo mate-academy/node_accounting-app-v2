@@ -6,25 +6,6 @@ const getAll = () => {
   return expenses;
 };
 
-const getAllByUserId = (queryUserId, filteredExpenses) => {
-  return filteredExpenses.filter(({ userId }) => userId === queryUserId);
-};
-
-const getAllByCategory = (queryCategory, filteredExpenses) => {
-  return filteredExpenses.filter(({ category }) => category.toLowerCase()
-    === queryCategory.toLowerCase());
-};
-
-const getAllByDateFrom = (queryFrom, filteredExpenses) => {
-  return filteredExpenses.filter(({ spentAt }) => new Date(spentAt).valueOf()
-    >= new Date(queryFrom).valueOf());
-};
-
-const getAllByDateTo = (queryTo, filteredExpenses) => {
-  return filteredExpenses.filter(({ spentAt }) => new Date(spentAt).valueOf()
-    <= new Date(queryTo).valueOf());
-};
-
 const getById = (expenseId) => {
   return expenses.find(({ id }) => id === expenseId) || null;
 };
@@ -64,10 +45,6 @@ const deleteAllExpenses = () => {
 
 module.exports = {
   getAll,
-  getAllByUserId,
-  getAllByCategory,
-  getAllByDateFrom,
-  getAllByDateTo,
   getById,
   create,
   update,

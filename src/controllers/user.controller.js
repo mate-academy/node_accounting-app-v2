@@ -1,109 +1,41 @@
 'use strict';
 
+const {
+  STATUS_CODE_OK,
+  STATUS_CODE_CREATED,
+  STATUS_CODE_NO_CONTENT,
+  STATUS_CODE_BAD_REQUEST,
+  STATUS_CODE_NOT_FOUND,
+} = require('../constants');
+
 const userService = require('../services/user.service');
 
-// const controlUsers = (req, res) => {
-//   switch (req.method) {
-//     case 'GET': {
-//       const userId = req.url.slice(1);
-
-//       if (userId) {
-//         const user = userService.sergetById(userId);
-
-//         return !user
-//           ? res.sendStatus(404)
-//           : res.send(user);
-//       } else {
-//         return res.send(userService.getAll());
-//       }
-//     };
-
-//     case 'POST': {
-//       const { name } = req.body;
-
-//       if (!name && !name.trim().length) {
-//         res.sendStatus(400);
-//       }
-
-//       const user = userService.create();
-
-//       res.statusCode = 201;
-
-//       res.send(user);
-
-//       break;
-//     };
-
-//     case 'PATCH': {
-//       const userId = req.url.slice(1);
-//       const { name } = req.body;
-
-//       const user = userService.getById(userId);
-
-//       if (!user && !userId) {
-//         res.sendStatus(404);
-
-//         return;
-//       }
-
-//       if (typeof name !== 'string' && !name.trim().length) {
-//         res.sendStatus(400);
-
-//         return;
-//       }
-
-//       userService.update(userId, name);
-//       res.send(user);
-
-//       break;
-//     };
-
-//     case 'DELETE': {
-//       const userId = req.url.slice(1);
-
-//       if (!userService.getById(+userId)) {
-//         res.sendStatus(404);
-
-//         return;
-//       }
-
-//       userService.deleteUser(+userId);
-
-//       res.sendStatus(204);
-
-//       break;
-//     };
-
-//     default: ;
-//   }
-// };
-
-const get = (req, res) => {
-  res.statusCode = 200;
+const getAll = (req, res) => {
+  res.statusCode = STATUS_CODE_OK;
   res.send(userService.getAll());
 };
 
-const getOne = (req, res) => {
-  const userId = +req.url.slice(1);
+const getById = (req, res) => {
+  const userId = Number(req.params.id);
 
   const user = userService.getById(userId);
 
   if (!user) {
-    res.sendStatus(404);
+    res.sendStatus(STATUS_CODE_NOT_FOUND);
 
     return;
   }
 
-  res.statusCode = 200;
+  res.statusCode = STATUS_CODE_OK;
   res.send(user);
 };
 
 const update = (req, res) => {
-  const userId = +req.url.slice(1);
+  const userId = Number(req.params.id);
   const { name } = req.body;
 
   if (typeof name !== 'string' || !name.trim().length || !userId) {
-    res.sendStatus(400);
+    res.sendStatus(STATUS_CODE_BAD_REQUEST);
 
     return;
   }
@@ -111,7 +43,7 @@ const update = (req, res) => {
   const user = userService.getById(userId);
 
   if (!user) {
-    res.sendStatus(404);
+    res.sendStatus(STATUS_CODE_NOT_FOUND);
 
     return;
   }
@@ -124,34 +56,34 @@ const create = (req, res) => {
   const { name } = req.body;
 
   if (!name || !name.trim().length) {
-    res.sendStatus(400);
+    res.sendStatus(STATUS_CODE_BAD_REQUEST);
 
     return;
   }
 
   const user = userService.create(name);
 
-  res.statusCode = 201;
+  res.statusCode = STATUS_CODE_CREATED;
   res.send(user);
 };
 
 const remove = (req, res) => {
-  const userId = +req.url.slice(1);
+  const userId = Number(req.params.id);
 
   if (!userService.getById(userId)) {
-    res.sendStatus(404);
+    res.sendStatus(STATUS_CODE_NOT_FOUND);
 
     return;
   }
 
   userService.deleteUser(userId);
-  res.sendStatus(204);
+  res.sendStatus(STATUS_CODE_NO_CONTENT);
 };
 
 module.exports = {
   update,
-  get,
-  getOne,
+  getAll,
+  getById,
   create,
   remove,
 };
