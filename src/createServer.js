@@ -1,3 +1,5 @@
+/* eslint-disable no-shadow */
+
 'use strict';
 
 const express = require('express');
@@ -11,7 +13,6 @@ function createServer(initialUsers = [], initialExpenses = []) {
 
   app.use(express.json());
 
-  // User Routes
   app.post('/users', (req, res) => {
     const { name } = req.body;
 
@@ -66,19 +67,34 @@ function createServer(initialUsers = [], initialExpenses = []) {
     res.status(204).send();
   });
 
-  // Expense Routes
   app.post('/expenses', (req, res) => {
-    const { description, amount, userId: userIdFromReq } = req.body;
+    const {
+      userId: newUserId,
+      spentAt,
+      note,
+      title,
+      amount,
+      category,
+    } = req.body;
 
-    if (!description || !amount || !userIdFromReq) {
+    const userExists = users.some(u => u.id === newUserId);
+
+    if (!userExists) {
+      return res.status(400).send({ message: 'User not found' });
+    }
+
+    if (!newUserId || !spentAt || !title || !note || !amount || !category) {
       return res.status(400).send();
     }
 
     const newExpense = {
       id: ++expenseId,
-      description,
+      userId: newUserId,
+      spentAt,
+      note,
+      title,
       amount,
-      userId: userIdFromReq,
+      category,
     };
 
     expenses.push(newExpense);
@@ -86,7 +102,35 @@ function createServer(initialUsers = [], initialExpenses = []) {
   });
 
   app.get('/expenses', (req, res) => {
-    res.status(200).json(expenses);
+    let filteredExpenses = [...expenses];
+
+    const { userId, categories, from, to } = req.query;
+
+    if (userId) {
+      filteredExpenses = filteredExpenses
+        .filter(expense => expense.userId === parseInt(userId));
+    }
+
+    if (categories) {
+      filteredExpenses = filteredExpenses
+        .filter(expense => categories.includes(expense.category));
+    }
+
+    if (from) {
+      const fromDate = new Date(from);
+
+      filteredExpenses = filteredExpenses
+        .filter(expense => new Date(expense.spentAt) >= fromDate);
+    }
+
+    if (to) {
+      const toDate = new Date(to);
+
+      filteredExpenses = filteredExpenses
+        .filter(expense => new Date(expense.spentAt) <= toDate);
+    }
+
+    res.status(200).json(filteredExpenses);
   });
 
   app.get('/expenses/:id', (req, res) => {
@@ -98,22 +142,35 @@ function createServer(initialUsers = [], initialExpenses = []) {
     res.status(200).json(expense);
   });
 
-  app.put('/expenses/:id', (req, res) => {
+  app.patch('/expenses/:id', (req, res) => {
     const expense = expenses.find(e => e.id === parseInt(req.params.id));
 
     if (!expense) {
       return res.status(404).send();
     }
 
-    const { description, amount } = req.body;
+    const { spentAt, title, amount, category, note } = req.body;
 
-    if (description) {
-      expense.description = description;
+    if (spentAt) {
+      expense.spentAt = spentAt;
+    }
+
+    if (title) {
+      expense.title = title;
     }
 
     if (amount) {
       expense.amount = amount;
     }
+
+    if (category) {
+      expense.category = category;
+    }
+
+    if (note) {
+      expense.note = note;
+    }
+
     res.status(200).json(expense);
   });
 
