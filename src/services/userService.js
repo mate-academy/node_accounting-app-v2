@@ -1,13 +1,30 @@
-const createUser = (users, userId, name) => {
+let currentUserId = 0;  // Initialize outside createUser
+
+const createUser = (users, name) => {
+  currentUserId++;  // Increment within createUser
   const newUser = {
-    id: ++userId,
+    id: currentUserId,
     name,
   };
-
   users.push(newUser);
   return newUser;
 };
 
+const getUserById = (users, id) => {
+  return users.find(u => u.id === parseInt(id));
+};
+
+const updateUser = (users, id, name) => {
+  const user = users.find(u => u.id === parseInt(id));
+  if (user && name) {
+    user.name = name;
+    return user;
+  }
+  return null;
+};
+
 module.exports = {
   createUser,
+  getUserById,
+  updateUser,
 };

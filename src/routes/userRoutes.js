@@ -5,7 +5,7 @@
 const express = require('express');
 const userService = require('../services/userService');
 
-const userRoutes = (users, userId) => {
+const userRoutes = (users) => {
   const router = express.Router();
 
   router.post('/', (req, res) => {
@@ -15,10 +15,7 @@ const userRoutes = (users, userId) => {
       return res.status(400).send();
     }
 
-    const newUser = userService.createUser(users, userId, name);
-
-    userId = newUser.id;
-
+    const newUser = userService.createUser(users, name);
     res.status(201).json(newUser);
   });
 
@@ -27,27 +24,23 @@ const userRoutes = (users, userId) => {
   });
 
   router.get('/:id', (req, res) => {
-    const user = users.find(u => u.id === parseInt(req.params.id));
+    const user = userService.getUserById(users, req.params.id);
 
     if (!user) {
       return res.status(404).send();
     }
+
     res.status(200).json(user);
   });
 
   router.patch('/:id', (req, res) => {
-    const user = users.find(u => u.id === parseInt(req.params.id));
+    const updatedUser = userService.updateUser(users, req.params.id, req.body.name);
 
-    if (!user) {
+    if (!updatedUser) {
       return res.status(404).send({ message: 'Not found' });
     }
 
-    const { name } = req.body;
-
-    if (name) {
-      user.name = name;
-    }
-    res.status(200).json(user);
+    res.status(200).json(updatedUser);
   });
 
   router.delete('/:id', (req, res) => {
