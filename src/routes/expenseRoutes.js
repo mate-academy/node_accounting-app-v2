@@ -43,8 +43,9 @@ const expenseRoutes = (expenses, expenseId, users) => {
   });
 
   router.get('/', (req, res) => {
-    console.log(req.query);
-    const filteredExpenses = expenseService.getFilteredExpenses(expenses, req.query);
+    const filteredExpenses = expenseService
+      .getFilteredExpenses(expenses, req.query);
+
     res.status(200).json(filteredExpenses);
   });
 

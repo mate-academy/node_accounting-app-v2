@@ -16,6 +16,7 @@ const userRoutes = (users) => {
     }
 
     const newUser = userService.createUser(users, name);
+
     res.status(201).json(newUser);
   });
 
@@ -34,7 +35,8 @@ const userRoutes = (users) => {
   });
 
   router.patch('/:id', (req, res) => {
-    const updatedUser = userService.updateUser(users, req.params.id, req.body.name);
+    const updatedUser = userService
+      .updateUser(users, req.params.id, req.body.name);
 
     if (!updatedUser) {
       return res.status(404).send({ message: 'Not found' });
@@ -44,12 +46,13 @@ const userRoutes = (users) => {
   });
 
   router.delete('/:id', (req, res) => {
-    const index = users.findIndex(u => u.id === parseInt(req.params.id));
+    const userId = parseInt(req.params.id);
+    const deleted = userService.deleteUser(users, userId);
 
-    if (index === -1) {
+    if (deleted === null) {
       return res.status(404).send();
     }
-    users.splice(index, 1);
+
     res.status(204).send();
   });
 

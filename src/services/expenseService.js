@@ -1,5 +1,6 @@
+'use strict';
+
 const getFilteredExpenses = (expenses, filters) => {
-  console.log(filters);
   let filteredExpenses = [...expenses];
   const { userId, categories, from, to } = filters;
 
