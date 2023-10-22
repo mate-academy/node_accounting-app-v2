@@ -15,13 +15,10 @@ const userRoutes = (users, userId) => {
       return res.status(400).send();
     }
 
-    // const newUser = {
-    //   id: ++userId,
-    //   name,
-    // };
-
     const newUser = userService.createUser(users, userId, name);
-    // users.push(newUser);
+
+    userId = newUser.id;
+
     res.status(201).json(newUser);
   });
 
