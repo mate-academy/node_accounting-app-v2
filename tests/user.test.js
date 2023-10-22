@@ -41,7 +41,7 @@ describe('User', () => {
     });
   });
 
-  describe('getUsers', () => {
+  describe('getUserByIds', () => {
     it('should return empty array if no users', async() => {
       const response = await api
         .get('/users')
@@ -90,7 +90,7 @@ describe('User', () => {
     });
   });
 
-  describe('getUser', () => {
+  describe('getUserById', () => {
     it('should return 404 if user does not exist', async() => {
       await api
         .get('/users/1')
