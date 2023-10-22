@@ -14,7 +14,7 @@ const getAllUsers = (req, res) => {
   res.send(userService.getAll());
 };
 
-const getUser = (req, res) => {
+const getUserById = (req, res) => {
   const { id } = req.params;
 
   if (!id) {
@@ -91,7 +91,7 @@ const updateUser = (req, res) => {
 
 module.exports = {
   getAllUsers,
-  getUser,
+  getUserById,
   postUser,
   deleteUser,
   updateUser,

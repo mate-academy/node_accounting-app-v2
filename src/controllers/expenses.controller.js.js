@@ -1,77 +1,83 @@
 'use strict';
 
-const {
-  OK,
-  CREATED,
-  NO_CONTENT,
-  BAD_REQUEST,
-  NOT_FOUND,
-} = require('../statusCode');
+const statusCode = require('../statusCode');
 const service = require('../services/expenses.services');
 const userService = require('../services/users.services');
 
-const getExpenses = (req, res) => {
-  const { userId, from, to, categories } = req.query;
+const getExpenses = function(req, res) {
+  const userId = req.query.userId;
+  const from = req.query.from;
+  const to = req.query.to;
+  const categories = req.query.categories;
 
   let expenses = service.getAll();
 
   if (userId) {
-    expenses = expenses.filter(expense =>
-      expense.userId === Number(userId));
+    expenses = expenses.filter(function(expense) {
+      return expense.userId === Number(userId);
+    });
   }
 
   if (categories) {
-    const categoriesArr = Array.isArray(categories)
+    const selectedCategories = Array.isArray(categories)
       ? categories
       : [categories];
 
-    expenses = expenses.filter(expense =>
-      categoriesArr.includes(expense.category));
+    expenses = expenses.filter(function(expense) {
+      return selectedCategories.includes(expense.category);
+    });
   }
 
   if (from) {
-    expenses = expenses.filter(expense =>
-      new Date(expense.spentAt).valueOf() >= new Date(from).valueOf());
+    expenses = expenses.filter(function(expense) {
+      return new Date(expense.spentAt).valueOf() >= new Date(from).valueOf();
+    });
   }
 
   if (to) {
-    expenses = expenses.filter(expense =>
-      new Date(expense.spentAt).valueOf() <= new Date(to).valueOf());
+    expenses = expenses.filter(function(expense) {
+      return new Date(expense.spentAt).valueOf() <= new Date(to).valueOf();
+    });
   }
 
-  res.statusCode = OK;
+  res.statusCode = statusCode.OK;
   res.send(expenses);
 };
 
-const postExpense = (req, res) => {
-  const { userId, spentAt, title, amount, category, note } = req.body;
+const postExpense = function(req, res) {
+  const userId = req.body.userId;
+  const spentAt = req.body.spentAt;
+  const title = req.body.title;
+  const amount = req.body.amount;
+  const category = req.body.category;
+  const note = req.body.note;
 
   if (!userService.getById(Number(userId))) {
-    res.sendStatus(BAD_REQUEST);
+    res.sendStatus(statusCode.BAD_REQUEST);
 
     return;
   }
 
   const newExpense = {
     id: Number(new Date()),
-    userId,
-    spentAt,
-    title,
-    amount,
-    category,
-    note,
+    userId: userId,
+    spentAt: spentAt,
+    title: title,
+    amount: amount,
+    category: category,
+    note: note,
   };
 
   service.add(newExpense);
-  res.statusCode = CREATED;
+  res.statusCode = statusCode.CREATED;
   res.send(newExpense);
 };
 
-const getOneExpense = (req, res) => {
-  const { id } = req.params;
+const getExpenseById = function(req, res) {
+  const id = req.params.id;
 
   if (!id) {
-    res.sendStatus(BAD_REQUEST);
+    res.sendStatus(statusCode.BAD_REQUEST);
 
     return;
   }
@@ -79,40 +85,40 @@ const getOneExpense = (req, res) => {
   const expense = service.getById(Number(id));
 
   if (!expense) {
-    res.sendStatus(NOT_FOUND);
+    res.sendStatus(statusCode.NOT_FOUND);
 
     return;
   }
 
-  res.statusCode = OK;
+  res.statusCode = statusCode.OK;
   res.send(expense);
 };
 
-const deleteExpense = (req, res) => {
-  const { id } = req.params;
+const deleteExpense = function(req, res) {
+  const id = req.params.id;
   const expense = service.getById(Number(id));
 
   if (!expense) {
-    res.sendStatus(NOT_FOUND);
+    res.sendStatus(statusCode.NOT_FOUND);
 
     return;
   }
 
   service.remove(Number(id));
-  res.sendStatus(NO_CONTENT);
+  res.sendStatus(statusCode.NO_CONTENT);
 };
 
-const updateExpense = (req, res) => {
-  const { id } = req.params;
+const updateExpense = function(req, res) {
+  const id = req.params.id;
 
   if (!id || !req.body) {
-    res.sendStatus(BAD_REQUEST);
+    res.sendStatus(statusCode.BAD_REQUEST);
 
     return;
   }
 
   if (!service.getById(Number(id))) {
-    res.sendStatus(NOT_FOUND);
+    res.sendStatus(statusCode.NOT_FOUND);
 
     return;
   }
@@ -123,7 +129,7 @@ const updateExpense = (req, res) => {
 module.exports = {
   getExpenses,
   postExpense,
-  getOneExpense,
+  getExpenseById,
   deleteExpense,
   updateExpense,
 };
