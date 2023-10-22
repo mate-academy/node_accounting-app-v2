@@ -105,29 +105,30 @@ function createServer() {
   });
 
   app.get('/expenses', (req, res) => {
-    const { userId, categories, from, to } = req.query;
-    const isDateInRange = (date, startDate, endDate) => {
-      return (!startDate || date >= startDate) && (!endDate || date <= endDate);
-    };
+    const { userId, from, to, categories } = req.query;
+    let filteredExpenses = expenses;
 
-    const getAll = () => {
-      const startDate = from ? new Date(from) : null;
-      const endDate = to ? new Date(to) : null;
+    if (userId) {
+      filteredExpenses = filteredExpenses
+        .filter(expense => expense.userId === Number(userId));
+    }
 
-      const filteredExpenses = expenses.filter(expense => {
-        const expenseUserId = expense.userId;
-        const expenseCategory = expense.category;
-        const expenseDate = new Date(expense.spentAt);
+    if (categories) {
+      const categoryList = categories.split(',');
 
-        return (!userId || userId === expenseUserId)
-          && (!categories || categories.includes(expenseCategory))
-          && isDateInRange(expenseDate, startDate, endDate);
+      filteredExpenses = filteredExpenses
+        .filter(expense => categoryList.includes(expense.category));
+    }
+
+    if (from && to) {
+      filteredExpenses = filteredExpenses.filter(expense => {
+        const spentAt = new Date(expense.spentAt);
+
+        return spentAt >= new Date(from) && spentAt <= new Date(to);
       });
+    }
 
-      return filteredExpenses;
-    };
-
-    res.status(200).json(getAll());
+    res.send(filteredExpenses);
   });
 
   app.get('/expenses/:id', (req, res) => {
