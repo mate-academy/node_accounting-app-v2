@@ -1,5 +1,3 @@
-/* eslint-disable no-param-reassign */
-
 'use strict';
 
 const express = require('express');

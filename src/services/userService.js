@@ -1,9 +1,9 @@
 'use strict';
 
-let currentUserId = 0; // Initialize outside createUser
+let currentUserId = 0;
 
 const createUser = (users, name) => {
-  currentUserId++; // Increment within createUser
+  currentUserId++;
 
   const newUser = {
     id: currentUserId,
