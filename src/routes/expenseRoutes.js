@@ -3,6 +3,7 @@
 'use strict';
 
 const express = require('express');
+const expenseService = require('../services/expenseService');
 
 const expenseRoutes = (expenses, expenseId, users) => {
   const router = express.Router();
@@ -42,34 +43,7 @@ const expenseRoutes = (expenses, expenseId, users) => {
   });
 
   router.get('/', (req, res) => {
-    let filteredExpenses = [...expenses];
-
-    const { userId, categories, from, to } = req.query;
-
-    if (userId) {
-      filteredExpenses = filteredExpenses
-        .filter(expense => expense.userId === parseInt(userId));
-    }
-
-    if (categories) {
-      filteredExpenses = filteredExpenses
-        .filter(expense => categories.includes(expense.category));
-    }
-
-    if (from) {
-      const fromDate = new Date(from);
-
-      filteredExpenses = filteredExpenses
-        .filter(expense => new Date(expense.spentAt) >= fromDate);
-    }
-
-    if (to) {
-      const toDate = new Date(to);
-
-      filteredExpenses = filteredExpenses
-        .filter(expense => new Date(expense.spentAt) <= toDate);
-    }
-
+    const filteredExpenses = expenseService.getFilteredExpenses(expenses, req.query);
     res.status(200).json(filteredExpenses);
   });
 

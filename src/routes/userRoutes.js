@@ -3,6 +3,7 @@
 'use strict';
 
 const express = require('express');
+const userService = require('../services/userService');
 
 const userRoutes = (users, userId) => {
   const router = express.Router();
@@ -14,12 +15,13 @@ const userRoutes = (users, userId) => {
       return res.status(400).send();
     }
 
-    const newUser = {
-      id: ++userId,
-      name,
-    };
+    // const newUser = {
+    //   id: ++userId,
+    //   name,
+    // };
 
-    users.push(newUser);
+    const newUser = userService.createUser(users, userId, name);
+    // users.push(newUser);
     res.status(201).json(newUser);
   });
 
