@@ -8,7 +8,7 @@ const getAllUsers = () => {
 
 const createUser = (name) => {
   const newUser = {
-    id: users.length + 1,
+    id: Number(new Date()),
     name,
   };
 

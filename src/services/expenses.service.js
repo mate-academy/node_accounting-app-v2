@@ -10,17 +10,10 @@ const getExpense = (id) => {
   return expenses.find(expense => expense.id === Number(id)) || null;
 };
 
-const addExpense = ({
-  userId, spentAt, title, amount, category, note,
-}) => {
+const addExpense = (values) => {
   const newExpense = {
-    id: expenses.length + 1,
-    userId,
-    spentAt,
-    title,
-    amount,
-    category,
-    note,
+    id: Number(new Date()),
+    ...values,
   };
 
   expenses.push(newExpense);

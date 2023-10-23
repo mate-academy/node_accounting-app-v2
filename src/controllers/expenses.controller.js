@@ -36,8 +36,13 @@ const getAllExpenses = (req, res) => {
   }
 
   if (categories) {
-    preparedExpenses = preparedExpenses
-      .filter(expense => categories.includes(expense.category));
+    const selectedCategories = Array.isArray(categories)
+      ? categories
+      : [categories];
+
+    preparedExpenses = preparedExpenses.filter((expense) => {
+      return selectedCategories.includes(expense.category);
+    });
   }
 
   res.send(preparedExpenses);
@@ -58,30 +63,22 @@ const getExpenseById = (req, res) => {
 };
 
 const createExpense = (req, res) => {
-  const {
-    userId, spentAt, title, amount, category, note,
-  } = req.body;
-  const foundUser = getUserById(userId);
+  const foundUser = getUserById(req.body.userId);
 
-  if (userId && !foundUser) {
+  if (req.body.userId && !foundUser) {
     res.sendStatus(STATUS_CODES.BAD_REQUEST);
 
     return;
   }
 
-  if (!title) {
+  if (!req.body.title) {
     res.sendStatus(STATUS_CODES.BAD_REQUEST);
 
     return;
   }
 
   const newExpense = addExpense({
-    userId,
-    spentAt,
-    title,
-    amount,
-    category,
-    note,
+    ...req.body,
   });
 
   res.statusCode = STATUS_CODES.CREATED;
