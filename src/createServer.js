@@ -153,7 +153,7 @@ app.post('/expenses', (req, res) => {
 
 // Endpoint do pobierania informacji o wszystkich wydatkach z filtrowaniem
 app.get('/expenses', (req, res) => {
-  const { userId, spentAt, title, amount, category, note, from, to } = req.query;
+  const { userId, spentAt, title, amount, category, note, from, to, categories } = req.query;
 
   const startDate = new Date(req.query.startDate);
   const endDate = new Date(req.query.endDate);
@@ -168,17 +168,20 @@ app.get('/expenses', (req, res) => {
     return res.json([]);
   } else if (!userId && !spentAt && !title && !amount && !category && !note && !from && (filteredExpenses.length > 0)) {
     return res.json(filteredExpenses);
-  } else if (!!userId && !category) {
+  } else if (!!userId && !categories) {
     filteredExpenses = filteredExpenses
       .filter((e) => e.userId === +userId);
 
     // eslint-disable-next-line no-useless-return
     return res.json(filteredExpenses);
-  } else if (!!category && !!userId) {
-    filteredExpenses = filteredExpenses
-      .filter((e) => e.category === category);
+  } else if (categories && userId) {
+    console.log('kontrolka');
 
+    filteredExpenses = filteredExpenses
+      .filter((e) => e.category.toString() === categories.toString());
+    console.log(filteredExpenses, categories);
     // eslint-disable-next-line no-useless-return
+
     return res.json(filteredExpenses);
   } else if (!!from && !!to) {
     const fromDate = new Date(from);
