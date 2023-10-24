@@ -1,10 +1,10 @@
 'use strict';
 
 const express = require('express');
-const { usersController } = require('./users/users.controller');
 const { usersService } = require('./users/users.service');
 const { expensesService } = require('./expenses/expenses.service');
-const { expensesController } = require('./expenses/expenses.controller');
+const { usersRouter } = require('./users/users.router');
+const { expensesRouter } = require('./expenses/expenses.router');
 
 function createServer() {
   const app = express();
@@ -14,25 +14,8 @@ function createServer() {
   expensesService.deleteExpenses();
   usersService.deleteUsers();
 
-  app.get('/users', usersController.getAllUsers);
-
-  app.post('/users', usersController.addNextUser);
-
-  app.delete('/users/:userId', usersController.deleteUser);
-
-  app.get('/users/:userId', usersController.getOneUser);
-
-  app.put('/users/:userId', usersController.userToUpdate);
-
-  app.get('/expenses', expensesController.getAllExpenses);
-
-  app.post('/expenses', expensesController.addNextExpense);
-
-  app.delete('/expenses/:expenseId', expensesController.deleteExpense);
-
-  app.get('/expenses/:expenseId', expensesController.getOneExpense);
-
-  app.put('/expenses/:expenseId', expensesController.expenseToUpdate);
+  app.use('/', usersRouter);
+  app.use('/', expensesRouter);
 
   return app;
 }

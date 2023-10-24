@@ -6,7 +6,7 @@ const getUsers = () => users;
 
 const indexOfUser = (userId) => users.findIndex(u => u.id === Number(userId));
 
-const getSingleUser = (userId) => users.find(u => u.id === userId);
+const getUserById = (userId) => users.find(u => u.id === userId);
 
 const addUser = (user) => users.push(user);
 
@@ -26,7 +26,7 @@ const deleteUsers = () => {
 const usersService = {
   users,
   getUsers,
-  getSingleUser,
+  getUserById,
   addUser,
   indexOfUser,
   deleteUser,

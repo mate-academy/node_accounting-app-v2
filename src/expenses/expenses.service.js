@@ -4,7 +4,7 @@ const expenses = [];
 
 const getExpenses = () => expenses;
 
-const getSingleExpense = (expenseId) => expenses.find(e => e.id === expenseId);
+const getExpenseById = (expenseId) => expenses.find(e => e.id === expenseId);
 
 const addExpense = (expense) => expenses.push(expense);
 
@@ -31,7 +31,7 @@ const deleteExpenses = () => {
 const expensesService = {
   expenses,
   getExpenses,
-  getSingleExpense,
+  getExpenseById,
   addExpense,
   deleteExpense,
   updateExpense,

@@ -7,22 +7,22 @@ const getAllExpenses = (req, res) => {
   const { categories, userId, from, to } = req.query;
   let filteredExpenses = expensesService.getExpenses();
 
-  switch (true) {
-    case Boolean(categories):
+  switch (req.query) {
+    case categories:
       filteredExpenses = filteredExpenses
         .filter(expense => expense.category === categories);
       break;
-    case Boolean(userId):
+    case userId:
       filteredExpenses = filteredExpenses
         .filter(expense => expense.userId === Number(userId));
       break;
 
-    case Boolean(from):
+    case from:
       filteredExpenses = filteredExpenses
         .filter(expense => new Date(expense.spentAt) > new Date(from));
       break;
 
-    case Boolean(to):
+    case to:
       filteredExpenses = filteredExpenses
         .filter(expense => new Date(expense.spentAt) < new Date(to));
       break;
@@ -36,7 +36,7 @@ const getAllExpenses = (req, res) => {
 
 const getOneExpense = (req, res) => {
   const { expenseId } = req.params;
-  const foundExpense = expensesService.getSingleExpense(expenseId);
+  const foundExpense = expensesService.getExpenseById(expenseId);
 
   if (!foundExpense) {
     res.sendStatus(404);

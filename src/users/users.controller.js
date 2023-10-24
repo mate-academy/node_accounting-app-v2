@@ -8,7 +8,7 @@ const getAllUsers = (req, res) => {
 
 const getOneUser = (req, res) => {
   const { userId } = req.params;
-  const foundUser = usersService.getSingleUser(userId);
+  const foundUser = usersService.getUserById(userId);
 
   if (!foundUser) {
     res.sendStatus(404);
