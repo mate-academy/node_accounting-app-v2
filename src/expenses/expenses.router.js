@@ -4,14 +4,14 @@ const express = require('express');
 const expensesRouter = express.Router();
 const { expensesController } = require('./expenses.controller');
 
-expensesRouter.get('/expenses', expensesController.getAllExpenses);
+expensesRouter.get('/', expensesController.getAllExpenses);
 
-expensesRouter.post('/expenses', expensesController.addNextExpense);
+expensesRouter.post('/', expensesController.addNextExpense);
 
-expensesRouter.delete('/expenses/:expenseId', expensesController.deleteExpense);
+expensesRouter.delete('/:expenseId', expensesController.deleteExpense);
 
-expensesRouter.get('/expenses/:expenseId', expensesController.getOneExpense);
+expensesRouter.get('/:expenseId', expensesController.getOneExpense);
 
-expensesRouter.put('/expenses/:expenseId', expensesController.expenseToUpdate);
+expensesRouter.put('/:expenseId', expensesController.expenseToUpdate);
 
 module.exports = { expensesRouter };

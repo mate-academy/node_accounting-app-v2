@@ -14,8 +14,8 @@ function createServer() {
   expensesService.deleteExpenses();
   usersService.deleteUsers();
 
-  app.use('/', usersRouter);
-  app.use('/', expensesRouter);
+  app.use('/users', usersRouter);
+  app.use('/expenses', expensesRouter);
 
   return app;
 }
