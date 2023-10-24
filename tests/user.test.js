@@ -38,7 +38,7 @@ describe('User', () => {
   });
 
   describe('getUsers', () => {
-    it.skip('should return empty array if no users', async () => {
+    it('should return empty array if no users', async () => {
       const response = await api
         .get('/users')
         .expect(200)

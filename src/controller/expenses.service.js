@@ -5,7 +5,7 @@ const { expenses } = require('../data/expenses.js');
 const getAll = (params) => {
   const filteredExpenses = expenses
     .filter((expense) =>
-      params.userId >= 0 ? expense.userId === params.userId : true,
+      params.userId ? expense.userId === params.userId : true,
     )
     .filter((expense) =>
       params.categories ? params.categories.includes(expense.category) : true,
@@ -28,7 +28,7 @@ const addExpense = (expense) => {
 const delExpense = (id) => {
   const index = expenses.findIndex((exp) => exp.id === +id);
 
-  if (index >= 0) {
+  if (index !== -1) {
     expenses.splice(index, 1);
   }
 

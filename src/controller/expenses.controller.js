@@ -5,21 +5,17 @@ const { checkType } = require('../functions/checkType.js');
 const { users } = require('../data/users.js');
 const { expenses } = require('../data/expenses.js');
 
-const getAll = async (req, res) => {
+const getAll = (req, res) => {
   const params = {
-    userId: +req.query.userId,
+    userId: +req.query.userId ? +req.query.userId : null,
     categories: req.query.categories ? [req.query.categories].flat() : null,
-    from: req.query.from,
-    to: req.query.to,
+    from: req.query.from ? req.query.from : null,
+    to: req.query.to ? req.query.to : null,
   };
 
-  try {
-    const result = await expensesServices.getAll(params);
+  const result = expensesServices.getAll(params);
 
-    res.json(result).end();
-  } catch (error) {
-    throw new Error(error);
-  }
+  res.json(result).end();
 };
 
 const getOne = (req, res) => {
@@ -42,7 +38,7 @@ const getOne = (req, res) => {
 
 const addExpense = (req, res) => {
   if (
-    ['userId', 'spentAt', 'title', 'amount', 'category', 'note'].every((key) =>
+    ['userId', 'spentAt', 'title', 'amount', 'category'].every((key) =>
       Object.keys(req.body).includes(key),
     ) &&
     Object.entries(req.body).every((entry) => checkType(entry[0], entry[1])) &&

@@ -6,14 +6,10 @@ const { expenses } = require('../data/expenses.js');
 
 const userService = require('./user.service.js');
 
-const getAll = async (req, res) => {
-  try {
-    const result = await userService.getAll();
+const getAll = (req, res) => {
+  const result = userService.getAll();
 
-    res.json(result);
-  } catch (error) {
-    throw new Error(error);
-  }
+  res.json(result);
 };
 
 const getOne = (req, res) => {
@@ -52,7 +48,7 @@ const addUser = (req, res) => {
 const editUser = async (req, res) => {
   const id = +req.params.id;
 
-  if (isNaN(id)) {
+  if (!id) {
     res.sendStatus(400);
 
     return;
@@ -60,7 +56,7 @@ const editUser = async (req, res) => {
 
   const userIndex = users.findIndex((user) => user.id === id);
 
-  if (!userIndex) {
+  if (userIndex === -1) {
     res.sendStatus(404).end();
 
     return;
@@ -83,36 +79,30 @@ const editUser = async (req, res) => {
   res.send(userService.editUser(userIndex, name)).end();
 };
 
-const delUser = async (req, res) => {
-  const userId = +req.params.id;
+const delUser = (req, res) => {
+  const { id } = req.params;
 
-  if (isNaN(userId)) {
-    res.sendStatus(400);
-
-    return;
-  }
-
-  if (!userId) {
+  if (!id) {
     res.sendStatus(404);
 
     return;
   }
 
-  const index = users.findIndex((user) => user.id === userId);
+  const index = users.findIndex((user) => user.id === +id);
 
-  if (index < 0) {
+  if (index === -1) {
     res.sendStatus(404).end();
 
     return;
   }
 
   expenses.forEach((exp) => {
-    if (exp.userId === userId) {
+    if (exp.userId === +id) {
       expensesServices.delExpense(exp.id);
     }
   });
 
-  await userService.delUser(index);
+  userService.delUser(index);
   res.sendStatus(204).end();
 };
 

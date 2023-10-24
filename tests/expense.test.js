@@ -62,7 +62,7 @@ describe('Expense', () => {
   });
 
   describe('getExpenses', () => {
-    it.skip('should return empty array if no expenses', async () => {
+    it('should return empty array if no expenses', async () => {
       const response = await api
         .get('/expenses')
         .expect(200)
@@ -71,7 +71,7 @@ describe('Expense', () => {
       expect(response.body).toEqual([]);
     });
 
-    it.skip('should return all expenses', async () => {
+    it('should return all expenses', async () => {
       const {
         body: { id: userId },
       } = await api.post('/users').send({
@@ -148,7 +148,7 @@ describe('Expense', () => {
       ]);
     });
 
-    it.skip('should return all expenses between dates', async () => {
+    it('should return all expenses between dates', async () => {
       const {
         body: { id: userId },
       } = await api.post('/users').send({
