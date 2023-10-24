@@ -3,11 +3,11 @@
 const expensesServices = require('../services/expenses.services.js');
 const userServices = require('../services/users.services.js');
 
-const getAll = (req, res) => {
-  res.status(200).send(expensesServices.getAll(req.query));
+const getAllExpenses = (req, res) => {
+  res.status(200).send(expensesServices.getAllExpenses(req.query));
 };
 
-const add = (req, res) => {
+const addExpense = (req, res) => {
   const {
     userId,
     spentAt,
@@ -52,7 +52,7 @@ const getCurrentExpense = (req, res) => {
   res.status(200).send(currentExpense);
 };
 
-const remove = (req, res) => {
+const removeExpense = (req, res) => {
   const { expenseId } = req.params;
   const currentExpense = expensesServices.getExpenseById(expenseId);
 
@@ -67,7 +67,7 @@ const remove = (req, res) => {
   res.sendStatus(204);
 };
 
-const update = (req, res) => {
+const updateExpense = (req, res) => {
   const { expenseId } = req.params;
   const currentExpense = expensesServices.getExpenseById(expenseId);
 
@@ -83,9 +83,9 @@ const update = (req, res) => {
 };
 
 module.exports = {
-  getAll,
-  add,
+  getAllExpenses,
+  addExpense,
   getCurrentExpense,
-  remove,
-  update,
+  removeExpense,
+  updateExpense,
 };

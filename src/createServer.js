@@ -9,8 +9,8 @@ const expenseServices = require('./services/expenses.services');
 function createServer() {
   const app = express();
 
-  expenseServices.resetExpense();
-  usersServices.resetUser();
+  expenseServices.resetExpenses();
+  usersServices.resetUsers();
 
   app.use('/users', express.json(), usersRouter);
   app.use('/expenses', express.json(), expensesRouter);

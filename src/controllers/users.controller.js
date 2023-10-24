@@ -2,11 +2,11 @@
 
 const userServices = require('../services/users.services');
 
-const getAll = (_req, res) => {
-  res.send(userServices.getAll());
+const getAllUsers = (_req, res) => {
+  res.send(userServices.getAllUsers());
 };
 
-const add = (req, res) => {
+const addUser = (req, res) => {
   const { name } = req.body;
 
   if (!name) {
@@ -31,7 +31,7 @@ const getCurrentUser = (req, res) => {
   res.send(foundUser);
 };
 
-const remove = (req, res) => {
+const removeUser = (req, res) => {
   const { userId } = req.params;
   const foundUser = userServices.getUserById(userId);
 
@@ -46,7 +46,7 @@ const remove = (req, res) => {
   res.sendStatus(204);
 };
 
-const update = (req, res) => {
+const updateUser = (req, res) => {
   const { userId } = req.params;
   const { name } = req.body;
   const foundUser = userServices.getUserById(userId);
@@ -67,9 +67,9 @@ const update = (req, res) => {
 };
 
 module.exports = {
-  getAll,
-  add,
+  getAllUsers,
+  addUser,
   getCurrentUser,
-  remove,
-  update,
+  removeUser,
+  updateUser,
 };

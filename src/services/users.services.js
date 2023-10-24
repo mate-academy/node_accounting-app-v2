@@ -3,7 +3,7 @@
 let users = [];
 let currentId = 0;
 
-const getAll = () => {
+const getAllUsers = () => {
   return users;
 };
 
@@ -38,15 +38,15 @@ const updateUser = (userId, newName) => {
   return findUser;
 };
 
-const resetUser = () => {
+const resetUsers = () => {
   users = [];
 };
 
 module.exports = {
-  getAll,
+  getAllUsers,
   createUser,
   getUserById,
   removeUser,
   updateUser,
-  resetUser,
+  resetUsers,
 };

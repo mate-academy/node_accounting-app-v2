@@ -3,7 +3,7 @@
 let expenses = [];
 let currentId = 0;
 
-const getAll = ({
+const getAllExpenses = ({
   userId,
   categories,
   to,
@@ -64,22 +64,22 @@ const removeExpense = (expenseId) => {
 };
 
 const updateExpense = (expenseId, params) => {
-  const currentExpense = getExpenseById(expenseId);
+  const currentExpenses = getExpenseById(expenseId);
 
-  Object.assign(currentExpense, params);
+  Object.assign(currentExpenses, params);
 
-  return currentExpense;
+  return currentExpenses;
 };
 
-const resetExpense = () => {
+const resetExpenses = () => {
   expenses = [];
 };
 
 module.exports = {
-  getAll,
+  getAllExpenses,
   createExpense,
   getExpenseById,
   removeExpense,
   updateExpense,
-  resetExpense,
+  resetExpenses,
 };
