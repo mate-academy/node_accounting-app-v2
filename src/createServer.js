@@ -1,13 +1,12 @@
 'use strict';
 
-// const express = require('express');
+const express = require('express');
+const app = express();
 
-function createServer() {
-  // Use express to create a server
-  // Add a routes to the server
-  // Return the server (express app)
-}
+const expensesRouter = require('./expensesRouter');
 
-module.exports = {
-  createServer,
-};
+app.use('/expenses', expensesRouter);
+
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT);
