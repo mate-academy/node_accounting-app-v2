@@ -1,9 +1,14 @@
 'use strict';
 
-const { createServer } = require('./src/createServer');
+const dotenv = require('dotenv');
 
-createServer()
-  .listen(3000, () => {
-    // eslint-disable-next-line no-console
-    console.log('Server is running on localhost:3000');
-  });
+dotenv.config();
+
+const { createServer } = require('./src/createServer.js');
+
+const PORT = process.env.PORT || 8080;
+
+createServer().listen(3000, () => {
+  // eslint-disable-next-line no-console
+  console.log(`Server is running on localhost:${PORT}`);
+});
