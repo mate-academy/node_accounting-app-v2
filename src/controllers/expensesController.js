@@ -1,11 +1,10 @@
 'use strict';
 
-const { users } = require('./usersController');
-
-const expenses = [];
+const { expenseServices } = require('../services/expensesServices');
+const { userServices } = require('../services/userServices');
 
 function getExpenses(req, res) {
-  let currentExpenses = [...expenses];
+  let currentExpenses = expenseServices.getExpenses();
   const userId = Number(req.query.userId);
   let from = req.query.from;
   let to = req.query.to;
@@ -39,7 +38,7 @@ function getExpenseById(req, res) {
   const { id } = req.params;
   const searchId = +id;
 
-  const expenseResult = expenses.find(expense => expense.id === searchId);
+  const expenseResult = expenseServices.getExpense(searchId);
 
   if (!expenseResult) {
     res.sendStatus(404);
@@ -58,7 +57,7 @@ function createExpense(req, res) {
     return;
   }
 
-  const userIds = users.map(user => user.id);
+  const userIds = userServices.getAllIds();
 
   if (!userIds.includes(userId)) {
     res.sendStatus(400);
@@ -66,7 +65,7 @@ function createExpense(req, res) {
     return;
   }
 
-  let id = Math.max(...expenses.map(exp => exp.id)) + 1;
+  let id = expenseServices.getId();
 
   if (id === -Infinity) {
     id = 0;
@@ -82,7 +81,7 @@ function createExpense(req, res) {
     note,
   };
 
-  expenses.push(expense);
+  expenseServices.createExpense(expense);
   res.statusCode = 201;
   res.send(expense);
 }
@@ -92,7 +91,7 @@ function updateExpense(req, res) {
   const searchId = +id;
   const { userId, spentAt, title, amount, category, note } = req.body;
 
-  const index = expenses.findIndex(exp => exp.id === searchId);
+  const index = expenseServices.expenseIndex(searchId);
 
   if (index === -1) {
     res.sendStatus(404);
@@ -110,19 +109,15 @@ function updateExpense(req, res) {
     return;
   }
 
-  const expense = expenses[index];
-
-  Object.assign(expense, {
-    userId, spentAt, title, amount, category, note,
-  });
-  res.send(expense);
+  res.send(expenseServices.updateExpense(index,
+    userId, spentAt, title, amount, category, note));
 }
 
 function deleteExpense(req, res) {
   const { id } = req.params;
   const searchId = +id;
 
-  const index = expenses.findIndex(exp => exp.id === searchId);
+  const index = expenseServices.expenseIndex(searchId);
 
   if (index === -1) {
     res.sendStatus(404);
@@ -130,7 +125,7 @@ function deleteExpense(req, res) {
     return;
   }
 
-  expenses.splice(index, 1);
+  expenseServices.deleteExpense(index);
   res.sendStatus(204);
 }
 

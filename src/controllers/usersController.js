@@ -1,16 +1,16 @@
 'use strict';
 
-const users = [];
+const { userServices } = require('../services/userServices.js');
 
 function getUsers(req, res) {
-  res.send(users);
+  res.send(userServices.getUsers());
 }
 
 function getUserById(req, res) {
   const { id } = req.params;
   const searchId = +id;
 
-  const userResult = users.find(user => user.id === searchId);
+  const userResult = userServices.getUser(searchId);
 
   if (!userResult) {
     res.sendStatus(404);
@@ -29,7 +29,7 @@ function createUser(req, res) {
     return;
   }
 
-  let id = Math.max(...users.map(person => person.id)) + 1;
+  let id = userServices.getId();
 
   if (id === -Infinity) {
     id = 0;
@@ -40,7 +40,7 @@ function createUser(req, res) {
     name,
   };
 
-  users.push(user);
+  userServices.createUser(user);
   res.statusCode = 201;
   res.send(user);
 }
@@ -50,7 +50,7 @@ function updateUser(req, res) {
   const searchId = +id;
   const { name } = req.body;
 
-  const index = users.findIndex(person => person.id === searchId);
+  const index = userServices.userIndex(searchId);
 
   if (index === -1) {
     res.sendStatus(404);
@@ -64,17 +64,14 @@ function updateUser(req, res) {
     return;
   }
 
-  const user = users[index];
-
-  Object.assign(user, { name });
-  res.send(user);
+  res.send(userServices.updateUserName(index, name));
 }
 
 function deleteUser(req, res) {
   const { id } = req.params;
   const searchId = +id;
 
-  const index = users.findIndex(person => person.id === searchId);
+  const index = userServices.userIndex(searchId);
 
   if (index === -1) {
     res.sendStatus(404);
@@ -82,12 +79,11 @@ function deleteUser(req, res) {
     return;
   }
 
-  users.splice(index, 1);
+  userServices.deleteUser(index);
   res.sendStatus(204);
 }
 
 module.exports = {
-  users,
   getUsers,
   getUserById,
   createUser,
