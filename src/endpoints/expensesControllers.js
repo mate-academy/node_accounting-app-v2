@@ -1,7 +1,7 @@
-"use strict";
+'use strict';
 
-const expensesService = require("../services/expensesService");
-const usersService = require("../services/usersService");
+const expensesService = require('../services/expensesService');
+const usersService = require('../services/usersService');
 
 const getAllExpenses = (req, res) => {
   const { userId, from, to, categories } = req.query;

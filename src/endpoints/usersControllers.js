@@ -1,6 +1,6 @@
-"use strict";
+'use strict';
 
-const usersService = require("../services/usersService");
+const usersService = require('../services/usersService');
 
 const getAllUsers = (req, res) => {
   const users = usersService.getAllUsers();
@@ -49,7 +49,7 @@ const updateUser = (req, res) => {
 
   const userId = +id;
 
-  if (!name || typeof name !== "string") {
+  if (!name || typeof name !== 'string') {
     res.sendStatus(422);
 
     return;
