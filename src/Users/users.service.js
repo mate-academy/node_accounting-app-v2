@@ -4,67 +4,35 @@ let users = [];
 
 const clearUsers = () => (users = []);
 
-const getAllUsers = (req, res) => {
-  return res.status(200).send(users);
+const getAllUsers = () => (users);
+
+const getUser = (userId) => {
+  users.find(u => u.id === Number(userId));
 };
 
-const getUser = (req, res) => {
-  const user = users.find(u => u.id === Number(req.params.id));
-
-  if (!user) {
-    return res.sendStatus(404);
-  }
-
-  return res.status(200).send(user);
+const postUser = (newUser) => {
+  users.push(newUser);
 };
 
-const postUser = (req, res) => {
-  if (!req.body.name) {
-    return res.sendStatus(400);
-  }
-
-  const user = {
-    id: new Date().getTime(),
-    name: req.body.name,
+const patchUser = (userId, name) => {
+  const user = users.find(u => u.id === Number(userId));
+  const changedUser = {
+    ...user,
+    name,
   };
 
-  users = [...users, user];
-
-  return res.status(201).send(user);
+  users = users.filter(u => u.id !== Number(userId));
+  users.push(changedUser);
 };
 
-const patchUser = (req, res) => {
-  const user = users.find(u => u.id === Number(req.params.id));
-
-  if (!user) {
-    return res.sendStatus(404);
-  }
-
-  if (req.body.name) {
-    user.name = req.body.name;
-  }
-
-  return res.status(200).send(user);
-};
-
-const deleteUser = (req, res) => {
-  const user = users.find(u => u.id === Number(req.params.id));
-
-  if (!user) {
-    return res.sendStatus(404);
-  }
-
-  const index = users.indexOf(user);
-
-  users.splice(index, 1);
-
-  return res.sendStatus(204);
+const deleteUser = (userId) => {
+  users = users.filter(u => u.id !== Number(userId));
 };
 
 const usersService = {
-  postUser,
   getUser,
   getAllUsers,
+  postUser,
   patchUser,
   deleteUser,
 };
