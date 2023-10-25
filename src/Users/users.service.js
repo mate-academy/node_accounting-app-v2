@@ -28,9 +28,9 @@ const postUser = (req, res) => {
     name: req.body.name,
   };
 
-  users.push(user);
+  users = [...users, user];
 
-  return res.status(201);
+  return res.status(201).send(user);
 };
 
 const patchUser = (req, res) => {
@@ -58,7 +58,7 @@ const deleteUser = (req, res) => {
 
   users.splice(index, 1);
 
-  return res.status(204);
+  return res.sendStatus(204);
 };
 
 const usersService = {
