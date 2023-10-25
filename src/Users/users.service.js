@@ -7,7 +7,7 @@ const clearUsers = () => (users = []);
 const getAllUsers = () => (users);
 
 const getUser = (userId) => {
-  users.find(u => u.id === Number(userId));
+  return users.find(u => u.id === Number(userId));
 };
 
 const postUser = (newUser) => {
@@ -23,6 +23,8 @@ const patchUser = (userId, name) => {
 
   users = users.filter(u => u.id !== Number(userId));
   users.push(changedUser);
+
+  return changedUser;
 };
 
 const deleteUser = (userId) => {
