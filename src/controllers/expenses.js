@@ -3,7 +3,7 @@
 const expensesService = require('../services/expenses');
 const usersService = require('../services/users');
 
-const getExpenses = (req, res) => {
+const getAllExpenses = (req, res) => {
   const expenses = expensesService.getExpenses(req.query);
 
   res.send(expenses);
