@@ -27,6 +27,10 @@ const deleteExpense = (index) => expenses.splice(index, 1);
 
 const getId = () => Math.max(...expenses.map(exp => exp.id)) + 1;
 
+const clear = () => {
+  expenses.length = 0;
+};
+
 const expenseServices = {
   getExpenses,
   getExpense,
@@ -35,6 +39,7 @@ const expenseServices = {
   updateExpense,
   deleteExpense,
   getId,
+  clear,
 };
 
 module.exports = {

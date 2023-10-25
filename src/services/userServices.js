@@ -23,6 +23,10 @@ const getId = () => Math.max(...users.map(person => person.id)) + 1;
 
 const getAllIds = () => users.map(user => user.id);
 
+const clear = () => {
+  users.length = 0;
+};
+
 const userServices = {
   getUsers,
   getUser,
@@ -32,6 +36,7 @@ const userServices = {
   deleteUser,
   getId,
   getAllIds,
+  clear,
 };
 
 module.exports = {

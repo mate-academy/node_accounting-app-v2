@@ -10,6 +10,8 @@ function getExpenses(req, res) {
   let to = req.query.to;
   const category = req.query.categories;
 
+  // eslint-disable-next-line no-console
+
   if (userId) {
     currentExpenses
       = currentExpenses.filter(expense => expense.userId === userId);
@@ -99,11 +101,17 @@ function updateExpense(req, res) {
     return;
   }
 
-  if (typeof userId !== 'number'
-    || typeof spentAt !== 'string'
-    || typeof title !== 'string'
-    || typeof amount !== 'number'
-    || typeof category !== 'string') {
+  // eslint-disable-next-line no-console
+  console.log(typeof userId, typeof spentAt,
+    typeof title,
+    typeof amount,
+    typeof category);
+
+  if ((userId && typeof userId !== 'number')
+    || (spentAt && typeof spentAt !== 'string')
+    || (title && typeof title !== 'string')
+    || (amount && typeof amount !== 'number')
+    || (category && typeof category !== 'string')) {
     res.sendStatus(422);
 
     return;

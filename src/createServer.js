@@ -4,9 +4,14 @@
 const express = require('express');
 const usersRoutes = require('./routes/usersRoutes');
 const expensesRoutes = require('./routes/expensesRoutes');
+const { expenseServices } = require('./services/expensesServices');
+const { userServices } = require('./services/userServices');
 
 function createServer() {
   const app = express();
+
+  expenseServices.clear();
+  userServices.clear();
 
   app.use('/', express.json(), usersRoutes);
   app.use('/', express.json(), expensesRoutes);
