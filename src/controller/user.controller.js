@@ -1,10 +1,10 @@
 'use strict';
 
 const { users } = require('../data/users.js');
-const expensesServices = require('./expenses.service.js');
+const expensesServices = require('../services/expenses.service.js');
 const { expenses } = require('../data/expenses.js');
 
-const userService = require('./user.service.js');
+const userService = require('../services/user.service.js');
 
 const getAll = (req, res) => {
   const result = userService.getAll();

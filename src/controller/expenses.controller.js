@@ -1,6 +1,6 @@
 'use strict';
 
-const expensesServices = require('./expenses.service.js');
+const expensesServices = require('../services/expenses.service.js');
 const { checkType } = require('../functions/checkType.js');
 const { users } = require('../data/users.js');
 const { expenses } = require('../data/expenses.js');
