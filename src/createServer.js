@@ -13,8 +13,8 @@ function createServer() {
   expenseServices.clear();
   userServices.clear();
 
-  app.use('/', express.json(), usersRoutes);
-  app.use('/', express.json(), expensesRoutes);
+  app.use('/users', express.json(), usersRoutes);
+  app.use('/expenses', express.json(), expensesRoutes);
 
   return app;
 }
