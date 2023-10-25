@@ -64,6 +64,7 @@ const updateUser = (req, res) => {
     return;
   }
 
+  res.status(200);
   res.send(userServices.updateUser(userId, name));
 };
 
