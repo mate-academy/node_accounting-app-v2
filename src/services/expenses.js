@@ -62,7 +62,7 @@ const deleteExpense = (expenseId) => {
     .filter(({ id }) => id !== expenseId);
 };
 
-const reset = () => {
+const resetExpenses = () => {
   expenses.length = 0;
 };
 
