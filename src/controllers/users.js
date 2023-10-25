@@ -2,7 +2,7 @@
 
 const usersService = require('../services/users');
 
-const getAll = (req, res) => {
+const getAllUsers = (req, res) => {
   const users = usersService.getAllUsers();
 
   res.send(users);
