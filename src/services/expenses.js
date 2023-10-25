@@ -2,7 +2,7 @@
 
 let expenses = [];
 
-const getExpenses = ({
+const getFilteredExpenses = ({
   userId,
   categories,
   from,
