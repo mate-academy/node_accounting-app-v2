@@ -30,7 +30,7 @@ const updateUser = (userId, name) => {
   return userToUpdate;
 };
 
-const reset = () => {
+const resetUsers = () => {
   users.length = 0;
 };
 
