@@ -1,24 +1,11 @@
 'use strict';
 
-const users = [];
+let users = [];
 
-const postUser = (req, res) => {
-  if (!req.body.name) {
-    return res.status(400);
-  }
-
-  const user = {
-    id: users.length,
-    name: req.body.name,
-  };
-
-  users.push(user);
-
-  res.sendStatus(200);
-};
+const clearUsers = () => (users = []);
 
 const getAllUsers = (req, res) => {
-  res.status(200).send(users);
+  return res.status(200).send(users);
 };
 
 const getUser = (req, res) => {
@@ -28,21 +15,22 @@ const getUser = (req, res) => {
     return res.sendStatus(404);
   }
 
-  res.status(200);
+  return res.status(200).send(user);
 };
 
-const deleteUser = (req, res) => {
-  const user = users.find(u => u.id === Number(req.params.id));
-
-  if (!user) {
-    return res.sendStatus(404);
+const postUser = (req, res) => {
+  if (!req.body.name) {
+    return res.sendStatus(400);
   }
 
-  const index = users.indexOf(user);
+  const user = {
+    id: new Date().getTime(),
+    name: req.body.name,
+  };
 
-  users.splice(index, 1);
+  users.push(user);
 
-  res.status(204).end();
+  return res.status(201);
 };
 
 const patchUser = (req, res) => {
@@ -56,7 +44,21 @@ const patchUser = (req, res) => {
     user.name = req.body.name;
   }
 
-  res.status(200).send(user);
+  return res.status(200).send(user);
+};
+
+const deleteUser = (req, res) => {
+  const user = users.find(u => u.id === Number(req.params.id));
+
+  if (!user) {
+    return res.sendStatus(404);
+  }
+
+  const index = users.indexOf(user);
+
+  users.splice(index, 1);
+
+  return res.status(204);
 };
 
 const usersService = {
@@ -69,4 +71,5 @@ const usersService = {
 
 module.exports = {
   usersService,
+  clearUsers,
 };

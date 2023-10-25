@@ -2,7 +2,9 @@
 
 const { usersService } = require('../Users/users.service');
 
-const expenses = [];
+let expenses = [];
+
+const clearExpenses = () => (expenses = []);
 
 const getAllExps = (req, res) => {
   const { userId, categories, from, to } = req.query;
@@ -34,7 +36,7 @@ const getAllExps = (req, res) => {
       .filter(expense => toDate >= new Date(expense.spentAt));
   }
 
-  res.status(200).send(results);
+  return res.status(200).send(results);
 };
 
 const getExp = (req, res) => {
@@ -44,7 +46,7 @@ const getExp = (req, res) => {
     return res.sendStatus(404);
   }
 
-  res.status(200).send(expense);
+  return res.status(200).send(expense);
 };
 
 const postExp = (req, res) => {
@@ -54,10 +56,14 @@ const postExp = (req, res) => {
     return res.sendStatus(400);
   }
 
-  usersService.getUser(userId);
+  const user = usersService.getUser(userId);
+
+  if (!user) {
+    return res.sendStatus(400);
+  }
 
   const expense = {
-    id: expenses.length,
+    id: new Date().getTime(),
     userId,
     spentAt: spentAt || new Date().toISOString(),
     title,
@@ -68,7 +74,7 @@ const postExp = (req, res) => {
 
   expenses.push(expense);
 
-  res.status(200).send(expense);
+  return res.status(201).send(expense);
 };
 
 const patchExp = (req, res) => {
@@ -76,7 +82,7 @@ const patchExp = (req, res) => {
     .find(exp => exp.id === Number(req.params.id));
 
   if (!expense) {
-    res.sendStatus(404);
+    return res.sendStatus(404);
   }
 
   const { spentAt, title, amount, category, note } = req.body;
@@ -101,7 +107,7 @@ const patchExp = (req, res) => {
     expense.note = note;
   }
 
-  res.status(200).send(expense);
+  return res.status(200).send(expense);
 };
 
 const deleteExp = (req, res) => {
@@ -116,7 +122,7 @@ const deleteExp = (req, res) => {
 
   expenses.splice(index, 1);
 
-  res.status(204).end();
+  return res.status(204);
 };
 
 const expensesService = {
@@ -129,4 +135,5 @@ const expensesService = {
 
 module.exports = {
   expensesService,
+  clearExpenses,
 };
