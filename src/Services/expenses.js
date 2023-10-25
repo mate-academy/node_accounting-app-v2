@@ -1,26 +1,32 @@
 'use strict';
 
-const expanses = [];
+const expenses = [];
 
 module.exports = {
-  getAll: ({ userId, categories, to }) => expanses
+  getAll: ({ userId, categories, to }) => expenses
     .filter(expense => !userId || expense.userId === +userId)
     .filter(expense => !categories || categories.includes(expense.category))
     .filter(expense => !to || expense.spentAt <= to),
 
-  createExpense: (expense) => expanses.push({
-    ...expense,
-    id: expanses.length === 0 ? 0 : expanses[expanses.length - 1].id + 1,
-  }) && [...expanses].pop(),
+  createExpense: (expense) => {
+    const newExpense = {
+      ...expense,
+      id: expenses.length === 0 ? 0 : expenses[expenses.length - 1].id + 1,
+    };
 
-  getById: (expenseId) => expanses
+    expenses.push(newExpense);
+
+    return newExpense;
+  },
+
+  getById: (expenseId) => expenses
     .find(expense => +expense.id === +expenseId),
 
-  remove: (expenseId) => expanses
-    .splice(expanses.findIndex(expense => expense.id === +expenseId), 1),
+  remove: (expenseId) => expenses
+    .splice(expenses.findIndex(expense => expense.id === +expenseId), 1),
 
   updateExpense: (expenseId, data) => Object
     .assign(module.exports.getById(expenseId), data),
 
-  resetExpense: () => expanses.splice(0),
+  resetExpense: () => expenses.splice(0),
 };
