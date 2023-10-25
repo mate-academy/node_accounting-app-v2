@@ -1,44 +1,51 @@
 'use strict';
 
-let users = [];
+const { getMaxId } = require('../utils/getMaxId');
 
-const getAllUsers = () => users;
+let initialUsers = [];
 
-const getUserById = (userId) => users
-  .find(({ id }) => id === userId) || null;
+function getAll() {
+  return initialUsers;
+};
 
-const createUser = userName => {
+function getById(id) {
+  const searchedUser = initialUsers.find(user => user.id === +id);
+
+  return searchedUser || null;
+};
+
+function create(name) {
   const newUser = {
-    name: userName,
-    id: users.length + 1,
+    id: getMaxId(initialUsers) + 1,
+    name,
   };
 
-  users.push(newUser);
+  initialUsers.push(newUser);
 
   return newUser;
 };
 
-const deleteUser = (userId) => {
-  users = users.filter(({ id }) => id !== userId);
+function update({ id, name }) {
+  const user = getById(id);
+
+  Object.assign(user, { name });
 };
 
-const updateUser = (userId, name) => {
-  const userToUpdate = getUserById(userId);
-
-  Object.assign(userToUpdate, { name });
-
-  return userToUpdate;
+function remove(id) {
+  initialUsers = initialUsers.filter(user => user.id !== +id);
 };
 
-const resetUsers = () => {
-  users.length = 0;
+function removeAllUsers() {
+  initialUsers = [];
 };
 
-module.exports = {
-  getAllUsers,
-  getUserById,
-  createUser,
-  deleteUser,
-  updateUser,
-  reset,
+const userServices = {
+  getAll,
+  getById,
+  create,
+  remove,
+  update,
+  removeAllUsers,
 };
+
+module.exports = userServices;

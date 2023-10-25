@@ -1,77 +1,120 @@
 'use strict';
 
-const usersService = require('../services/users');
+const userServices = require('../services/users');
 
-const getAllUsers = (req, res) => {
-  const users = usersService.getAllUsers();
+const getAll = (req, res) => {
+  const users = userServices.getAll();
 
   res.send(users);
 };
 
-const getUser = (req, res) => {
+const getOne = (req, res) => {
   const { userId } = req.params;
 
-  const foundedUser = usersService.getUserById(Number(userId));
-
-  if (!foundedUser) {
-    res.sendStatus(404);
-
-    return;
-  }
-
-  res.send(foundedUser);
-};
-
-const createUser = (req, res) => {
-  const { name } = req.body;
-
-  if (!name) {
+  if (!userId) {
+    res.statusMessage = 'Param "ID" is required';
     res.sendStatus(400);
 
     return;
   }
 
-  const newUser = usersService.createUser(name);
+  const user = userServices.getById(userId);
 
-  res.status(201).send(newUser);
-};
-
-const deleteUser = (req, res) => {
-  const { userId } = req.params;
-
-  const foundedUser = usersService.getUserById(Number(userId));
-
-  if (!foundedUser) {
+  if (!user) {
+    res.statusMessage = 'User not found';
     res.sendStatus(404);
 
     return;
   }
 
-  usersService.deleteUser(Number(userId));
+  res.send(user);
+};
+
+const add = (req, res) => {
+  const { name } = req.body;
+
+  if (!name) {
+    res.statusMessage = 'Param "name" is required';
+    res.sendStatus(400);
+
+    return;
+  }
+
+  const newUser = userServices.create(name);
+
+  res.statusCode = 201;
+  res.statusMessage = 'Creation successfully';
+  res.send(newUser);
+};
+
+const remove = (req, res) => {
+  const { userId } = req.params;
+
+  if (!userId) {
+    res.statusMessage = 'Param "ID" is required';
+    res.sendStatus(400);
+
+    return;
+  }
+
+  const user = userServices.getById(userId);
+
+  if (!user) {
+    res.statusMessage = 'User not found';
+    res.sendStatus(404);
+
+    return;
+  }
+
+  userServices.remove(userId);
+
+  res.statusCode = 200;
+  res.statusMessage = 'Removal successful';
   res.sendStatus(204);
 };
 
-const updateUser = (req, res) => {
+const update = (req, res) => {
   const { userId } = req.params;
   const { name } = req.body;
 
-  const foundedUser = usersService.getUserById(Number(userId));
+  if (!userId) {
+    res.statusMessage = 'Param "ID" is required';
+    res.sendStatus(400);
 
-  if (!foundedUser) {
+    return;
+  }
+
+  if (!name) {
+    res.statusMessage = 'Param "name" is required';
+    res.sendStatus(400);
+
+    return;
+  }
+
+  const user = userServices.getById(userId);
+
+  if (!user) {
+    res.statusMessage = 'User not found';
     res.sendStatus(404);
 
     return;
   }
 
-  usersService.updateUser(Number(foundedUser.id), name);
+  userServices.update({
+    id: userId,
+    name,
+  });
 
-  res.send(foundedUser);
+  res.statusMessage = 'Update successful';
+  res.send(user);
 };
 
-module.exports = {
+const controllers = {
   getAll,
-  getUser,
-  createUser,
-  deleteUser,
-  updateUser,
+  getOne,
+  add,
+  remove,
+  update,
 };
+
+module.exports = controllers;

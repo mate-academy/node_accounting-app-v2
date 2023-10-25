@@ -1,76 +1,74 @@
 'use strict';
 
-let expenses = [];
+const { getMaxId } = require('../utils/getMaxId');
 
-const getFilteredExpenses = ({
-  userId,
-  categories,
-  from,
-  to,
-}) => {
-  let filteredExpenses = expenses;
+let initialExpenses = [];
+
+function getAll({ userId, categories, from, to }) {
+  if (categories) {
+    initialExpenses = initialExpenses.filter((expense) => {
+      return categories.includes(expense.category);
+    });
+  }
 
   if (userId) {
-    filteredExpenses = filteredExpenses
-      .filter((expense) => (expense.userId === Number(userId)));
-  };
+    initialExpenses = initialExpenses.filter((expense) => {
+      return expense.userId === +userId;
+    });
+  }
 
-  if (categories) {
-    filteredExpenses = filteredExpenses
-      .filter(({ category }) => (categories.includes(category)));
-  };
+  if (from && to) {
+    initialExpenses = initialExpenses.filter((expense) => {
+      return expense.spentAt >= from && expense.spentAt <= to;
+    });
+  }
 
-  if (from) {
-    filteredExpenses = filteredExpenses
-      .filter(({ spentAt }) => (spentAt >= from));
-  };
-
-  if (to) {
-    filteredExpenses = filteredExpenses
-      .filter(({ spentAt }) => (spentAt <= to));
-  };
-
-  return filteredExpenses;
+  return initialExpenses;
 };
 
-const getExpenseById = (expenseId) => {
-  return expenses
-    .find(({ id }) => id === Number(expenseId)) || null;
+function getById(id) {
+  const searchedExpense = initialExpenses.find(expense => expense.id === +id);
+
+  return searchedExpense || null;
 };
 
-const createExpense = (expense) => {
+function create({ userId, spentAt, title, amount, category, note }) {
   const newExpense = {
-    ...expense,
-    id: expenses.length + 1,
+    id: getMaxId(initialExpenses) + 1,
+    userId,
+    spentAt,
+    title,
+    amount,
+    category,
+    note,
   };
 
-  expenses.push(newExpense);
+  initialExpenses.push(newExpense);
 
   return newExpense;
 };
 
-const updateExpense = (expenseId, newData) => {
-  const expenseToUpdate = getExpenseById(expenseId);
+function update(id, params) {
+  const expense = getById(id);
 
-  Object.assign(expenseToUpdate, newData);
-
-  return expenseToUpdate;
+  Object.assign(expense, params);
 };
 
-const deleteExpense = (expenseId) => {
-  expenses = expenses
-    .filter(({ id }) => id !== expenseId);
+function remove(id) {
+  initialExpenses = initialExpenses.filter(expense => expense.id !== +id);
 };
 
-const resetExpenses = () => {
-  expenses.length = 0;
+function removeAllExpenses() {
+  initialExpenses = [];
 };
 
-module.exports = {
-  getExpenses,
-  getExpenseById,
-  createExpense,
-  updateExpense,
-  deleteExpense,
-  reset,
+const expenseServices = {
+  getAll,
+  getById,
+  create,
+  remove,
+  update,
+  removeAllExpenses,
 };
+
+module.exports = expenseServices;

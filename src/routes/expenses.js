@@ -1,16 +1,19 @@
 'use strict';
 
 const express = require('express');
-const expensesController = require('../controllers/expenses.js');
 
-const expensesRouter = express.Router();
+const controllers = require('../controllers/expenses');
 
-expensesRouter.get('/', expensesController.getExpenses);
-expensesRouter.get('/:expenseId', expensesController.getExpense);
-expensesRouter.post('/', expensesController.createExpense);
-expensesRouter.delete('/:expenseId', expensesController.deleteExpense);
-expensesRouter.patch('/:expenseId', expensesController.updateExpense);
+const expenseRouter = express.Router();
 
-module.exports = {
-  expensesRouter,
-};
+expenseRouter.get('/', controllers.getAll);
+
+expenseRouter.get('/:expenseId', controllers.getOne);
+
+expenseRouter.post('/', controllers.add);
+
+expenseRouter.delete('/:expenseId', controllers.remove);
+
+expenseRouter.patch('/:expenseId', controllers.update);
+
+module.exports = { expenseRouter };
