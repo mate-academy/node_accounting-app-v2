@@ -28,6 +28,7 @@ const getCurrentUser = (request, response) => {
     return;
   }
 
+  response.status(200);
   response.send(findUserById);
 };
 
@@ -63,6 +64,7 @@ const updateUser = (request, response) => {
     return;
   }
 
+  response.status(200);
   response.send(usersServices.updateUser(userId, name));
 };
 
