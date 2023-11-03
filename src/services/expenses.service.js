@@ -3,6 +3,7 @@
 let expenses = [];
 
 const expansesService = {
+  clear: () => (expenses = []),
   get: (userId, categories, from, to) => {
     const res = expenses.filter(expense => {
       if (userId && +expense.userId !== +userId) {

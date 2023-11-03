@@ -3,6 +3,7 @@
 let users = [];
 
 const userService = {
+  clear: () => (users = []),
   getAll: () => users,
   getById: (id) => users.find(user => +user.id === +id) || null,
   addUser: (newUser) => {
