@@ -18,20 +18,21 @@ const {
 
 const getExpenses = (req, res) => {
   const { userId, categories, from, to } = req.query;
+  const expenses = getAllExpenses();
 
-  if (userId || categories || (from && to)) {
+  if (userId || categories || from || to) {
     res.status(200).send(getFilteredExpenses(userId, categories, from, to));
 
     return;
   }
 
-  if (!getAllExpenses()) {
+  if (!expenses) {
     res.status(200).send([]);
 
     return;
   }
 
-  res.status(200).send(getAllExpenses());
+  res.status(200).send(expenses);
 };
 
 const createExpense = (req, res) => {

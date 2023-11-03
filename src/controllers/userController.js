@@ -11,13 +11,15 @@ const {
 const { checkId, checkIfItemFound } = require('../helpers.js');
 
 const getUsers = (req, res) => {
-  if (!getAllUsers()) {
+  const users = getAllUsers();
+
+  if (!users) {
     res.sendStatus(404);
 
     return;
   }
 
-  res.status(200).send(getAllUsers());
+  res.status(200).send(users);
 };
 
 const createUser = (req, res) => {

@@ -21,7 +21,11 @@ const getFilteredExpenses = (userId, categories, from, to) => {
       checkUserId = expense.userId === Number(userId);
     }
 
-    if (from && to) {
+    if (from && !to) {
+      checkDateRange = spentAtDate > fromDate;
+    } else if (to && !from) {
+      checkDateRange = spentAtDate < toDate;
+    } else if (from && to) {
       checkDateRange = spentAtDate < toDate && spentAtDate > fromDate;
     }
 
