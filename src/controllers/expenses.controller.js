@@ -1,7 +1,7 @@
 'use strict';
 
 const expensesService = require('../services/expenses.service');
-const { users } = require('../services/user.service');
+const { userService } = require('../services/user.service');
 
 const expensesController = {
   get: (req, res) => {
@@ -22,7 +22,7 @@ const expensesController = {
   addExpense: (req, res) => {
     const { userId, spentAt, title, amount, category, note } = req.body;
 
-    if (!users.some(user => user.id === userId)) {
+    if (!userService.getAll().some(user => user.id === userId)) {
       res.sendStatus(400);
 
       return;
