@@ -6,11 +6,11 @@ const {
   deleteUser,
 } = require('../services/usersServices');
 
-export const get = (req, res) => {
+const loadUsers = (req, res) => {
   res.send(getAllUsers)
 };
 
-export const getOne = (req, res) => {
+const loadOneUser = (req, res) => {
   const { id } = req.params;
 
   const user = getUserById(id);
@@ -24,7 +24,7 @@ export const getOne = (req, res) => {
   res.send(user);
 };
 
-export const add = (req, res) => {
+const addOneUser = (req, res) => {
   const { name }  = req.body;
 
   if (!name) {
@@ -33,14 +33,21 @@ export const add = (req, res) => {
     return;
   }
 
-  const newUser = addUser(name);
+  
+  try {
+    const newUser = addUser(name);
     
-  res.statusCode(201);
+    res.statusCode(201);
 
-  res.send(newUser);
+    res.send(newUser);
+  } catch {
+    res.statusCode(500);
+    res.end('Error while adding');
+    return;
+  }
 };
 
-export const change = (req, res) => {
+const changeOneUser = (req, res) => {
   const { personId } = req.params;
   const { name } = req.body;
 
@@ -63,7 +70,7 @@ export const change = (req, res) => {
   res.send(updatedUser);
 };
 
-export const remove = (req, res) => {
+const removeUser = (req, res) => {
   const { id } = req.params;
 
   if (getUserById(id)) {
@@ -75,4 +82,12 @@ export const remove = (req, res) => {
   deleteUser(id);
     
   res.sendStatus(204);
+};
+
+module.exports = {
+  loadUsers,
+  loadOneUser,
+  addOneUser,
+  changeOneUser,
+  removeUser,
 };

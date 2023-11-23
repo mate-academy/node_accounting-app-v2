@@ -2,23 +2,23 @@ const uuidv4 = require('uuidv4');
 
 let users = [];
 
-export const getAllUsers = () => {
+const getAllUsers = () => {
   return users;
 };
 
-export const getUserById = (userId) => {
+const getUserById = (userId) => {
   return users.find(person = person.id === userId) || null;
 };
 
-export const updateUser = (personId, name) => {
+const updateUser = (personId, name) => {
   const user = getUserById(personId);
 
   Object.assign(user, { name });
 
   return user;
-}
+};
 
-export const addUser = (name) => {
+const addUser = (name) => {
   const newUser = {
     id: uuidv4(),
     name,
@@ -27,8 +27,16 @@ export const addUser = (name) => {
   users.push(newUser);
 
   return newUser;
-}
+};
 
-export const deleteUser = (id) => {
+const deleteUser = (id) => {
   users = users.filter(user => user.id !== id);
-}
+};
+
+module.exports = {
+  getAllUsers,
+  getUserById,
+  updateUser,
+  addUser,
+  deleteUser,
+};

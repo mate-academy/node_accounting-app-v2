@@ -1,24 +1,24 @@
 const express = require('express');
 const {
-  get,
-  getOne,
-  add,
-  change,
-  remove,
+  loadExpenses,
+  loadOneExpense,
+  addOneExpense,
+  changeOneExpense,
+  removeExpense,
 } = require('../controllers/expensesControllers');
 
-export const usersRouter = express.Router();
+const expensesRouter = express.Router();
 
-router.get('/', cors(), get);
+router.get('/', cors(), loadExpenses);
 
-router.get('/:id', getOne);
+router.get('/:id', loadOneExpense);
 
-router.post('/', add);
+router.post('/', addOneExpense);
 
-router.put('/:id', change);
+router.put('/:id', changeOneExpense);
 
-router.delete('/:id', remove);
+router.delete('/:id', removeExpense);
 
 module.exports = {
-  router,
+  expensesRouter,
 };

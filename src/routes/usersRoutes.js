@@ -1,24 +1,24 @@
 const express = require('express');
 const {
-  get,
-  getOne,
-  add,
-  change,
-  remove,
+  loadUsers,
+  loadOneUser,
+  addOneUser,
+  changeOneUser,
+  removeUser,
 } = require('../controllers/usersControllers');
 
-export const usersRouter = express.Router();
+const usersRouter = express.Router();
 
-router.get('/', cors(), get);
+router.get('/', cors(), loadUsers);
 
-router.get('/:id', getOne);
+router.get('/:id', loadOneUser);
 
-router.post('/', add);
+router.post('/', addOneUser);
 
-router.put('/:id', change);
+router.put('/:id', changeOneUser);
 
-router.delete('/:id', remove);
+router.delete('/:id', removeUser);
 
 module.exports = {
-  router,
+  usersRouter,
 };
