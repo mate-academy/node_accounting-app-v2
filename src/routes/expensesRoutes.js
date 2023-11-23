@@ -1,23 +1,26 @@
+'use strict';
+
 const express = require('express');
+const cors = require('cors');
 const {
-  loadExpenses,
-  loadOneExpense,
-  addOneExpense,
-  changeOneExpense,
+  getExpenses,
+  getExpenseById,
+  addExpense,
+  changeExpense,
   removeExpense,
 } = require('../controllers/expensesControllers');
 
 const expensesRouter = express.Router();
 
-router.get('/', cors(), loadExpenses);
+expensesRouter.get('/', cors(), getExpenses);
 
-router.get('/:id', loadOneExpense);
+expensesRouter.get('/:id', getExpenseById);
 
-router.post('/', addOneExpense);
+expensesRouter.post('/', addExpense);
 
-router.put('/:id', changeOneExpense);
+expensesRouter.put('/:id', changeExpense);
 
-router.delete('/:id', removeExpense);
+expensesRouter.delete('/:id', removeExpense);
 
 module.exports = {
   expensesRouter,

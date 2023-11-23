@@ -1,23 +1,26 @@
+'use strict';
+
 const express = require('express');
+const cors = require('cors');
 const {
-  loadUsers,
-  loadOneUser,
-  addOneUser,
-  changeOneUser,
+  getUsers,
+  getUserById,
+  addUser,
+  changeUser,
   removeUser,
 } = require('../controllers/usersControllers');
 
 const usersRouter = express.Router();
 
-router.get('/', cors(), loadUsers);
+usersRouter.get('/', cors(), getUsers);
 
-router.get('/:id', loadOneUser);
+usersRouter.get('/:id', getUserById);
 
-router.post('/', addOneUser);
+usersRouter.post('/', addUser);
 
-router.put('/:id', changeOneUser);
+usersRouter.put('/:id', changeUser);
 
-router.delete('/:id', removeUser);
+usersRouter.delete('/:id', removeUser);
 
 module.exports = {
   usersRouter,

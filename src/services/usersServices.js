@@ -1,4 +1,6 @@
-const uuidv4 = require('uuidv4'); 
+'use strict';
+
+const uuidv4 = require('uuidv4');
 
 let users = [];
 
@@ -7,7 +9,7 @@ const getAllUsers = () => {
 };
 
 const getUserById = (userId) => {
-  return users.find(person = person.id === userId) || null;
+  return users.find(person => person.id === userId) || null;
 };
 
 const updateUser = (personId, name) => {
@@ -22,7 +24,7 @@ const addUser = (name) => {
   const newUser = {
     id: uuidv4(),
     name,
-  }; 
+  };
 
   users.push(newUser);
 
