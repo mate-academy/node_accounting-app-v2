@@ -11,31 +11,37 @@ const getExpenseById = (id) => {
 };
 
 const getExpensesByQuery = (query) => {
-  let expenses = [...EXPENSES];
+  return [...EXPENSES].filter((expense) => {
+    for (const key in query) {
+      switch (key) {
+        case 'id':
+        case 'userId':
+          if (expense[key] !== +query[key]) {
+            return false;
+          }
+          break;
+        case 'from':
+        case 'to':
+          if (key === 'from' && expense.spentAt < query.from) {
+            return false;
+          }
 
-  for (const key in query) {
-    switch (key) {
-      case 'id':
-        expenses = expenses.filter((e) => e.id === +query.id);
-        break;
-      case 'userId':
-        expenses = expenses.filter((e) => e.userId === +query.userId);
-        break;
-      case 'from':
-        expenses = expenses.filter((e) => e.spentAt >= query.from);
-        break;
-      case 'to':
-        expenses = expenses.filter((e) => e.spentAt <= query.to);
-        break;
-      case 'categories':
-        expenses = expenses.filter((e) => e.category === query.categories);
-        break;
-      default:
-        break;
+          if (key === 'to' && expense.spentAt > query.to) {
+            return false;
+          }
+          break;
+        case 'categories':
+          if (expense.category !== query.categories) {
+            return false;
+          }
+          break;
+        default:
+          break;
+      }
     }
-  }
 
-  return expenses;
+    return true;
+  });
 };
 
 const addExpense = (expense) => {

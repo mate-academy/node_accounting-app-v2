@@ -14,10 +14,10 @@ const getAllExpenses = (req, res) => {
   const { userId, from, to, categories, id } = req.query;
 
   if (id || categories || from || to || userId) {
-    const findExpenses = getExpensesByQuery(req.query);
+    const expense = getExpensesByQuery(req.query);
 
     res.statusCode = 200;
-    res.send(findExpenses);
+    res.send(expense);
 
     return;
   }
@@ -29,23 +29,23 @@ const getAllExpenses = (req, res) => {
 const getOneExpense = (req, res) => {
   const { id } = req.params;
 
-  const findExpense = getExpenseById(id);
+  const expense = getExpenseById(id);
 
-  if (!findExpense) {
+  if (!expense) {
     res.sendStatus(404);
 
     return;
   }
 
   res.statusCode = 200;
-  res.send(findExpense);
+  res.send(expense);
 };
 
 const createExpense = (req, res) => {
   const { userId, title } = req.body;
-  const findUser = getUserById(userId);
+  const user = getUserById(userId);
 
-  if (!findUser || !title) {
+  if (!user || !title) {
     res.sendStatus(400);
 
     return;
@@ -75,9 +75,9 @@ const updateExpenseInfo = (req, res) => {
 const removeExpense = (req, res) => {
   const { id } = req.params;
 
-  const findExpense = getExpenseById(id);
+  const expense = getExpenseById(id);
 
-  if (!findExpense) {
+  if (!expense) {
     res.sendStatus(404);
 
     return;

@@ -9,6 +9,14 @@ const {
 } = require('../services/user.servise');
 
 const getUsers = (req, res) => {
+  const users = getAllUsers();
+
+  if (!users) {
+    res.sendStatus(404);
+
+    return;
+  }
+
   res.statusCode = 200;
   res.send(getAllUsers());
 };
@@ -31,31 +39,31 @@ const createUser = (req, res) => {
 const getOneUser = (req, res) => {
   const { id } = req.params;
 
-  const findUser = getUserById(id);
+  const user = getUserById(id);
 
-  if (!findUser) {
+  if (!user) {
     res.sendStatus(404);
 
     return;
   }
 
   res.statusCode = 200;
-  res.send(findUser);
+  res.send(user);
 };
 
 const updateUser = (req, res) => {
   const { id } = req.params;
   const { name } = req.body;
 
-  const findUser = getUserById(id);
+  const user = getUserById(id);
 
-  if (!findUser) {
+  if (!user) {
     res.sendStatus(404);
 
     return;
   }
 
-  const newUser = updateUserInfo(findUser, name);
+  const newUser = updateUserInfo(user, name);
 
   res.statusCode = 200;
   res.send(newUser);
@@ -64,9 +72,9 @@ const updateUser = (req, res) => {
 const removeUser = (req, res) => {
   const { id } = req.params;
 
-  const findUser = getUserById(id);
+  const user = getUserById(id);
 
-  if (!findUser) {
+  if (!user) {
     res.sendStatus(404);
 
     return;
