@@ -12,12 +12,6 @@ const expenseController = {
   getOne: (req, res) => {
     const { id } = req.params;
 
-    if (!id) {
-      res.sendStatus(400);
-
-      return;
-    }
-
     const expense = expenseService.getById(+id);
 
     if (!expense) {
@@ -65,12 +59,6 @@ const expenseController = {
 
   delete: (req, res) => {
     const { id } = req.params;
-
-    if (!id) {
-      res.sendStatus(400);
-
-      return;
-    }
 
     if (!expenseService.getById(+id)) {
       res.sendStatus(404);
