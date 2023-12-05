@@ -25,8 +25,7 @@ function createServer() {
 
       users.push(user);
 
-      res.status(201);
-      res.send(user);
+      return res.status(201).send(user);
     } else {
       res.sendStatus(400);
     }
@@ -66,21 +65,98 @@ function createServer() {
 
     if (user) {
       user.name = req.body.name;
-      res.status(200);
       res.send(user);
     } else {
       res.sendStatus(404);
     }
   });
 
-  // Use express to create a server
+  // Expenses
 
-  app.get('/users', (req, res) => {
+  let expenses = [];
+
+  app.get('/expenses', (req, res) => {
     res.setHeader('Content-Type', 'application/json');
-    res.send(users);
+
+    const { userId, from, to, categories } = req.query;
+    let filteredExpenses = [...expenses];
+
+    if (userId) {
+      filteredExpenses = filteredExpenses
+        .filter(e => e.userId === Number(userId));
+    }
+
+    if (from && to) {
+      filteredExpenses = filteredExpenses
+        .filter(e => e.spentAt > from && e.spentAt < to);
+    }
+
+    if (categories) {
+      filteredExpenses = filteredExpenses
+        .filter(e => categories.includes(e.category));
+    }
+    res.send(filteredExpenses);
   });
 
-  // Add a routes to the server
+  app.post('/expenses', (req, res) => {
+    res.setHeader('Content-Type', 'application/json');
+
+    const userId = req.body.userId;
+
+    if (userId && users.find(u => u.id === Number(userId))) {
+      const expense = {
+        id: expenses.length,
+        ...req.body,
+      };
+
+      expenses.push(expense);
+
+      res.status(201).send(expense);
+    } else {
+      res.sendStatus(400);
+    }
+  });
+
+  app.get('/expenses/:expenseId', (req, res) => {
+    res.setHeader('Content-Type', 'application/json');
+
+    const { expenseId } = req.params;
+    const expense = expenses.find(e => e.id === Number(expenseId));
+
+    if (expense) {
+      res.send(expense);
+    } else {
+      res.sendStatus(404);
+    }
+  });
+
+  app.patch('/expenses/:expenseId', (req, res) => {
+    res.setHeader('Content-Type', 'application/json');
+
+    const { expenseId } = req.params;
+    const expense = expenses.find(e => e.id === Number(expenseId));
+
+    if (expense) {
+      expense.title = req.body.title;
+      res.send(expense);
+    } else {
+      res.sendStatus(404);
+    }
+  });
+
+  app.delete('/expenses/:expenseId', (req, res) => {
+    const { expenseId } = req.params;
+    const expense = expenses.find(e => e.id === Number(expenseId));
+
+    if (expense) {
+      expenses = expenses.filter(e => e.id !== Number(expenseId));
+
+      res.sendStatus(204);
+    } else {
+      res.sendStatus(404);
+    }
+  });
+
   return app;
 }
 
