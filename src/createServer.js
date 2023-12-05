@@ -23,6 +23,12 @@ function createServer() {
     res.send(user);
   })
 
+  app.get('/users/:userId', (req, res) => {
+    const { userId } = req.params;
+    const user = users.find(u => u.id === Number(userId));
+    res.send(user);
+  })
+
   // Use express to create a server
   // Add a routes to the server
   return app;
