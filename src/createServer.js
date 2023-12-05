@@ -8,13 +8,20 @@ const users = [];
 function createServer() {
   const app = express();
 
-  app.get('/users', express.json(), (req, res) => {
-    res.setHeader('Content-Type', 'application/json');
+  app.use(express.json());
 
+  app.get('/users', (req, res) => {
     res.send(users);
   })
 
-
+  app.post('/users', (req, res) => {
+    const user = {
+      id: Math.max(0, ...users.map(u => u.id)) + 1,
+      name: req.body.name
+    }
+    users.push(user)
+    res.send(user);
+  })
 
   // Use express to create a server
   // Add a routes to the server
@@ -24,3 +31,4 @@ function createServer() {
 module.exports = {
   createServer,
 };
+
