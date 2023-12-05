@@ -2,10 +2,10 @@
 
 const express = require('express');
 
-let users = [];
-
 function createServer() {
   const app = express();
+
+  let users = [];
 
   app.use(express.json());
 
@@ -66,13 +66,20 @@ function createServer() {
 
     if (user) {
       user.name = req.body.name;
-      res.sendStatus(200);
+      res.status(200);
+      res.send(user);
     } else {
       res.sendStatus(404);
     }
   });
 
   // Use express to create a server
+
+  app.get('/users', (req, res) => {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(users);
+  });
+
   // Add a routes to the server
   return app;
 }
