@@ -10,25 +10,39 @@ function createServer() {
   app.use(express.json());
 
   app.get('/users', (req, res) => {
+    res.setHeader('Content-Type', 'application/json');
     res.send(users);
   });
 
   app.post('/users', (req, res) => {
-    const user = {
-      id: Math.max(0, ...users.map(u => u.id)) + 1,
-      name: req.body.name,
-    };
+    res.setHeader('Content-Type', 'application/json');
 
-    users.push(user);
+    if (req.body.name) {
+      const user = {
+        id: Math.max(0, ...users.map(u => u.id)) + 1,
+        name: req.body.name,
+      };
 
-    res.send(user);
+      users.push(user);
+
+      res.status(201);
+      res.send(user);
+    } else {
+      res.sendStatus(400);
+    }
   });
 
   app.get('/users/:userId', (req, res) => {
+    res.setHeader('Content-Type', 'application/json');
+
     const { userId } = req.params;
     const user = users.find(u => u.id === Number(userId));
 
-    res.send(user);
+    if (user) {
+      res.send(user);
+    } else {
+      res.sendStatus(404);
+    }
   });
 
   app.delete('/users/:userId', (req, res) => {
@@ -45,13 +59,14 @@ function createServer() {
   });
 
   app.patch('/users/:userId', (req, res) => {
+    res.setHeader('Content-Type', 'application/json');
+
     const { userId } = req.params;
     const user = users.find(u => u.id === Number(userId));
 
     if (user) {
       user.name = req.body.name;
-
-      res.sendStatus(204);
+      res.sendStatus(200);
     } else {
       res.sendStatus(404);
     }
