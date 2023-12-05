@@ -1,31 +1,13 @@
 'use strict';
 
-const express = require('express');
-const userService = require('../services/userService');
+const userService = require('../services/user.service');
 
-const userRouter = express.Router();
-
-userRouter.get('/', (req, res) => {
+const get = (req, res) => {
   res.statusCode = 200;
   res.send(userService.getAll());
-});
+};
 
-userRouter.post('/', express.json(), (req, res) => {
-  const { name } = req.body;
-
-  if (!name) {
-    res.sendStatus(400);
-
-    return;
-  }
-
-  const newUser = userService.create(name);
-
-  res.statusCode = 201;
-  res.send(newUser);
-});
-
-userRouter.get('/:id', (req, res) => {
+const getOne = (req, res) => {
   const { id } = req.params;
 
   if (!id) {
@@ -43,9 +25,24 @@ userRouter.get('/:id', (req, res) => {
   }
 
   res.send(user);
-});
+};
 
-userRouter.patch('/:id', express.json(), (req, res) => {
+const create = (req, res) => {
+  const { name } = req.body;
+
+  if (!name) {
+    res.sendStatus(400);
+
+    return;
+  }
+
+  const newUser = userService.create(name);
+
+  res.statusCode = 201;
+  res.send(newUser);
+};
+
+const update = (req, res) => {
   const { id } = req.params;
   const { name } = req.body;
 
@@ -64,9 +61,9 @@ userRouter.patch('/:id', express.json(), (req, res) => {
   const updatedUser = userService.update(Number(id), name);
 
   res.send(updatedUser);
-});
+};
 
-userRouter.delete('/:id', (req, res) => {
+const remove = (req, res) => {
   const { id } = req.params;
 
   if (!userService.getById(Number(id))) {
@@ -77,6 +74,12 @@ userRouter.delete('/:id', (req, res) => {
 
   userService.remove(Number(id));
   res.sendStatus(204);
-});
+};
 
-module.exports = userRouter;
+module.exports = {
+  get,
+  getOne,
+  create,
+  update,
+  remove,
+};

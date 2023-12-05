@@ -1,12 +1,9 @@
 'use strict';
 
-const express = require('express');
-const userService = require('../services/userService');
-const expenseService = require('../services/expenseService');
+const expenseService = require('../services/expense.service');
+const userService = require('../services/user.service');
 
-const expenseRouter = express.Router();
-
-expenseRouter.get('/', (req, res) => {
+const getExpences = (req, res) => {
   const { userId, categories, from, to } = req.query;
 
   if (userId || categories || from || to) {
@@ -25,9 +22,30 @@ expenseRouter.get('/', (req, res) => {
 
   res.statusCode = 200;
   res.send(expenseService.getAll());
-});
+};
 
-expenseRouter.post('/', (req, res) => {
+const getOne = (req, res) => {
+  const { id } = req.params;
+
+  if (!id) {
+    res.sendStatus(400);
+
+    return;
+  }
+
+  const expense = expenseService.getById(id);
+
+  if (!expense) {
+    res.sendStatus(404);
+
+    return;
+  }
+
+  res.statusCode = 200;
+  res.send(expense);
+};
+
+const create = (req, res) => {
   const {
     userId,
     spentAt,
@@ -53,35 +71,14 @@ expenseRouter.post('/', (req, res) => {
 
   res.statusCode = 201;
   res.send(newExpense);
-});
+};
 
-expenseRouter.get('/:id', (req, res) => {
-  const { id } = req.params;
-
-  if (!id) {
-    res.sendStatus(400);
-
-    return;
-  }
-
-  const expense = expenseService.getById(id);
-
-  if (!expense) {
-    res.sendStatus(404);
-
-    return;
-  }
-
-  res.statusCode = 200;
-  res.send(expense);
-});
-
-expenseRouter.patch('/:id', (req, res) => {
+const update = (req, res) => {
   const { id } = req.params;
 
   const data = Object.fromEntries(Object.entries(req.body));
 
-  if (!expenseService.getById(id)) {
+  if (!expenseService.getById(+id)) {
     res.sendStatus(404);
 
     return;
@@ -90,9 +87,9 @@ expenseRouter.patch('/:id', (req, res) => {
   const updatedExpense = expenseService.update(id, data);
 
   res.send(updatedExpense);
-});
+};
 
-expenseRouter.delete('/:id', (req, res) => {
+const remove = (req, res) => {
   const { id } = req.params;
 
   if (!expenseService.getById(Number(id))) {
@@ -103,6 +100,12 @@ expenseRouter.delete('/:id', (req, res) => {
 
   expenseService.remove(Number(id));
   res.sendStatus(204);
-});
+};
 
-module.exports = expenseRouter;
+module.exports = {
+  getExpences,
+  getOne,
+  create,
+  update,
+  remove,
+};

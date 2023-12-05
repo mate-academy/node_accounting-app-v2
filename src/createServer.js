@@ -2,11 +2,11 @@
 
 const express = require('express');
 const cors = require('cors');
-const userRouter = require('./routes/userRoute');
+const userRouter = require('./routes/user.route');
 
-const userService = require('./services/userService');
-const expenseService = require('./services/expenseService');
-const expenseRouter = require('./routes/expenseRouter');
+const userService = require('./services/user.service');
+const expenseService = require('./services/expense.service');
+const expenseRouter = require('./routes/expense.route');
 
 function createServer() {
   userService.reset();
