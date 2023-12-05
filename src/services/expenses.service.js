@@ -6,8 +6,31 @@ const resetExpenses = () => {
   expenses = [];
 };
 
-const getAll = () => {
-  return expenses;
+const getExpenses = (userId, from, to, categories) => {
+  let expensesToDisplay = [...expenses];
+
+  if (userId) {
+    expensesToDisplay = expensesToDisplay.filter(e => e.userId === +userId);
+  }
+
+  if (categories) {
+    expensesToDisplay = expensesToDisplay
+      .filter(e => e.category === categories);
+  }
+
+  if (from) {
+    expensesToDisplay = expensesToDisplay.filter(e => (
+      Date.parse(e.spentAt) > Date.parse(from)
+    ));
+  }
+
+  if (to) {
+    expensesToDisplay = expensesToDisplay.filter(e => (
+      Date.parse(e.spentAt) < Date.parse(to)
+    ));
+  }
+
+  return expensesToDisplay;
 };
 
 const getById = (id) => {
@@ -25,7 +48,7 @@ const create = (expenseData) => {
   return newExpense;
 };
 
-const update = (id, ...dataToUpdate) => {
+const update = (id, dataToUpdate) => {
   const expense = getById(id);
 
   Object.assign(expense, { ...dataToUpdate });
@@ -38,7 +61,7 @@ const remove = (id) => {
 };
 
 module.exports = {
-  getAll,
+  getExpenses,
   getById,
   create,
   update,

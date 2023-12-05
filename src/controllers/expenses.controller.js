@@ -6,7 +6,9 @@ const { notFoundResponse } = require('./../helpers/notFoundResponse');
 const { isDate } = require('../helpers/isDate');
 
 const get = (req, res) => {
-  res.send(expenseService.getAll());
+  const { userId, from, to, categories } = req.query;
+
+  res.send(expenseService.getExpenses(userId, from, to, categories));
 };
 
 const getOne = (req, res) => {
@@ -35,7 +37,7 @@ const create = (req, res) => {
     return res
       .status(400)
       .json({
-        error: 'Please provide a valid userId',
+        error: 'User not found',
       });
   }
 
@@ -63,7 +65,7 @@ const create = (req, res) => {
       });
   }
 
-  if (!amount || typeof amount !== 'number') {
+  if (amount === undefined || typeof amount !== 'number') {
     return res
       .status(400)
       .json({
@@ -75,11 +77,11 @@ const create = (req, res) => {
     return res
       .status(400)
       .json({
-        error: 'Please provide a valid `name` as a string.',
+        error: 'Please provide a valid `title` as a string.',
       });
   }
 
-  const newUser = expenseService.create(
+  const newExpense = expenseService.create(
     {
       userId,
       spentAt,
@@ -90,42 +92,92 @@ const create = (req, res) => {
     }
   );
 
-  res.status(201);
-  res.send(newUser);
+  return res.status(201).json(newExpense);
 };
 
 const remove = (req, res) => {
   const { id } = req.params;
 
   if (!expenseService.getById(id)) {
-    notFoundResponse(res);
+    return res
+      .status(404)
+      .json({
+        error: 'Expense not found',
+      });
   }
 
   expenseService.remove(id);
-  res.sendStatus(204);
+
+  return res.sendStatus(204);
 };
 
 const update = (req, res) => {
   const { id } = req.params;
-  const { name } = req.body;
+  const dataToUpdate = req.body;
+  const expense = expenseService.getById(id);
 
-  const user = expenseService.getById(id);
-
-  if (!name || typeof name !== 'string') {
+  if (!expense) {
     return res
-      .status(400)
+      .status(404)
       .json({
-        error: 'Please provide a valid `name` as a string.',
+        error: 'Expense not found',
       });
   }
 
-  if (!user) {
-    notFoundResponse(res);
+  if (
+    dataToUpdate.hasOwnProperty('id')
+    || dataToUpdate.hasOwnProperty('userId')
+  ) {
+    return res
+      .status(400)
+      .json({
+        error: 'You can not update id or userId',
+      });
   }
 
-  expenseService.update(id, name);
+  if (dataToUpdate.spentAt && !isDate(dataToUpdate.spentAt)) {
+    return res
+      .status(400)
+      .json({
+        error: 'Please provide a valid date',
+      });
+  }
 
-  res.send(user);
+  if (dataToUpdate.category && typeof dataToUpdate.category !== 'string') {
+    return res
+      .status(400)
+      .json({
+        error: 'Please provide a valid `category` as a string.',
+      });
+  }
+
+  if (dataToUpdate.note && typeof dataToUpdate.note !== 'string') {
+    return res
+      .status(400)
+      .json({
+        error: 'Please provide a valid `note` as a string.',
+      });
+  }
+
+  if (dataToUpdate.amount && typeof dataToUpdate.amount !== 'number') {
+    return res
+      .status(400)
+      .json({
+        error: 'Please provide a valid `amount` as a number.',
+      });
+  }
+
+  if (dataToUpdate.title && typeof dataToUpdate.title !== 'string') {
+    return res
+      .status(400)
+      .json({
+        error: 'Please provide a valid `title` as a string.',
+      });
+  }
+
+  expenseService.update(id, dataToUpdate);
+
+  res.send(expense);
 };
 
 module.exports = {
