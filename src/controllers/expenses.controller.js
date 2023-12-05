@@ -8,7 +8,7 @@ const { isDate } = require('../helpers/isDate');
 const get = (req, res) => {
   const { userId, from, to, categories } = req.query;
 
-  res.send(expenseService.getExpenses(userId, from, to, categories));
+  return res.send(expenseService.getExpenses(userId, from, to, categories));
 };
 
 const getOne = (req, res) => {
@@ -17,10 +17,10 @@ const getOne = (req, res) => {
   const user = expenseService.getById(id);
 
   if (!user) {
-    notFoundResponse(res);
+    return notFoundResponse(res);
   }
 
-  res.send(user);
+  return res.send(user);
 };
 
 const create = (req, res) => {
@@ -108,7 +108,7 @@ const remove = (req, res) => {
 
   expenseService.remove(id);
 
-  return res.sendStatus(204);
+  res.sendStatus(204);
 };
 
 const update = (req, res) => {

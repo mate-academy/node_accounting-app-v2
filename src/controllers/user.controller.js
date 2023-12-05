@@ -13,7 +13,7 @@ const getOne = (req, res) => {
   const user = userService.getById(id);
 
   if (!user) {
-    notFoundResponse(res);
+    return notFoundResponse(res);
   }
 
   res.send(user);
@@ -32,19 +32,19 @@ const create = (req, res) => {
 
   const newUser = userService.create(name);
 
-  res.status(201);
-  res.send(newUser);
+  return res.status(201).json(newUser);
 };
 
 const remove = (req, res) => {
   const { id } = req.params;
 
   if (!userService.getById(id)) {
-    notFoundResponse(res);
+    return notFoundResponse(res);
   }
 
   userService.remove(id);
-  res.sendStatus(204);
+
+  return res.sendStatus(204);
 };
 
 const update = (req, res) => {
@@ -62,12 +62,12 @@ const update = (req, res) => {
   }
 
   if (!user) {
-    notFoundResponse(res);
+    return notFoundResponse(res);
   }
 
   userService.update(id, name);
 
-  res.send(user);
+  return res.send(user);
 };
 
 module.exports = {
