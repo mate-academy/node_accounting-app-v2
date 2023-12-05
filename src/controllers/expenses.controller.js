@@ -3,24 +3,25 @@
 const expenseService = require('./../services/expenses.service');
 const userService = require('./../services/users.service');
 const { notFoundResponse } = require('./../helpers/notFoundResponse');
+const { badRequestResponse } = require('./../helpers/badRequestResponse');
 const { isDate } = require('../helpers/isDate');
 
 const get = (req, res) => {
   const { userId, from, to, categories } = req.query;
 
-  return res.send(expenseService.getExpenses(userId, from, to, categories));
+  res.send(expenseService.getExpenses(userId, from, to, categories));
 };
 
 const getOne = (req, res) => {
   const { id } = req.params;
 
-  const user = expenseService.getById(id);
+  const expense = expenseService.getById(id);
 
-  if (!user) {
-    return notFoundResponse(res);
+  if (!expense) {
+    return notFoundResponse(res, 'Expense');
   }
 
-  return res.send(user);
+  res.send(expense);
 };
 
 const create = (req, res) => {
@@ -42,43 +43,23 @@ const create = (req, res) => {
   }
 
   if (!isDate(spentAt)) {
-    return res
-      .status(400)
-      .json({
-        error: 'Please provide a valid date',
-      });
+    return badRequestResponse(res, 'spentAt', 'Date');
   }
 
   if (!category || typeof category !== 'string') {
-    return res
-      .status(400)
-      .json({
-        error: 'Please provide a valid `category` as a string.',
-      });
+    return badRequestResponse(res, 'category', 'string');
   }
 
   if (!note || typeof note !== 'string') {
-    return res
-      .status(400)
-      .json({
-        error: 'Please provide a valid `note` as a string.',
-      });
+    return badRequestResponse(res, 'note', 'string');
   }
 
   if (amount === undefined || typeof amount !== 'number') {
-    return res
-      .status(400)
-      .json({
-        error: 'Please provide a valid `amount` as a number.',
-      });
+    return badRequestResponse(res, 'amount', 'number');
   }
 
   if (!title || typeof title !== 'string') {
-    return res
-      .status(400)
-      .json({
-        error: 'Please provide a valid `title` as a string.',
-      });
+    return badRequestResponse(res, 'title', 'string');
   }
 
   const newExpense = expenseService.create(
@@ -99,11 +80,7 @@ const remove = (req, res) => {
   const { id } = req.params;
 
   if (!expenseService.getById(id)) {
-    return res
-      .status(404)
-      .json({
-        error: 'Expense not found',
-      });
+    return notFoundResponse(res, 'Expense');
   }
 
   expenseService.remove(id);
@@ -117,11 +94,7 @@ const update = (req, res) => {
   const expense = expenseService.getById(id);
 
   if (!expense) {
-    return res
-      .status(404)
-      .json({
-        error: 'Expense not found',
-      });
+    return notFoundResponse(res, 'Expense');
   }
 
   if (
@@ -136,43 +109,23 @@ const update = (req, res) => {
   }
 
   if (dataToUpdate.spentAt && !isDate(dataToUpdate.spentAt)) {
-    return res
-      .status(400)
-      .json({
-        error: 'Please provide a valid date',
-      });
+    return badRequestResponse(res, 'spentAt', 'Date');
   }
 
   if (dataToUpdate.category && typeof dataToUpdate.category !== 'string') {
-    return res
-      .status(400)
-      .json({
-        error: 'Please provide a valid `category` as a string.',
-      });
+    return badRequestResponse(res, 'category', 'string');
   }
 
   if (dataToUpdate.note && typeof dataToUpdate.note !== 'string') {
-    return res
-      .status(400)
-      .json({
-        error: 'Please provide a valid `note` as a string.',
-      });
+    return badRequestResponse(res, 'note', 'string');
   }
 
   if (dataToUpdate.amount && typeof dataToUpdate.amount !== 'number') {
-    return res
-      .status(400)
-      .json({
-        error: 'Please provide a valid `amount` as a number.',
-      });
+    return badRequestResponse(res, 'amount', 'string');
   }
 
   if (dataToUpdate.title && typeof dataToUpdate.title !== 'string') {
-    return res
-      .status(400)
-      .json({
-        error: 'Please provide a valid `title` as a string.',
-      });
+    return badRequestResponse(res, 'title', 'string');
   }
 
   expenseService.update(id, dataToUpdate);

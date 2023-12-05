@@ -1,10 +1,10 @@
 'use strict';
 
-const notFoundResponse = (res) => {
+const notFoundResponse = (res, entity) => {
   return res
     .status(404)
     .json({
-      error: 'User not found',
+      error: `${entity} not found`,
     });
 };
 
