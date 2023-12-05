@@ -10,6 +10,11 @@ const expenseKeys = [
   'note',
 ];
 
+const NOT_FOUND_CODE = 404;
+const NOT_FOUND_MESSAGE = 'Expected entity does not exist';
+const REQUIRED_CODE = 400;
+const REQUIRED_MESSAGE = 'Required parameter is not passed';
+
 function createServer() {
   let users = [];
   let expenses = [];
@@ -24,7 +29,7 @@ function createServer() {
     const { name } = req.body;
 
     if (!name) {
-      res.status(400).send('Required parameter is not passed');
+      res.status(REQUIRED_CODE).send(REQUIRED_MESSAGE);
 
       return;
     }
@@ -46,7 +51,7 @@ function createServer() {
     const user = users.find(item => item.id === +id);
 
     if (!user) {
-      res.status(404).send('Expected entity does not exist');
+      res.status(NOT_FOUND_CODE).send(NOT_FOUND_MESSAGE);
 
       return;
     }
@@ -57,10 +62,10 @@ function createServer() {
   app.delete('/users/:id', (req, res) => {
     const { id } = req.params;
 
-    const newUsers = users.find(user => user.id !== +id);
+    const newUsers = users.filter(user => user.id !== +id);
 
     if (newUsers.length === users.length) {
-      res.status(404).send('Expected entity does not exist');
+      res.status(NOT_FOUND_CODE).send(NOT_FOUND_MESSAGE);
 
       return;
     }
@@ -70,20 +75,20 @@ function createServer() {
     res.sendStatus(204);
   });
 
-  app.put('/users/:id', express.json(), (req, res) => {
+  app.patch('/users/:id', express.json(), (req, res) => {
     const { id } = req.params;
     const { name } = req.body;
-
-    if (!name) {
-      res.status(400).send('Required parameter is not passed');
-
-      return;
-    }
 
     const user = users.find(item => item.id === +id);
 
     if (!user) {
-      res.status(404).send('Expected entity does not exist');
+      res.status(NOT_FOUND_CODE).send(NOT_FOUND_MESSAGE);
+
+      return;
+    }
+
+    if (!name) {
+      res.status(REQUIRED_CODE).send(REQUIRED_MESSAGE);
 
       return;
     }
@@ -107,8 +112,8 @@ function createServer() {
 
     if (from && to) {
       newExpenses = newExpenses.filter((item) => (
-        item.spentAt.getTime() < to.getTime()
-          && item.spentAt.getTime() > from.getTime()
+        Date.parse(item.spentAt) < Date.parse(to)
+          && Date.parse(item.spentAt) > Date.parse(from)
       ));
     }
 
@@ -119,12 +124,15 @@ function createServer() {
     const payload = req.body;
     const postExpenseKeys = ['userId', ...expenseKeys];
 
-    for (const key of postExpenseKeys) {
-      if (!payload[key]) {
-        res.status(400).send('Required parameter is not passed');
+    const missingKeys = postExpenseKeys
+      .filter(key => !payload.hasOwnProperty(key));
 
-        return;
-      }
+    const isUserExists = users.some(user => user.id === payload.userId);
+
+    if (missingKeys.length || !isUserExists) {
+      res.status(REQUIRED_CODE).send(REQUIRED_MESSAGE);
+
+      return;
     }
 
     const expense = {
@@ -144,7 +152,7 @@ function createServer() {
     const expense = expenses.find(item => item.id === +id);
 
     if (!expense) {
-      res.status(404).send('Expected entity does not exist');
+      res.status(NOT_FOUND_CODE).send(NOT_FOUND_MESSAGE);
 
       return;
     }
@@ -155,10 +163,10 @@ function createServer() {
   app.delete('/expenses/:id', (req, res) => {
     const { id } = req.params;
 
-    const newExpenses = expenses.find(expense => expense.id !== +id);
+    const newExpenses = expenses.filter(expense => expense.id !== +id);
 
     if (newExpenses.length === users.length) {
-      res.status(404).send('Expected entity does not exist');
+      res.status(NOT_FOUND_CODE).send(NOT_FOUND_MESSAGE);
 
       return;
     }
@@ -168,22 +176,20 @@ function createServer() {
     res.sendStatus(204);
   });
 
-  app.put('/expenses/:id', express.json(), (req, res) => {
+  app.patch('/expenses/:id', express.json(), (req, res) => {
     const { id } = req.params;
     const payload = req.body;
-
-    for (const key of expenseKeys) {
-      if (!payload[key]) {
-        res.status(400).send('Required parameter is not passed');
-
-        return;
-      }
-    }
 
     const expense = expenses.find(item => item.id === +id);
 
     if (!expense) {
-      res.status(404).send('Expected entity does not exist');
+      res.status(NOT_FOUND_CODE).send(NOT_FOUND_MESSAGE);
+
+      return;
+    }
+
+    if (!payload.hasOwnProperty('title')) {
+      res.status(REQUIRED_CODE).send(REQUIRED_MESSAGE);
 
       return;
     }
