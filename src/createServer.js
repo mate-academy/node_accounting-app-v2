@@ -3,7 +3,7 @@
 const express = require('express');
 const path = require('path');
 
-const users = [];
+let users = [];
 
 function createServer() {
   const app = express();
@@ -27,6 +27,18 @@ function createServer() {
     const { userId } = req.params;
     const user = users.find(u => u.id === Number(userId));
     res.send(user);
+  })
+
+  app.delete('/users/:userId', (req, res) => {
+    const { userId } = req.params;
+    const user = users.find(u => u.id === Number(userId));
+    if (user) {
+      users = users.filter(u => u.id !== Number(userId));
+
+      res.sendStatus(204);
+    } else {
+      res.sendStatus(404);
+    }
   })
 
   // Use express to create a server
