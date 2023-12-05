@@ -41,6 +41,18 @@ function createServer() {
     }
   })
 
+  app.patch('/users/:userId', (req, res) => {
+    const { userId } = req.params;
+    const user = users.find(u => u.id === Number(userId));
+    if (user) {
+      user.name = req.body.name;
+
+      res.sendStatus(204);
+    } else {
+      res.sendStatus(404);
+    }
+  })
+
   // Use express to create a server
   // Add a routes to the server
   return app;
