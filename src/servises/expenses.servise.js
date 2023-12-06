@@ -8,6 +8,32 @@ function resetExpenses() {
 
 const getAllExpenses = () => expenses;
 
+const getQueryExpenses = (userId, from, to, categories) => {
+  let visibleExpenses = getAllExpenses();
+
+  if (userId) {
+    visibleExpenses = visibleExpenses.filter(exp => exp.userId === +userId);
+  }
+
+  if (from && to) {
+    const start = new Date(from).getTime();
+    const end = new Date(to).getTime();
+
+    visibleExpenses = visibleExpenses.filter(exp => {
+      const currExpensesDate = new Date(exp.spentAt).getTime();
+
+      return currExpensesDate >= start && currExpensesDate <= end;
+    });
+  }
+
+  if (categories) {
+    visibleExpenses = visibleExpenses
+      .filter(exp => exp.category === categories);
+  }
+
+  return visibleExpenses;
+};
+
 const getExpenseById = (id) => {
   return expenses.find(expense => expense.id === +id) || null;
 };
@@ -65,6 +91,7 @@ const updateExpense = (id,
 
 module.exports = {
   resetExpenses,
+  getQueryExpenses,
   getAllExpenses,
   getExpenseById,
   createExpense,

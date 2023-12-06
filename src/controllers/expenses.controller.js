@@ -1,7 +1,8 @@
 'use strict';
 
 const {
-  getAllExpenses,
+  // getAllExpenses,
+  getQueryExpenses,
   getExpenseById,
   createExpense,
   deleteExpense,
@@ -10,24 +11,8 @@ const {
 const { getUserById } = require('../servises/users.servise');
 
 const getExpensesResponse = (req, res) => {
-  const { from, to, categories } = req.query;
-  let visibleExpenses = getAllExpenses();
-
-  if (from && to) {
-    const start = new Date(from).getTime();
-    const end = new Date(to).getTime();
-
-    visibleExpenses = visibleExpenses.filter(exp => {
-      const currExpensesDate = new Date(exp.spentAt).getTime();
-
-      return currExpensesDate >= start && currExpensesDate <= end;
-    });
-  }
-
-  if (categories) {
-    visibleExpenses = visibleExpenses
-      .filter(exp => exp.category === categories);
-  }
+  const { userId, from, to, categories } = req.query;
+  const visibleExpenses = getQueryExpenses(userId, from, to, categories);
 
   res.send(visibleExpenses);
 };
