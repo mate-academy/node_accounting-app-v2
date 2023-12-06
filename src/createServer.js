@@ -100,22 +100,20 @@ function createServer() {
 
   app.get('/expenses', (req, res) => {
     const { userId, categories, from, to } = req.query;
-    let newExpenses = expenses;
+    const newExpenses = expenses.filter((item) => {
+      if (
+        (!userId || item.userId === +userId)
+          && (!categories || item.category === categories)
+          && (!from || !to || (
+            Date.parse(item.spentAt) < Date.parse(to)
+              && Date.parse(item.spentAt) > Date.parse(from)
+          ))
+      ) {
+        return true;
+      }
 
-    if (userId) {
-      newExpenses = newExpenses.filter(item => item.userId === +userId);
-    }
-
-    if (categories) {
-      newExpenses = newExpenses.filter(item => item.category === categories);
-    }
-
-    if (from && to) {
-      newExpenses = newExpenses.filter((item) => (
-        Date.parse(item.spentAt) < Date.parse(to)
-          && Date.parse(item.spentAt) > Date.parse(from)
-      ));
-    }
+      return false;
+    });
 
     res.send(newExpenses);
   });
