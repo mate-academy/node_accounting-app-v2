@@ -1,13 +1,21 @@
-'use strict'
+'use strict';
 
 const express = require('express');
 
-function createServer() {
+const keys = [
+  'spentAt',
+  'title',
+  'amount',
+  'category',
+  'note',
+];
 
+function createServer() {
   let usersList = [];
   let expenseList = [];
 
   const app = express();
+
   app.get('/users', (res) => {
     res.send(usersList);
   });
@@ -108,7 +116,7 @@ function createServer() {
   });
 
   app.post('/expenses', express.json(), (req, res) => {
-    const postExpenseKeys = ['userId', ...expense];
+    const postExpenseKeys = ['userId', ...keys];
 
     const missingKeys = postExpenseKeys
       .filter(key => !req.body.hasOwnProperty(key));
