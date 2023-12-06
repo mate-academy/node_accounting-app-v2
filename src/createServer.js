@@ -1,6 +1,8 @@
 'use strict';
 
 const express = require('express');
+const userService = require('./services/user.service');
+const expenseService = require('./services/expense.service');
 
 const expenseKeys = [
   'spentAt',
@@ -16,13 +18,13 @@ const REQUIRED_CODE = 400;
 const REQUIRED_MESSAGE = 'Required parameter is not passed';
 
 function createServer() {
-  let users = [];
-  let expenses = [];
+  userService.reset();
+  expenseService.reset();
 
   const app = express();
 
   app.get('/users', (req, res) => {
-    res.send(users);
+    res.send(userService.getAllUsers());
   });
 
   app.post('/users', express.json(), (req, res) => {
@@ -34,21 +36,14 @@ function createServer() {
       return;
     }
 
-    const user = {
-      id: +new Date(),
-      name,
-    };
-
-    users.push(user);
-
     res.statusCode = 201;
-    res.send(user);
+    res.send(userService.createUser(name));
   });
 
   app.get('/users/:id', (req, res) => {
     const { id } = req.params;
 
-    const user = users.find(item => item.id === +id);
+    const user = userService.getUser(id);
 
     if (!user) {
       res.status(NOT_FOUND_CODE).send(NOT_FOUND_MESSAGE);
@@ -62,15 +57,13 @@ function createServer() {
   app.delete('/users/:id', (req, res) => {
     const { id } = req.params;
 
-    const newUsers = users.filter(user => user.id !== +id);
-
-    if (newUsers.length === users.length) {
+    if (!userService.getUser(id)) {
       res.status(NOT_FOUND_CODE).send(NOT_FOUND_MESSAGE);
 
       return;
     }
 
-    users = newUsers;
+    userService.deleteUser(id);
 
     res.sendStatus(204);
   });
@@ -79,7 +72,7 @@ function createServer() {
     const { id } = req.params;
     const { name } = req.body;
 
-    const user = users.find(item => item.id === +id);
+    const user = userService.getUser(id);
 
     if (!user) {
       res.status(NOT_FOUND_CODE).send(NOT_FOUND_MESSAGE);
@@ -93,61 +86,48 @@ function createServer() {
       return;
     }
 
-    Object.assign(user, { name });
+    userService.updateUser({
+      user,
+      name,
+    });
 
     res.send(user);
   });
 
   app.get('/expenses', (req, res) => {
     const { userId, categories, from, to } = req.query;
-    const newExpenses = expenses.filter((item) => {
-      if (
-        (!userId || item.userId === +userId)
-          && (!categories || item.category === categories)
-          && (!from || !to || (
-            Date.parse(item.spentAt) < Date.parse(to)
-              && Date.parse(item.spentAt) > Date.parse(from)
-          ))
-      ) {
-        return true;
-      }
 
-      return false;
-    });
-
-    res.send(newExpenses);
+    res.send(expenseService.getAllExpenses({
+      userId,
+      categories,
+      from,
+      to,
+    }));
   });
 
   app.post('/expenses', express.json(), (req, res) => {
     const payload = req.body;
     const postExpenseKeys = ['userId', ...expenseKeys];
 
+    const user = userService.getUser(payload.userId);
+
     const missingKeys = postExpenseKeys
       .filter(key => !payload.hasOwnProperty(key));
 
-    const isUserExists = users.some(user => user.id === payload.userId);
-
-    if (missingKeys.length || !isUserExists) {
+    if (missingKeys.length || !user) {
       res.status(REQUIRED_CODE).send(REQUIRED_MESSAGE);
 
       return;
     }
 
-    const expense = {
-      id: +new Date(),
-      ...payload,
-    };
-
-    expenses.push(expense);
-
     res.statusCode = 201;
-    res.send(expense);
+    res.send(expenseService.createExpense(payload));
   });
 
   app.get('/expenses/:id', (req, res) => {
     const { id } = req.params;
 
-    const expense = expenses.find(item => item.id === +id);
+    const expense = expenseService.getExpense(id);
 
     if (!expense) {
       res.status(NOT_FOUND_CODE).send(NOT_FOUND_MESSAGE);
@@ -161,15 +141,13 @@ function createServer() {
   app.delete('/expenses/:id', (req, res) => {
     const { id } = req.params;
 
-    const newExpenses = expenses.filter(expense => expense.id !== +id);
-
-    if (newExpenses.length === users.length) {
+    if (!expenseService.getExpense(id)) {
       res.status(NOT_FOUND_CODE).send(NOT_FOUND_MESSAGE);
 
       return;
     }
 
-    expenses = newExpenses;
+    expenseService.deleteExpense(id);
 
     res.sendStatus(204);
   });
@@ -178,7 +156,7 @@ function createServer() {
     const { id } = req.params;
     const payload = req.body;
 
-    const expense = expenses.find(item => item.id === +id);
+    const expense = expenseService.getExpense(id);
 
     if (!expense) {
       res.status(NOT_FOUND_CODE).send(NOT_FOUND_MESSAGE);
@@ -192,7 +170,10 @@ function createServer() {
       return;
     }
 
-    Object.assign(expense, payload);
+    expenseService.updateExpense({
+      expense,
+      payload,
+    });
 
     res.send(expense);
   });
