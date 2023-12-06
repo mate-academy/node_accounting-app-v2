@@ -1,13 +1,6 @@
+'use strict'
+
 const express = require('express');
-
-const keys = [
-  'spentAt',
-  'title',
-  'amount',
-  'category',
-  'note',
-];
-
 
 function createServer() {
 
@@ -115,7 +108,7 @@ function createServer() {
   });
 
   app.post('/expenses', express.json(), (req, res) => {
-    const postExpenseKeys = ['userId', ...expenseKeys];
+    const postExpenseKeys = ['userId', ...expense];
 
     const missingKeys = postExpenseKeys
       .filter(key => !req.body.hasOwnProperty(key));
