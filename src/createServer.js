@@ -3,19 +3,8 @@
 const express = require('express');
 const userService = require('./services/user.service');
 const expenseService = require('./services/expense.service');
-
-const expenseKeys = [
-  'spentAt',
-  'title',
-  'amount',
-  'category',
-  'note',
-];
-
-const NOT_FOUND_CODE = 404;
-const NOT_FOUND_MESSAGE = 'Expected entity does not exist';
-const REQUIRED_CODE = 400;
-const REQUIRED_MESSAGE = 'Required parameter is not passed';
+const userController = require('./controllers/user.controller');
+const expenseController = require('./controllers/expense.controller');
 
 function createServer() {
   userService.reset();
@@ -23,160 +12,25 @@ function createServer() {
 
   const app = express();
 
-  app.get('/users', (req, res) => {
-    res.send(userService.getAllUsers());
-  });
+  app.get('/users', userController.getAll);
 
-  app.post('/users', express.json(), (req, res) => {
-    const { name } = req.body;
+  app.post('/users', express.json(), userController.create);
 
-    if (!name) {
-      res.status(REQUIRED_CODE).send(REQUIRED_MESSAGE);
+  app.get('/users/:id', userController.getOne);
 
-      return;
-    }
+  app.delete('/users/:id', userController.remove);
 
-    res.statusCode = 201;
-    res.send(userService.createUser(name));
-  });
+  app.patch('/users/:id', express.json(), userController.update);
 
-  app.get('/users/:id', (req, res) => {
-    const { id } = req.params;
+  app.get('/expenses', expenseController.getAll);
 
-    const user = userService.getUser(id);
+  app.post('/expenses', express.json(), expenseController.create);
 
-    if (!user) {
-      res.status(NOT_FOUND_CODE).send(NOT_FOUND_MESSAGE);
+  app.get('/expenses/:id', expenseController.getOne);
 
-      return;
-    }
+  app.delete('/expenses/:id', expenseController.remove);
 
-    res.send(user);
-  });
-
-  app.delete('/users/:id', (req, res) => {
-    const { id } = req.params;
-
-    if (!userService.getUser(id)) {
-      res.status(NOT_FOUND_CODE).send(NOT_FOUND_MESSAGE);
-
-      return;
-    }
-
-    userService.deleteUser(id);
-
-    res.sendStatus(204);
-  });
-
-  app.patch('/users/:id', express.json(), (req, res) => {
-    const { id } = req.params;
-    const { name } = req.body;
-
-    const user = userService.getUser(id);
-
-    if (!user) {
-      res.status(NOT_FOUND_CODE).send(NOT_FOUND_MESSAGE);
-
-      return;
-    }
-
-    if (!name) {
-      res.status(REQUIRED_CODE).send(REQUIRED_MESSAGE);
-
-      return;
-    }
-
-    userService.updateUser({
-      user,
-      name,
-    });
-
-    res.send(user);
-  });
-
-  app.get('/expenses', (req, res) => {
-    const { userId, categories, from, to } = req.query;
-
-    res.send(expenseService.getAllExpenses({
-      userId,
-      categories,
-      from,
-      to,
-    }));
-  });
-
-  app.post('/expenses', express.json(), (req, res) => {
-    const payload = req.body;
-    const postExpenseKeys = ['userId', ...expenseKeys];
-
-    const user = userService.getUser(payload.userId);
-
-    const missingKeys = postExpenseKeys
-      .filter(key => !payload.hasOwnProperty(key));
-
-    if (missingKeys.length || !user) {
-      res.status(REQUIRED_CODE).send(REQUIRED_MESSAGE);
-
-      return;
-    }
-
-    res.statusCode = 201;
-    res.send(expenseService.createExpense(payload));
-  });
-
-  app.get('/expenses/:id', (req, res) => {
-    const { id } = req.params;
-
-    const expense = expenseService.getExpense(id);
-
-    if (!expense) {
-      res.status(NOT_FOUND_CODE).send(NOT_FOUND_MESSAGE);
-
-      return;
-    }
-
-    res.send(expense);
-  });
-
-  app.delete('/expenses/:id', (req, res) => {
-    const { id } = req.params;
-
-    if (!expenseService.getExpense(id)) {
-      res.status(NOT_FOUND_CODE).send(NOT_FOUND_MESSAGE);
-
-      return;
-    }
-
-    expenseService.deleteExpense(id);
-
-    res.sendStatus(204);
-  });
-
-  app.patch('/expenses/:id', express.json(), (req, res) => {
-    const { id } = req.params;
-    const payload = req.body;
-
-    const expense = expenseService.getExpense(id);
-
-    if (!expense) {
-      res.status(NOT_FOUND_CODE).send(NOT_FOUND_MESSAGE);
-
-      return;
-    }
-
-    if (!payload.hasOwnProperty('title')) {
-      res.status(REQUIRED_CODE).send(REQUIRED_MESSAGE);
-
-      return;
-    }
-
-    expenseService.updateExpense({
-      expense,
-      payload,
-    });
-
-    res.send(expense);
-  });
+  app.patch('/expenses/:id', express.json(), expenseController.update);
 
   return app;
 }
