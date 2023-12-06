@@ -92,9 +92,9 @@ const getOneById = (req, res) => {
 
 const deleteOne = (req, res) => {
   const { id } = req.params;
-  const newExpenses = deleteExpense(id);
+  const deleted = deleteExpense(id);
 
-  if (!newExpenses) {
+  if (!deleted) {
     res.sendStatus(404);
 
     return;

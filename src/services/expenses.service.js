@@ -22,7 +22,11 @@ const createExpense = ({ userId, spentAt, title, amount, category, note }) => {
   return newExpense;
 };
 const deleteExpense = (id) => {
+  const initialLength = expenses.length;
+
   expenses = expenses.filter(e => e.id !== +id);
+
+  return expenses.length !== initialLength;
 };
 const updateExpense = (id, title) => {
   const expense = getExpenseById(id);

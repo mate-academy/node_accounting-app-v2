@@ -39,10 +39,12 @@ const getOneById = (req, res) => {
 
 const deleteOne = (req, res) => {
   const { id } = req.params;
-  const deletedUser = deleteUser(id);
+  const deleted = deleteUser(id);
 
-  if (!deletedUser) {
-    return res.sendStatus(404);
+  if (!deleted) {
+    res.sendStatus(404);
+
+    return;
   }
 
   res.sendStatus(204);

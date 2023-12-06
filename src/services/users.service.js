@@ -17,7 +17,11 @@ const createUser = (name) => {
   return newUser;
 };
 const deleteUser = (id) => {
+  const initialLength = users.length;
+
   users = users.filter(u => u.id !== +id);
+
+  return users.length !== initialLength;
 };
 const updateUser = (id, name) => {
   const user = getUserById(id);
