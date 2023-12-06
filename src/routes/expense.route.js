@@ -1,6 +1,6 @@
 'use strict';
 
-const expensesControllers = require('../controllers/expense.controllers');
+const expensesControllers = require('../controllers/expense.controller');
 
 const express = require('express');
 
