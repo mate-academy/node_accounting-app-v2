@@ -16,29 +16,14 @@ const getAll = () => {
 };
 
 const getFiltered = (userId, categories, fromDate, toDate) => {
-  let filterData = [...expenses];
+  return expenses.filter(ex => {
+    const byUser = !userId || ex.userId.toString() === userId.toString();
+    const byCategory = !categories || categories.includes(ex.category);
+    const byFromDate = !fromDate || new Date(ex.spentAt) >= new Date(fromDate);
+    const byToDate = !toDate || new Date(ex.spentAt) <= new Date(toDate);
 
-  if (userId) {
-    filterData = filterData.filter(ex => ex.userId === Number(userId));
-  }
-
-  if (categories) {
-    filterData = filterData.filter(ex => categories.includes(ex.category));
-  }
-
-  if (fromDate) {
-    const dateFrom = new Date(fromDate);
-
-    filterData = filterData.filter(ex => new Date(ex.spentAt) >= dateFrom);
-  }
-
-  if (toDate) {
-    const dateTo = new Date(toDate);
-
-    filterData = filterData.filter(ex => new Date(ex.spentAt) <= dateTo);
-  }
-
-  return filterData;
+    return byUser && byCategory && byFromDate && byToDate;
+  });
 };
 
 const getById = (id) => {
