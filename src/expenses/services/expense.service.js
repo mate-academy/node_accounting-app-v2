@@ -11,29 +11,25 @@ function clearExpenses() {
 function getExpenses(userId, from, to, categories) {
   let filteredExpenses = [...expenses];
 
-  if (userId) {
-    filteredExpenses = filteredExpenses.filter(
-      expense => expense.userId === +userId
-    );
-  }
+  filteredExpenses = filteredExpenses.filter(expense => {
+    if (userId && expense.userId !== +userId) {
+      return false;
+    }
 
-  if (categories) {
-    filteredExpenses = filteredExpenses.filter(
-      expense => expense.category === categories
-    );
-  }
+    if (categories && expense.category !== categories) {
+      return false;
+    }
 
-  if (from) {
-    filteredExpenses = filteredExpenses.filter(
-      expense => expense.spentAt > from
-    );
-  }
+    if (from && expense.spentAt <= from) {
+      return false;
+    }
 
-  if (to) {
-    filteredExpenses = filteredExpenses.filter(
-      expense => expense.spentAt < to
-    );
-  }
+    if (to && expense.spentAt >= to) {
+      return false;
+    }
+
+    return true;
+  });
 
   return filteredExpenses;
 }
