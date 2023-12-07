@@ -9,7 +9,7 @@ const getAll = (req, res) => {
 
   const expenses = expenseService.getAll();
 
-  if (Object.keys(query).length === 0) {
+  if (!Object.keys(query).length) {
     res.send(expenses);
 
     return;
