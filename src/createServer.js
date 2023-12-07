@@ -2,15 +2,17 @@
 
 const cors = require('cors');
 const express = require('express');
-const bodyParser = require('body-parser');
 const app = express();
 
 app.use(cors());
-app.use(bodyParser.json());
+
+const BAD_REQUES = 400;
+const NOT_FOUND = 404;
+const CREATED_STATUS = 201;
+const NO_CONTENT = 204;
 
 let expenses = [];
 let users = [];
-let currentId = 0;
 
 const clearExpenses = () => {
   expenses = [];
@@ -24,17 +26,17 @@ app.post('/expenses', express.json(), (req, res) => {
   const { userId, spentAt, title, amount, category, note } = req.body;
 
   if (!title) {
-    return res.send(400);
+    return res.sendStatus(BAD_REQUES);
   }
 
   const userExists = users.some(u => u.id === userId);
 
   if (!userExists) {
-    return res.status(400).send('User not found');
+    return res.status(BAD_REQUES).send('User not found');
   }
 
   const newExpense = {
-    id: currentId++,
+    id: expenses.length,
     userId,
     spentAt,
     title,
@@ -44,7 +46,7 @@ app.post('/expenses', express.json(), (req, res) => {
   };
 
   expenses.push(newExpense);
-  res.status(201).send(newExpense);
+  res.status(CREATED_STATUS).send(newExpense);
 });
 
 app.get('/expenses', (req, res) => {
@@ -57,7 +59,7 @@ app.get('/expenses', (req, res) => {
 
   if (userId) {
     filteredExpenses = filteredExpenses
-      .filter(e => e.userId === Number(userId));
+      .filter(e => e.userId === +userId);
   }
 
   if (categories && categories.length) {
@@ -83,32 +85,24 @@ app.get('/expenses/:id', (req, res) => {
   const expense = expenses.find(e => e.id === +id);
 
   if (!expense) {
-    return res.send(404);
+    return res.send(NOT_FOUND);
   }
 
   res.send(expense);
 });
 
-app.put('/expenses/:id', express.json(), (req, res) => {
+app.patch('/expenses/:id', express.json(), (req, res) => {
   const { id } = req.params;
-  const { userId, spentAt, title, amount, category, note } = req.body;
 
-  const expense = expenses.find(user => user.id === id);
+  const expense = expenses.find(e => e.id === +id);
 
   if (!expense) {
-    return res.status(404);
+    return res.sendStatus(NOT_FOUND);
   }
 
-  Object.assign(expense, {
-    userId,
-    spentAt,
-    title,
-    amount,
-    category,
-    note,
-  });
+  const newExpense = Object.assign(expense, req.body);
 
-  res.send(expense);
+  res.send(newExpense);
 });
 
 app.delete('/expenses/:id', (req, res) => {
@@ -116,17 +110,18 @@ app.delete('/expenses/:id', (req, res) => {
   const expense = expenses.find(e => e.id === +id);
 
   if (!expense) {
-    return res.send(404);
+    return res.sendStatus(NOT_FOUND);
   }
 
-  res.send(204);
+  expenses = expenses.filter(ex => ex.id !== +id);
+  res.send(NO_CONTENT);
 });
 
 app.post('/users', express.json(), (req, res) => {
   const { name } = req.body;
 
   if (!name) {
-    return res.send(400);
+    return res.sendStatus(BAD_REQUES);
   }
 
   const newUser = {
@@ -135,7 +130,7 @@ app.post('/users', express.json(), (req, res) => {
   };
 
   users.push(newUser);
-  res.status(201).send(newUser);
+  res.status(CREATED_STATUS).send(newUser);
 });
 
 app.get('/users', (req, res) => {
@@ -151,39 +146,39 @@ app.get('/users/:id', (req, res) => {
   const user = users.find(u => u.id === +id);
 
   if (!user) {
-    return res.send(404);
+    return res.send(NOT_FOUND);
   }
 
   res.send(user);
 });
 
-app.put('/users/:id', express.json(), (req, res) => {
-  const { id, name } = req.params;
+app.patch('/users/:id', express.json(), (req, res) => {
+  const { id } = req.params;
   const user = users.find(u => u.id === +id);
 
   if (!user) {
-    res.sendStatus(404);
+    res.sendStatus(NOT_FOUND);
 
     return;
   }
 
-  Object.assign(user, { name });
+  Object.assign(user, req.body);
   res.send(user);
 });
 
 app.delete('/users/:id', (req, res) => {
   const { id } = req.params;
-  const newUsers = users.filter(user => user.id !== id);
+  const newUsers = users.find(user => user.id === +id);
 
-  if (newUsers.length === users.length) {
-    res.sendStatus(404);
+  if (!newUsers) {
+    res.sendStatus(NOT_FOUND);
 
     return;
   }
 
-  users = newUsers;
+  users = users.filter(user => user.id !== +id);
 
-  res.sendStatus(204);
+  res.sendStatus(NO_CONTENT);
 });
 
 function createServer() {
