@@ -7,30 +7,12 @@ const resetExpenses = () => {
 };
 
 const getExpenses = (userId, from, to, categories) => {
-  let expensesToDisplay = [...expenses];
-
-  if (userId) {
-    expensesToDisplay = expensesToDisplay.filter(e => e.userId === +userId);
-  }
-
-  if (categories) {
-    expensesToDisplay = expensesToDisplay
-      .filter(e => e.category === categories);
-  }
-
-  if (from) {
-    expensesToDisplay = expensesToDisplay.filter(e => (
-      Date.parse(e.spentAt) > Date.parse(from)
-    ));
-  }
-
-  if (to) {
-    expensesToDisplay = expensesToDisplay.filter(e => (
-      Date.parse(e.spentAt) < Date.parse(to)
-    ));
-  }
-
-  return expensesToDisplay;
+  return expenses.filter(e => (
+    (!userId || e.userId === +userId)
+    && (!categories || e.category === categories)
+    && (!from || Date.parse(e.spentAt) > Date.parse(from))
+    && (!to || Date.parse(e.spentAt) < Date.parse(to))
+  ));
 };
 
 const getById = (id) => {
