@@ -14,37 +14,31 @@ const { getAll } = require('../services/user.service');
 const get = (req, res) => {
   const allExpenses = getAllExpenses();
   const { userId, categories, from, to } = req.query;
-  let filteredExpenses = null;
+  let filteredExpenses = allExpenses;
 
-  if (categories && userId) {
-    filteredExpenses = allExpenses.filter(item => {
-      return item.category === categories;
-    });
-
-    return res.send(filteredExpenses);
-  };
-
-  if (userId) {
-    filteredExpenses = allExpenses.filter(item => {
-      return item.userId === +userId;
-    });
-
-    return res.send(filteredExpenses);
-  }
-
-  if (allExpenses.length === 0) {
+  if (!allExpenses.length) {
     return res.send([]);
   }
 
-  if (from && to) {
-    filteredExpenses = allExpenses.filter(item => {
+  filteredExpenses = filteredExpenses.filter(item => {
+    if (categories && userId) {
+      return item.category === categories;
+    }
+
+    if (userId) {
+      return item.userId === +userId;
+    }
+
+    if (from && to) {
       return item.spentAt > from && item.spentAt < to;
-    });
+    }
+  });
 
-    return res.send(filteredExpenses);
+  if (filteredExpenses.length) {
+    res.send(filteredExpenses);
+  } else {
+    res.send(allExpenses);
   }
-
-  return res.send(allExpenses);
 };
 
 const postOne = (req, res) => {
