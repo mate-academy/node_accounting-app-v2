@@ -33,8 +33,8 @@ It means, if I create expense in the first POST request it should be returned in
 But after stop/start server again data should be empty.
 
 ### Code requirements
-You have to work inside `src/createServer.js`.
-You should create, set up and return an express app from `createServer` function.
+You have to work inside `src/usersService.js`.
+You should create, set up and return an express app from `usersService` function.
 > ❗️You shouldn't call `app.listen(...)`. I's done in tests and in the `main.js`
 You might create additional files and might not, but no one can guarantee approve by mentor 😉.
 

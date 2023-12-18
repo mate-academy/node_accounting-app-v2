@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Node.js accounting app",
   "main": "src/index.js",
+
   "scripts": {
     "start": "node main.js",
     "dev": "nodemon main.js",
