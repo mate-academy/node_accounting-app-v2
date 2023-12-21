@@ -9,9 +9,11 @@ const get = (req, res) => {
 const getOne = (req, res) => {
   const { id } = req.params;
 
-  const normalizedId = parseInt(id);
+  if (!id) {
+    res.sendStatus(400);
+  }
 
-  const expense = expenseService.getExpenseById(normalizedId);
+  const expense = expenseService.getExpenseById(id);
 
   if (!expense) {
     res.sendStatus(404);
@@ -39,9 +41,11 @@ const add = (req, res) => {
 const remove = (req, res) => {
   const { id } = req.params;
 
-  const normalizedId = parseInt(id);
+  if (!id) {
+    res.sendStatus(400);
+  }
 
-  const expense = expenseService.getExpenseById(normalizedId);
+  const expense = expenseService.getExpenseById(id);
 
   if (!expense) {
     res.sendStatus(404);
@@ -49,7 +53,7 @@ const remove = (req, res) => {
     return;
   }
 
-  expenseService.deleteExpense(normalizedId);
+  expenseService.deleteExpense(id);
 
   res.sendStatus(204);
 };
@@ -58,16 +62,18 @@ const update = (req, res) => {
   const { id } = req.params;
   const newProperties = req.body;
 
-  const normalizedId = parseInt(id);
+  if (!id) {
+    res.sendStatus(400);
+  }
 
-  if (!expenseService.getExpenseById(normalizedId)) {
+  if (!expenseService.getExpenseById(id)) {
     res.sendStatus(404);
 
     return;
   }
 
   const updatedExpense = expenseService
-    .updateExpense(normalizedId, newProperties);
+    .updateExpense(id, newProperties);
 
   res.send(updatedExpense);
 };

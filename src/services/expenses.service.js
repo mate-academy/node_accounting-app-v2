@@ -5,7 +5,9 @@ let expenses = [];
 const getExpenses = () => expenses;
 
 const getExpenseById = (id) => {
-  return expenses.find(expense => expense.id === id) || null;
+  const normalizedId = parseInt(id);
+
+  return expenses.find(expense => expense.id === normalizedId) || null;
 };
 
 const addExpense = (expense) => {
@@ -22,7 +24,9 @@ const addExpense = (expense) => {
 };
 
 const deleteExpense = (id) => {
-  expenses = expenses.filter(expense => expense.id !== id);
+  const normalizedId = parseInt(id);
+
+  expenses = expenses.filter(expense => expense.id !== normalizedId);
 };
 
 const updateExpense = (id, newProperties) => {

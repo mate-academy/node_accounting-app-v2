@@ -5,7 +5,9 @@ let users = [];
 const getUsers = () => users;
 
 const getUserById = (id) => {
-  return users.find(user => user.id === id) || null;
+  const normalizedId = parseInt(id);
+
+  return users.find(user => user.id === normalizedId) || null;
 };
 
 const createUser = (name) => {
@@ -22,11 +24,13 @@ const createUser = (name) => {
 };
 
 const deleteUser = (id) => {
-  users = users.filter(user => user.id !== id);
+  const normalizedId = parseInt(id);
+
+  users = users.filter(user => user.id !== normalizedId);
 };
 
-const updateUser = ({ normalizedId, name }) => {
-  const user = getUserById(normalizedId);
+const updateUser = ({ id, name }) => {
+  const user = getUserById(id);
 
   Object.assign(user, { name });
 

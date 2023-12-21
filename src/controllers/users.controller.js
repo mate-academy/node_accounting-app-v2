@@ -9,9 +9,11 @@ const get = (req, res) => {
 const getOne = (req, res) => {
   const { id } = req.params;
 
-  const normalizedId = parseInt(id);
+  if (!id) {
+    res.sendStatus(400);
+  }
 
-  const user = userService.getUserById(normalizedId);
+  const user = userService.getUserById(id);
 
   if (!user) {
     res.sendStatus(404);
@@ -39,9 +41,11 @@ const create = (req, res) => {
 const remove = (req, res) => {
   const { id } = req.params;
 
-  const normalizedId = parseInt(id);
+  if (!id) {
+    res.sendStatus(400);
+  }
 
-  const user = userService.getUserById(normalizedId);
+  const user = userService.getUserById(id);
 
   if (!user) {
     res.sendStatus(404);
@@ -49,7 +53,7 @@ const remove = (req, res) => {
     return;
   }
 
-  userService.deleteUser(normalizedId);
+  userService.deleteUser(id);
 
   res.sendStatus(204);
 };
@@ -58,18 +62,21 @@ const update = (req, res) => {
   const { id } = req.params;
   const { name } = req.body;
 
-  const normalizedId = parseInt(id);
+  if (!id) {
+    res.sendStatus(400);
+  }
 
-  if (!userService.getUserById(normalizedId)) {
+  if (!userService.getUserById(id)) {
     res.sendStatus(404);
 
     return;
   }
 
   const updatedUser = userService.updateUser({
-    normalizedId, name,
+    id, name,
   });
 
+  res.sendStatus(201);
   res.send(updatedUser);
 };
 
