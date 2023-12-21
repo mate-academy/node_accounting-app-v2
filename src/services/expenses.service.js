@@ -2,7 +2,22 @@
 
 let expenses = [];
 
-const getExpenses = () => expenses;
+const getExpenses = (filterProperties) => {
+  const { userId, categories, from, to } = filterProperties;
+
+  switch (true) {
+    case userId:
+      return expenses.find(expanse => expanse.userId === userId);
+    case categories:
+      return expenses.find(expanse => expanse.categories.includes(categories));
+    case from:
+      return expenses.find(expanse => expanse.spentAt >= from);
+    case to:
+      return expenses.find(expanse => expanse.spentAt <= to);
+    default:
+      return expenses;
+  }
+};
 
 const getExpenseById = (id) => {
   const normalizedId = parseInt(id);

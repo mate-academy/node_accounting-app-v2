@@ -3,7 +3,7 @@
 const expenseService = require('../services/expenses.service');
 
 const get = (req, res) => {
-  res.send(expenseService.getExpenses());
+  res.send(expenseService.getExpenses(req.body));
 };
 
 const getOne = (req, res) => {
@@ -35,6 +35,7 @@ const add = (req, res) => {
 
   const newExpense = expenseService.addExpense(expense);
 
+  res.sendStatus(201);
   res.send(newExpense);
 };
 

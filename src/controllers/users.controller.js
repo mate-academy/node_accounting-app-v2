@@ -35,6 +35,7 @@ const create = (req, res) => {
 
   const newUser = userService.createUser(name);
 
+  res.sendStatus(201);
   res.send(newUser);
 };
 
