@@ -13,6 +13,7 @@ const getById = (req, res) => {
 
   if (!user) {
     res.sendStatus(404);
+    res.send('User not found');
 
     return;
   }
@@ -25,6 +26,7 @@ const create = (req, res) => {
 
   if (!name) {
     res.sendStatus(400);
+    res.send('Field name not provided');
 
     return;
   }
@@ -43,12 +45,14 @@ const update = (req, res) => {
 
   if (!user) {
     res.sendStatus(404);
+    res.send('User not found');
 
     return;
   }
 
   if (typeof name !== 'string') {
     res.sendStatus(400);
+    res.send('Field name may contain only string data');
 
     return;
   }
@@ -66,6 +70,7 @@ const deleteById = (req, res) => {
 
   if (!usersService.getById(Number(id))) {
     res.sendStatus(404);
+    res.send('User not found');
 
     return;
   }

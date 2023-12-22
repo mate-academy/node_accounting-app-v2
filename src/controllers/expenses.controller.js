@@ -49,9 +49,11 @@ const getById = (req, res) => {
 
   if (!expense) {
     res.sendStatus(404);
+    res.send('Expense data not found');
 
     return;
   }
+
   res.statusCode = 200;
   res.send(expense);
 };
@@ -61,6 +63,7 @@ const deleteById = (req, res) => {
 
   if (!expensesService.getById(Number(id))) {
     res.sendStatus(404);
+    res.send('Expense data not found');
 
     return;
   }
@@ -75,6 +78,7 @@ const update = (req, res) => {
 
   if (!expensesService.getById(id) || !title) {
     res.sendStatus(404);
+    res.send('Expense data not found or no title');
 
     return;
   }
