@@ -4,8 +4,16 @@ const expensesService = require('../services/expenses.service');
 const userService = require('../services/users.service');
 
 const get = (req, res) => {
-  const allExpenses = expensesService.getAllExpenses();
   const { userId, categories, from, to } = req.query;
+
+  const allExpenses = expensesService.getAllExpenses();
+
+  if (!allExpenses) {
+    res.status(404).send('Not Found: The specified entity does not exist');
+
+    return;
+  }
+
   let filteredExpenses = {};
 
   if (categories && userId) {
@@ -21,7 +29,7 @@ const get = (req, res) => {
     return res.send(filteredExpenses);
   }
 
-  if (allExpenses.length === 0) {
+  if (!allExpenses.length) {
     return res.send([]);
   }
 
@@ -38,10 +46,16 @@ const get = (req, res) => {
 const getOne = (req, res) => {
   const { id } = req.params;
 
+  if (!id) {
+    res.status(400).send('Bad Request: Missing required parameter');
+
+    return;
+  }
+
   const item = expensesService.getExpensesById(id);
 
   if (!item) {
-    res.sendStatus(404);
+    res.status(404).send('Not Found: The specified entity does not exist');
 
     return;
   }
@@ -53,7 +67,7 @@ const create = (req, res) => {
   const { userId, spentAt, title, amount, category, note } = req.body;
 
   if (!userService.getUsersById(Number(userId)) || !title) {
-    res.sendStatus(400);
+    res.status(400).send('Bad Request: Missing required parameter');
 
     return;
   };
@@ -65,6 +79,12 @@ const create = (req, res) => {
     category,
     note);
 
+  if (!item) {
+    res.status(404).send('Not Found: The specified entity does not exist');
+
+    return;
+  }
+
   res.status(201).json(item);
 };
 
@@ -72,17 +92,25 @@ const update = (req, res) => {
   const { id } = req.params;
   const { title } = req.body;
 
-  const expense = expensesService.getExpensesById(Number(id));
+  if (!id) {
+    res.status(400).send('Bad Request: Missing required parameter');
 
-  if (!expense) {
-    return res.sendStatus(404);
+    return;
+  }
+
+  const item = expensesService.getExpensesById(Number(id));
+
+  if (!item) {
+    res.status(404).send('Not Found: The specified entity does not exist');
+
+    return;
   }
 
   if (typeof title !== 'string') {
     return res.sendStatus(422);
   }
 
-  const updatedExpenses = expensesService.updateExpenses(title, expense);
+  const updatedExpenses = expensesService.updateExpenses(title, item);
 
   res.send(updatedExpenses);
 };
@@ -90,10 +118,16 @@ const update = (req, res) => {
 const remove = (req, res) => {
   const { id } = req.params;
 
+  if (!id) {
+    res.status(400).send('Bad Request: Missing required parameter');
+
+    return;
+  }
+
   const item = expensesService.getExpensesById(Number(id));
 
   if (!item) {
-    res.sendStatus(404);
+    res.status(404).send('Not Found: The specified entity does not exist');
 
     return;
   }
