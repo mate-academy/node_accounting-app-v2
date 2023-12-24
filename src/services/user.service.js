@@ -7,7 +7,7 @@ const getUsers = () => users;
 const getUserById = (id) => {
   const normalizedId = parseInt(id);
 
-  return users.find(user => user.id === normalizedId) || null;
+  return !!users.find(user => user.id === normalizedId);
 };
 
 const createUser = (name) => {

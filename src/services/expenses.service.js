@@ -5,24 +5,19 @@ let expenses = [];
 const getExpenses = (filterProperties) => {
   const { userId, categories, from, to } = filterProperties;
 
-  switch (true) {
-    case userId:
-      return expenses.find(expanse => expanse.userId === userId);
-    case categories:
-      return expenses.find(expanse => expanse.categories.includes(categories));
-    case from:
-      return expenses.find(expanse => expanse.spentAt >= from);
-    case to:
-      return expenses.find(expanse => expanse.spentAt <= to);
-    default:
-      return expenses;
-  }
+  return expenses.filter(expense => {
+    const userIdMatch = !userId || expense.userId === userId;
+    const categoriesMatch = !categories
+      || expense.categories.includes(categories);
+    const fromMatch = !from || expense.spentAt >= from;
+    const toMatch = !to || expense.spentAt <= to;
+
+    return userIdMatch && categoriesMatch && fromMatch && toMatch;
+  });
 };
 
 const getExpenseById = (id) => {
-  const normalizedId = parseInt(id);
-
-  return expenses.find(expense => expense.id === normalizedId) || null;
+  return expenses.find(expense => expense.id === Number(id)) || null;
 };
 
 const addExpense = (expense) => {
@@ -41,7 +36,11 @@ const addExpense = (expense) => {
 const deleteExpense = (id) => {
   const normalizedId = parseInt(id);
 
+  const initialLength = expenses.length;
+
   expenses = expenses.filter(expense => expense.id !== normalizedId);
+
+  return expenses.length < initialLength;
 };
 
 const updateExpense = (id, newProperties) => {
