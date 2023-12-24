@@ -1,42 +1,47 @@
 /* eslint-disable no-console */
-/* eslint-disable no-useless-return */
 'use strict';
 
 const userService = require('../services/users.service');
 
-const get = (req, res) => {
-  const allUsers = userService.getAllUsers();
+const get = async(req, res) => {
+  try {
+    const allUsers = await userService.getAllUsers();
 
-  if (!allUsers) {
-    res.status(404).send('Not Found: The specified entity does not exist');
+    if (!allUsers) {
+      res.status(404).send('Not Found: The specified entity does not exist');
+    }
 
-    return;
+    res.send(allUsers);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send('Internal Server Error');
   }
-
-  res.send(allUsers);
 };
 
-const getOne = (req, res) => {
+const getOne = async(req, res) => {
   const { id } = req.params;
 
   if (!id) {
     res.status(400).send('Bad Request: Missing required parameter');
-
-    return;
   }
 
-  const user = userService.getUsersById(id);
+  try {
+    const user = await userService.getUsersById(id);
 
-  if (!user) {
-    res.status(404).send('Not Found: The specified entity does not exist');
+    if (!user) {
+      res.status(404).send('Not Found: The specified entity does not exist');
 
-    return;
+      return;
+    }
+
+    res.send(user);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send('Internal Server Error');
   }
-
-  res.send(user);
 };
 
-const create = (req, res) => {
+const create = async(req, res) => {
   const { name } = req.body;
 
   if (!name) {
@@ -45,45 +50,51 @@ const create = (req, res) => {
     return;
   }
 
-  const user = userService.createUser(name);
+  try {
+    const user = userService.createUser(name);
 
-  if (!user) {
-    res.status(404).send('Not Found: The specified entity does not exist');
+    if (!user) {
+      res.status(404).send('Not Found: The specified entity does not exist');
 
-    return;
+      return;
+    }
+
+    res.statusCode = 201;
+    res.send(user);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send('Internal Server Error');
   }
-
-  res.statusCode = 201;
-  res.send(user);
 };
 
-const update = (req, res) => {
+const update = async(req, res) => {
   const { id } = req.params;
   const { name } = req.body;
 
   if (!name || !id) {
     res.status(400).send('Bad Request: Missing required parameter');
-
-    return;
   }
 
-  const user = userService.getUsersById(id);
+  try {
+    const user = await userService.getUsersById(id);
 
-  if (!user) {
-    res.status(404).send('Not Found: The specified entity does not exist');
+    if (!user) {
+      res.status(404).send('Not Found: The specified entity does not exist');
+    }
 
-    return;
+    if (typeof name !== 'string') {
+      res.sendStatus(422);
+    }
+
+    const updatedUser = userService.updateUser({
+      id, name,
+    });
+
+    res.send(updatedUser);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send('Internal Server Error');
   }
-
-  if (typeof name !== 'string') {
-    return res.sendStatus(422);
-  }
-
-  const updatedUser = userService.updateUser({
-    id, name,
-  });
-
-  res.send(updatedUser);
 };
 
 const remove = async(req, res) => {
@@ -91,21 +102,24 @@ const remove = async(req, res) => {
 
   if (!id) {
     res.status(400).send('Bad Request: Missing required parameter');
-
-    return;
   }
 
-  const user = userService.getUsersById(id);
+  try {
+    const user = userService.getUsersById(id);
 
-  if (!user) {
-    res.status(404).send('Not Found: The specified entity does not exist');
+    if (!user) {
+      res.status(404).send('Not Found: The specified entity does not exist');
 
-    return;
+      return;
+    }
+
+    await userService.removeUser(id);
+
+    res.sendStatus(204);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send('Internal Server Error');
   }
-
-  userService.removeUser(id);
-
-  return res.sendStatus(204);
 };
 
 module.exports = {

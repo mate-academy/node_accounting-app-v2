@@ -1,140 +1,132 @@
+/* eslint-disable no-console */
 'use strict';
 
 const expensesService = require('../services/expenses.service');
 const userService = require('../services/users.service');
 
-const get = (req, res) => {
+const get = async(req, res) => {
   const { userId, categories, from, to } = req.query;
 
-  const allExpenses = expensesService.getAllExpenses();
+  try {
+    const allExpenses = expensesService.getAllExpenses(
+      userId, categories, from, to);
 
-  if (!allExpenses) {
-    res.status(404).send('Not Found: The specified entity does not exist');
+    if (!allExpenses) {
+      res.status(404).send('Not Found: The specified entity does not exist');
+    }
 
-    return;
+    res.send(allExpenses);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send('Internal Server Error');
   }
-
-  let filteredExpenses = {};
-
-  if (categories && userId) {
-    filteredExpenses = allExpenses.filter(item => item.category === categories);
-
-    return res.send(filteredExpenses);
-  };
-
-  if (userId) {
-    filteredExpenses = allExpenses.filter(
-      item => item.userId === Number(userId));
-
-    return res.send(filteredExpenses);
-  }
-
-  if (!allExpenses.length) {
-    return res.send([]);
-  }
-
-  if (from && to) {
-    filteredExpenses = allExpenses.filter(
-      item => item.spentAt > from && item.spentAt < to);
-
-    return res.send(filteredExpenses);
-  }
-
-  return res.send(allExpenses);
 };
 
-const getOne = (req, res) => {
+const getOne = async(req, res) => {
   const { id } = req.params;
 
   if (!id) {
     res.status(400).send('Bad Request: Missing required parameter');
-
-    return;
   }
 
-  const item = expensesService.getExpensesById(id);
+  try {
+    const item = await expensesService.getExpensesById(id);
 
-  if (!item) {
-    res.status(404).send('Not Found: The specified entity does not exist');
+    if (!item) {
+      res.status(404).send('Not Found: The specified entity does not exist');
+    }
 
-    return;
+    res.send(item);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send('Internal Server Error');
   }
-
-  res.send(item);
 };
 
-const create = (req, res) => {
+const create = async(req, res) => {
   const { userId, spentAt, title, amount, category, note } = req.body;
+  const user = userService.getUsersById(Number(userId));
 
-  if (!userService.getUsersById(Number(userId)) || !title) {
+  if (!user || !title) {
     res.status(400).send('Bad Request: Missing required parameter');
 
     return;
-  };
-
-  const item = expensesService.createExpenses(userId,
-    spentAt,
-    title,
-    amount,
-    category,
-    note);
-
-  if (!item) {
-    res.status(404).send('Not Found: The specified entity does not exist');
-
-    return;
   }
 
-  res.status(201).json(item);
+  try {
+    const item = await expensesService.createExpenses(userId,
+      spentAt,
+      title,
+      amount,
+      category,
+      note);
+
+    if (!item) {
+      res.status(404).send('Not Found: The specified entity does not exist');
+
+      return;
+    }
+
+    res.status(201).json(item);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send('Internal Server Error');
+  }
 };
 
-const update = (req, res) => {
+const update = async(req, res) => {
   const { id } = req.params;
   const { title } = req.body;
 
   if (!id) {
     res.status(400).send('Bad Request: Missing required parameter');
-
-    return;
   }
 
-  const item = expensesService.getExpensesById(Number(id));
+  try {
+    const item = expensesService.getExpensesById(Number(id));
 
-  if (!item) {
-    res.status(404).send('Not Found: The specified entity does not exist');
+    if (!item) {
+      res.status(404).send('Not Found: The specified entity does not exist');
 
-    return;
+      return;
+    }
+
+    if (typeof title !== 'string') {
+      res.sendStatus(422);
+    }
+
+    const updatedExpenses = await expensesService.updateExpenses(title, item);
+
+    res.send(updatedExpenses);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send('Internal Server Error');
   }
-
-  if (typeof title !== 'string') {
-    return res.sendStatus(422);
-  }
-
-  const updatedExpenses = expensesService.updateExpenses(title, item);
-
-  res.send(updatedExpenses);
 };
 
-const remove = (req, res) => {
+const remove = async(req, res) => {
   const { id } = req.params;
 
   if (!id) {
     res.status(400).send('Bad Request: Missing required parameter');
-
-    return;
   }
 
-  const item = expensesService.getExpensesById(Number(id));
+  try {
+    const item = await expensesService.getExpensesById(Number(id));
 
-  if (!item) {
-    res.status(404).send('Not Found: The specified entity does not exist');
+    if (!item) {
+      res.status(404).send('Not Found: The specified entity does not exist');
 
-    return;
+      return;
+    }
+
+    await expensesService.removeExpenses(Number(id));
+
+    res.sendStatus(204);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send('Internal Server Error');
   }
-
-  expensesService.removeExpenses(Number(id));
-
-  return res.sendStatus(204);
 };
 
 module.exports = {

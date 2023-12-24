@@ -2,7 +2,29 @@
 
 let expenses = [];
 
-const getAllExpenses = () => {
+const getAllExpenses = (userId, categories, from, to) => {
+  let filteredExpenses = {};
+
+  if (categories && userId) {
+    filteredExpenses = expenses.filter(item => item.category === categories);
+
+    return filteredExpenses;
+  };
+
+  if (userId) {
+    filteredExpenses = expenses.filter(
+      item => item.userId === Number(userId));
+
+    return filteredExpenses;
+  }
+
+  if (from && to) {
+    filteredExpenses = expenses.filter(
+      item => item.spentAt > from && item.spentAt < to);
+
+    return filteredExpenses;
+  }
+
   return expenses;
 };
 
