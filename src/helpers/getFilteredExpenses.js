@@ -1,8 +1,6 @@
 'use strict';
 
 const getFilteredExpenses = (expenses, filter) => {
-  let filteredExpenses = [...expenses];
-
   const {
     userId,
     categories,
@@ -10,47 +8,46 @@ const getFilteredExpenses = (expenses, filter) => {
     to,
   } = filter;
 
-  let formattedCategories = [];
+  let categoriesArr = [];
 
   if (Array.isArray(filter.categories)) {
-    formattedCategories = [...categories];
+    categoriesArr = [...categories];
   } else if (categories) {
-    formattedCategories.push(categories);
+    categoriesArr.push(categories);
   }
 
-  if (userId) {
-    filteredExpenses = filteredExpenses
-      .filter(expense => expense.userId === +userId);
-  }
-
-  if (formattedCategories.length > 0) {
-    filteredExpenses = filteredExpenses
-      .filter(expense => categories.includes(expense.category));
-  }
+  let formattedFrom = 0;
+  let formattedTo = 0;
 
   if (from) {
-    const formattedFrom = new Date(from).getTime();
-
-    filteredExpenses = filteredExpenses
-      .filter(expense => {
-        const expenseTime = new Date(expense.spentAt).getTime();
-
-        return expenseTime >= formattedFrom;
-      });
+    formattedFrom = +new Date(from);
   }
 
   if (to) {
-    const formattedTo = new Date(to).getTime();
-
-    filteredExpenses = filteredExpenses
-      .filter(expense => {
-        const expenseTime = new Date(expense.spentAt).getTime();
-
-        return expenseTime <= formattedTo;
-      });
+    formattedTo = +new Date(to);
   }
 
-  return filteredExpenses;
+  return expenses.filter(expense => {
+    if (userId && expense.userId !== +userId) {
+      return false;
+    }
+
+    if (categoriesArr.length > 0 && !categoriesArr.includes(expense.category)) {
+      return false;
+    }
+
+    const expenseTime = +new Date(expense.spentAt);
+
+    if (from && expenseTime < formattedFrom) {
+      return false;
+    }
+
+    if (to && expenseTime > formattedTo) {
+      return false;
+    }
+
+    return true;
+  });
 };
 
 module.exports = {
