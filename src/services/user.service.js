@@ -37,6 +37,10 @@ const update = ({ id, name }) => {
   return user;
 };
 
+const clearUsers = () => {
+  users = [];
+};
+
 module.exports = {
   userService: {
     getAll,
@@ -44,5 +48,6 @@ module.exports = {
     getById,
     remove,
     update,
+    clearUsers,
   },
 };

@@ -63,6 +63,10 @@ const update = ({
   return expense;
 };
 
+const clearExpenses = () => {
+  expenses = [];
+};
+
 module.exports = {
   expenseService: {
     getAll,
@@ -70,5 +74,6 @@ module.exports = {
     getById,
     remove,
     update,
+    clearExpenses,
   },
 };
