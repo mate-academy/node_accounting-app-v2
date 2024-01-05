@@ -5,7 +5,7 @@ const { getNewId } = require('../helpers/getNewId.js');
 
 let expenses = [];
 
-const getAll = (filters) => {
+const getAllFiltered = (filters) => {
   return getFilteredExpenses(expenses, filters);
 };
 
@@ -69,7 +69,7 @@ const clearExpenses = () => {
 
 module.exports = {
   expenseService: {
-    getAll,
+    getAllFiltered,
     create,
     getById,
     remove,

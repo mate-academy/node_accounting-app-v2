@@ -3,15 +3,17 @@
 const { expenseService } = require('../services/expense.service.js');
 const { userService } = require('../services/user.service.js');
 
-const getAll = (req, res) => {
+const getAllFiltered = (req, res) => {
   const { userId, categories, from, to } = req.query;
 
-  res.send(expenseService.getAll({
+  const filteredExpenses = expenseService.getAllFiltered({
     userId,
     categories,
     from,
     to,
-  }));
+  });
+
+  res.send(filteredExpenses);
 };
 
 const create = (req, res) => {
@@ -24,12 +26,15 @@ const create = (req, res) => {
     note,
   } = req.body;
 
+  if (!userId || !spentAt || !title || !amount || !category || !note) {
+    return res.status(400)
+      .send('Request missing one or more of the properties');
+  }
+
   const user = userService.getById(+userId);
 
-  if (!user || !spentAt || !title || !amount || !category || !note) {
-    res.sendStatus(400);
-
-    return;
+  if (!user) {
+    return res.status(400).send('User not found');
   }
 
   const expense = expenseService.create(req.body);
@@ -43,17 +48,13 @@ const getOne = (req, res) => {
   const { id } = req.params;
 
   if (isNaN(+id)) {
-    res.sendStatus(400);
-
-    return;
+    return res.status(400).send('Id is not a number');
   }
 
   const expense = expenseService.getById(+id);
 
   if (!expense) {
-    res.sendStatus(404);
-
-    return;
+    return res.status(404).send('Expense not found');
   }
 
   res.send(expense);
@@ -62,12 +63,14 @@ const getOne = (req, res) => {
 const remove = (req, res) => {
   const { id } = req.params;
 
+  if (isNaN(+id)) {
+    return res.status(400).send('Id is not a number');
+  }
+
   const expense = expenseService.getById(+id);
 
   if (!expense) {
-    res.sendStatus(404);
-
-    return;
+    return res.status(404).send('Expense not found');
   }
 
   expenseService.remove(+id);
@@ -86,17 +89,13 @@ const update = (req, res) => {
   } = req.body;
 
   if (isNaN(+id)) {
-    res.sendStatus(400);
-
-    return;
+    return res.status(400).send('Id is not a number');
   }
 
   const expense = expenseService.getById(+id);
 
   if (!expense) {
-    res.sendStatus(404);
-
-    return;
+    return res.status(404).send('Expense not found');
   }
 
   const updatedExpense = expenseService.update({
@@ -113,7 +112,7 @@ const update = (req, res) => {
 
 module.exports = {
   expenseController: {
-    getAll,
+    getAllFiltered,
     create,
     getOne,
     remove,

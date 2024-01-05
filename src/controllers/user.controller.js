@@ -10,9 +10,7 @@ const create = (req, res) => {
   const { name } = req.body;
 
   if (!name) {
-    res.sendStatus(400);
-
-    return;
+    return res.status(400).send('Request does not have "name" property.');
   }
 
   const user = userService.create(name);
@@ -26,17 +24,13 @@ const getOne = (req, res) => {
   const { id } = req.params;
 
   if (isNaN(+id)) {
-    res.sendStatus(400);
-
-    return;
+    return res.status(400).send('Id is not a number');
   }
 
   const user = userService.getById(+id);
 
   if (!user) {
-    res.sendStatus(404);
-
-    return;
+    return res.status(404).send('User not found');
   }
 
   res.send(user);
@@ -45,12 +39,14 @@ const getOne = (req, res) => {
 const remove = (req, res) => {
   const { id } = req.params;
 
+  if (isNaN(+id)) {
+    return res.status(400).send('Id is not a number');
+  }
+
   const user = userService.getById(+id);
 
   if (!user) {
-    res.sendStatus(404);
-
-    return;
+    return res.status(404).send('User not found');
   }
 
   userService.remove(+id);
@@ -63,17 +59,13 @@ const update = (req, res) => {
   const { name } = req.body;
 
   if (isNaN(+id)) {
-    res.sendStatus(400);
-
-    return;
+    return res.status(400).send('Id is not a number');
   }
 
   const user = userService.getById(+id);
 
   if (!user) {
-    res.sendStatus(404);
-
-    return;
+    return res.status(404).send('User not found');
   }
 
   const updatedUser = userService.update({
