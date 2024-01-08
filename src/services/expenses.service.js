@@ -2,7 +2,30 @@
 
 let expenses = [];
 
-const getAllExpenses = () => expenses;
+const getAllExpenses = (userId, categories, from, to) => {
+  let filteredExpenses = expenses;
+
+  if (userId) {
+    filteredExpenses
+      = filteredExpenses.filter((expense) => expense.userId === +userId);
+  }
+
+  if (categories) {
+    filteredExpenses = filteredExpenses.filter((expense) =>
+      categories.includes(expense.category)
+    );
+  }
+
+  if (from && to) {
+    filteredExpenses = filteredExpenses.filter(
+      (expense) =>
+        new Date(expense.spentAt) >= new Date(from)
+        && new Date(expense.spentAt) <= new Date(to)
+    );
+  }
+
+  return filteredExpenses;
+};
 
 const getExpenseById = (id) => (
   expenses.find((expense) => expense.id === +id) || null
