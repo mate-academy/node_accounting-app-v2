@@ -24,7 +24,7 @@ const create = (req, res) => {
   const { name } = req.body;
 
   if (!name) {
-    res.sendStatus(422);
+    res.sendStatus(400);
 
     return;
   }

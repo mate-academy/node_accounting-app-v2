@@ -1,26 +1,30 @@
 'use strict';
 
-const { v4: uuidv4 } = require('uuid');
+const { generateIntId } = require('../helpers/generateIntId.js');
 
 let users = [];
+
+const clear = () => {
+  users = [];
+};
 
 const getAll = () => {
   return users;
 };
 
 const getById = (id) => {
-  return users.find(user => user.id === id) || null;
+  return users.find(user => user.id === +id) || null;
 };
 
 const create = (name) => {
   const user = {
-    id: uuidv4(),
+    id: generateIntId(),
     name,
   };
 
   users.push(user);
 
-  return getAll();
+  return user;
 };
 
 const update = ({ id, name }) => {
@@ -34,12 +38,13 @@ const update = ({ id, name }) => {
 };
 
 const remove = (id) => {
-  const newUser = users.filter(user => user.id !== id);
+  const newUser = users.filter(user => user.id !== +id);
 
   users = newUser;
 };
 
 module.exports.userService = {
+  clear,
   getAll,
   getById,
   create,

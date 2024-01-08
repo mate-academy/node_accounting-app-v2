@@ -31,8 +31,8 @@ const create = (req, res) => {
     note,
   } = req.body;
 
-  if (!userId || !spentAt || !title || !amount || !category || !note) {
-    res.sendStatus(422);
+  if (!userId || !spentAt || !title || amount < 0 || !category || !note) {
+    res.sendStatus(400);
 
     return;
   }
@@ -45,7 +45,7 @@ const create = (req, res) => {
     || typeof category !== 'string'
     || typeof note !== 'string'
   ) {
-    res.sendStatus(422);
+    res.sendStatus(400);
 
     return;
   }

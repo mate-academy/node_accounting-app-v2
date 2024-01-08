@@ -1,8 +1,12 @@
 'use strict';
 
-const { v4: uuidv4 } = require('uuid');
+const { generateIntId } = require('../helpers/generateIntId.js');
 
 let expenses = [];
+
+const clear = () => {
+  expenses = [];
+};
 
 const getAll = ({
   userId,
@@ -12,45 +16,58 @@ const getAll = ({
 }) => {
   let copy = [...expenses];
 
-  if (userId) {
-    copy = copy.filter(expense => expense.userId === userId);
-  }
+  copy = copy.filter(expense => {
+    if (userId && expense.userId !== +userId) {
+      return false;
+    }
 
-  if (categories) {
-    copy = copy.filter(expense => Array.isArray(categories)
-      ? categories.includes(expense.category)
-      : categories === expense.category
-    );
-  }
+    if (categories) {
+      if (Array.isArray(categories)) {
+        if (!categories.includes(expense.category)) {
+          return false;
+        }
+      } else {
+        if (categories !== expense.category) {
+          return false;
+        }
+      }
+    }
 
-  if (from) {
-    const fromDate = new Date(from);
+    if (from) {
+      const fromDate = new Date(from);
 
-    copy = copy.filter(expense => new Date(expense.spentAt) >= fromDate);
-  }
+      if (new Date(expense.spentAt) < fromDate) {
+        return false;
+      }
+    }
 
-  if (to) {
-    const toDate = new Date(to);
+    if (to) {
+      const toDate = new Date(to);
 
-    copy = copy.filter(expense => new Date(expense.spentAt) <= toDate);
-  }
+      if (new Date(expense.spentAt) > toDate) {
+        return false;
+      }
+    }
+
+    return true;
+  });
 
   return copy;
 };
 
 const getById = (id) => {
-  return expenses.find(expense => expense.id === id) || null;
+  return expenses.find(expense => expense.id === +id) || null;
 };
 
 const create = (expenseFromUser) => {
-  const user = {
-    id: uuidv4(),
+  const expense = {
+    id: generateIntId(),
     ...expenseFromUser,
   };
 
-  expenses.push(user);
+  expenses.push(expense);
 
-  return getAll();
+  return expense;
 };
 
 const update = (id, body) => {
@@ -64,12 +81,13 @@ const update = (id, body) => {
 };
 
 const remove = (id) => {
-  const newExpenses = expenses.filter(expense => expense.id !== id);
+  const newExpenses = expenses.filter(expense => expense.id !== +id);
 
   expenses = newExpenses;
 };
 
 module.exports.expensesService = {
+  clear,
   getAll,
   getById,
   create,
