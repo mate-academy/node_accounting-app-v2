@@ -3,12 +3,12 @@
 const usersController = require('./users.services');
 
 const getAll = (req, res) => {
-  res.send(usersController.getAll());
+  res.status(200).send(usersController.getAll());
 };
 
 const getById = (req, res) => {
-  const { id } = req.params;
-  const user = usersController.getByID(+id);
+  const id = +req.params.id;
+  const user = usersController.getByID(id);
 
   if (!user) {
     res.sendStatus(404);
@@ -16,7 +16,7 @@ const getById = (req, res) => {
     return;
   }
 
-  res.send(user);
+  res.status(200).send(user);
 };
 
 const create = (req, res) => {
@@ -30,26 +30,25 @@ const create = (req, res) => {
 
   const newUser = usersController.create(name);
 
-  res.status(201);
-  res.send(newUser);
+  res.status(201).send(newUser);
 };
 
 const remove = (req, res) => {
-  const { id } = req.params;
+  const id = +req.params.id;
 
-  if (!usersController.getByID(+id)) {
+  if (!usersController.getByID(id)) {
     res.sendStatus(404);
 
     return;
   }
 
-  usersController.remove(+id);
+  usersController.remove(id);
 
   res.sendStatus(204);
 };
 
 const update = (req, res) => {
-  const { id } = req.params;
+  const id = +req.params.id;
   const { name } = req.body;
 
   if (!name) {
@@ -58,7 +57,7 @@ const update = (req, res) => {
     return;
   }
 
-  if (!usersController.getByID(+id)) {
+  if (!usersController.getByID(id)) {
     res.sendStatus(404);
 
     return;
@@ -66,7 +65,7 @@ const update = (req, res) => {
 
   const user = usersController.update(+id, name);
 
-  res.send(user);
+  res.status(204).send(user);
 };
 
 module.exports = {

@@ -15,12 +15,12 @@ const checkProps = (expense) => expenseKeys
   .every(prop => expense.hasOwnProperty(prop));
 
 const getAll = (req, res) => {
-  res.send(expenseController.getAll(req.query));
+  res.status(200).send(expenseController.getAll(req.query));
 };
 
 const getById = (req, res) => {
-  const { id } = req.params;
-  const expense = expenseController.getByID(+id);
+  const id = +req.params.id;
+  const expense = expenseController.getByID(id);
 
   if (!expense) {
     res.sendStatus(404);
@@ -28,7 +28,7 @@ const getById = (req, res) => {
     return;
   }
 
-  res.send(expense);
+  res.status(200).send(expense);
 };
 
 const create = (req, res) => {
@@ -48,37 +48,36 @@ const create = (req, res) => {
 
   const newExpense = expenseController.create(expense);
 
-  res.status(201);
-  res.send(newExpense);
+  res.status(201).send(newExpense);
 };
 
 const remove = (req, res) => {
-  const { id } = req.params;
+  const id = +req.params.id;
 
-  if (!expenseController.getByID(+id)) {
+  if (!expenseController.getByID(id)) {
     res.sendStatus(404);
 
     return;
   }
 
-  expenseController.remove(+id);
+  expenseController.remove(id);
 
   res.sendStatus(204);
 };
 
 const update = (req, res) => {
-  const { id } = req.params;
+  const id = +req.params.id;
   const newExpense = req.body;
 
-  if (!expenseController.getByID(+id)) {
+  if (!expenseController.getByID(id)) {
     res.sendStatus(404);
 
     return;
   }
 
-  const expense = expenseController.update(+id, newExpense);
+  const expense = expenseController.update(id, newExpense);
 
-  res.send(expense);
+  res.status(204).send(expense);
 };
 
 module.exports = {
