@@ -9,7 +9,10 @@ const getAll = (req, res) => {
   const userId = +req.query.userId;
 
   res.status(200).send(expensesService.getAll({
-    userId, categories, from, to,
+    userId,
+    from,
+    to,
+    categories: Array.isArray(categories) ? categories : [categories],
   }));
 };
 
