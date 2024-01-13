@@ -12,7 +12,7 @@ const getById = (req, res) => {
   const user = userService.getOne(id);
 
   if (!user) {
-    res.status(404).end();
+    res.sendStatus(404);
 
     return;
   }
@@ -26,21 +26,21 @@ const remove = (req, res) => {
   const user = userService.getOne(id);
 
   if (!user) {
-    res.status(404).end();
+    res.sendStatus(404);
 
     return;
   }
 
   userService.remove(id);
 
-  res.status(204).end();
+  res.sendStatus(204);
 };
 
 const create = (req, res) => {
   const { name } = req.body;
 
   if (!name) {
-    res.status(400).end();
+    res.sendStatus(400);
 
     return;
   }
@@ -55,7 +55,7 @@ const update = (req, res) => {
   const { name } = req.body;
 
   if (!name) {
-    res.status(400).end();
+    res.sendStatus(400);
 
     return;
   }
@@ -63,7 +63,7 @@ const update = (req, res) => {
   const user = userService.getOne(id);
 
   if (!user) {
-    res.status(404).end();
+    res.sendStatus(404);
 
     return;
   }

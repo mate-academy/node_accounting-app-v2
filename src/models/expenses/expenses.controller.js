@@ -22,7 +22,7 @@ const getById = (req, res) => {
   const item = expensesService.getOne(id);
 
   if (!item) {
-    res.status(404).end();
+    res.sendStatus(404);
 
     return;
   }
@@ -36,14 +36,14 @@ const remove = (req, res) => {
   const item = expensesService.getOne(id);
 
   if (!item) {
-    res.status(404).end();
+    res.sendStatus(404);
 
     return;
   }
 
   expensesService.remove(id);
 
-  res.status(204).end();
+  res.sendStatus(204);
 };
 
 const create = (req, res) => {
@@ -59,7 +59,7 @@ const create = (req, res) => {
   const user = userService.getOne(userId);
 
   if (!user) {
-    res.status(400).end();
+    res.sendStatus(400);
 
     return;
   }
@@ -70,7 +70,7 @@ const create = (req, res) => {
     || !category
     || !amount
   ) {
-    res.status(404).end();
+    res.sendStatus(404);
 
     return;
   }
@@ -92,7 +92,7 @@ const update = (req, res) => {
   const { name } = req.body;
 
   if (!name) {
-    res.status(400).end();
+    res.sendStatus(400);
 
     return;
   }
@@ -100,7 +100,7 @@ const update = (req, res) => {
   const user = expensesService.getOne(id);
 
   if (!user) {
-    res.status(404).end();
+    res.sendStatus(404);
 
     return;
   }
