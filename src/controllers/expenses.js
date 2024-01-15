@@ -3,8 +3,10 @@
 const { ExpenseService } = require('../services/expenses.service');
 const { UserService } = require('../services/users.service');
 
+const expenseService = new ExpenseService();
+const userService = new UserService();
+
 const getAllExpenses = (req, res) => {
-  const expenseService = new ExpenseService();
   const query = req.query;
   const expenses = expenseService.findAll(query);
 
@@ -13,7 +15,6 @@ const getAllExpenses = (req, res) => {
 
 const getOneExpense = (req, res) => {
   const { expenseId } = req.params;
-  const expenseService = new ExpenseService();
   const expense = expenseService.findById(expenseId);
 
   if (!expense) {
@@ -27,8 +28,6 @@ const getOneExpense = (req, res) => {
 
 const addExpense = (req, res) => {
   const newExpenseData = req.body;
-  const expenseService = new ExpenseService();
-  const userService = new UserService();
 
   const user = userService.findById(newExpenseData.userId);
 
@@ -48,7 +47,6 @@ const addExpense = (req, res) => {
 
 const removeExpense = (req, res) => {
   const { expenseId } = req.params;
-  const expenseService = new ExpenseService();
   const foundExpense = expenseService.findById(expenseId);
 
   if (!foundExpense) {
@@ -63,7 +61,6 @@ const removeExpense = (req, res) => {
 
 const updateExpense = (req, res) => {
   const { expenseId } = req.params;
-  const expenseService = new ExpenseService();
   const foundExpense = expenseService.findById(expenseId);
 
   if (!foundExpense) {

@@ -2,32 +2,40 @@
 
 const { UserService } = require('../services/users.service');
 
+const userService = new UserService();
+
 const getAllUsers = (req, res) => {
-  const userService = new UserService();
   const users = userService.findAll();
 
   res.send(users);
 };
 
 const getOneUser = (req, res) => {
-  const userService = new UserService();
-
   const { userId } = req.params;
   const user = userService.findById(userId);
+  const errorsStore = [
+    'userId is required in the request parameters',
+    'User not found',
+  ];
+
+  if (!userId) {
+    res.sendStatus(400).send({ error: errorsStore[0] });
+
+    return;
+  }
 
   if (!user) {
-    res.sendStatus(404);
+    res.sendStatus(404).send({ error: errorsStore[1] });
 
     return;
   }
 
   res.send(user);
+  res.sendStatus(200);
 };
 
 const addUser = (req, res) => {
   const { name } = req.body;
-
-  const userService = new UserService();
 
   if (!name) {
     res.sendStatus(400);
@@ -43,7 +51,6 @@ const addUser = (req, res) => {
 
 const removeUser = (req, res) => {
   const { userId } = req.params;
-  const userService = new UserService();
   const foundUser = userService.findById(userId);
 
   if (!foundUser) {
@@ -58,7 +65,6 @@ const removeUser = (req, res) => {
 
 const updateUser = (req, res) => {
   const { userId } = req.params;
-  const userService = new UserService();
   const foundUser = userService.findById(userId);
 
   if (!foundUser) {
