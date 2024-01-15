@@ -19,13 +19,15 @@ const getOneUser = (req, res) => {
   ];
 
   if (!userId) {
-    res.sendStatus(400).send({ error: errorsStore[0] });
+    res.statusCode = 400;
+    res.send(errorsStore[0]);
 
     return;
   }
 
   if (!user) {
-    res.sendStatus(404).send({ error: errorsStore[1] });
+    res.statusCode = 404;
+    res.send(errorsStore[1]);
 
     return;
   }
