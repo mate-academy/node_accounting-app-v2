@@ -124,7 +124,7 @@ describe('User', () => {
   describe('updateUser', () => {
     it('should return 404 if user does not exist', async() => {
       await api
-        .put('/users/1')
+        .patch('/users/1')
         .send({
           name: 'John Doe',
         })
