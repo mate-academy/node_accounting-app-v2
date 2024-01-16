@@ -9,7 +9,7 @@ const {
 } = require('../services/expenses.service.js');
 
 const {
-  getUser
+  getUser,
 } = require('../services/users.service.js');
 
 function getAllExpenses(req, res) {
@@ -17,7 +17,7 @@ function getAllExpenses(req, res) {
     userId,
     categories,
     from,
-    to
+    to,
   } = req.query;
   const result = getExpenses(userId, categories, from, to);
 
@@ -30,6 +30,7 @@ function createNewExpense(req, res) {
 
   if (Object.keys(body).length === 0) {
     res.sendStatus(400);
+
     return;
   }
 
@@ -37,6 +38,7 @@ function createNewExpense(req, res) {
 
   if (!user) {
     res.sendStatus(400);
+
     return;
   }
 
@@ -50,6 +52,7 @@ function getExpenseById(req, res) {
 
   if (!expense) {
     res.sendStatus(404);
+
     return;
   }
 
@@ -63,6 +66,7 @@ function deleteExpenseById(req, res) {
 
   if (!result) {
     res.sendStatus(404);
+
     return;
   }
 
@@ -77,6 +81,7 @@ function editExpenseField(req, res) {
 
   if (!result) {
     res.sendStatus(404);
+
     return;
   }
 

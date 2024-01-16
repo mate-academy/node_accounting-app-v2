@@ -9,6 +9,7 @@ const { router: expensesRouter } = require('./routes/expenses.js');
 function createServer() {
   clearUsersStorage();
   clearExpensesStorage();
+
   const app = express();
 
   app.get('/', (req, res) => {

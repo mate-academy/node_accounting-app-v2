@@ -5,5 +5,5 @@ function getIndex(storage, currentId) {
 }
 
 module.exports = {
-  getIndex
+  getIndex,
 };

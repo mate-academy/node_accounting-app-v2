@@ -39,6 +39,7 @@ function editUser(id, name) {
 
   if (index >= 0) {
     usersStorage[index].name = name;
+
     return usersStorage[index];
   }
 
@@ -46,7 +47,7 @@ function editUser(id, name) {
 }
 
 function clearUsersStorage() {
-  usersStorage = []
+  usersStorage = [];
 }
 
 module.exports = {

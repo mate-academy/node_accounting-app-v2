@@ -17,6 +17,7 @@ function createNewUser(req, res) {
 
   if (!name) {
     res.sendStatus(400);
+
     return;
   }
 
@@ -30,6 +31,7 @@ function getUserById(req, res) {
 
   if (!user) {
     res.sendStatus(404);
+
     return;
   }
 
@@ -43,6 +45,7 @@ function deleteUserById(req, res) {
 
   if (!result) {
     res.sendStatus(404);
+
     return;
   }
 
@@ -57,6 +60,7 @@ function editUserField(req, res) {
 
   if (!result) {
     res.sendStatus(400);
+
     return;
   }
 

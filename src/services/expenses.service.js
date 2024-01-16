@@ -74,6 +74,7 @@ function editExpense(id, body) {
 
   if (index >= 0) {
     expensesStorage[index] = Object.assign(expensesStorage[index], body);
+
     return expensesStorage[index];
   }
 
@@ -81,7 +82,7 @@ function editExpense(id, body) {
 }
 
 function clearExpensesStorage() {
-  expensesStorage = []
+  expensesStorage = [];
 }
 
 module.exports = {
