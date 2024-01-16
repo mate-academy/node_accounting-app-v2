@@ -12,12 +12,12 @@ const {
 function getExpenses(req, res) {
   const { userId, categories, from, to } = req.query;
 
-  const searchedExpenses = getAllExpenses({
+  const searchedExpenses = getAllExpenses(
     userId,
     categories,
     from,
     to,
-  });
+  );
 
   res.send(searchedExpenses);
 }
