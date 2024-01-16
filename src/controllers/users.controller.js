@@ -3,7 +3,7 @@
 const userService = require('../services/user.service');
 
 const getUsers = (req, res) => {
-  res.status(200).send(userService.getAll());
+  res.send(userService.getAll());
 };
 
 const getUser = (req, res) => {

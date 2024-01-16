@@ -3,17 +3,6 @@
 const expenseService = require('../services/expense.service');
 const userService = require('../services/user.service');
 
-const expenseKeys = [
-  'userId',
-  'spentAt',
-  'title',
-  'amount',
-  'category',
-];
-
-const checkKeys = (expense) => expenseKeys
-  .every(key => expense.hasOwnProperty(key));
-
 const getExpenses = (req, res) => {
   const { userId, categories, from, to } = req.query;
   const expenses = expenseService.getAll(userId, categories, from, to);
@@ -43,12 +32,6 @@ const getExpense = (req, res) => {
 
 const createExpense = (req, res) => {
   const expense = req.body;
-
-  if (!checkKeys(expense)) {
-    res.sendStatus(400);
-
-    return;
-  }
 
   const user = userService.getById(expense.userId);
 
