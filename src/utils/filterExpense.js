@@ -1,33 +1,26 @@
 'use strict';
 
-const filterExpense = (expenses, queryParams) => {
+const filterExpense = (expenses, { userId, categories, from, to }) => {
   let filteredExpenses = [...expenses];
 
-  for (const key in queryParams) {
-    switch (key) {
-      case 'userId':
-      case 'amount':
-        filteredExpenses = filteredExpenses
-          .filter(expense => expense[key] === +queryParams[key]);
-        break;
+  if (userId) {
+    filteredExpenses = filteredExpenses
+      .filter(expense => expense.userId === +userId);
+  }
 
-      case 'from':
-        filteredExpenses = filteredExpenses
-          .filter(expense =>
-            new Date(expense.spentAt) >= new Date(queryParams[key]));
-        break;
+  if (categories) {
+    filteredExpenses = filteredExpenses
+      .filter(expense => categories.includes(expense.category));
+  }
 
-      case 'to':
-        filteredExpenses = filteredExpenses
-          .filter(expense =>
-            new Date(expense.spentAt) <= new Date(queryParams[key]));
-        break;
+  if (from) {
+    filteredExpenses = filteredExpenses
+      .filter(expense => new Date(expense.spentAt) >= new Date(from));
+  }
 
-      default:
-        filteredExpenses = filteredExpenses
-          .filter(expense => expense[key] === queryParams[key]);
-        break;
-    }
+  if (to) {
+    filteredExpenses = filteredExpenses
+      .filter(expense => new Date(expense.spentAt) <= new Date(to));
   }
 
   return filteredExpenses;

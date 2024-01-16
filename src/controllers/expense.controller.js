@@ -16,7 +16,7 @@ const checkKeys = (expense) => expenseKeys
 
 const getExpenses = (req, res) => {
   const { userId, categories, from, to } = req.query;
-  const expenses = expenseService.getAll(req.query);
+  const expenses = expenseService.getAll(userId, categories, from, to);
 
   if (userId || categories || from || to) {
     if (!expenses.length) {

@@ -33,10 +33,15 @@ const remove = (id) => {
   users = filteredUsers;
 };
 
+const clearUsers = () => {
+  users = [];
+};
+
 module.exports = {
   getAll,
   getById,
   create,
   update,
   remove,
+  clearUsers,
 };

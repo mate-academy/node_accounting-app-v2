@@ -5,12 +5,14 @@ const { getNewId } = require('../utils/getNewId');
 
 let expenses = [];
 
-const getAll = (queryParams) => {
-  if (!(Object.keys(queryParams).length)) {
-    return expenses;
-  }
-
-  return filterExpense(expenses, queryParams);
+const getAll = (userId, categories, from, to) => {
+  return filterExpense(expenses,
+    {
+      userId,
+      categories,
+      from,
+      to,
+    });
 };
 
 const getById = id => expenses.find(expense => expense.id === id);
@@ -40,10 +42,15 @@ const remove = (id) => {
   expenses = filteredExpenses;
 };
 
+const clearExpenses = () => {
+  expenses = [];
+};
+
 module.exports = {
   getAll,
   getById,
   create,
   remove,
   update,
+  clearExpenses,
 };
