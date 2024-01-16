@@ -28,9 +28,14 @@ const removeUser = (id) => {
   users = newUsers;
 };
 
+const clearUsers = () => {
+  users = [];
+};
+
 module.exports = {
   findUsers,
   createUser,
   findUser,
   removeUser,
+  clearUsers,
 };

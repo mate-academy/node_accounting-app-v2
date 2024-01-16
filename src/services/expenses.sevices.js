@@ -3,8 +3,25 @@
 const { nextId } = require('../helpers/helpers');
 let expenses = [];
 
-const getExpenses = () => {
-  return expenses;
+const getExpenses = (userId, categories, from, to) => {
+  let preaperedExpenses = expenses;
+
+  if (userId) {
+    preaperedExpenses = preaperedExpenses
+      .filter(expense => expense.userId === userId);
+  }
+
+  if (categories) {
+    preaperedExpenses = preaperedExpenses
+      .filter(({ category }) => categories.includes(category));
+  }
+
+  if (from && to) {
+    preaperedExpenses = preaperedExpenses
+      .filter(expense => from <= expense.spentAt && expense.spentAt <= to);
+  }
+
+  return preaperedExpenses;
 };
 
 const createExpense = (userId, spentAt, title, amount, category, note) => {
@@ -31,10 +48,15 @@ const getOneExpense = (id) => {
   return expenses.find(expense => expense.id === id);
 };
 
+const clearExpenses = () => {
+  expenses = [];
+};
+
 module.exports = {
   removeExpense,
   getExpenses,
   createExpense,
   expenses,
   getOneExpense,
+  clearExpenses,
 };
