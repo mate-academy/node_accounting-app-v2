@@ -2,12 +2,7 @@
 
 const { getNewId } = require('../utils/getNewId');
 
-let users = [
-  {
-    id: 1,
-    name: 'Ihor',
-  },
-];
+let users = [];
 
 const getAll = () => users;
 

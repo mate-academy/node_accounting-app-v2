@@ -3,17 +3,7 @@
 const { filterExpense } = require('../utils/filterExpense');
 const { getNewId } = require('../utils/getNewId');
 
-let expenses = [
-  {
-    id: 1,
-    userId: 1,
-    spentAt: '2022-10-19T11:01:43.462Z',
-    title: 'Buy a new TV',
-    amount: 999,
-    category: 'Electronics',
-    note: 'I need a new laptop',
-  },
-];
+let expenses = [];
 
 const getAll = (queryParams) => {
   if (!(Object.keys(queryParams).length)) {
