@@ -64,7 +64,7 @@ const deleteExpense = (req, res) => {
   const expense = getOneExpense(idToNum);
 
   if (!expense) {
-    res.status(404);
+    res.sendStatus(404);
 
     return;
   }
