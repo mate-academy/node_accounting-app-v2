@@ -15,9 +15,8 @@ const getAll = (req, res) => {
   let expenses = expenseService.getAll();
 
   if (!expenses.length) {
-    console.log(expenses)
     res.send([]);
-    
+
     return;
   }
 

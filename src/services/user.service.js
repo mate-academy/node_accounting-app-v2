@@ -4,7 +4,9 @@ const { getNewId } = require('../utils/getNewId.js');
 
 let users = [];
 
-const resetUsers = () => users = [];
+function resetUsers() {
+  users = [];
+};
 
 const getAll = () => users;
 
