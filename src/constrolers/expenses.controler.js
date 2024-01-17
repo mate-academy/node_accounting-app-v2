@@ -5,7 +5,7 @@ const {
   createExpense,
   removeExpense,
   getOneExpense,
-
+  patchExpense,
 } = require('../services/expenses.sevices');
 const { findUser } = require('../services/users.services');
 
@@ -107,7 +107,7 @@ const updateExpense = (req, res) => {
     return;
   }
 
-  Object.assign(expense, newInformation);
+  patchExpense(expense, newInformation);
 
   res.status(200).send(expense);
 };

@@ -32,10 +32,15 @@ const clearUsers = () => {
   users = [];
 };
 
+const updateUserInfo = (user, information) => {
+  Object.assign(user, information);
+};
+
 module.exports = {
   findUsers,
   createUser,
   findUser,
   removeUser,
   clearUsers,
+  updateUserInfo,
 };

@@ -3,7 +3,8 @@
 const { findUsers,
   createUser,
   findUser,
-  removeUser } = require('../services/users.services');
+  removeUser,
+  updateUserInfo } = require('../services/users.services');
 
 const getUsers = (req, res) => {
   const users = findUsers();
@@ -64,7 +65,7 @@ const patchUser = (req, res) => {
     return;
   }
 
-  Object.assign(user, { name });
+  updateUserInfo(user, { name });
 
   res.status(200).send(user);
 };

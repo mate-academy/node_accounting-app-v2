@@ -52,6 +52,10 @@ const clearExpenses = () => {
   expenses = [];
 };
 
+const patchExpense = (expense, information) => {
+  Object.assign(expense, information);
+};
+
 module.exports = {
   removeExpense,
   getExpenses,
@@ -59,4 +63,5 @@ module.exports = {
   expenses,
   getOneExpense,
   clearExpenses,
+  patchExpense,
 };
