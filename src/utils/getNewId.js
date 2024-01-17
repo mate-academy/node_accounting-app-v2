@@ -1,9 +1,9 @@
-const getNewId = (entrie) => {
-  if (!entrie.length) {
+const getNewId = (entry) => {
+  if (!entry.length) {
     return 1;
   }
 
-  const ids = entrie.map(entriePart => entriePart.id);
+  const ids = entry.map(entryPart => entryPart.id);
   const maxId = Math.max(...ids);
 
   return maxId + 1;

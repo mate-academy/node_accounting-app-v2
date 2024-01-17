@@ -1,34 +1,6 @@
 const { getNewId } = require('../utils/getNewId.js');
 
-let expenses = [
-  {
-    "id": 1,
-    "userId": 1,
-    "spentAt": "2024-01-16T22:18:57.099Z",
-    "title": "titleValue",
-    "amount": 0,
-    "category": "categoryValue1",
-    "note": "noteValue"
-  },
-  {
-    "id": 5,
-    "userId": 2,
-    "spentAt": "2024-01-16T22:18:57.099Z",
-    "title": "titleValue",
-    "amount": 0,
-    "category": "categoryValue2",
-    "note": "noteValue"
-  },
-  {
-    "id": 5,
-    "userId": 2,
-    "spentAt": "2024-01-16T22:18:57.099Z",
-    "title": "titleValue",
-    "amount": 0,
-    "category": "categoryValue3",
-    "note": "noteValue"
-  }
-];
+let expenses = [];
 
 const getAll = () => expenses;
 
