@@ -1,3 +1,5 @@
+'use strict';
+
 const { getNewId } = require('../utils/getNewId.js');
 
 let expenses = [];
@@ -5,7 +7,7 @@ let expenses = [];
 const getAll = () => expenses;
 
 const getById = (id) => (
-  expenses.find(expense => expense.id === id)  
+  expenses.find(expense => expense.id === id)
 );
 
 const create = (options) => {
@@ -28,7 +30,7 @@ const create = (options) => {
     amount,
     category,
     note,
-  }
+  };
 
   expenses = [...expenses, newExpense];
 
@@ -64,7 +66,7 @@ const patch = (options) => {
   return expenseToUpdate;
 };
 
-module.exports = { 
+module.exports = {
   getAll,
   getById,
   create,

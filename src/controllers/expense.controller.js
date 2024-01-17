@@ -1,8 +1,10 @@
+'use strict';
+
 const expenseService = require('../services/expense.service.js');
 const userService = require('../services/user.service.js');
 
 const getAll = (req, res) => {
-  const { 
+  const {
     userId: recivedUserId,
     categories,
     from,
@@ -18,6 +20,7 @@ const getAll = (req, res) => {
 
   if (categories) {
     const categoriesArray = categories.split(',');
+
     expenses = expenses.filter(expense => (
       categoriesArray.includes(expense.category)
     ));
@@ -25,11 +28,15 @@ const getAll = (req, res) => {
 
   if (from) {
     const fromDate = new Date(from);
-    expenses = expenses.filter(expense => new Date(expense.spentAt) >= fromDate);
+
+    expenses = expenses.filter(expense => (
+      new Date(expense.spentAt) >= fromDate
+    ));
   }
 
   if (to) {
     const toDate = new Date(to);
+
     expenses = expenses.filter(expense => new Date(expense.spentAt) <= toDate);
   }
 
@@ -41,6 +48,7 @@ const getById = (req, res) => {
 
   if (!id || Number.isNaN(id) || !isFinite(id) || id <= 0) {
     res.sendStatus(400);
+
     return;
   }
 
@@ -48,6 +56,7 @@ const getById = (req, res) => {
 
   if (!expense) {
     res.sendStatus(404);
+
     return;
   }
 
@@ -55,7 +64,7 @@ const getById = (req, res) => {
 };
 
 const create = (req, res) => {
-  const { 
+  const {
     title,
     userId,
     spentAt,
@@ -76,6 +85,7 @@ const create = (req, res) => {
     || Number.isNaN(userId)
   ) {
     res.sendStatus(400);
+
     return;
   }
 
@@ -98,6 +108,7 @@ const remove = (req, res) => {
 
   if (!expenseToRemove) {
     res.sendStatus(404);
+
     return;
   }
 
@@ -109,7 +120,7 @@ const remove = (req, res) => {
 const patch = (req, res) => {
   const { id: recivedId } = req.params;
   const id = Number(recivedId);
-  const { 
+  const {
     spentAt,
     title,
     amount,
@@ -126,6 +137,7 @@ const patch = (req, res) => {
     || typeof title !== 'string'
   ) {
     res.sendStatus(400);
+
     return;
   }
 
@@ -133,6 +145,7 @@ const patch = (req, res) => {
 
   if (!expenseToUpdate) {
     res.sendStatus(404);
+
     return;
   }
 
@@ -154,4 +167,4 @@ module.exports = {
   create,
   remove,
   patch,
-}
+};

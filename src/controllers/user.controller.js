@@ -1,3 +1,5 @@
+'use strict';
+
 const userService = require('../services/user.service');
 
 const getAll = (_, res) => {
@@ -11,6 +13,7 @@ const getById = (req, res) => {
 
   if (!id || Number.isNaN(id) || !isFinite(id) || id <= 0) {
     res.sendStatus(400);
+
     return;
   }
 
@@ -18,6 +21,7 @@ const getById = (req, res) => {
 
   if (!user) {
     res.sendStatus(404);
+
     return;
   }
 
@@ -29,6 +33,7 @@ const create = (req, res) => {
 
   if (!name || typeof name !== 'string') {
     res.sendStatus(400);
+
     return;
   }
 
@@ -44,6 +49,7 @@ const remove = (req, res) => {
 
   if (!userToRemove) {
     res.sendStatus(404);
+
     return;
   }
 
@@ -65,6 +71,7 @@ const patch = (req, res) => {
     || typeof name !== 'string'
   ) {
     res.sendStatus(400);
+
     return;
   }
 
@@ -72,6 +79,7 @@ const patch = (req, res) => {
 
   if (!userToUpdate) {
     res.sendStatus(404);
+
     return;
   }
 
@@ -80,7 +88,7 @@ const patch = (req, res) => {
   res.status(200).send(updatedUser);
 };
 
-module.exports = { 
+module.exports = {
   getAll,
   getById,
   create,

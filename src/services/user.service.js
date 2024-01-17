@@ -1,3 +1,5 @@
+'use strict';
+
 const { getNewId } = require('../utils/getNewId.js');
 
 let users = [];
@@ -5,7 +7,7 @@ let users = [];
 const getAll = () => users;
 
 const getById = (id) => (
-  users.find(user => user.id === id)  
+  users.find(user => user.id === id)
 );
 
 const create = (name) => {
@@ -13,7 +15,7 @@ const create = (name) => {
   const newUser = {
     id: newUserId,
     name,
-  }
+  };
 
   users = [...users, newUser];
 
@@ -34,7 +36,7 @@ const patch = (id, newName) => {
   return userToUpdate;
 };
 
-module.exports = { 
+module.exports = {
   getAll,
   getById,
   create,
