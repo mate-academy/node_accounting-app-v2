@@ -43,7 +43,7 @@ const updateUser = ({ id, name }) => {
 const resetUsers = () => {
   users = [];
   userIds = 1;
-}
+};
 
 module.exports = {
   findAllUsers,

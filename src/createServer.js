@@ -3,9 +3,9 @@
 const express = require('express');
 const cors = require('cors');
 const { Router } = require('./routes/user.routes');
-const { expenseRouter} = require('./routes/expenses.routes');
+const { expenseRouter } = require('./routes/expenses.routes');
 const userService = require('./services/user.service');
-const expensesService = require('./services/expenses.service')
+const expensesService = require('./services/expenses.service');
 
 const userRouter = Router;
 

@@ -5,9 +5,9 @@ const userService = require('../services/user.service');
 const getAll = (req, res) => {
   try {
     const users = userService.findAllUsers();
+
     res.status(200).send(users);
   } catch (error) {
-    console.error(error);
     res.status(500).send('Internal Server Error');
   }
 };
@@ -19,12 +19,12 @@ const findById = (req, res) => {
 
     if (!user) {
       res.sendStatus(404);
+
       return;
     }
 
     res.status(200).send(user);
   } catch (error) {
-    console.error(error);
     res.status(500).send('Internal Server Error');
   }
 };
@@ -35,6 +35,7 @@ const createNewUser = (req, res) => {
 
     if (!name) {
       res.status(400).send('Bad Request: Name is required');
+
       return;
     }
 
@@ -42,7 +43,6 @@ const createNewUser = (req, res) => {
 
     res.status(201).send(newUser);
   } catch (error) {
-    console.error(error);
     res.status(500).send('Internal Server Error');
   }
 };
@@ -54,13 +54,13 @@ const deleteUserById = (req, res) => {
 
     if (!neededUser) {
       res.sendStatus(404);
+
       return;
     }
 
     userService.deleteUser(userId);
     res.status(204).send();
   } catch (error) {
-    console.error(error);
     res.status(500).send('Internal Server Error');
   }
 };
@@ -73,6 +73,7 @@ const handleUserUpdate = (req, res) => {
 
     if (typeof name !== 'string') {
       res.status(422).send('Unprocessable Entity: Name should be a string');
+
       return;
     }
 
@@ -83,12 +84,12 @@ const handleUserUpdate = (req, res) => {
 
     if (!foundUser || !updatedUser) {
       res.sendStatus(404);
+
       return;
     }
 
     res.status(200).send(updatedUser);
   } catch (error) {
-    console.error(error);
     res.status(500).send('Internal Server Error');
   }
 };
