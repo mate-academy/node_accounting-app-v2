@@ -7,7 +7,7 @@ let usersFromServer = [];
 const findAll = () => usersFromServer;
 
 const getById = (id) => (
-  usersFromServer.find(u => u.id === id) || null
+  usersFromServer.find(user => user.id === id) || null
 );
 
 const createOne = (name) => {
@@ -22,7 +22,7 @@ const createOne = (name) => {
 };
 
 const deleteOne = (id) => {
-  usersFromServer = usersFromServer.filter(u => u.id !== id);
+  usersFromServer = usersFromServer.filter(user => user.id !== id);
 };
 
 const updateOne = (users, name) => {

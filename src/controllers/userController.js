@@ -67,7 +67,7 @@ const update = (req, res) => {
     return;
   }
 
-  if (!validate) {
+  if (!validate(name)) {
     res.sendStatus(422);
 
     return;

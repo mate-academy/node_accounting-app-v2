@@ -16,7 +16,7 @@ const getAll = () => {
 };
 
 const getById = (id) => (
-  expensesFromServer.find(e => e.id === id) || null
+  expensesFromServer.find(expenses => expenses.id === id) || null
 );
 
 const createOne = ({
@@ -43,7 +43,8 @@ const createOne = ({
 };
 
 const deleteOne = (id) => {
-  expensesFromServer = expensesFromServer.filter(e => e.id !== id);
+  expensesFromServer = expensesFromServer
+    .filter(expenses => expenses.id !== id);
 };
 
 const updateOne = (title, expenses) => {
@@ -60,6 +61,25 @@ const clearExpenses = () => {
   expensesFromServer = [];
 };
 
+const filterByCategory = (expenseList, categories, userId) => {
+  if (categories && userId) {
+    return expenseList
+      .filter(item => item.category === categories && item.userId === +userId);
+  } else if (userId) {
+    return expenseList.filter(item => item.userId === +userId);
+  } else {
+    return expenseList;
+  }
+};
+
+const filterByDate = (expenses, from, to) => {
+  if (from && to) {
+    return expenses.filter(item => item.spentAt > from && item.spentAt < to);
+  } else {
+    return expenses;
+  }
+};
+
 module.exports = {
   getAll,
   getById,
@@ -68,4 +88,6 @@ module.exports = {
   updateOne,
   setAll,
   clearExpenses,
+  filterByCategory,
+  filterByDate,
 };

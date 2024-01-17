@@ -1,11 +1,14 @@
 'use strict';
 
+const { findUser: currentUser } = require('../helpers');
 const {
   getAll,
   getById,
   createOne,
   deleteOne,
   updateOne,
+  filterByCategory,
+  filterByDate,
 } = require('../services/expensesServices');
 const { findAll } = require('../services/userServices');
 
@@ -13,20 +16,9 @@ const get = (req, res) => {
   const expenseList = getAll();
   const { userId, categories, from, to } = req.query;
 
-  let filteredExpenses = expenseList;
+  let filteredExpenses = filterByCategory(expenseList, categories, userId);
 
-  if (categories && userId) {
-    filteredExpenses = expenseList
-      .filter(item => item.category === categories && item.userId === +userId);
-  } else if (userId) {
-    filteredExpenses = expenseList
-      .filter(item => item.userId === +userId);
-  }
-
-  if (from && to) {
-    filteredExpenses = filteredExpenses
-      .filter(item => item.spentAt > from && item.spentAt < to);
-  }
+  filteredExpenses = filterByDate(filteredExpenses, from, to);
 
   return res.send(filteredExpenses.length > 0 ? filteredExpenses : expenseList);
 };
@@ -55,7 +47,7 @@ const create = (req, res) => {
     note,
   } = req.body;
 
-  const findUser = findAll().find(u => u.id === userId);
+  const findUser = currentUser(findAll(), userId);
 
   if (!title || !findUser) {
     res.status(400).send('Invalid request: Title or user not provided');
