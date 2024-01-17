@@ -8,7 +8,7 @@ const getAll = (req, res) => {
 
     res.status(200).send(users);
   } catch (error) {
-    res.status(500).send('Internal Server Error');
+    res.status(500).send(`Internal Server Error ${error}`);
   }
 };
 
@@ -25,7 +25,7 @@ const findById = (req, res) => {
 
     res.status(200).send(user);
   } catch (error) {
-    res.status(500).send('Internal Server Error');
+    res.status(500).send(`Internal Server Error ${error}`);
   }
 };
 
@@ -43,7 +43,7 @@ const createNewUser = (req, res) => {
 
     res.status(201).send(newUser);
   } catch (error) {
-    res.status(500).send('Internal Server Error');
+    res.status(500).send(`Internal Server Error ${error}`);
   }
 };
 
@@ -61,7 +61,7 @@ const deleteUserById = (req, res) => {
     userService.deleteUser(userId);
     res.status(204).send();
   } catch (error) {
-    res.status(500).send('Internal Server Error');
+    res.status(500).send(`Internal Server Error ${error}`);
   }
 };
 
@@ -90,7 +90,7 @@ const handleUserUpdate = (req, res) => {
 
     res.status(200).send(updatedUser);
   } catch (error) {
-    res.status(500).send('Internal Server Error');
+    res.status(500).send(`Internal Server Error ${error}`);
   }
 };
 
