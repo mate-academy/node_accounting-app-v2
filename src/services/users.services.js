@@ -1,6 +1,6 @@
 'use strict';
 
-const { getMaxId, validate } = require('../helpers/userValidation');
+const { getMaxId } = require('../helpers/userValidation');
 
 let usersFromServer = [];
 
@@ -46,6 +46,5 @@ module.exports = {
   remove,
   update,
   setAll,
-  validate,
   clearUsers,
 };

@@ -1,33 +1,22 @@
 'use strict';
 
 const expensesServices = require('../services/expenses.services');
-const { findAll } = require('../services/users.services');
+const userService = require('../services/users.services');
+const filterExpenses = require('../helpers/filterExpenses');
+const { validate } = require('../helpers/userValidation');
 
 const getAll = (req, res) => {
   const allExpenses = expensesServices.findAll();
   const { userId, categories, from, to } = req.query;
+  const filters = {
+    userId,
+    categories,
+    from,
+    to,
+  };
+  const filteredExpenses = filterExpenses(allExpenses, filters);
 
-  let filteredExpenses = allExpenses;
-
-  if (userId) {
-    filteredExpenses = filteredExpenses.filter(item => item.userId === +userId);
-  }
-
-  if (categories) {
-    filteredExpenses = filteredExpenses
-      .filter(item => item.category === categories);
-  }
-
-  if (from && to) {
-    filteredExpenses = filteredExpenses
-      .filter(item => item.spentAt > from && item.spentAt < to);
-  }
-
-  const responseExpenses = filteredExpenses.length > 0
-    ? filteredExpenses
-    : allExpenses;
-
-  return res.send(responseExpenses);
+  return res.send(filteredExpenses);
 };
 
 const getById = (req, res) => {
@@ -54,9 +43,9 @@ const create = (req, res) => {
     note,
   } = req.body;
 
-  const findUser = findAll().find(user => user.id === userId);
+  const findUser = userService.getById(userId);
 
-  if (!title || !findUser) {
+  if (!validate(title) || !findUser) {
     res.sendStatus(400);
 
     return;
@@ -92,7 +81,7 @@ const update = (req, res) => {
 
   const expenses = expensesServices.getById(+id);
 
-  if (!expenses) {
+  if (!expenses || !validate(title)) {
     res.sendStatus(404);
 
     return;

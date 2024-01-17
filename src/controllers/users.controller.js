@@ -1,6 +1,7 @@
 'use strict';
 
 const userServices = require('../services/users.services');
+const { validate } = require('../helpers/userValidation');
 
 const getAll = (req, res) => {
   const users = userServices.findAll();
@@ -60,7 +61,7 @@ const update = (req, res) => {
     return;
   }
 
-  if (!userServices.validate) {
+  if (!validate(name)) {
     res.sendStatus(422);
 
     return;
