@@ -4,6 +4,8 @@ const { getNewId } = require('../utils/getNewId.js');
 
 let expenses = [];
 
+const resetExpenses = () => expenses = [];
+
 const getAll = () => expenses;
 
 const getById = (id) => (
@@ -55,13 +57,11 @@ const patch = (options) => {
 
   const expenseToUpdate = expenses.find(expense => expense.id === id);
 
-  Object.assign(expenseToUpdate, {
-    spentAt,
-    title,
-    amount,
-    category,
-    note,
-  });
+  const updates = { spentAt, title, amount, category, note };
+  const entriesToUpdate = Object.entries(updates).filter(([_, value]) => value !== undefined);
+  const updatesFiltered = Object.fromEntries(entriesToUpdate);
+
+  Object.assign(expenseToUpdate, updatesFiltered);
 
   return expenseToUpdate;
 };
@@ -72,4 +72,5 @@ module.exports = {
   create,
   remove,
   patch,
+  resetExpenses,
 };

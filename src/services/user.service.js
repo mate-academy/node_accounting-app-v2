@@ -4,6 +4,8 @@ const { getNewId } = require('../utils/getNewId.js');
 
 let users = [];
 
+const resetUsers = () => users = [];
+
 const getAll = () => users;
 
 const getById = (id) => (
@@ -42,4 +44,5 @@ module.exports = {
   create,
   remove,
   patch,
+  resetUsers,
 };

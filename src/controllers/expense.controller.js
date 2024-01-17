@@ -14,6 +14,13 @@ const getAll = (req, res) => {
 
   let expenses = expenseService.getAll();
 
+  if (!expenses.length) {
+    console.log(expenses)
+    res.send([]);
+    
+    return;
+  }
+
   if (userId) {
     expenses = expenses.filter(expense => expense.userId === userId);
   }
@@ -128,14 +135,7 @@ const patch = (req, res) => {
     note,
   } = req.body;
 
-  if (
-    !id
-    || Number.isNaN(id)
-    || !isFinite(id)
-    || id <= 0
-    || !title
-    || typeof title !== 'string'
-  ) {
+  if (isNaN(id)) {
     res.sendStatus(400);
 
     return;
@@ -158,7 +158,9 @@ const patch = (req, res) => {
     note,
   });
 
-  res.status(200).send(updatedExpense);
+  res.statusCode = 200;
+
+  res.send(updatedExpense);
 };
 
 module.exports = {

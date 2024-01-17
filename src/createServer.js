@@ -4,8 +4,14 @@ const express = require('express');
 const userController = require('./controllers/user.controller.js');
 const expensesController = require('./controllers/expense.controller.js');
 
+const userService = require('./services/user.service.js');
+const expenseService = require('./services/expense.service.js');
+
 function createServer() {
   const app = express();
+
+  userService.resetUsers();
+  expenseService.resetExpenses();
 
   app.use(express.json());
 
