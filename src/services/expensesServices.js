@@ -1,7 +1,6 @@
 'use strict';
 
 const getNewId = require('../helper.js');
-
 let expenses = [];
 
 const getAllExpenses = () => expenses;
