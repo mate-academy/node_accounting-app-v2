@@ -55,4 +55,4 @@ module.exports = {
   update,
   remove,
   getById,
-}
+};
