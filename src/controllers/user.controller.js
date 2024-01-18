@@ -5,12 +5,6 @@ const userService = require('../services/user.service');
 const getAll = (_, res) => {
   const users = userService.getAll();
 
-  if (!users.length) {
-    res.send([]);
-
-    return;
-  }
-
   res.send(users);
 };
 

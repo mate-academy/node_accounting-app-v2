@@ -50,21 +50,13 @@ const remove = (id) => {
 const patch = (options) => {
   const {
     id,
-    spentAt,
-    title,
-    amount,
-    category,
-    note,
+    ...updates
   } = options;
 
   const expenseToUpdate = expenses.find(expense => expense.id === id);
 
-  const updates = {
-    spentAt, title, amount, category, note,
-  };
-
   const entriesToUpdate = Object.entries(updates)
-    .filter(([_, value]) => value !== undefined);
+    .filter(([_, value]) => value);
 
   const updatesFiltered = Object.fromEntries(entriesToUpdate);
 

@@ -1,11 +1,12 @@
 'use strict';
 
 const express = require('express');
-const userController = require('./controllers/user.controller.js');
-const expensesController = require('./controllers/expense.controller.js');
 
 const userService = require('./services/user.service.js');
 const expenseService = require('./services/expense.service.js');
+
+const { userRouter } = require('./routes/user.routes.js');
+const { expenseRouter } = require('./routes/expense.routes.js');
 
 function createServer() {
   const app = express();
@@ -15,17 +16,8 @@ function createServer() {
 
   app.use(express.json());
 
-  app.get('/users', userController.getAll);
-  app.get('/users/:id', userController.getById);
-  app.post('/users', userController.create);
-  app.delete('/users/:id', userController.remove);
-  app.patch('/users/:id', userController.patch);
-
-  app.get('/expenses', expensesController.getAll);
-  app.get('/expenses/:id', expensesController.getById);
-  app.post('/expenses', expensesController.create);
-  app.delete('/expenses/:id', expensesController.remove);
-  app.patch('/expenses/:id', expensesController.patch);
+  app.use(userRouter);
+  app.use(expenseRouter);
 
   return app;
 }

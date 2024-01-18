@@ -2,6 +2,7 @@
 
 const expenseService = require('../services/expense.service.js');
 const userService = require('../services/user.service.js');
+const { getFilteredExpenses } = require('../utils/getFilteredExpenses.js');
 
 const getAll = (req, res) => {
   const {
@@ -12,41 +13,17 @@ const getAll = (req, res) => {
   } = req.query;
   const userId = Number(recivedUserId);
 
-  let expenses = expenseService.getAll();
+  const expenses = expenseService.getAll();
 
-  if (!expenses.length) {
-    res.send([]);
+  const filteredExpenses = getFilteredExpenses(
+    expenses,
+    userId,
+    categories,
+    from,
+    to,
+  );
 
-    return;
-  }
-
-  if (userId) {
-    expenses = expenses.filter(expense => expense.userId === userId);
-  }
-
-  if (categories) {
-    const categoriesArray = categories.split(',');
-
-    expenses = expenses.filter(expense => (
-      categoriesArray.includes(expense.category)
-    ));
-  }
-
-  if (from) {
-    const fromDate = new Date(from);
-
-    expenses = expenses.filter(expense => (
-      new Date(expense.spentAt) >= fromDate
-    ));
-  }
-
-  if (to) {
-    const toDate = new Date(to);
-
-    expenses = expenses.filter(expense => new Date(expense.spentAt) <= toDate);
-  }
-
-  res.send(expenses);
+  res.send(filteredExpenses);
 };
 
 const getById = (req, res) => {
