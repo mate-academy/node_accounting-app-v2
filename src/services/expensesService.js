@@ -8,7 +8,7 @@ function clearExpenses() {
   expenses = [];
 }
 
-function getAllExpenses(userId, categories, from, to) {
+function getAllExpenses({ userId, categories, from, to }) {
   let filteredExpenses = [...expenses];
 
   if (categories) {

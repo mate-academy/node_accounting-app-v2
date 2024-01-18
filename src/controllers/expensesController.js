@@ -11,14 +11,7 @@ const {
 const { getUserById } = require('../services/usersService');
 
 function getExpenses(req, res) {
-  const { userId, categories, from, to } = req.query;
-
-  const searchedExpenses = getAllExpenses(
-    userId,
-    categories,
-    from,
-    to,
-  );
+  const searchedExpenses = getAllExpenses(req.query);
 
   res.send(searchedExpenses);
 }
