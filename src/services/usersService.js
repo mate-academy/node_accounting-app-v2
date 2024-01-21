@@ -22,10 +22,12 @@ const getAll = () => {
 };
 
 const getById = (id) => {
-  return users.find(item => item.id === id) || null;
+  const user = users.find(item => item.id === id) || null;
+
+  return user;
 };
 
-const createUser = (name) => {
+const create = (name) => {
   const user = {
     name,
     id: generatedId(users),
@@ -48,10 +50,15 @@ const remove = (id) => {
   users = users.filter(item => item.id !== id);
 };
 
+const resetUser = () => {
+  users = [];
+};
+
 module.exports = {
   getAll,
   getById,
-  createUser,
+  create,
   update,
   remove,
+  resetUser,
 };

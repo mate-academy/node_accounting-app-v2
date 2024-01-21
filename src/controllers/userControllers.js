@@ -1,43 +1,43 @@
 'use strict';
 
-const usersService
+const { getAll, getById, create, update, remove }
   = require('../services/usersService');
 
 const get = (req, res) => {
-  res.send(usersService.getAll());
+  res.send(getAll());
 };
-const getOnce = (req, res) => {
+const getUser = (req, res) => {
   const { id } = req.params;
-  const user = usersService.getById(id);
+  const user = getById(id);
 
   if (!user) {
     res.sendStatus(404);
-
-    return;
   }
 
   res.send(user);
 };
-const create = (req, res) => {
+const createUser = (req, res) => {
   const { name } = req.body;
 
   if (!name) {
-    res.sendStatus(422);
+    res.sendStatus(400);
+
+    return;
   }
 
-  const user = usersService.createUser(name);
+  const user = create(name);
 
-  res.statusCode = 201;
+  res.statusCode(201);
   res.send(user);
 };
 const updateUser = (req, res) => {
   const { id } = req.params;
   const { name } = req.body;
 
-  const user = usersService.getById(id);
+  const findUser = getById(id);
 
-  if (!user) {
-    res.sendStatus(404);
+  if (!findUser) {
+    res.sendStatus(422);
 
     return;
   }
@@ -46,24 +46,24 @@ const updateUser = (req, res) => {
     res.sendStatus(422);
   }
 
-  const newUpdateUser = usersService.update(id, name);
+  const user = update(id, name);
 
-  res.send(newUpdateUser);
+  res.send(user);
 };
-const removeUser = (req, res) => {
+const deleteUser = (req, res) => {
   const { id } = req.params;
 
-  if (!usersService.getById(id)) {
+  if (!getById(id)) {
     res.sendStatus(404);
   }
-  usersService.remove(id);
+  remove(id);
   res.sendStatus(204);
 };
 
 module.exports = {
   get,
-  getOnce,
-  create,
+  getUser,
+  createUser,
   updateUser,
-  removeUser,
+  deleteUser,
 };
