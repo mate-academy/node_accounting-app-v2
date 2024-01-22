@@ -3,18 +3,18 @@
 const { generatedId } = require('../utils/generatedId');
 
 let users = [
-  {
-    id: '1',
-    name: 'tonia',
-  },
-  {
-    id: '2',
-    name: 'anna',
-  },
-  {
-    id: '4',
-    name: 'tonia',
-  },
+  // {
+  //   id: '1',
+  //   name: 'tonia',
+  // },
+  // {
+  //   id: '2',
+  //   name: 'anna',
+  // },
+  // {
+  //   id: '4',
+  //   name: 'tonia',
+  // },
 ];
 
 const getAll = () => {
@@ -22,7 +22,7 @@ const getAll = () => {
 };
 
 const getById = (id) => {
-  const user = users.find(item => item.id === id) || null;
+  const user = users.find(item => item.id === +id) || null;
 
   return user;
 };
@@ -47,7 +47,7 @@ const update = ({ id, name }) => {
 };
 
 const remove = (id) => {
-  users = users.filter(item => item.id !== id);
+  users = users.filter(item => item.id !== +id);
 };
 
 const resetUser = () => {

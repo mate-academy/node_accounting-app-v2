@@ -14,28 +14,36 @@ let expenses = [
   // },
 ];
 
-const getExpensesAll = ({ userId, category, from, to }) => {
+const getExpensesAll = ({ userId, categories, from, to }) => {
   let filterExpenses = [...expenses];
 
   if (userId) {
-    filterExpenses = filterExpenses.filter(item => item.userId === userId);
+    filterExpenses = filterExpenses.filter(item => item.userId === +userId);
   }
 
-  if (category) {
-    filterExpenses = filterExpenses
-      .filter(item => item.categories === category);
+  if (categories) {
+    filterExpenses = filterExpenses.filter((item) =>
+      categories.includes(item.category)
+    );
   }
 
-  if (from && to) {
-    filterExpenses = filterExpenses
-      .filter(item => item.spentAt >= from && item.spentAt <= to);
+  if (from) {
+    filterExpenses = filterExpenses.filter(
+      (expense) => expense.spentAt >= from
+    );
+  }
+
+  if (to) {
+    filterExpenses = filterExpenses.filter(
+      (expense) => expense.spentAt <= to
+    );
   }
 
   return filterExpenses;
 };
 
 const getExpensesById = (id) => {
-  return expenses.find(item => item.id === id) || null;
+  return expenses.find(item => item.id === +id) || null;
 };
 
 const createExpenses = (
@@ -67,7 +75,7 @@ const updateExpense = ({ id, spentAt, title, amount, category, note }) => {
 };
 
 const removeExpenses = (id) => {
-  expenses = expenses.filter(item => item.id !== id);
+  expenses = expenses.filter(item => item.id !== +id);
 };
 
 const resetExpenses = () => {

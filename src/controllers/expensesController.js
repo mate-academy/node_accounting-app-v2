@@ -5,14 +5,14 @@ const { getExpensesAll, getExpensesById, createExpenses }
 
 const getExpenses = (req, res) => {
   const {
-    userId, category, from, to,
+    userId, categories, from, to,
   } = req.body;
   const expenses = getExpensesAll({
-    userId, category, from, to,
+    userId, categories, from, to,
   });
 
   if (!expenses) {
-    res.sendStatus(404);
+    res.status(404);
 
     return;
   }
@@ -24,13 +24,13 @@ const getOnceExpenses = (req, res) => {
   const expense = getExpensesById(id);
 
   if (!expense) {
-    res.sendStatus(404);
+    res.status(404);
 
     return;
   }
 
   if (isNaN(+id)) {
-    res.sendStatus(400);
+    res.status(400);
 
     return;
   }
@@ -49,15 +49,17 @@ const creatNewExpenses = (req, res) => {
   && typeof amount === 'number'
   && typeof category === 'string'
   && category
-  && (typeof note === 'string' || typeof note === 'undefined');
+  && typeof note === 'string';
 
-  if (arePropsValid) {
-    res.sendStatus(400);
+  if (!arePropsValid) {
+    res.status(400);
+
+    return;
   }
 
   const cost = createExpenses(userId, spentAt, title, amount, category, note);
 
-  res.sendStatus(201);
+  res.status(201);
   res.send(cost);
 };
 const updateExpense = (req, res) => {
@@ -67,13 +69,13 @@ const updateExpense = (req, res) => {
   const expense = getExpensesById(id);
 
   if (!expense) {
-    res.sendStatus(404);
+    res.status(404);
 
     return;
   }
 
   if (typeof title !== 'string') {
-    res.sendStatus(400);
+    res.status(400);
 
     return;
   }
@@ -85,12 +87,14 @@ const updateExpense = (req, res) => {
 };
 const removeExpenses = (req, res) => {
   const { id } = req.params;
+  const expense = getExpensesById(id);
 
-  if (!getExpensesById(id)) {
-    res.sendStatus(404);
+  if (!expense) {
+    res.status(404);
   }
+
   removeExpenses(id);
-  res.sendStatus(204);
+  res.status(204);
 };
 
 module.exports = {

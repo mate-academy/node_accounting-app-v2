@@ -11,7 +11,7 @@ const getUser = (req, res) => {
   const user = getById(id);
 
   if (!user) {
-    res.sendStatus(404);
+    res.status(404);
   }
 
   res.send(user);
@@ -19,16 +19,15 @@ const getUser = (req, res) => {
 const createUser = (req, res) => {
   const { name } = req.body;
 
-  if (!name) {
-    res.sendStatus(400);
+  if (typeof name !== 'string' || !name) {
+    res.status(400);
 
     return;
   }
 
   const user = create(name);
 
-  res.statusCode(201);
-  res.send(user);
+  res.status(201).send(user);
 };
 const updateUser = (req, res) => {
   const { id } = req.params;
@@ -37,27 +36,28 @@ const updateUser = (req, res) => {
   const findUser = getById(id);
 
   if (!findUser) {
-    res.sendStatus(422);
+    res.status(404);
 
     return;
   }
 
   if (typeof name !== 'string' || !name.length) {
-    res.sendStatus(422);
+    res.status(400);
   }
 
   const user = update(id, name);
 
+  res.status(200);
   res.send(user);
 };
 const deleteUser = (req, res) => {
   const { id } = req.params;
 
   if (!getById(id)) {
-    res.sendStatus(404);
+    res.status(404);
   }
   remove(id);
-  res.sendStatus(204);
+  res.status(204);
 };
 
 module.exports = {
