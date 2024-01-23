@@ -12,36 +12,39 @@ const getExpenses = (req, res) => {
   });
 
   if (!expenses) {
-    res.status(404);
+    res.sendStatus(404);
 
     return;
   }
 
   res.send(expenses);
 };
+
 const getOnceExpenses = (req, res) => {
   const { id } = req.params;
-  const expense = getExpensesById(id);
-
-  if (!expense) {
-    res.status(404);
+  if (isNaN(+id)) {
+    res.sendStatus(400);
 
     return;
   }
 
-  if (isNaN(+id)) {
-    res.status(400);
+  const expense = getExpensesById(+id);
+
+
+  if (!expense) {
+    res.sendStatus(404);
 
     return;
   }
 
   res.send(expense);
 };
+
 const creatNewExpenses = (req, res) => {
   const { userId, spentAt, title, amount, category, note } = req.body;
 
   const arePropsValid
-  = typeof userId === 'number'
+  = typeof +userId === 'number'
   && getExpensesById(userId)
   && !isNaN(new Date(spentAt))
   && typeof title === 'string'
@@ -52,30 +55,30 @@ const creatNewExpenses = (req, res) => {
   && typeof note === 'string';
 
   if (!arePropsValid) {
-    res.status(400);
+    res.sendStatus(400);
 
     return;
   }
 
   const cost = createExpenses(userId, spentAt, title, amount, category, note);
 
-  res.status(201);
+  res.statusCode = 201;
   res.send(cost);
 };
 const updateExpense = (req, res) => {
   const { id } = req.params;
   const { spentAt, title, amount, category, note } = req.body;
 
-  const expense = getExpensesById(id);
+  const expense = getExpensesById(+id);
 
   if (!expense) {
-    res.status(404);
+    res.sendStatus(404);
 
     return;
   }
 
   if (typeof title !== 'string') {
-    res.status(400);
+    res.sendStatus(400);
 
     return;
   }
@@ -87,14 +90,20 @@ const updateExpense = (req, res) => {
 };
 const removeExpenses = (req, res) => {
   const { id } = req.params;
-  const expense = getExpensesById(id);
+
+  if (isNaN(+id)) {
+    res.sendStatus(400);
+
+    return;
+  }
+  const expense = getExpensesById(+id);
 
   if (!expense) {
-    res.status(404);
+    res.sendStatus(404);
   }
 
-  removeExpenses(id);
-  res.status(204);
+  removeExpenses(+id);
+  res.sendStatus(204);
 };
 
 module.exports = {

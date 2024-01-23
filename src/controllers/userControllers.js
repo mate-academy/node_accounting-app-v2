@@ -8,32 +8,44 @@ const get = (req, res) => {
 };
 const getUser = (req, res) => {
   const { id } = req.params;
-  const user = getById(id);
 
-  if (!user) {
-    res.status(404);
+  if (isNaN(+id)) {
+    res.sendStatus(400);
+    return;
   }
-
+  const user = getById(+id);
+  if (!user) {
+    res.sendStatus(404);
+    return;
+  }
   res.send(user);
 };
 const createUser = (req, res) => {
   const { name } = req.body;
 
-  if (typeof name !== 'string' || !name) {
-    res.status(400);
+  if (!name) {
+    res.sendStatus(400);
 
     return;
   }
 
+  res.statusCode = 201;
+
   const user = create(name);
 
-  res.status(201).send(user);
+  res.send(user);
 };
 const updateUser = (req, res) => {
   const { id } = req.params;
   const { name } = req.body;
 
-  const findUser = getById(id);
+  if (isNaN(+id) || !name) {
+    res.sendStatus(400);
+
+    return;
+  }
+
+  const findUser = getById(+id);
 
   if (!findUser) {
     res.status(404);
@@ -41,11 +53,7 @@ const updateUser = (req, res) => {
     return;
   }
 
-  if (typeof name !== 'string' || !name.length) {
-    res.status(400);
-  }
-
-  const user = update(id, name);
+  const user = update(+id, name);
 
   res.status(200);
   res.send(user);
@@ -53,10 +61,18 @@ const updateUser = (req, res) => {
 const deleteUser = (req, res) => {
   const { id } = req.params;
 
-  if (!getById(id)) {
-    res.status(404);
+  if (isNaN(+id)) {
+    res.sendStatus(400);
+
+    return;
   }
-  remove(id);
+
+  if (!getById(+id)) {
+    res.sendStatus(404);
+
+    return;
+  }
+  remove(+id);
   res.status(204);
 };
 

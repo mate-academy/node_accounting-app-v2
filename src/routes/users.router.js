@@ -1,7 +1,13 @@
 'use strict';
 
 const express = require('express');
-const { get, deleteUser, getUser, createUser, updateUser }
+const {
+  get,
+  deleteUser,
+  getUser,
+  createUser,
+  updateUser
+}
  = require('../controllers/userControllers');
 const userRouter = express.Router();
 

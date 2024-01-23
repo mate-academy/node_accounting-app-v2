@@ -5,9 +5,9 @@ const { expensesRouter } = require('./routes/exspensesRouter');
 const { userRouter } = require('./routes/users.router');
 const { resetExpenses } = require('./services/expensesService');
 const { resetUser } = require('./services/usersService');
-const app = express();
 
 function createServer() {
+  const app = express();
   resetUser();
   resetExpenses();
 

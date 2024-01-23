@@ -2,7 +2,11 @@
 
 const express = require('express');
 const {
-  getOnceExpenses, getExpenses, creatNewExpenses, updateExpense, removeExpenses,
+  getOnceExpenses,
+  getExpenses,
+  creatNewExpenses,
+  updateExpense,
+  removeExpenses,
 } = require('../controllers/expensesController');
 const expensesRouter = express.Router();
 

@@ -2,35 +2,22 @@
 
 const { generatedId } = require('../utils/generatedId');
 
-let users = [
-  // {
-  //   id: '1',
-  //   name: 'tonia',
-  // },
-  // {
-  //   id: '2',
-  //   name: 'anna',
-  // },
-  // {
-  //   id: '4',
-  //   name: 'tonia',
-  // },
-];
+let users = [];
 
 const getAll = () => {
   return users;
 };
 
 const getById = (id) => {
-  const user = users.find(item => item.id === +id) || null;
+  const user = users.find(item => item.id === id);
 
   return user;
 };
 
 const create = (name) => {
   const user = {
-    name,
     id: generatedId(users),
+    name,
   };
 
   users.push(user);
@@ -38,16 +25,16 @@ const create = (name) => {
   return user;
 };
 
-const update = ({ id, name }) => {
+const update = ( id, name ) => {
   const user = getById(id);
 
-  Object.assign(user, { name });
+ user.name = name;
 
   return user;
 };
 
 const remove = (id) => {
-  users = users.filter(item => item.id !== +id);
+  users = users.filter(item => item.id !== id);
 };
 
 const resetUser = () => {
