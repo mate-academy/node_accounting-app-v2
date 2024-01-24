@@ -1,7 +1,8 @@
 'use strict';
 
-const { getExpensesAll, getExpensesById, createExpenses }
+const { getExpensesAll, getExpensesById, createExpenses, removeExpensesService }
   = require('../services/expensesService');
+const { getById } = require('../services/usersService');
 
 const getExpenses = (req, res) => {
   const {
@@ -35,20 +36,9 @@ const getOnceExpenses = (req, res) => {
 
 const creatNewExpenses = (req, res) => {
   const { userId, spentAt, title, amount, category, note } = req.body;
+  const findUser = getById(+userId);
 
-  const arePropsValid
-  = typeof +userId === 'number'
-  && getExpensesById(userId)
-  && !isNaN(new Date(spentAt))
-  && typeof title === 'string'
-  && title
-  && typeof amount === 'number'
-  && typeof category === 'string'
-  && category
-  && typeof note === 'string'
-  && (typeof note === 'undefined' || typeof note === 'string');
-
-  if (!arePropsValid) {
+  if (!findUser) {
     res.sendStatus(400);
 
     return;
@@ -64,7 +54,7 @@ const creatNewExpenses = (req, res) => {
 const updateExpense = (req, res) => {
   const { id } = req.params;
 
-  if (!req.body) {
+  if (isNaN(+id) || !req.body) {
     res.sendStatus(400);
 
     return;
@@ -79,11 +69,25 @@ const updateExpense = (req, res) => {
     return;
   }
 
-  const newUpdateExpense
-    = updateExpense(id, spentAt, title, amount, category, note);
+  const newUpdateExpense = updateExpense({
+    id,
+    spentAt,
+    title,
+    amount,
+    category,
+    note,
+  });
 
+  if (!newUpdateExpense) {
+    res.sendStatus(404);
+
+    return;
+  }
+
+  // res.status(200);
   res.send(newUpdateExpense);
 };
+
 const removeExpenses = (req, res) => {
   const { id } = req.params;
 
@@ -101,7 +105,7 @@ const removeExpenses = (req, res) => {
     return;
   }
 
-  removeExpenses(+id);
+  removeExpensesService(+id);
   res.sendStatus(204);
 };
 

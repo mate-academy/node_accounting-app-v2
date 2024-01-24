@@ -65,7 +65,7 @@ const updateExpense = ({ id, spentAt, title, amount, category, note }) => {
   return expense;
 };
 
-const removeExpenses = (id) => {
+const removeExpensesService = (id) => {
   expenses = expenses.filter(item => item.id !== id);
 };
 
@@ -78,6 +78,6 @@ module.exports = {
   getExpensesById,
   createExpenses,
   updateExpense,
-  removeExpenses,
+  removeExpensesService,
   resetExpenses,
 };

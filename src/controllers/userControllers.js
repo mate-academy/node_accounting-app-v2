@@ -67,7 +67,7 @@ const deleteUser = (req, res) => {
   const { id } = req.params;
 
   if (isNaN(+id)) {
-    res.sendStatus(400);
+    res.sendStatus(204);
 
     return;
   }
@@ -77,8 +77,9 @@ const deleteUser = (req, res) => {
 
     return;
   }
+
   remove(+id);
-  res.status(204);
+  res.sendStatus(204);
 };
 
 module.exports = {
