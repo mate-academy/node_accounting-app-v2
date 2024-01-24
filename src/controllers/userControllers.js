@@ -11,13 +11,18 @@ const getUser = (req, res) => {
 
   if (isNaN(+id)) {
     res.sendStatus(400);
+
     return;
   }
+
   const user = getById(+id);
+
   if (!user) {
     res.sendStatus(404);
+
     return;
   }
+
   res.send(user);
 };
 const createUser = (req, res) => {

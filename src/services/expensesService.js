@@ -8,7 +8,8 @@ const getExpensesAll = ({ userId, categories, from, to }) => {
   let filterExpenses = [...expenses];
 
   if (userId) {
-    filterExpenses = filterExpenses.filter(expense => expense.userId === +userId);
+    filterExpenses = filterExpenses
+      .filter((expense) => expense.userId === +userId);
   }
 
   if (categories) {
@@ -19,13 +20,13 @@ const getExpensesAll = ({ userId, categories, from, to }) => {
 
   if (from) {
     filterExpenses = filterExpenses.filter(
-      (expense) => expense.spentAt >= from
+      (expense) => new Date(expense.spentAt) > new Date(from)
     );
   }
 
   if (to) {
     filterExpenses = filterExpenses.filter(
-      (expense) => expense.spentAt <= to
+      (expense) => new Date(expense.spentAt) < new Date(to)
     );
   }
 
@@ -33,13 +34,13 @@ const getExpensesAll = ({ userId, categories, from, to }) => {
 };
 
 const getExpensesById = (id) => {
-  return expenses.find(item => item.id === id) || null;
+  return expenses.find((item) => item.id === id);
 };
 
 const createExpenses = (
   userId, spentAt, title, amount, category, note
 ) => {
-  const cost = {
+  const expense = {
     id: generatedId(expenses),
     userId,
     spentAt,
@@ -49,19 +50,19 @@ const createExpenses = (
     note,
   };
 
-  expenses.push(cost);
+  expenses.push(expense);
 
-  return cost;
+  return expense;
 };
 
 const updateExpense = ({ id, spentAt, title, amount, category, note }) => {
-  const cost = getExpensesById(+id);
+  const expense = getExpensesById(+id);
 
-  Object.assign(cost, {
+  Object.assign(expense, {
     spentAt, title, amount, category, note,
   });
 
-  return cost;
+  return expense;
 };
 
 const removeExpenses = (id) => {

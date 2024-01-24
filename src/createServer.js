@@ -8,6 +8,7 @@ const { resetUser } = require('./services/usersService');
 
 function createServer() {
   const app = express();
+
   resetUser();
   resetExpenses();
 

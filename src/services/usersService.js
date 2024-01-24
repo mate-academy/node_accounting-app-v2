@@ -25,10 +25,10 @@ const create = (name) => {
   return user;
 };
 
-const update = ( id, name ) => {
+const update = (id, name) => {
   const user = getById(id);
 
- user.name = name;
+  user.name = name;
 
   return user;
 };

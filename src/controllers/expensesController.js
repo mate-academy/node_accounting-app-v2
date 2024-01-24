@@ -6,7 +6,7 @@ const { getExpensesAll, getExpensesById, createExpenses }
 const getExpenses = (req, res) => {
   const {
     userId, categories, from, to,
-  } = req.body;
+  } = req.query;
   const expenses = getExpensesAll({
     userId, categories, from, to,
   });
@@ -22,14 +22,7 @@ const getExpenses = (req, res) => {
 
 const getOnceExpenses = (req, res) => {
   const { id } = req.params;
-  if (isNaN(+id)) {
-    res.sendStatus(400);
-
-    return;
-  }
-
   const expense = getExpensesById(+id);
-
 
   if (!expense) {
     res.sendStatus(404);
@@ -52,7 +45,8 @@ const creatNewExpenses = (req, res) => {
   && typeof amount === 'number'
   && typeof category === 'string'
   && category
-  && typeof note === 'string';
+  && typeof note === 'string'
+  && (typeof note === 'undefined' || typeof note === 'string');
 
   if (!arePropsValid) {
     res.sendStatus(400);
@@ -60,15 +54,23 @@ const creatNewExpenses = (req, res) => {
     return;
   }
 
-  const cost = createExpenses(userId, spentAt, title, amount, category, note);
+  const expense = createExpenses(
+    userId, spentAt, title, amount, category, note,
+  );
 
   res.statusCode = 201;
-  res.send(cost);
+  res.send(expense);
 };
 const updateExpense = (req, res) => {
   const { id } = req.params;
-  const { spentAt, title, amount, category, note } = req.body;
 
+  if (!req.body) {
+    res.sendStatus(400);
+
+    return;
+  }
+
+  const { spentAt, title, amount, category, note } = req.body;
   const expense = getExpensesById(+id);
 
   if (!expense) {
@@ -77,29 +79,26 @@ const updateExpense = (req, res) => {
     return;
   }
 
-  if (typeof title !== 'string') {
-    res.sendStatus(400);
-
-    return;
-  }
-
-  const newUpdateUser
+  const newUpdateExpense
     = updateExpense(id, spentAt, title, amount, category, note);
 
-  res.send(newUpdateUser);
+  res.send(newUpdateExpense);
 };
 const removeExpenses = (req, res) => {
   const { id } = req.params;
 
   if (isNaN(+id)) {
-    res.sendStatus(400);
+    res.sendStatus(204);
 
     return;
   }
+
   const expense = getExpensesById(+id);
 
   if (!expense) {
     res.sendStatus(404);
+
+    return;
   }
 
   removeExpenses(+id);
