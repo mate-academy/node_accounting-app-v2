@@ -71,15 +71,13 @@ function createServer() {
   app.delete('/users/:id', (req, res) => {
     const { id } = req.params;
 
-    const usersLength = getAllUsers().length;
-
-    removeUser(id);
-
-    if (getAllUsers().length === usersLength) {
+    if (!getUser(id)) {
       res.sendStatus(404);
 
       return;
     }
+
+    removeUser(id);
 
     res.sendStatus(204);
   });
@@ -152,15 +150,13 @@ function createServer() {
   app.delete('/expences/:id', (req, res) => {
     const { id } = req.params;
 
-    const expenceLength = getAllExpences().length;
-
-    removeExpence(id);
-
-    if (getAllExpences().length === expenceLength) {
+    if (!getExpenceById(id)) {
       res.sendStatus(400);
 
       return;
     }
+
+    removeExpence(id);
 
     res.sendStatus(204);
   });
@@ -170,7 +166,7 @@ function createServer() {
     const { userId, spentAt, title, amount, category, note } = req.body;
 
     if (!getExpenceById(id)) {
-      res.sendStatus(400);
+      res.sendStatus(404);
 
       return;
     }
