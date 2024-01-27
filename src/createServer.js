@@ -82,7 +82,40 @@ function createServer() {
     res.sendStatus(204);
   });
 
-  app.patch('/users:id', (req, res) => {
+  app.patch('/users/:id', express.json(), (req, res) => {
+    const { name } = req.body;
+    const { id } = req.params;
+
+    if (id === undefined) {
+      res.sendStatus(400);
+
+      return;
+    }
+
+    const index = users.findIndex(u => u.id === Number(id));
+
+    if (index === -1) {
+      res.sendStatus(404);
+
+      return;
+    }
+
+    const oldUser = users[index];
+
+    if (!name) {
+      res.sendStatus(400);
+
+      return;
+    }
+
+    const user = {
+      id: oldUser.id,
+      name: name || oldUser.name,
+    };
+
+    users[index] = user;
+    res.statusCode = 200;
+    res.send(user);
   });
 
   app.get('/expenses', (req, res) => {
@@ -159,7 +192,52 @@ function createServer() {
     res.sendStatus(204);
   });
 
-  app.patch('/expenses:id', (req, res) => {
+  app.patch('/expenses/:id', express.json(), (req, res) => {
+    const { userId, spentAt, title, amount, category, note } = req.body;
+    const { id } = req.params;
+
+    if (id === undefined) {
+      res.sendStatus(400);
+
+      return;
+    }
+
+    const index = expenses.findIndex(e => e.id === Number(id));
+
+    if (index === -1) {
+      res.sendStatus(404);
+
+      return;
+    }
+
+    const oldExpense = expenses[index];
+
+    if (userId === undefined && !spentAt
+      && !title && amount === undefined && !category) {
+      res.sendStatus(400);
+
+      return;
+    }
+
+    if (!users.map(u => u.id).includes(userId) && userId !== undefined) {
+      res.sendStatus(400);
+
+      return;
+    }
+
+    const expense = {
+      id: oldExpense.id,
+      userId: userId || oldExpense.userId,
+      spentAt: spentAt || oldExpense.spentAt,
+      title: title || oldExpense.title,
+      amount: amount || oldExpense.amount,
+      category: category || oldExpense.category,
+      note: note || oldExpense.note,
+    };
+
+    expenses[index] = expense;
+    res.statusCode = 200;
+    res.send(expense);
   });
 
   return app;
