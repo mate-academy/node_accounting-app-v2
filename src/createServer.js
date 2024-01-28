@@ -119,7 +119,21 @@ function createServer() {
   });
 
   app.get('/expenses', (req, res) => {
-    res.send(expenses);
+    const searchParams = new URLSearchParams(req.url
+      .substring('/expenses'.length));
+    const userId = searchParams.get('userId');
+    const categories = searchParams.getAll('categories');
+    const from = searchParams.get('from');
+    const to = searchParams.get('to');
+
+    const outExpenses = expenses.filter(e =>
+      (userId === null || e.userId === Number(userId))
+      && (categories.length === 0 || categories.includes(e.category))
+      && (from === null || new Date(e.spentAt) >= new Date(from))
+      && (to === null || new Date(e.spentAt) <= new Date(to))
+    );
+
+    res.send(outExpenses);
   });
 
   app.post('/expenses', express.json(), (req, res) => {
