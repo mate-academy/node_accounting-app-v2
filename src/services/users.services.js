@@ -1,10 +1,6 @@
 'use strict';
 
-const users = [{
-  id: 1, imie: 'Marcin',
-}, {
-  id: 2, imie: 'Blanka',
-}];
+const users = [];
 
 const getAllUsers = () => {
   return users;
@@ -16,7 +12,20 @@ const getUserById = (userId) => {
   return user;
 };
 
+const createUser = (name) => {
+  const userId = users.length ? users[users.length - 1].id : 0;
+  const user = {
+    id: userId + 1,
+    name,
+  };
+
+  users.push(user);
+
+  return user;
+};
+
 module.exports = {
   getAllUsers,
   getUserById,
+  createUser,
 };

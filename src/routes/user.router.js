@@ -8,6 +8,6 @@ const userRouter = Router();
 
 userRouter.get('/:id', usersController.getOne);
 userRouter.get('/', usersController.getAll);
-userRouter.post('/', express.json())
+userRouter.post('/', express.json(), usersController.addUser);
 
 module.exports = { userRouter };
