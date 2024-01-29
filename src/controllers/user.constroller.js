@@ -1,7 +1,7 @@
 'use strict';
 
 const {
-  getAllUsers, getUserById, createUser,
+  getAllUsers, getUserById, createUser, deletUser,
 } = require('../services/users.services');
 
 const getAll = (req, res) => {
@@ -32,8 +32,23 @@ const addUser = (req, res) => {
   res.send(createUser(name));
 };
 
+const deleteUser = (req, res) => {
+  const { id } = req.params;
+  const isUserExist = getUserById(+id);
+
+  if (!isUserExist) {
+    res.sendStatus(404);
+
+    return;
+  }
+
+  deletUser(+id);
+  res.sendStatus(204);
+};
+
 module.exports = {
   getAll,
   getOne,
   addUser,
+  deleteUser,
 };

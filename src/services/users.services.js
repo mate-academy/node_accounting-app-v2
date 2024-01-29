@@ -1,6 +1,17 @@
 'use strict';
 
-const users = [];
+let users = [{
+  id: 1,
+  name: 'Kajetan',
+},
+{
+  id: 2,
+  name: 'Kajetan',
+},
+{
+  id: 3,
+  name: 'Kajetan',
+}];
 
 const getAllUsers = () => {
   return users;
@@ -24,8 +35,13 @@ const createUser = (name) => {
   return user;
 };
 
+const deletUser = (id) => {
+  users = users.filter(user => user.id !== id);
+};
+
 module.exports = {
   getAllUsers,
   getUserById,
   createUser,
+  deletUser,
 };
