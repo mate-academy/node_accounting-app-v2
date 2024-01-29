@@ -2,12 +2,7 @@
 
 const { maxId } = require('../helpers/helper');
 
-let users = [{
-  'id': 1, name: 'oleg',
-},
-{
-  id: 2, name: 'oleg',
-}];
+let users = [];
 
 const getUsers = () => {
   return users;

@@ -2,15 +2,15 @@
 
 const userService = require('../services/user.service');
 
-const getAll = (req, res) => {
+const getAllUser = (req, res) => {
   return res.status(200).send(userService.getUsers());
 };
 
-const getOne = (req, res) => {
+const getOneUser = (req, res) => {
   const user = userService.getById(+req.params.id);
 
   if (!user) {
-    res.status(404).send('user not found');
+    res.status(400).send('user not found');
 
     return;
   }
@@ -18,11 +18,11 @@ const getOne = (req, res) => {
   return res.status(200).send(user);
 };
 
-const create = (req, res) => {
+const createUser = (req, res) => {
   const { name } = req.body;
 
   if (!name) {
-    res.status(404);
+    res.status(400);
 
     return;
   }
@@ -30,11 +30,11 @@ const create = (req, res) => {
   return res.status(201).send(userService.createUser(name));
 };
 
-const update = (req, res) => {
+const updateUser = (req, res) => {
   const { name } = req.body;
 
   if (!name) {
-    res.status(404);
+    res.status(400);
 
     return;
   }
@@ -42,7 +42,7 @@ const update = (req, res) => {
   return res.status(204).send(userService.updateUser(+req.params.id, name));
 };
 
-const remove = (req, res) => {
+const removeUser = (req, res) => {
   if (!userService.getById(+req.params.id)) {
     res.status(404);
 
@@ -55,9 +55,9 @@ const remove = (req, res) => {
 };
 
 module.exports = {
-  remove,
-  update,
-  create,
-  getOne,
-  getAll,
+  removeUser,
+  updateUser,
+  createUser,
+  getOneUser,
+  getAllUser,
 };

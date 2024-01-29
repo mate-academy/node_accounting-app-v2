@@ -4,7 +4,7 @@ const express = require('express');
 const { clearUsers } = require('./services/user.service');
 const userRoute = require('./routes/user.route');
 const expRoute = require('./routes/expenses.route');
-const { clearExp } = require('./services/expenses.serice');
+const { clearExpenses } = require('./services/expenses.service');
 
 function createServer() {
   const app = express();
@@ -14,7 +14,7 @@ function createServer() {
   app.use('/expenses', expRoute);
 
   clearUsers();
-  clearExp();
+  clearExpenses();
 
   return app;
 }

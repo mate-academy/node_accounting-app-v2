@@ -5,7 +5,7 @@ const { maxId } = require('../helpers/helper');
 
 let expenses = [];
 
-const getAll = queryParams => {
+const getAllExpenses = queryParams => {
   if (Object.keys(queryParams).length === 0) {
     return expenses;
   }
@@ -13,15 +13,15 @@ const getAll = queryParams => {
   return prepareExpenses(expenses, queryParams);
 };
 
-const remove = (id) => {
+const removeExpenses = (id) => {
   expenses = expenses.filter(user => user.id !== id);
 };
 
-const getById = id => {
+const getByIdExpenses = id => {
   return expenses.find(user => user.id === id);
 };
 
-const create = (params) => {
+const createExpenses = (params) => {
   const newExpenses = {
     id: maxId(expenses),
     ...params,
@@ -30,7 +30,7 @@ const create = (params) => {
   expenses.push(newExpenses);
 };
 
-const update = (id, params) => {
+const updateExpenses = (id, params) => {
   const updateExp = expenses.map(exp => {
     if (exp.id === id) {
       return {
@@ -44,15 +44,15 @@ const update = (id, params) => {
   expenses = updateExp;
 };
 
-const clearExp = () => {
+const clearExpenses = () => {
   expenses = [];
 };
 
 module.exports = {
-  clearExp,
-  getAll,
-  create,
-  update,
-  remove,
-  getById,
+  clearExpenses,
+  getAllExpenses,
+  createExpenses,
+  updateExpenses,
+  removeExpenses,
+  getByIdExpenses,
 };

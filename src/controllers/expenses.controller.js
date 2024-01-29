@@ -1,6 +1,6 @@
 'use strict';
 
-const expService = require('../services/expenses.serice');
+const expensesService = require('../services/expenses.service');
 
 const expensesKeys = [
   'userId',
@@ -13,65 +13,65 @@ const expensesKeys = [
 const checkKeys = (expense) => expensesKeys
   .every(item => expense.hasOwnProperty(item));
 
-const getAll = (req, res) => {
-  res.status(200).send(expService.getAll(req.query));
+const getAllExpenses = (req, res) => {
+  res.status(200).send(expensesService.getAllExpenses(req.query));
 };
 
-const getOne = (req, res) => {
-  const exp = expService.getById(+req.params.id);
+const getOneExpenses = (req, res) => {
+  const expenses = expensesService.getByIdExpenses(+req.params.id);
 
-  if (!exp) {
+  if (!expenses) {
     res.status(404).send('exp not found');
 
     return;
   }
 
-  return res.status(200).send(exp);
+  return res.status(200).send(expenses);
 };
 
-const create = (req, res) => {
-  const exp = req.body;
+const createExpenses = (req, res) => {
+  const expenses = req.body;
 
-  if (!checkKeys(exp)) {
-    res.status(404);
+  if (!checkKeys(expenses)) {
+    res.status(400).send('Invalid props');
 
     return;
   }
 
-  return res.status(201).send(expService.create(exp));
+  return res.status(201).send(expensesService.createExpenses(expenses));
 };
 
-const remove = (req, res) => {
-  if (!expService.getById(+req.params.id)) {
-    res.status(404);
+const removeExpenses = (req, res) => {
+  if (!expensesService.getByIdExpenses(+req.params.id)) {
+    res.status(404).send('Expense not found');
 
     return;
   }
 
-  expService.remove(+req.params.id);
+  expensesService.removeExpenses(+req.params.id);
 
-  return res.status(204).send('delete');
+  return res.sendStatus(204);
 };
 
-const update = (req, res) => {
+const updateExpenses = (req, res) => {
   const id = +req.params.id;
   const newExpense = req.body;
 
-  if (!expService.getById(id)) {
-    res.sendStatus(404);
+  if (!expensesService.getByIdExpenses(id)) {
+    res.status(400).send('expense not found');
 
     return;
   }
 
-  const expense = expService.update(id, newExpense);
+  const expense = expensesService.updateExpenses(id, newExpense);
 
   res.status(204).send(expense);
 };
 
 module.exports = {
-  remove,
-  update,
-  create,
-  getOne,
-  getAll,
+  removeExpenses,
+  updateExpenses,
+  createExpenses,
+  getOneExpenses,
+  getAllExpenses,
 };
