@@ -1,14 +1,17 @@
 'use strict';
 
+const expensesController = require('../controllers/expense.controller');
 const express = require('express');
-const expenseController = require('../controllers/expense.controller');
+const expensesRouter = express.Router();
 
-const expenseRouter = express.Router();
+expensesRouter.use(express.json());
 
-expenseRouter.get('/', expenseController.get);
-expenseRouter.post('/', expenseController.post);
-expenseRouter.get('/:id', expenseController.getById);
-expenseRouter.delete('/:id', expenseController.remove);
-expenseRouter.patch('/:id', expenseController.update);
+expensesRouter.get('/', expensesController.getAll);
+expensesRouter.get('/:id', expensesController.getById);
+expensesRouter.post('/', expensesController.create);
+expensesRouter.delete('/:id', expensesController.remove);
+expensesRouter.patch('/:id', expensesController.update);
 
-module.exports = { expenseRouter };
+module.exports = {
+  expensesRouter,
+};

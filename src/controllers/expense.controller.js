@@ -1,162 +1,101 @@
 'use strict';
 
-const expenseService = require('../services/expense.service');
+const expensesServices = require('../services/expense.service');
+const userService = require('../services/user.service');
+const filterExpenses = require('../helpers/filterExpenses');
+const { validate } = require('../helpers/userValidation');
 
-const get = (req, res) => {
-  const { userId, categories, from, to } = req.params;
-
-  res
-    .status(200)
-    .send(expenseService.get(userId, categories, from, to));
-};
-
-const post = (req, res) => {
-  const { userId, spentAt, title, amount, category, note } = req.body;
-
-  const result = expenseService.post(
+const getAll = (req, res) => {
+  const allExpenses = expensesServices.findAll();
+  const { userId, categories, from, to } = req.query;
+  const filters = {
     userId,
-    spentAt,
-    title,
-    amount,
-    category,
-    note || '',
-  );
+    categories,
+    from,
+    to,
+  };
+  const filteredExpenses = filterExpenses(allExpenses, filters);
 
-  switch (result) {
-    case 'No userId': {
-      return res
-        .send('No userId')
-        .status(400);
-    }
-
-    case 'No spentAt': {
-      return res
-        .send('No spentAt')
-        .status(400);
-    }
-
-    case 'No title': {
-      return res
-        .send('No title')
-        .status(400);
-    }
-
-    case 'No amount': {
-      return res
-        .send('No amount')
-        .status(400);
-    }
-
-    case 'No category': {
-      return res
-        .send('No category')
-        .status(400);
-    }
-
-    case 'No expense to update': {
-      return res
-        .send('No expense to update')
-        .status(400);
-    }
-
-    default: {
-      res
-        .status(201)
-        .send(result);
-    }
-  }
+  return res.send(filteredExpenses);
 };
 
 const getById = (req, res) => {
   const { id } = req.params;
 
-  const result = expenseService.getById(id);
+  const expenses = expensesServices.getById(+id);
 
-  if (!id) {
-    return res.status(400);
+  if (!expenses) {
+    res.sendStatus(404);
+
+    return;
   }
 
-  if (!result) {
-    return res.status(404);
+  return res.json(expenses);
+};
+
+const create = (req, res) => {
+  const {
+    userId,
+    spentAt,
+    title,
+    amount,
+    category,
+    note,
+  } = req.body;
+
+  const findUser = userService.getById(userId);
+
+  if (!validate(title) || !findUser) {
+    res.sendStatus(400);
+
+    return;
   }
 
-  res
-    .status(200)
-    .send(result);
+  const newExpenses = expensesServices.create({
+    userId,
+    spentAt,
+    title,
+    amount,
+    category,
+    note,
+  });
+
+  res.status(201).send(newExpenses);
 };
 
 const remove = (req, res) => {
   const { id } = req.params;
 
-  const result = expenseService.remove(id);
-
-  if (!id) {
-    return res.status(400);
+  if (!expensesServices.getById(+id)) {
+    return res.sendStatus(404);
   }
 
-  if (!result) {
-    return res.status(404);
-  }
+  expensesServices.remove(+id);
 
-  res
-    .status(200)
-    .send(result);
+  return res.sendStatus(204);
 };
 
 const update = (req, res) => {
-  const { spentAt, title, amount, category, note } = req.body;
+  const { id } = req.params;
+  const { title } = req.body;
 
-  const result = expenseService.update(
-    spentAt,
-    title,
-    amount,
-    category,
-    note || '',
-  );
+  const expenses = expensesServices.getById(+id);
 
-  switch (result) {
-    case 'No spentAt': {
-      return res
-        .send('No spentAt')
-        .status(400);
-    }
+  if (!expenses || !validate(title)) {
+    res.sendStatus(404);
 
-    case 'No title': {
-      return res
-        .send('No title')
-        .status(400);
-    }
-
-    case 'No amount': {
-      return res
-        .send('No amount')
-        .status(400);
-    }
-
-    case 'No category': {
-      return res
-        .send('No category')
-        .status(400);
-    }
-
-    case 'No expense to update': {
-      return res
-        .send('No expense to update')
-        .status(400);
-    }
-
-    default: {
-      res
-        .status(201)
-        .send(result);
-    }
+    return;
   }
+
+  const updatedExpenses = expensesServices.update(title, expenses);
+
+  return res.send(updatedExpenses);
 };
 
 module.exports = {
-  get,
-  post,
+  getAll,
   getById,
+  create,
   remove,
   update,
 };

@@ -1,84 +1,81 @@
 'use strict';
 
-const userService = require('../services/user.service');
+const userServices = require('../services/user.service');
+const { validate } = require('../helpers/userValidation');
 
-const get = (req, res) => {
-  res
-    .status(201)
-    .send(userService.getAll());
+const getAll = (req, res) => {
+  const users = userServices.findAll();
+
+  res.send(users);
+};
+
+const getById = (req, res) => {
+  const { id } = req.params;
+
+  const user = userServices.getById(+id);
+
+  if (!user) {
+    res.sendStatus(404);
+
+    return;
+  }
+
+  res.send(user);
 };
 
 const create = (req, res) => {
   const { name } = req.body;
 
   if (!name) {
-    return res.sendStatus(400);
+    res.sendStatus(400);
+
+    return;
   }
 
-  res
-    .status(201)
-    .send(userService.create(name));
-};
+  const newUser = userServices.create(name);
 
-const getById = (req, res) => {
-  const { id } = req.params;
-
-  if (!id || isNaN(+id)) {
-    return res.sendStatus(400);
-  }
-
-  const result = userService.findById(id);
-
-  if (!result) {
-    return res.sendStatus(404);
-  }
-
-  return res
-    .status(200)
-    .send(result);
+  res.status(201).send(newUser);
 };
 
 const remove = (req, res) => {
   const { id } = req.params;
 
-  if (!id || isNaN(+id)) {
-    return res.sendStatus(400);
-  }
-
-  const result = userService.remove(id);
-
-  if (!result) {
+  if (!userServices.getById(+id)) {
     return res.sendStatus(404);
   }
 
-  res
-    .status(200)
-    .send(result);
+  userServices.remove(+id);
+
+  res.sendStatus(204);
 };
 
 const update = (req, res) => {
   const { id } = req.params;
   const { name } = req.body;
 
-  if (!id || isNaN(+id) || !name) {
-    return res.sendStatus(400);
+  const user = userServices.getById(+id);
+
+  if (!user) {
+    res.sendStatus(404);
+
+    return;
   }
 
-  const result = userService.update(id, name);
+  if (!validate(name)) {
+    res.sendStatus(422);
 
-  if (!result) {
-    return res.status(404);
+    return;
   }
 
-  res
-    .status(200)
-    .send(result);
+  const updatedUser = userServices.update(user, name);
+
+  res.send(updatedUser);
 };
 
 module.exports = {
-  get,
-  create,
+  getAll,
   getById,
+  create,
   remove,
   update,
 };

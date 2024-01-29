@@ -1,14 +1,17 @@
 'use strict';
 
-const express = require('express');
 const userController = require('../controllers/user.controller');
-
+const express = require('express');
 const userRouter = express.Router();
 
-userRouter.get('/', userController.get);
-userRouter.post('/', userController.create);
+userRouter.use(express.json());
+
+userRouter.get('/', userController.getAll);
 userRouter.get('/:id', userController.getById);
+userRouter.post('/', userController.create);
 userRouter.delete('/:id', userController.remove);
 userRouter.patch('/:id', userController.update);
 
-module.exports = { userRouter };
+module.exports = {
+  userRouter,
+};

@@ -1,67 +1,50 @@
 'use strict';
 
-let users = [];
-let idState = 0;
+const { getMaxId } = require('../helpers/userValidation');
 
-const getAll = () => users;
+let usersFromServer = [];
+
+const findAll = () => usersFromServer;
+
+const getById = (id) => (
+  usersFromServer.find(user => user.id === id) || null
+);
 
 const create = (name) => {
   const newUser = {
-    id: idState = idState + 1,
+    id: getMaxId(usersFromServer) + 1,
     name,
   };
 
-  users.push(newUser);
+  usersFromServer.push(newUser);
 
   return newUser;
 };
 
-const findById = (id) => {
-  if (!users.some(user => user.id === id)) {
-    return null;
-  }
-
-  return users.find(user => user.id === id);
+const remove = (id) => {
+  usersFromServer = usersFromServer.filter(user => user.id !== id);
 };
 
-const remove = (id) => {
-  const userToDelete = users.find(user => user.id === id);
-
-  if (!userToDelete) {
-    return null;
-  }
+const update = (users, name) => {
+  Object.assign(users, { name });
 
   return users;
 };
 
-const update = (id, name) => {
-  const userToUpdate = users.find(user => user.id === id);
-
-  if (!userToUpdate) {
-    return null;
-  }
-
-  const updatedUser = {
-    ...userToUpdate,
-    name,
-  };
-
-  users.filter(user => user.id !== userToUpdate.id);
-  users.push(updatedUser);
-
-  return updatedUser;
+const setAll = (newUser) => {
+  usersFromServer = newUser;
 };
 
-const reset = () => {
-  users = [];
-  idState = 0;
+const clearUsers = () => {
+  usersFromServer = [];
 };
 
 module.exports = {
-  getAll,
+  findAll,
+  getById,
   create,
-  findById,
   remove,
   update,
-  reset,
+  setAll,
+  clearUsers,
 };
