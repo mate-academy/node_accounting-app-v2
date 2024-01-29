@@ -2,13 +2,24 @@
 
 const express = require('express');
 const expenseController = require('../controllers/expense.controller.js');
+const {
+  validateIdReqParam,
+  validateReqParamsForGet,
+  validateReqParamsForCreateAndUpdate,
+} = require('../middlewares/expense.middlewares.js');
 
 const router = express.Router();
 
-router.get('/', expenseController.get);
-router.post('/', expenseController.create);
-router.get('/:id', expenseController.getOne);
-router.delete('/:id', expenseController.remove);
-router.patch('/:id', expenseController.update);
+router.get('/', validateReqParamsForGet, expenseController.get);
+router.post('/', validateReqParamsForCreateAndUpdate, expenseController.create);
+router.get('/:id', validateIdReqParam, expenseController.getOne);
+router.delete('/:id', validateIdReqParam, expenseController.remove);
+
+router.patch(
+  '/:id',
+  validateReqParamsForCreateAndUpdate,
+  validateIdReqParam,
+  expenseController.update,
+);
 
 module.exports = router;

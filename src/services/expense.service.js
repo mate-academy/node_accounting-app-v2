@@ -29,7 +29,7 @@ const getSome = (params) => {
   const { userId, categories, from, to } = params;
 
   return expenses.filter(expense => {
-    if (+userId === expense.id
+    if (userId === expense.userId
       && categories.includes(expense.category)
       && new Date(from) <= new Date(expense.spentAt)
       && new Date(to) >= new Date(expense.spentAt)) {

@@ -2,13 +2,23 @@
 
 const express = require('express');
 const userController = require('../controllers/user.controller.js');
+const {
+  validateIdReqParam,
+  validateReqParamsForCreateAndUpdate,
+} = require('../middlewares/user.middlewares.js');
 
 const router = express.Router();
 
 router.get('/', userController.getAll);
-router.post('/', userController.create);
-router.get('/:id', userController.getOne);
-router.delete('/:id', userController.remove);
-router.patch('/:id', userController.update);
+router.post('/', validateReqParamsForCreateAndUpdate, userController.create);
+router.get('/:id', validateIdReqParam, userController.getOne);
+router.delete('/:id', validateIdReqParam, userController.remove);
+
+router.patch(
+  '/:id',
+  validateIdReqParam,
+  validateReqParamsForCreateAndUpdate,
+  userController.update,
+);
 
 module.exports = router;
