@@ -1,0 +1,41 @@
+GET http://localhost:3000/users
+
+###
+
+POST http://localhost:3000/users
+Content-Type: application/json
+
+{
+  "name": "tesst22"
+}
+
+###
+
+DELETE http://localhost:3000/users/1
+
+###
+
+PATCH http://localhost:3000/users/1
+Content-Type: application/json
+
+{
+  "name": "new name"
+}
+
+###
+
+GET http://localhost:3000/expenses
+
+###
+
+POST http://localhost:3000/expenses
+Content-Type: application/json
+
+{
+  "userId": 0,
+  "spentAt": "2024-01-29T16:11:36.486Z",
+  "title": "string",
+  "amount": 0,
+  "category": "string",
+  "note": "string"
+}
