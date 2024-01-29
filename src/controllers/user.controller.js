@@ -1,4 +1,7 @@
+'use strict';
+
 const userService = require('../services/user.service.js');
+
 const { checkIsReqBodyValid } = require('../helpers/checkIsReqBodyValid.js');
 
 const getAll = (req, res) => res.send(userService.getAll());
@@ -6,17 +9,20 @@ const getAll = (req, res) => res.send(userService.getAll());
 const create = (req, res) => {
   const { ...params } = req.body;
 
-  const listOfExpectedParams = [
-    { key: 'name', type: 'string' },
-  ];
+  const listOfExpectedParams = [{
+    key: 'name',
+    type: 'string',
+  }];
   const isReqBodyValid = checkIsReqBodyValid(params, listOfExpectedParams);
 
   if (!isReqBodyValid) {
     res.sendStatus(400);
+
     return;
   }
 
   const newUser = userService.create(params.name);
+
   res.status(201).send(newUser);
 };
 
@@ -32,6 +38,7 @@ const getOne = (req, res) => {
 
   if (!foundUser) {
     res.sendStatus(404);
+
     return;
   }
 
@@ -43,6 +50,7 @@ const remove = (req, res) => {
 
   if (!userService.getById(id)) {
     res.sendStatus(404);
+
     return;
   }
 
@@ -54,23 +62,33 @@ const update = (req, res) => {
   const { id } = req.params;
   const { ...params } = req.body;
 
-  const listOfExpectedParams = [
-    { key: 'name', type: 'string' },
-  ];
+  const listOfExpectedParams = [{
+    key: 'name',
+    type: 'string',
+  }];
   const isReqBodyValid = checkIsReqBodyValid(params, listOfExpectedParams);
 
   if (!isReqBodyValid) {
     res.sendStatus(400);
+
     return;
   }
 
   if (!userService.getById(id)) {
     res.sendStatus(404);
+
     return;
   }
 
-  const updatedUser = userService.update(id, name);
+  const updatedUser = userService.update(id, params.name);
+
   res.send(updatedUser);
 };
 
-module.exports = { getAll, getOne, create, remove, update };
+module.exports = {
+  getAll,
+  getOne,
+  create,
+  remove,
+  update,
+};

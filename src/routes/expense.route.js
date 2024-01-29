@@ -1,3 +1,5 @@
+'use strict';
+
 const express = require('express');
 const expenseController = require('../controllers/expense.controller.js');
 

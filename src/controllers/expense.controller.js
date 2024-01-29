@@ -1,3 +1,6 @@
+'use strict';
+/* eslint-disable object-curly-newline */
+
 const expenseService = require('../services/expense.service.js');
 const { checkIsReqBodyValid } = require('../helpers/checkIsReqBodyValid.js');
 
@@ -38,10 +41,12 @@ const create = (req, res) => {
 
   if (!isReqBodyValid) {
     res.sendStatus(400);
+
     return;
   }
 
   const newExpense = expenseService.create(params);
+
   res.status(201).send(newExpense);
 };
 
@@ -51,11 +56,13 @@ const getOne = (req, res) => {
 
   if (isNaN(+id)) {
     res.sendStatus(400);
+
     return;
   }
 
   if (!foundExpense) {
     res.sendStatus(404);
+
     return;
   }
 
@@ -67,6 +74,7 @@ const remove = (req, res) => {
 
   if (!expenseService.getById(id)) {
     res.sendStatus(404);
+
     return;
   }
 
@@ -90,15 +98,18 @@ const update = (req, res) => {
 
   if (!isReqBodyValid) {
     res.sendStatus(400);
+
     return;
   }
 
   if (!expenseService.getById(id)) {
     res.sendStatus(404);
+
     return;
   }
 
   const updatedExpense = expenseService.update(id, params);
+
   res.send(updatedExpense);
 };
 
