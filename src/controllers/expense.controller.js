@@ -4,37 +4,7 @@ const expenseService = require('../services/expense.service');
 const { getAll } = require('../services/user.service');
 
 const get = (req, res) => {
-  const allExpenses = expenseService.getAllExpenses();
-  const { userId, categories, from, to } = req.query;
-  let filteredExpenses = null;
-
-  if (categories && userId) {
-    filteredExpenses = allExpenses.filter(item => {
-      return item.category === categories;
-    });
-
-    return res.send(filteredExpenses);
-  };
-
-  if (userId) {
-    filteredExpenses = allExpenses.filter(item => {
-      return item.userId === +userId;
-    });
-
-    return res.send(filteredExpenses);
-  }
-
-  if (allExpenses.length === 0) {
-    return res.send([]);
-  }
-
-  if (from && to) {
-    filteredExpenses = allExpenses.filter(item => {
-      return item.spentAt > from && item.spentAt < to;
-    });
-
-    return res.send(filteredExpenses);
-  }
+  const allExpenses = expenseService.getAllExpenses(req);
 
   return res.send(allExpenses);
 };
@@ -54,14 +24,9 @@ const getOne = (req, res) => {
 };
 
 const post = (req, res) => {
-  const {
-    userId,
-    spentAt,
-    title,
-    amount,
-    category,
-    note,
-  } = req.body;
+  const newExpense = expenseService.createExpense(req);
+
+  const { userId, title } = req.body;
 
   const userToFind = getAll().find(user => user.id === +userId);
 
@@ -70,15 +35,6 @@ const post = (req, res) => {
 
     return;
   }
-
-  const newExpense = expenseService.createExpense({
-    userId,
-    spentAt,
-    title,
-    amount,
-    category,
-    note,
-  });
 
   res.status(201).json(newExpense);
 };
@@ -107,11 +63,9 @@ const update = (req, res) => {
 };
 
 const remove = (req, res) => {
-  const { id } = req.params;
+  const newExpenses = expenseService.deleteExpense(req);
 
-  const newExpenses = expenseService.deleteExpense(id);
-
-  if (newExpenses.length === expenseService.getAllExpenses().length) {
+  if (newExpenses.length === expenseService.getAllExpenses(req).length) {
     res.sendStatus(404);
 
     return;

@@ -2,7 +2,34 @@
 
 let expenses = [];
 
-const getAllExpenses = () => {
+const getAllExpenses = (req) => {
+  const { userId, categories, from, to } = req.query;
+  let filteredExpenses = null;
+
+  if (categories && userId) {
+    filteredExpenses = expenses.filter(item => {
+      return item.category === categories;
+    });
+
+    return filteredExpenses;
+  };
+
+  if (userId) {
+    filteredExpenses = expenses.filter(item => {
+      return item.userId === +userId;
+    });
+
+    return filteredExpenses;
+  }
+
+  if (from && to) {
+    filteredExpenses = expenses.filter(item => {
+      return item.spentAt > from && item.spentAt < to;
+    });
+
+    return filteredExpenses;
+  }
+
   return expenses;
 };
 
@@ -14,14 +41,16 @@ const getExpenseById = (id) => {
   return expenses.find(expense => expense.id === +id) || null;
 };
 
-const createExpense = ({
-  userId,
-  spentAt,
-  title,
-  amount,
-  category,
-  note,
-}) => {
+const createExpense = (req) => {
+  const {
+    userId,
+    spentAt,
+    title,
+    amount,
+    category,
+    note,
+  } = req.body;
+
   const expense = {
     id: expenses.length,
     userId,
@@ -41,7 +70,9 @@ const updateExpense = (title, expense) => {
   return Object.assign(expense, { title });
 };
 
-const deleteExpense = (id) => {
+const deleteExpense = (req) => {
+  const { id } = req.params;
+
   return expenses.filter(expense => expense.id !== +id);
 };
 
