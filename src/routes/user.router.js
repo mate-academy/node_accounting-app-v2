@@ -10,5 +10,6 @@ userRouter.get('/:id', usersController.getOne);
 userRouter.get('/', usersController.getAll);
 userRouter.post('/', usersController.addUser);
 userRouter.delete('/:id', usersController.deleteUser);
+userRouter.patch('/:id', usersController.editUser);
 
 module.exports = { userRouter };

@@ -39,9 +39,14 @@ const deletUser = (id) => {
   users = users.filter(user => user.id !== id);
 };
 
+const editNameOfUser = (userToUpdate, name) => {
+  return Object.assign(userToUpdate, { name });
+};
+
 module.exports = {
   getAllUsers,
   getUserById,
   createUser,
   deletUser,
+  editNameOfUser,
 };
