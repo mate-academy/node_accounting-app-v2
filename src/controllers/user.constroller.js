@@ -5,7 +5,9 @@ const {
 } = require('../services/users.services');
 
 const getAll = (req, res) => {
-  res.send(getAllUsers());
+  const users = getAllUsers();
+
+  res.send(users);
 };
 
 const getOne = (req, res) => {
@@ -14,6 +16,8 @@ const getOne = (req, res) => {
 
   if (!user) {
     res.sendStatus(404);
+
+    return;
   }
 
   res.send(user);

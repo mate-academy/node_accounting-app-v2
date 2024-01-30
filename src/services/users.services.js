@@ -1,24 +1,13 @@
 'use strict';
 
-let users = [{
-  id: 1,
-  name: 'Kajetan',
-},
-{
-  id: 2,
-  name: 'Kajetan',
-},
-{
-  id: 3,
-  name: 'Kajetan',
-}];
+let users = [];
 
 const getAllUsers = () => {
   return users;
 };
 
 const getUserById = (userId) => {
-  const user = users.find(el => el.id === userId);
+  const user = users.find(el => el.id === userId) || null;
 
   return user;
 };
