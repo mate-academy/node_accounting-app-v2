@@ -8,8 +8,8 @@ const expensesRouter = Router();
 
 expensesRouter.get('/:id', expensesController.getOneExp);
 expensesRouter.get('/', expensesController.getAllExp);
-// expensesRouter.post('/', expensesController.addUser);
-// expensesRouter.delete('/:id', expensesController.deleteUser);
-// expensesRouter.patch('/:id', expensesController.editUser);
+expensesRouter.post('/', expensesController.addExp);
+expensesRouter.delete('/:id', expensesController.deleteExp);
+expensesRouter.patch('/:id', expensesController.editExp);
 
 module.exports = { expensesRouter };

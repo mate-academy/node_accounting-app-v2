@@ -14,7 +14,7 @@ const getOne = (req, res) => {
   const { id } = req.params;
   const user = getUserById(+id);
 
-  if (!user) {
+  if (user === null) {
     res.sendStatus(404);
 
     return;
@@ -40,7 +40,13 @@ const deleteUser = (req, res) => {
   const { id } = req.params;
   const isUserExist = getUserById(+id);
 
-  if (!isUserExist) {
+  if (id === undefined) {
+    res.sendStatus(400);
+
+    return;
+  }
+
+  if (isUserExist === null) {
     res.sendStatus(404);
 
     return;

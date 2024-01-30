@@ -3,83 +3,107 @@
 const {
   getAllExpenses,
   getExpensesById,
-  // createExpenses,
-  // deletcreateExpenses,
-  // editcreateExpenses,
+  createExpense,
+  deleteExpenses,
+  editExpense,
 } = require('../services/expenses.services');
 
+const { getUserById } = require('../services/users.services');
+
 const getAllExp = (req, res) => {
-  const expenses = getAllExpenses();
+  const { userId, categories, from, to } = req.query;
+  const expenses = getAllExpenses({
+    userId, categories, from, to,
+  });
 
   res.send(expenses);
 };
 
 const getOneExp = (req, res) => {
   const { id } = req.params;
-  const Expense = getExpensesById(+id);
+  const expense = getExpensesById(+id);
 
-  if (!Expense) {
+  if (id === undefined) {
+    res.sendStatus(400);
+
+    return;
+  }
+
+  if (!expense) {
     res.sendStatus(404);
 
     return;
   }
 
-  res.send(Expense);
+  res.send(expense);
 };
 
-// const addExpenses = (req, res) => {
-//   const { name } = req.body;
+const addExp = (req, res) => {
+  const { userId, spentAt, title, amount, category, note } = req.body;
 
-//   if (!name) {
-//     res.sendStatus(400);
+  if (userId === undefined
+    || !spentAt
+    || !title
+    || amount === undefined
+    || !category) {
+    res.sendStatus(400);
 
-//     return;
-//   }
+    return;
+  }
 
-//   res.status(201);
-//   res.send(createUser(name));
-// };
+  if (getUserById(userId) === null) {
+    res.sendStatus(400);
 
-// const deleteExpenses = (req, res) => {
-//   const { id } = req.params;
-//   const isUserExist = getUserById(+id);
+    return;
+  }
 
-//   if (!isUserExist) {
-//     res.sendStatus(404);
+  const newExpense = createExpense(
+    userId, spentAt, title, amount, category, note);
 
-//     return;
-//   }
+  res.status(201);
+  res.send(newExpense);
+};
 
-//   deletUser(+id);
-//   res.sendStatus(204);
-// };
+const deleteExp = (req, res) => {
+  const { id } = req.params;
+  const isExpensesExist = getExpensesById(+id);
 
-// const editExpenses = (req, res) => {
-//   const { id } = req.params;
-//   const { name } = req.body;
-//   const userToUpdate = getUserById(+id);
+  if (isExpensesExist === null) {
+    res.sendStatus(404);
 
-//   if (!userToUpdate) {
-//     res.sendStatus(404);
+    return;
+  }
 
-//     return;
-//   }
+  deleteExpenses(+id);
+  res.sendStatus(204);
+};
 
-//   if (typeof name !== 'string') {
-//     res.sendStatus(422);
+const editExp = (req, res) => {
+  const { id } = req.params;
+  const { title } = req.body;
+  const expendeToEdit = getExpensesById(id);
 
-//     return;
-//   }
+  if (expendeToEdit === null) {
+    res.sendStatus(404);
 
-//   const editedUser = editNameOfUser(userToUpdate, name);
+    return;
+  }
 
-//   res.send(editedUser);
-// };
+  if (typeof title !== 'string') {
+    res.sendStatus(422);
+
+    return;
+  }
+
+  const editedExpense = editExpense(title, expendeToEdit);
+
+  res.send(editedExpense);
+};
 
 module.exports = {
   getAllExp,
   getOneExp,
-  // addExpenses,
-  // deleteExpenses,
-  // editExpenses,
+  addExp,
+  deleteExp,
+  editExp,
 };

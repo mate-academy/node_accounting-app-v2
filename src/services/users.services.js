@@ -7,13 +7,13 @@ const getAllUsers = () => {
 };
 
 const getUserById = (userId) => {
-  const user = users.find(el => el.id === userId) || null;
+  const user = users.find(el => el.id === +userId) || null;
 
   return user;
 };
 
 const createUser = (name) => {
-  const userId = users.length ? users[users.length - 1].id : 0;
+  const userId = users.length;
   const user = {
     id: userId + 1,
     name,
