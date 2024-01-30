@@ -2,6 +2,10 @@
 
 let expenses = [];
 
+const resetExpenses = () => {
+  expenses = [];
+};
+
 const getAllExpenses = ({ userId, categories, from, to }) => {
   let result = [...expenses];
 
@@ -60,4 +64,5 @@ module.exports = {
   createExpense,
   deleteExpenses,
   editExpense,
+  resetExpenses,
 };

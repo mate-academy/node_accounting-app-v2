@@ -52,7 +52,7 @@ const deleteUser = (req, res) => {
     return;
   }
 
-  deletUser(+id);
+  deletUser(id);
   res.sendStatus(204);
 };
 

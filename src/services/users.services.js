@@ -2,6 +2,10 @@
 
 let users = [];
 
+const reserUsers = () => {
+  users = [];
+};
+
 const getAllUsers = () => {
   return users;
 };
@@ -25,7 +29,7 @@ const createUser = (name) => {
 };
 
 const deletUser = (id) => {
-  users = users.filter(user => user.id !== id);
+  users = users.filter(user => user.id !== +id);
 };
 
 const editNameOfUser = (userToUpdate, name) => {
@@ -38,4 +42,5 @@ module.exports = {
   createUser,
   deletUser,
   editNameOfUser,
+  reserUsers,
 };
