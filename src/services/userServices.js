@@ -1,12 +1,17 @@
 'use strict';
 
-let currentUserId = 0;
+let users = [];
+let currentId = 0;
 
-const createUser = (users, name) => {
-  currentUserId++;
+const getAllUsers = () => {
+  return users;
+};
+
+const createUser = (name) => {
+  currentId++;
 
   const newUser = {
-    id: currentUserId,
+    id: currentId,
     name,
   };
 
@@ -15,37 +20,33 @@ const createUser = (users, name) => {
   return newUser;
 };
 
-const getUserById = (users, id) => {
-  return users.find(u => u.id === parseInt(id));
+const getUserById = (userId) => {
+  const findUser = users.find(user => user.id === +userId);
+
+  return findUser;
 };
 
-const updateUser = (users, id, name) => {
-  const user = users.find(u => u.id === parseInt(id));
-
-  if (user && name) {
-    user.name = name;
-
-    return user;
-  }
-
-  return null;
+const removeUser = (userId) => {
+  users = users.filter(user => user.id !== +userId);
 };
 
-const deleteUser = (users, userId) => {
-  const index = users.findIndex(u => u.id === userId);
+const updateUser = (userId, newName) => {
+  const findUser = users.find(user => user.id === +userId);
 
-  if (index === -1) {
-    return null;
-  }
+  Object.assign(findUser, { name: newName });
 
-  users.splice(index, 1);
+  return findUser;
+};
 
-  return true;
+const resetUsers = () => {
+  users = [];
 };
 
 module.exports = {
+  getAllUsers,
   createUser,
   getUserById,
+  removeUser,
   updateUser,
-  deleteUser,
+  resetUsers,
 };

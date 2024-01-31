@@ -1,60 +1,17 @@
 'use strict';
 
 const express = require('express');
-const userServices = require('../services/userServices');
+const usersRouter = express.Router();
+const usersControllers = require('../controllers/userControllers');
 
-const userRoutes = (users) => {
-  const router = express.Router();
+usersRouter.get('/', usersControllers.getAllUsers);
 
-  router.post('/', (req, res) => {
-    const { name } = req.body;
+usersRouter.post('/', usersControllers.addUser);
 
-    if (!name) {
-      return res.status(400).send();
-    }
+usersRouter.get('/:userId', usersControllers.getCurrentUser);
 
-    const newUser = userServices.createUser(users, name);
+usersRouter.delete('/:userId', usersControllers.removeUser);
 
-    res.status(201).json(newUser);
-  });
+usersRouter.patch('/:userId', usersControllers.updateUser);
 
-  router.get('/', (req, res) => {
-    res.status(200).json(users);
-  });
-
-  router.get('/:id', (req, res) => {
-    const user = userServices.getUserById(users, req.params.id);
-
-    if (!user) {
-      return res.status(404).send();
-    }
-
-    res.status(200).json(user);
-  });
-
-  router.patch('/:id', (req, res) => {
-    const updatedUser = userServices
-      .updateUser(users, req.params.id, req.body.name);
-
-    if (!updatedUser) {
-      return res.status(404).send({ message: 'Not found' });
-    }
-
-    res.status(200).json(updatedUser);
-  });
-
-  router.delete('/:id', (req, res) => {
-    const userId = parseInt(req.params.id);
-    const deleted = userServices.deleteUser(users, userId);
-
-    if (deleted === null) {
-      return res.status(404).send();
-    }
-
-    res.status(204).send();
-  });
-
-  return router;
-};
-
-module.exports = userRoutes;
+module.exports = { usersRouter };

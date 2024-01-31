@@ -1,31 +1,51 @@
 'use strict';
 
-let currentExpenseId = 0;
+let expenses = [];
+let currentId = 0;
 
-const createExpense = (expenses, newExpenseData, users) => {
-  const {
-    userId: newUserId,
-    spentAt,
-    note,
-    title,
-    amount,
-    category,
-  } = newExpenseData;
+const getAllExpenses = ({
+  userId,
+  categories,
+  to,
+}) => {
+  let currentExpenses = expenses;
 
-  const userExists = users.some(u => u.id === newUserId);
-
-  if (!userExists) {
-    return null;
+  if (userId) {
+    currentExpenses = currentExpenses
+      .filter(expense => expense.userId === +userId);
   }
 
+  if (categories) {
+    currentExpenses = currentExpenses
+      .filter(expense => categories.includes(expense.category));
+  }
+
+  if (to) {
+    currentExpenses = currentExpenses
+      .filter(expense => expense.spentAt <= to);
+  }
+
+  return currentExpenses;
+};
+
+const createExpense = ({
+  userId,
+  spentAt,
+  title,
+  amount,
+  category,
+  note,
+}) => {
+  currentId++;
+
   const newExpense = {
-    id: ++currentExpenseId,
-    userId: newUserId,
+    id: currentId,
+    userId,
     spentAt,
-    note,
     title,
     amount,
     category,
+    note,
   };
 
   expenses.push(newExpense);
@@ -33,89 +53,33 @@ const createExpense = (expenses, newExpenseData, users) => {
   return newExpense;
 };
 
-const getFilteredExpenses = (expenses, filters) => {
-  let filteredExpenses = [...expenses];
-  const { userId, categories, from, to } = filters;
+const getExpenseById = (expenseId) => {
+  const findExpense = expenses.find(expense => +expense.id === +expenseId);
 
-  if (userId) {
-    filteredExpenses = filteredExpenses
-      .filter(expense => expense.userId === parseInt(userId));
-  }
-
-  if (categories) {
-    filteredExpenses = filteredExpenses
-      .filter(expense => categories.includes(expense.category));
-  }
-
-  if (from) {
-    const fromDate = new Date(from);
-
-    filteredExpenses = filteredExpenses
-      .filter(expense => new Date(expense.spentAt) >= fromDate);
-  }
-
-  if (to) {
-    const toDate = new Date(to);
-
-    filteredExpenses = filteredExpenses
-      .filter(expense => new Date(expense.spentAt) <= toDate);
-  }
-
-  return filteredExpenses;
+  return findExpense || null;
 };
 
-const getExpenseById = (expenses, id) => {
-  return expenses.find(e => e.id === parseInt(id));
+const removeExpense = (expenseId) => {
+  expenses = expenses.filter(expense => +expense.id !== +expenseId);
 };
 
-const updateExpense = (expenses, expenseId, updateData) => {
-  const expense = expenses.find(e => e.id === parseInt(expenseId));
+const updateExpense = (expenseId, params) => {
+  const currentExpenses = getExpenseById(expenseId);
 
-  if (!expense) {
-    return null;
-  }
+  Object.assign(currentExpenses, params);
 
-  const { spentAt, title, amount, category, note } = updateData;
-
-  if (spentAt) {
-    expense.spentAt = spentAt;
-  }
-
-  if (title) {
-    expense.title = title;
-  }
-
-  if (amount) {
-    expense.amount = amount;
-  }
-
-  if (category) {
-    expense.category = category;
-  }
-
-  if (note) {
-    expense.note = note;
-  }
-
-  return expense;
+  return currentExpenses;
 };
 
-const deleteExpense = (expenses, expenseId) => {
-  const index = expenses.findIndex(e => e.id === parseInt(expenseId));
-
-  if (index === -1) {
-    return false;
-  }
-
-  expenses.splice(index, 1);
-
-  return true;
+const resetExpenses = () => {
+  expenses = [];
 };
 
 module.exports = {
-  getFilteredExpenses,
+  getAllExpenses,
   createExpense,
   getExpenseById,
+  removeExpense,
   updateExpense,
-  deleteExpense,
+  resetExpenses,
 };
