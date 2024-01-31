@@ -7,7 +7,7 @@ const {
   creatNewExpenses,
   patchExpense,
   removeExpenses,
-} = require('../operations/expenseCrud');
+} = require('../controller/expenseController');
 const expensesRouter = express.Router();
 
 expensesRouter.get('/', getExpenses);

@@ -8,7 +8,7 @@ const {
   createUser,
   updateUser,
 }
- = require('../operations/usersCrud');
+ = require('../controller/usersController');
 const userRouter = express.Router();
 
 userRouter.get('/', get);
