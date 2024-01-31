@@ -2,7 +2,7 @@
 
 let users = [];
 
-const reserUsers = () => {
+const resetUsers = () => {
   users = [];
 };
 
@@ -42,5 +42,5 @@ module.exports = {
   createUser,
   deletUser,
   editNameOfUser,
-  reserUsers,
+  resetUsers,
 };
