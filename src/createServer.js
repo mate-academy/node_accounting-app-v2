@@ -1,11 +1,23 @@
 'use strict';
 
-// const express = require('express');
+const { userRouter } = require('./routes/user.router');
+const { expensesRouter } = require('./routes/expenses.router');
+
+const express = require('express');
+const { resetUsers } = require('./services/users.services');
+const { resetExpenses } = require('./services/expenses.services');
 
 function createServer() {
-  // Use express to create a server
-  // Add a routes to the server
-  // Return the server (express app)
+  const app = express();
+
+  resetUsers();
+  resetExpenses();
+
+  app.use(express.json());
+  app.use('/users', userRouter);
+  app.use('/expenses', expensesRouter);
+
+  return app;
 }
 
 module.exports = {
