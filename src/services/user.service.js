@@ -1,7 +1,5 @@
 'use strict';
 
-const { v4: uuid } = require('uuid');
-
 let users = [];
 
 const get = () => {
@@ -9,18 +7,18 @@ const get = () => {
 };
 
 const getById = (id) => {
-  return users.find(us => us.id === id) || null;
+  return users.find(us => +us.id === +id) || null;
 };
 
 const create = (name) => {
   const user = {
     name,
-    id: uuid(),
+    id: new Date().getTime(),
   };
 
   users.push(user);
 
-  return users;
+  return user;
 };
 
 const update = (id, name) => {
@@ -34,7 +32,7 @@ const update = (id, name) => {
 };
 
 const remove = (id) => {
-  users = users.filter(user => user.id !== id);
+  users = users.filter(user => user.id !== +id);
 };
 
 module.exports = {

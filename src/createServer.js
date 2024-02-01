@@ -4,9 +4,13 @@ const express = require('express');
 const cors = require('cors');
 const userRouter = require('./routes/user.route');
 const expenswRouter = require('./routes/expense.route');
+const { expenses } = require('./services/expense.service');
 
 function createServer() {
   const app = express();
+
+  expenses.splice(0, expenses.length);
+  // console.log(expenses);
 
   app.use(cors());
 

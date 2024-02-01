@@ -1,9 +1,10 @@
 'use strict';
 
 const expenseService = require('./../services/expense.service');
+const userService = require('./../services/user.service');
 
 const get = async(req, res) => {
-  res.send(expenseService.get());
+  res.send(expenseService.get(req));
 };
 
 const getOne = async(req, res) => {
@@ -28,6 +29,12 @@ const create = async(req, res) => {
     return;
   }
 
+  if (!userService.getById(+userId)) {
+    res.sendStatus(400);
+
+    return;
+  }
+
   const expense = expenseService.create(req.body);
 
   res.status(201);
@@ -36,13 +43,13 @@ const create = async(req, res) => {
 
 const update = async(req, res) => {
   const { id } = req.params;
-  const { userId, spentAt, title, amount, category, note } = req.body;
+  // const { userId, spentAt, title, amount, category, note } = req.body;
 
-  if (!userId || !spentAt || !title || !amount || !category || !note) {
-    res.sendStatus(400);
+  // if (!userId || !spentAt || !title || !amount || !category || !note) {
+  //   res.sendStatus(400);
 
-    return;
-  }
+  //   return;
+  // }
 
   if (!expenseService.getById(id)) {
     res.sendStatus(404);

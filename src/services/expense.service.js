@@ -1,26 +1,77 @@
 'use strict';
 
-const { v4: uuid } = require('uuid');
+let expenses = [
+  // {
+  //   'userId': 2,
+  //   'spentAt': '2022-01-29T07:51:25.586Z',
+  //   'title': 'string',
+  //   'amount': 100,
+  //   'category': 'car',
+  //   'note': 'car',
+  //   'id': 1706784240585,
+  // },
+  // {
+  //   'userId': 4,
+  //   'spentAt': '2021-01-29T07:51:25.586Z',
+  //   'title': 'string',
+  //   'amount': 100,
+  //   'category': 'Electronics',
+  //   'note': 'something',
+  //   'id': 1706784244813,
+  // },
+  // {
+  //   'userId': 4,
+  //   'spentAt': '2024-01-29T07:51:25.586Z',
+  //   'title': 'string',
+  //   'amount': 10,
+  //   'category': 'string',
+  //   'note': 'something',
+  //   'id': 1706784248044,
+  // },
+];
 
-let expenses = [];
+const get = (req) => {
+  if (req.query) {
+    const newExpenses = expenses.filter(user => {
+      return Object.entries(req.query).every(([key, value]) => {
+        const lookingVal = new Date(value).getTime();
+        const currVal = new Date(user.spentAt).getTime();
 
-const get = () => {
-  return expenses;
+        switch (key) {
+          case 'userId':
+            return user[key] === +value;
+
+          case 'from':
+            return currVal >= lookingVal;
+
+          case 'to':
+            return currVal <= lookingVal;
+
+          default:
+            return value.includes(user[key]);
+        }
+      });
+    });
+
+    return newExpenses;
+  } else {
+    return expenses;
+  }
 };
 
 const getById = (id) => {
-  return expenses.find(us => us.id === id) || null;
+  return expenses.find(expense => +expense.id === +id) || null;
 };
 
 const create = (data) => {
   const expense = {
     ...data,
-    id: uuid(),
+    id: new Date().getTime(),
   };
 
   expenses.push(expense);
 
-  return expenses;
+  return expense;
 };
 
 const update = (id, data) => {
@@ -34,10 +85,11 @@ const update = (id, data) => {
 };
 
 const remove = (id) => {
-  expenses = expenses.filter(expense => expense.id !== id);
+  expenses = expenses.filter(expense => expense.id !== +id);
 };
 
 module.exports = {
+  expenses,
   get,
   getById,
   create,
