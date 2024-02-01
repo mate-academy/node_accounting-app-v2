@@ -15,17 +15,21 @@ const get = (req, res) => {
       return;
     }
 
-    res.send(expenseService.getByQueries({
+    const expensesByQueries = expenseService.getByQueries({
       userId: parsedId,
       categories,
       from,
       to,
-    }));
+    });
+
+    res.send(expensesByQueries);
 
     return;
   }
 
-  res.send(expenseService.getAll());
+  const allExpenses = expenseService.getAll();
+
+  res.send(allExpenses);
 };
 
 const getOne = (req, res) => {
@@ -68,8 +72,7 @@ const create = (req, res) => {
     note,
   });
 
-  res.statusCode = 201;
-  res.send(expense);
+  res.status(201).send(expense);
 };
 
 const remove = (req, res) => {
@@ -90,7 +93,7 @@ const remove = (req, res) => {
 
 const update = (req, res) => {
   const { parsedId } = req;
-  const { spentAt, title, amount, category, note } = req.body;
+  const { title, amount, category, note } = req.body;
 
   const expense = expenseService.getById(parsedId);
 
@@ -109,14 +112,7 @@ const update = (req, res) => {
     return;
   }
 
-  const updatedExpense = expenseService.update({
-    parsedId,
-    spentAt,
-    title,
-    amount,
-    category,
-    note,
-  });
+  const updatedExpense = expenseService.update(expense, req.body);
 
   res.send(updatedExpense);
 };

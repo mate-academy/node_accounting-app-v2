@@ -71,25 +71,8 @@ const remove = (id) => {
   expenses = expenses.filter(expense => expense.id !== id);
 };
 
-const update = ({
-  parsedId: id,
-  userId,
-  spentAt,
-  title,
-  amount,
-  category,
-  note,
-}) => {
-  const expense = getById(id);
-
-  Object.assign(expense, {
-    userId: userId || expense.userId,
-    spentAt: spentAt || expense.spentAt,
-    title: title || expense.title,
-    amount: amount || expense.amount,
-    category: category || expense.category,
-    note: note || expense.note,
-  });
+const update = (expense, reqBody) => {
+  Object.assign(expense, reqBody);
 
   return expense;
 };

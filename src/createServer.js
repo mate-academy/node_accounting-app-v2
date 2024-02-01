@@ -7,9 +7,11 @@ const { router: expenseRouter } = require('./routes/expense.route');
 function createServer() {
   const app = express();
 
-  app.use('/users', express.json(), userRouter);
+  app.use(express.json());
 
-  app.use('/expenses', express.json(), expenseRouter);
+  app.use('/users', userRouter);
+
+  app.use('/expenses', expenseRouter);
 
   return app;
 }
