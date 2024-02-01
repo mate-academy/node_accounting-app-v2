@@ -77,6 +77,10 @@ const update = (expense, reqBody) => {
   return expense;
 };
 
+const reset = () => {
+  expenses = [];
+};
+
 module.exports = {
   getAll,
   getByQueries,
@@ -84,4 +88,5 @@ module.exports = {
   remove,
   update,
   create,
+  reset,
 };

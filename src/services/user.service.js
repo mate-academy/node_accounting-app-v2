@@ -35,10 +35,15 @@ const update = ({ parsedId, name }) => {
   return user;
 };
 
+const reset = () => {
+  users = [];
+};
+
 module.exports = {
   getAll,
   getById,
   create,
   remove,
   update,
+  reset,
 };
