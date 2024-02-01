@@ -1,12 +1,8 @@
 'use strict';
 
-const express = require('express');
+const expenseService = require('../services/expense.service');
 
-const expenseService = require('./expense.service.js');
-
-const expenseRouter = express.Router();
-
-expenseRouter.get('/', (request, response) => {
+const get = (request, response) => {
   if (request.query.userId) {
     request.query.userId = parseInt(request.query.userId);
   }
@@ -14,9 +10,9 @@ expenseRouter.get('/', (request, response) => {
   const expenses = expenseService.getExpenses(request.query);
 
   response.send(expenses);
-});
+};
 
-expenseRouter.get('/:id', (request, response) => {
+const getOne = (request, response) => {
   const { id } = request.params;
   const expense = expenseService.getExpenseById(parseInt(id));
 
@@ -25,9 +21,9 @@ expenseRouter.get('/:id', (request, response) => {
   }
 
   response.send(expense);
-});
+};
 
-expenseRouter.post('/', (request, response) => {
+const create = (request, response) => {
   const { userId, title } = request.body;
 
   if (!userId || !title) {
@@ -42,9 +38,9 @@ expenseRouter.post('/', (request, response) => {
 
   response.status(201);
   response.send(expense);
-});
+};
 
-expenseRouter.patch('/:id', (request, response) => {
+const update = (request, response) => {
   const { id } = request.params;
 
   if (!request.body) {
@@ -58,9 +54,9 @@ expenseRouter.patch('/:id', (request, response) => {
   }
 
   response.send(expense);
-});
+};
 
-expenseRouter.delete('/:id', (request, response) => {
+const remove = (request, response) => {
   const { id } = request.params;
 
   const deletedExpense = expenseService.deleteExpenseById(parseInt(id));
@@ -70,6 +66,12 @@ expenseRouter.delete('/:id', (request, response) => {
   }
 
   response.sendStatus(204);
-});
+};
 
-module.exports = expenseRouter;
+module.exports = {
+  get,
+  create,
+  getOne,
+  remove,
+  update,
+};

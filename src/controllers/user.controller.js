@@ -1,19 +1,12 @@
-/* eslint-disable no-console */
 'use strict';
 
-const express = require('express');
+const userService = require('../services/user.service');
 
-const userService = require('./user.service.js');
+const get = (request, response) => {
+  response.send(userService.getUsers());
+};
 
-const userRouter = express.Router();
-
-userRouter.get('/', (request, response) => {
-  const users = userService.getUsers();
-
-  response.send(users);
-});
-
-userRouter.get('/:id', (request, response) => {
+const getOne = (request, response) => {
   const { id } = request.params;
 
   const user = userService.getUserById(parseInt(id));
@@ -23,9 +16,9 @@ userRouter.get('/:id', (request, response) => {
   }
 
   response.send(user);
-});
+};
 
-userRouter.post('/', (request, response) => {
+const create = (request, response) => {
   if (!request.body || !request.body.name) {
     return response.sendStatus(400);
   }
@@ -34,9 +27,9 @@ userRouter.post('/', (request, response) => {
 
   response.status(201);
   response.send(user);
-});
+};
 
-userRouter.patch('/:id', (request, response) => {
+const update = (request, response) => {
   const { id } = request.params;
 
   if (!request.body.name) {
@@ -50,9 +43,9 @@ userRouter.patch('/:id', (request, response) => {
   }
 
   response.send(user);
-});
+};
 
-userRouter.delete('/:id', (request, response) => {
+const remove = (request, response) => {
   const { id } = request.params;
 
   const deletedUser = userService.deleteUserById(parseInt(id));
@@ -62,6 +55,12 @@ userRouter.delete('/:id', (request, response) => {
   }
 
   response.sendStatus(204);
-});
+};
 
-module.exports = userRouter;
+module.exports = {
+  get,
+  create,
+  getOne,
+  remove,
+  update,
+};

@@ -1,39 +1,37 @@
 'use strict';
 
-const { getUserById } = require('../user/user.service.js');
+const { getUserById } = require('./user.service.js');
 
 let expenses = [];
 
 const getExpenses = ({ categories, from, to, userId }) => {
-  let filteredExpenses = expenses;
+  return expenses.filter((expense) => {
+    let toReturn = true;
 
-  if (userId) {
-    filteredExpenses = filteredExpenses.filter(
-      (expense) => expense.userId === userId
-    );
-  }
+    if (userId && userId !== expense.userId) {
+      toReturn = false;
+    }
 
-  if (categories) {
-    filteredExpenses = filteredExpenses.filter(
-      (expense) => categories.includes(expense.category)
-    );
-  }
+    if (categories && !categories.includes(expense.category)) {
+      toReturn = false;
+    }
 
-  if (from) {
-    filteredExpenses = filteredExpenses.filter(
-      (expense) =>
-        new Date(expense.spentAt).valueOf() >= new Date(from).valueOf()
-    );
-  }
+    if (
+      from
+      && new Date(expense.spentAt).valueOf() < new Date(from).valueOf()
+    ) {
+      toReturn = false;
+    }
 
-  if (to) {
-    filteredExpenses = filteredExpenses.filter(
-      (expense) =>
-        new Date(expense.spentAt).valueOf() <= new Date(to).valueOf()
-    );
-  }
+    if (
+      to
+      && new Date(expense.spentAt).valueOf() > new Date(to).valueOf()
+    ) {
+      toReturn = false;
+    }
 
-  return filteredExpenses;
+    return toReturn;
+  });
 };
 
 const getExpenseById = (id) => {
