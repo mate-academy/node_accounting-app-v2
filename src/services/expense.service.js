@@ -32,14 +32,14 @@ let expenses = [
 
 const get = (req) => {
   if (req.query) {
-    const newExpenses = expenses.filter(user => {
+    const newExpenses = expenses.filter(expense => {
       return Object.entries(req.query).every(([key, value]) => {
         const lookingVal = new Date(value).getTime();
-        const currVal = new Date(user.spentAt).getTime();
+        const currVal = new Date(expense.spentAt).getTime();
 
         switch (key) {
           case 'userId':
-            return user[key] === +value;
+            return expense[key] === +value;
 
           case 'from':
             return currVal >= lookingVal;
@@ -48,7 +48,7 @@ const get = (req) => {
             return currVal <= lookingVal;
 
           default:
-            return value.includes(user[key]);
+            return value.includes(expense.category);
         }
       });
     });

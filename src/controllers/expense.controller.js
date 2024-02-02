@@ -43,13 +43,6 @@ const create = async(req, res) => {
 
 const update = async(req, res) => {
   const { id } = req.params;
-  // const { userId, spentAt, title, amount, category, note } = req.body;
-
-  // if (!userId || !spentAt || !title || !amount || !category || !note) {
-  //   res.sendStatus(400);
-
-  //   return;
-  // }
 
   if (!expenseService.getById(id)) {
     res.sendStatus(404);
@@ -71,10 +64,8 @@ const remove = async(req, res) => {
     return;
   }
 
-  const newExpense = expenseService.remove(id);
-
+  expenseService.remove(id);
   res.sendStatus(204);
-  res.send(newExpense);
 };
 
 module.exports = {

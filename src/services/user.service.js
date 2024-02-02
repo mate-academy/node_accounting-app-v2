@@ -36,6 +36,7 @@ const remove = (id) => {
 };
 
 module.exports = {
+  users,
   get,
   getById,
   create,

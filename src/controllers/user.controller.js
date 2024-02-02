@@ -64,10 +64,8 @@ const remove = async(req, res) => {
     return;
   }
 
-  const newUsers = userService.remove(id);
-
+  userService.remove(id);
   res.sendStatus(204);
-  res.send(newUsers);
 };
 
 module.exports = {
