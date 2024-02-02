@@ -4,8 +4,9 @@ const userService = require('../services/users.js');
 const expensesService = require('../services/expenses.js');
 
 const getAll = (req, res) => {
-  const { userId, categories, from, to } = req.query;
-
+  const { userId, categories, from, to } = {
+    ...req.query, ...req.body,
+  };
   const expenses = expensesService.getAll({
     userId, categories, from, to,
   });
@@ -43,19 +44,19 @@ const add = (req, res) => {
     return;
   }
 
-  const newExpenses = expensesService.create(
+  const newExpense = expensesService.create(
     userId, spentAt, title, amount, category, note
   );
 
   res.statusCode = 201;
-  res.send(newExpenses);
+  res.send(newExpense);
 };
 
 const remove = (req, res) => {
   const expensesId = Number(req.params.expensesId);
-  const foundExpenses = expensesService.getById(expensesId);
+  const foundExpense = expensesService.getById(expensesId);
 
-  if (!foundExpenses) {
+  if (!foundExpense) {
     res.sendStatus(404);
 
     return;
@@ -67,9 +68,9 @@ const remove = (req, res) => {
 
 const update = (req, res) => {
   const id = Number(req.params.expensesId);
-  const foundExpenses = expensesService.getById(id);
+  const foundExpense = expensesService.getById(id);
 
-  if (!foundExpenses) {
+  if (!foundExpense) {
     res.sendStatus(404);
 
     return;
