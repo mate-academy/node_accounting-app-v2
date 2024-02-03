@@ -9,14 +9,14 @@ const {
   updateOneUser,
 } = require('../controllers/users.controller');
 
-const Userouter = express.Router;
+const userRouter = express.Router;
 
-Userouter.get('/', getAllUsers);
-Userouter.get('/:id', getOneUser);
-Userouter.post('/', createOneUser);
-Userouter.delete('/:id', deleteOneUser);
-Userouter.patch('/:id', updateOneUser);
+userRouter.get('/', getAllUsers);
+userRouter.get('/:id', getOneUser);
+userRouter.post('/', createOneUser);
+userRouter.delete('/:id', deleteOneUser);
+userRouter.patch('/:id', updateOneUser);
 
 module.exports = {
-  Userouter,
+  userRouter,
 };
