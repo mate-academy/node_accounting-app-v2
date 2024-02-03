@@ -18,6 +18,7 @@ const getAllExpenses = (req, res) => {
 
   if (!userId || !categories || !from || !to) {
     res.sendStatus(400);
+    res.message = 'Some of your data are not valid';
 
     return;
   }
@@ -71,7 +72,7 @@ const getOneExpense = (req, res) => {
     return;
   }
 
-  res.statusCode(200);
+  res.sendStatus(200);
   res.send(expense);
 };
 
@@ -79,7 +80,7 @@ const deleteOneExpense = (req, res) => {
   const { id } = req.params;
 
   if (!id) {
-    res.sendStatus(404);
+    res.sendStatus(400);
 
     return;
   }
@@ -87,7 +88,7 @@ const deleteOneExpense = (req, res) => {
   const expense = getExpense(id);
 
   if (!expense) {
-    res.sendStatus(400);
+    res.sendStatus(404);
 
     return;
   }

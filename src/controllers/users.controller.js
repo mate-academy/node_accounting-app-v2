@@ -34,6 +34,8 @@ const getOneUser = (req, res) => {
 
   if (!id) {
     res.sendStatus(400);
+
+    return;
   }
 
   const user = getUser(id);
