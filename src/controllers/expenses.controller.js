@@ -23,7 +23,7 @@ const getAllExpenses = (req, res) => {
     return;
   }
 
-  res.statusCode(200);
+  res.sendStatus(200);
   res.send(getExpenses(userId, categories, from, to));
 };
 
@@ -39,6 +39,7 @@ const createOneExpense = (req, res) => {
 
   if (!userId || !category || !spentAt || !title || !amount) {
     res.sendStatus(400);
+    res.message = 'Some of your data are not valid';
 
     return;
   }
@@ -52,7 +53,7 @@ const createOneExpense = (req, res) => {
     note,
   );
 
-  res.statusCode(201);
+  res.sendStatus(201);
 
   res.send(expense);
 };
@@ -62,6 +63,9 @@ const getOneExpense = (req, res) => {
 
   if (!id) {
     res.sendStatus(400);
+    res.message = 'The id is invalid';
+
+    return;
   }
 
   const expense = getExpense(id);
@@ -81,6 +85,7 @@ const deleteOneExpense = (req, res) => {
 
   if (!id) {
     res.sendStatus(400);
+    res.message = 'The name is invalid';
 
     return;
   }
@@ -110,6 +115,7 @@ const updateOneExpense = (req, res) => {
 
   if (!id) {
     res.sendStatus(400);
+    res.message = 'The name is invalid';
 
     return;
   }
@@ -128,6 +134,7 @@ const updateOneExpense = (req, res) => {
     || typeof spentAt !== 'string'
     || typeof amount !== 'number') {
     res.sendStatus(400);
+    res.message = 'Some of your data are not valid';
 
     return;
   }

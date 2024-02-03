@@ -4,7 +4,9 @@ const { v4 } = require('uuid');
 
 let users = [];
 
-const getUsers = () => users;
+const getUsers = () => {
+  return users;
+};
 
 const createUser = (name) => {
   const user = {
@@ -29,10 +31,16 @@ const deleteUser = (id) => {
 
 const updateUser = ({ id, name }) => {
   const user = getUser(id);
+  const updatedUser = {
+    ...user,
+    name,
+  };
 
-  Object.assign(user, { name });
+  const indexOfUser = users.findIndex(userOne => userOne.id === id);
 
-  return user;
+  users.splice(indexOfUser, 1, updatedUser);
+
+  return updatedUser;
 };
 
 module.exports = {

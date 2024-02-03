@@ -9,7 +9,7 @@ const {
   updateOneExpense,
 } = require('../controllers/expenses.controller');
 
-const expensesRouter = express.Router;
+const expensesRouter = express.Router();
 
 expensesRouter.get('/', getAllExpenses);
 expensesRouter.get('/:id', createOneExpense);

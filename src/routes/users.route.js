@@ -9,7 +9,7 @@ const {
   updateOneUser,
 } = require('../controllers/users.controller');
 
-const userRouter = express.Router;
+const userRouter = express.Router();
 
 userRouter.get('/', getAllUsers);
 userRouter.get('/:id', getOneUser);

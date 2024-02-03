@@ -9,7 +9,7 @@ const {
 } = require('../services/users.serveces');
 
 const getAllUsers = (req, res) => {
-  res.statusCode(200);
+  res.sendStatus(200);
   res.send(getUsers());
 };
 
@@ -18,13 +18,14 @@ const createOneUser = (req, res) => {
 
   if (!name) {
     res.sendStatus(400);
+    res.message = 'The name is invalid';
 
     return;
   }
 
   const user = createUser(name);
 
-  res.statusCode(201);
+  res.sendStatus(201);
 
   res.send(user);
 };
@@ -34,6 +35,7 @@ const getOneUser = (req, res) => {
 
   if (!id) {
     res.sendStatus(400);
+    res.message = 'The id is invalid';
 
     return;
   }
@@ -46,7 +48,7 @@ const getOneUser = (req, res) => {
     return;
   }
 
-  res.statusCode(200);
+  res.sendStatus(200);
   res.send(user);
 };
 
@@ -54,7 +56,8 @@ const deleteOneUser = (req, res) => {
   const { id } = req.params;
 
   if (!id) {
-    res.sendStatus(404);
+    res.sendStatus(400);
+    res.message = 'The id is invalid';
 
     return;
   }
@@ -62,7 +65,7 @@ const deleteOneUser = (req, res) => {
   const user = getUser(id);
 
   if (!user) {
-    res.sendStatus(400);
+    res.sendStatus(404);
 
     return;
   }
@@ -78,6 +81,7 @@ const updateOneUser = (req, res) => {
 
   if (!id) {
     res.sendStatus(400);
+    res.message = 'The id is invalid';
 
     return;
   }
@@ -92,6 +96,7 @@ const updateOneUser = (req, res) => {
 
   if (typeof name !== 'string') {
     res.sendStatus(400);
+    res.message = 'The name is invalid';
 
     return;
   }
