@@ -2,11 +2,9 @@
 'use strict';
 
 const express = require('express');
-
 const router = express.Router();
 
 let users = [];
-
 let id = 0;
 
 router.get('/', (req, res) => {

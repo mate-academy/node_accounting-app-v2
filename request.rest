@@ -25,6 +25,16 @@ Content-Type: application/json
 ###
 
 GET http://localhost:3000/expenses
+Content-Type: application/json
+
+{
+  "userId": 2,
+  "categories": ["party"]
+}
+
+###
+
+GET http://localhost:3000/expenses/2
 
 ###
 
@@ -32,7 +42,7 @@ POST http://localhost:3000/expenses
 Content-Type: application/json
 
 {
-  "userId": 0,
+  "userId": 2,
   "spentAt": "2024-01-29T16:11:36.486Z",
   "title": "string",
   "amount": 0,

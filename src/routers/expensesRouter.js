@@ -3,21 +3,9 @@
 'use strict';
 
 const express = require('express');
-
 const router = express.Router();
 
-// const expense2 = {
-//   id: 0,
-//   userId: 0,
-//   spentAt: Date.now(),
-//   title: '',
-//   amount: 0,
-//   category: '',
-//   note: '',
-// };
-
 let expenses = [];
-
 let id = 0;
 
 const getExpenses = (userId, categories, from, to) => {
