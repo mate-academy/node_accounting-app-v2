@@ -25,6 +25,7 @@
     "supertest": "^6.3.0"
   },
   "dependencies": {
-    "express": "^4.18.2"
+    "express": "^4.18.2",
+    "lodash.isempty": "^4.4.0"
   }
 }
