@@ -23,9 +23,6 @@ class UsersService {
   };
 
   getUserById(id) {
-    // eslint-disable-next-line no-console
-    console.log('----users.find=', this.__users.find(user => user.id === id));
-
     return this.__users.find(user => user.id === id) || null;
   };
 
@@ -54,57 +51,6 @@ class UsersService {
     return this.__users.map(user => user.id);
   };
 }
-
-// let users = [];
-
-// a private method
-// const getUsersIds = () => {
-//   return users.map(user => user.id);
-// };
-
-// const usersService = {
-// getUsers() {
-//   // eslint-disable-next-line no-console
-//   console.log('----------- users=', users);
-
-//   return users;
-// },
-
-// createUser(name) {
-//   const newUser = {
-//     id: createNumberId(getUsersIds()),
-//     name,
-//   };
-
-//   users.push(newUser);
-
-//   return newUser;
-// },
-
-// getUserById(id) {
-//   // eslint-disable-next-line no-console
-//   console.log('----------- users.find=', users.find(user => user.id === id));
-
-//   return users.find(user => user.id === id) || null;
-// },
-
-// removeUserById(id) {
-//   users = users.filter(user => user.id !== id);
-// },
-
-// updateUserById(id, params) {
-//   const foundUser = this.getUserById(id);
-//   const updateUser = {
-//     ...foundUser, ...params, id,
-//   };
-
-//   this.removeUserById(id);
-
-//   users.push(updateUser);
-
-//   return updateUser;
-// },
-// };
 
 const usersService = new UsersService();
 
