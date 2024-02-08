@@ -2,235 +2,165 @@
 
 const express = require('express');
 
+const {
+  getUsers,
+  createUser,
+  getOneUser,
+  deleteUser,
+  updateUser,
+  resetUsers,
+} = require('./usersServices');
+const {
+  getExpenses,
+  createExpense,
+  getExpense,
+  deleteExpense,
+  updateExpense,
+  resetExpenses,
+} = require('./expensesServices');
+
 function createServer() {
+  resetUsers();
+  resetExpenses();
+
   const app = express();
 
   app.use(express.json());
 
-  const users = [];
-
-  const expenses = [];
-
   // USERS
   app.get('/users', (request, response) => {
+    const users = getUsers();
+
     response.send(users);
   });
 
   app.post('/users', (request, response) => {
-    const { name } = request.body;
+    try {
+      const { name } = request.body;
+      const newUser = createUser(name);
 
-    if (!name) {
+      response.statusCode = 201;
+      response.send(newUser);
+    } catch (err) {
       response.sendStatus(400);
-
-      return;
     }
-
-    const newUser = {
-      id: Date.now(),
-      name: name,
-    };
-
-    response.statusCode = 201;
-    users.push(newUser);
-    response.send(newUser);
   });
 
   app.get('/users/:id', (request, response) => {
-    const { id } = request.params;
-    const wantedUser = users.find((user) => user.id === Number(id));
+    try {
+      const { id } = request.params;
+      const user = getOneUser(id);
 
-    if (!wantedUser) {
+      response.send(user);
+    } catch (err) {
       response.sendStatus(404);
-
-      return;
     }
-
-    response.send(wantedUser);
   });
 
   app.delete('/users/:id', (request, response) => {
-    const { id } = request.params;
-    const indexToDelete = users.findIndex((user) => user.id === Number(id));
+    try {
+      const { id } = request.params;
 
-    if (indexToDelete === -1) {
+      deleteUser(id);
+      response.sendStatus(204);
+    } catch (err) {
       response.sendStatus(404);
-
-      return;
     }
-
-    users.splice(indexToDelete, 1);
-    response.sendStatus(204);
   });
 
   app.patch('/users/:id', (request, response) => {
-    const { id } = request.params;
-    const { name } = request.body;
-    const userToUpdate = users.find((user) => user.id === Number(id));
+    try {
+      const { id } = request.params;
+      const { name } = request.body;
 
-    if (!userToUpdate) {
-      response.sendStatus(404);
+      const updatedUser = updateUser(id, name);
 
-      return;
+      response.send(updatedUser);
+    } catch (err) {
+      if (err.message === 'User does not exist.') {
+        response.sendStatus(404);
+      }
+
+      if (err.message === 'Name was not provided.') {
+        response.sendStatus(422);
+      }
     }
-
-    if (!name) {
-      response.sendStatus(422);
-
-      return;
-    }
-
-    Object.assign(userToUpdate, { name: name });
-    response.send(userToUpdate);
   });
 
   // EXPENSES
   app.get('/expenses', (request, response) => {
-    let filteredExpenses = expenses;
+    const { userId, categories, from, to } = request.query;
+    const expenses = getExpenses(userId, categories, from, to);
 
-    if (request.query.userId) {
-      const userId = Number(request.query.userId);
-
-      filteredExpenses = filteredExpenses.filter(
-        (expense) => expense.userId === userId
-      );
-    }
-
-    if (request.query.categories) {
-      const categories = request.query.categories.split(',');
-
-      filteredExpenses = filteredExpenses.filter((expense) =>
-        categories.includes(expense.category)
-      );
-    }
-
-    if (request.query.from || request.query.to) {
-      const fromDate = request.query.from
-        ? new Date(request.query.from)
-        : new Date(0);
-      const toDate = request.query.to ? new Date(request.query.to) : new Date();
-
-      filteredExpenses = filteredExpenses.filter((expense) => {
-        const expenseDate = new Date(expense.spentAt);
-
-        return expenseDate >= fromDate && expenseDate <= toDate;
-      });
-    }
-
-    response.json(filteredExpenses);
+    response.json(expenses);
   });
 
   app.post('/expenses', (request, response) => {
-    const { userId, spentAt, title, amount, category, note } = request.body;
+    try {
+      const { userId, spentAt, title, amount, category, note } = request.body;
 
-    if (!userId || !spentAt || !title || !amount || !category || !note) {
+      const newExpense = createExpense(
+        userId,
+        spentAt,
+        title,
+        amount,
+        category,
+        note
+      );
+
+      response.statusCode = 201;
+      response.send(newExpense);
+    } catch (err) {
       response.sendStatus(400);
-
-      return;
     }
-
-    if (!users.find((user) => user.id === userId)) {
-      response.sendStatus(400);
-
-      return;
-    }
-
-    const newExpense = {
-      id: Date.now(),
-      userId,
-      spentAt,
-      title,
-      amount,
-      category,
-      note,
-    };
-
-    response.statusCode = 201;
-    expenses.push(newExpense);
-    response.send(newExpense);
   });
 
   app.get('/expenses/:id', (request, response) => {
-    const { id } = request.params;
-    const wantedExpense = expenses.find((expense) => expense.id === Number(id));
+    try {
+      const { id } = request.params;
+      const expense = getExpense(id);
 
-    if (!wantedExpense) {
+      response.send(expense);
+    } catch (err) {
       response.sendStatus(404);
-
-      return;
     }
-
-    response.send(wantedExpense);
   });
 
   app.delete('/expenses/:id', (request, response) => {
-    const { id } = request.params;
-    const indexToDelete = expenses.findIndex(
-      (expense) => expense.id === Number(id)
-    );
+    try {
+      const { id } = request.params;
 
-    if (indexToDelete === -1) {
+      deleteExpense(id);
+
+      response.sendStatus(204);
+    } catch (err) {
       response.sendStatus(404);
-
-      return;
     }
-
-    expenses.splice(indexToDelete, 1);
-    response.sendStatus(204);
-  });
-
-  app.patch('/users/:id', (request, response) => {
-    const { id } = request.params;
-    const { name } = request.body;
-    const userToUpdate = users.find((user) => user.id === Number(id));
-
-    if (!userToUpdate) {
-      response.sendStatus(404);
-
-      return;
-    }
-
-    if (!name) {
-      response.sendStatus(422);
-
-      return;
-    }
-
-    Object.assign(userToUpdate, { name: name });
-    response.send(userToUpdate);
   });
 
   app.patch('/expenses/:id', (request, response) => {
-    const { id } = request.params;
-    const { spentAt, title, amount, category, note } = request.body;
-    const expenseToUpdate = expenses.find(
-      (expense) => expense.id === Number(id)
-    );
+    try {
+      const { id } = request.params;
+      const { spentAt, title, amount, category, note } = request.body;
 
-    if (!expenseToUpdate) {
-      response.sendStatus(404);
+      const updatedExpense = updateExpense(
+        id,
+        spentAt,
+        title,
+        amount,
+        category,
+        note
+      );
 
-      return;
-    }
-
-    if (spentAt || title || amount || category || note) {
-      if (title) {
-        expenseToUpdate.title = title;
+      response.send(updatedExpense);
+    } catch (err) {
+      if (err.message === 'Expense not found.') {
+        response.sendStatus(404);
       }
 
-      if (amount) {
-        expenseToUpdate.amount = amount;
+      if (err.message === 'Incomplete data provided.') {
+        response.sendStatus(404);
       }
-
-      if (category) {
-        expenseToUpdate.category = category;
-      }
-
-      if (note !== undefined) {
-        expenseToUpdate.note = note;
-      }
-      response.send(expenseToUpdate);
-    } else {
-      response.sendStatus(400);
     }
   });
 
