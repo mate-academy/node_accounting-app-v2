@@ -9,32 +9,15 @@ const initializeExpenses = () => {
 };
 
 const get = ({ userId, categories, from, to }) => {
-  let expensesFiltered = [...expenses];
-
-  if (!isNaN(userId)) {
-    expensesFiltered = expensesFiltered
-      .filter(expense => expense.userId === userId);
-  }
-
-  if (categories) {
-    expensesFiltered = expensesFiltered
-      .filter(expense => typeof categories === 'string'
+  return expenses.filter(expense => {
+    return (!isNaN(userId) ? expense.userId === userId : true)
+      && (categories ? (typeof categories === 'string'
         ? expense.category === categories
         : categories.includes(expense.category)
-      );
-  }
-
-  if (from) {
-    expensesFiltered = expensesFiltered
-      .filter(expense => new Date(expense.spentAt) >= new Date(from));
-  }
-
-  if (to) {
-    expensesFiltered = expensesFiltered
-      .filter(expense => new Date(expense.spentAt) <= new Date(to));
-  }
-
-  return expensesFiltered;
+      ) : true)
+      && (from ? new Date(expense.spentAt) >= new Date(from) : true)
+      && (to ? new Date(expense.spentAt) <= new Date(to) : true);
+  });
 };
 
 const getById = (id) => {
