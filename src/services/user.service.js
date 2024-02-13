@@ -2,12 +2,14 @@
 
 let users = [];
 
-const readAll = () => {
-  return users;
+const userInit = () => {
+  users = [];
 };
 
+const readAll = () => users;
+
 const read = (id) => {
-  return users.find(user => user.id === id);
+  return users.find(user => user.id === id) || null;
 };
 
 const create = ({ name }) => {
@@ -25,15 +27,10 @@ const remove = (id) => {
   users = users.filter(user => user.id !== id);
 };
 
-const update = (id, params) => {
-  const user = read(id);
-
-  return Object.assign(user, {
-    id, ...params,
-  });
-};
+const update = (id, fields) => Object.assign(read(id), { ...fields });
 
 module.exports = {
+  userInit,
   readAll,
   read,
   create,

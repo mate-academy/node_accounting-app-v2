@@ -7,15 +7,16 @@ const getAll = (req, res) => {
 };
 
 const get = (req, res) => {
-  const { id } = req.query;
+  const { id } = req.params;
+  const user = userService.read(+id);
 
-  if (!userService.read(id)) {
+  if (!user) {
     res.sendStatus(404);
 
     return;
   }
 
-  res.status(200).json(userService.read(id));
+  res.status(200).json(user);
 };
 
 const create = (req, res) => {
@@ -31,30 +32,32 @@ const create = (req, res) => {
 };
 
 const remove = (req, res) => {
-  const { id } = req.query;
+  const { id } = req.params;
+  const user = userService.read(+id);
 
-  if (!userService.read(id)) {
+  if (!user) {
     res.sendStatus(404);
 
     return;
   }
 
-  userService.remove(id);
+  userService.remove(user.id);
 
   res.sendStatus(204);
 };
 
 const update = (req, res) => {
-  const { id } = req.query;
+  const { id } = req.params;
   const body = req.body;
+  const user = userService.read(+id);
 
-  if (!userService.read(id)) {
+  if (!user) {
     res.sendStatus(404);
 
     return;
   }
 
-  res.status(200).json(userService.update(id, body));
+  res.status(200).json(userService.update(user.id, body));
 };
 
 module.exports = {

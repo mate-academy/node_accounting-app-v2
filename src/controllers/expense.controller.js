@@ -10,19 +10,21 @@ const getAll = (req, res) => {
 };
 
 const get = (req, res) => {
-  const { id } = req.query;
+  const { id } = req.params;
+  const expense = expenseService.read(+id);
 
-  if (!expenseService.read(id)) {
+  if (!expense) {
     res.sendStatus(404);
 
     return;
   }
 
-  res.json(expenseService.read(id));
+  res.json(expenseService.read(expense.id));
 };
 
 const create = (req, res) => {
   const body = req.body;
+  const user = userService.read(+body.userId);
 
   if ((!body.hasOwnProperty('userId')
     || !body.hasOwnProperty('spentAt')
@@ -30,7 +32,7 @@ const create = (req, res) => {
     || !body.hasOwnProperty('amount')
     || !body.hasOwnProperty('category')
     || !body.hasOwnProperty('note'))
-    || !userService.read(body.userId)) {
+    || !user) {
     res.sendStatus(400);
 
     return;
@@ -40,30 +42,32 @@ const create = (req, res) => {
 };
 
 const remove = (req, res) => {
-  const { id } = req.query;
+  const { id } = req.params;
+  const expense = expenseService.read(+id);
 
-  if (!expenseService.read(id)) {
+  if (!expense) {
     res.sendStatus(404);
 
     return;
   }
 
-  expenseService.remove(id);
+  expenseService.remove(expense.id);
 
   res.sendStatus(204);
 };
 
 const update = (req, res) => {
-  const { id } = req.query;
+  const { id } = req.params;
   const body = req.body;
+  const expense = expenseService.read(+id);
 
-  if (!expenseService.read(id)) {
+  if (!expense) {
     res.sendStatus(404);
 
     return;
   }
 
-  res.json(expenseService.update(id, body));
+  res.json(expenseService.update(expense.id, body));
 };
 
 module.exports = {
