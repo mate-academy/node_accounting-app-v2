@@ -1,3 +1,5 @@
+'use strict';
+
 let expenses = [];
 
 const init = () => {

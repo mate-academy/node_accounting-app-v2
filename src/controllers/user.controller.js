@@ -1,3 +1,5 @@
+'use strict';
+
 const userService = require('../services/user.service');
 
 const get = (req, res) => {
