@@ -14,7 +14,7 @@ const get = (req, res) => {
     to,
   );
 
-  res.json(filteredExpenses);
+  res.send(filteredExpenses);
 };
 
 const create = (req, res) => {
@@ -56,7 +56,7 @@ const getOne = (req, res) => {
     return res.sendStatus(404);
   }
 
-  res.status(200).json(product);
+  res.status(200).send(product);
 };
 
 const remove = (req, res) => {
@@ -66,7 +66,7 @@ const remove = (req, res) => {
     return res.sendStatus(404);
   }
 
-  res.status(204).json(expensesService.remove(id));
+  res.status(204).send(expensesService.remove(id));
 };
 
 const update = (req, res) => {
@@ -80,7 +80,7 @@ const update = (req, res) => {
 
   const updatedProduct = expensesService.update(id, args);
 
-  res.status(200).json(updatedProduct);
+  res.status(200).send(updatedProduct);
 };
 
 module.exports = {

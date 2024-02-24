@@ -6,13 +6,13 @@ const router = express.Router();
 
 router.get('/', expensesController.get);
 
-router.post('/', express.json(), expensesController.create);
+router.post('/', expensesController.create);
 
-router.get('/:id', express.json(), expensesController.getOne);
+router.get('/:id', expensesController.getOne);
 
-router.delete('/:id', express.json(), expensesController.remove);
+router.delete('/:id', expensesController.remove);
 
-router.patch('/:id', express.json(), expensesController.update);
+router.patch('/:id', expensesController.update);
 
 module.exports = {
   expensesRouter: router,

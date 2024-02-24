@@ -6,13 +6,13 @@ const router = express.Router();
 
 router.get('/', userController.get);
 
-router.post('/', express.json(), userController.create);
+router.post('/', userController.create);
 
-router.get('/:id', express.json(), userController.getOne);
+router.get('/:id', userController.getOne);
 
-router.delete('/:id', express.json(), userController.remove);
+router.delete('/:id', userController.remove);
 
-router.patch('/:id', express.json(), userController.update);
+router.patch('/:id', userController.update);
 
 module.exports = {
   userRouter: router,

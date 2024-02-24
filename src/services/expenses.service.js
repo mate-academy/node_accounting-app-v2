@@ -49,15 +49,15 @@ const filter = (id, categories, dateFrom, dateTo) => {
       return false;
     }
 
-    if (categories !== undefined && !categories.includes(item.category)) {
+    if (categories && !categories.includes(item.category)) {
       return false;
     }
 
-    if (dateFrom !== undefined && new Date(item.spentAt) < new Date(dateFrom)) {
+    if (dateFrom && new Date(item.spentAt) < new Date(dateFrom)) {
       return false;
     }
 
-    if (dateTo !== undefined && new Date(item.spentAt) > new Date(dateTo)) {
+    if (dateTo && new Date(item.spentAt) > new Date(dateTo)) {
       return false;
     }
 
