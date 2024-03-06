@@ -4,6 +4,10 @@ const { getId } = require('../libs/helpers');
 
 let users = [];
 
+const reset = () => {
+  users = [];
+};
+
 const getAll = () => {
   return users;
 };
@@ -38,5 +42,5 @@ const update = (id, name) => {
 };
 
 module.exports = {
-  getAll, getById, create, remove, update,
+  getAll, getById, create, remove, update, reset,
 };

@@ -4,6 +4,10 @@ const { getId } = require('../libs/helpers');
 
 let expenses = [];
 
+const reset = () => {
+  expenses = [];
+};
+
 const getExpenses = (userId, categories = [], from, to) => {
   const categoriesArray = Array.isArray(categories) ? categories : [categories];
 
@@ -58,5 +62,5 @@ const update = (id, data) => {
 };
 
 module.exports = {
-  getExpenses, getById, create, remove, update,
+  getExpenses, getById, create, remove, update, reset,
 };
