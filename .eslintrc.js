@@ -3,6 +3,9 @@ module.exports = {
   env: {
     mocha: true,
   },
+  parserOptions: {
+    sourceType: "module",
+  },
   globals: {
     expect: 'readonly',
   },

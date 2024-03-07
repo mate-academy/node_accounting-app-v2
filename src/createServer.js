@@ -1,13 +1,7 @@
-'use strict';
+import express from 'express';
 
-// const express = require('express');
+export function createServer() {
+  const app = express();
 
-function createServer() {
-  // Use express to create a server
-  // Add a routes to the server
-  // Return the server (express app)
+  return app;
 }
-
-module.exports = {
-  createServer,
-};
