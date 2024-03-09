@@ -1,3 +1,5 @@
+'use strict';
+
 module.exports = {
   extends: '@mate-academy/eslint-config',
   env: {
@@ -7,7 +9,8 @@ module.exports = {
     expect: 'readonly',
   },
   rules: {
-    'no-proto': 0
+    'no-proto': 0,
+    'object-curly-newline': 'off',
   },
-  plugins: ['jest']
+  plugins: ['jest'],
 };
