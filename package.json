@@ -1,12 +1,11 @@
 {
-  "type": "module",
   "name": "node_accounting-app",
   "version": "1.0.0",
   "description": "Node.js accounting app",
   "main": "src/index.js",
   "scripts": {
-    "start": "node src/main.js",
-    "dev": "nodemon src/main.js",
+    "start": "node main.js",
+    "dev": "nodemon main.js",
     "test:only": "mocha",
     "test": "npm run lint && npm run test:only",
     "test:watch": "mocha --watch",
