@@ -2,10 +2,10 @@
 
 const { getId } = require('./getId');
 
-let users;
+const users = [];
 
 const init = () => {
-  users = [];
+  users.length = 0;
 };
 
 const getAll = () => {
@@ -34,7 +34,11 @@ const update = ({ id, name }) => {
 };
 
 const remove = (id) => {
-  users = users.filter(user => user.id !== +id);
+  const index = users.findIndex(expense => expense.id === +id);
+
+  if (index > -1) {
+    users.splice(index, 1);
+  }
 };
 
 module.exports = {

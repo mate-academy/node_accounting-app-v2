@@ -2,11 +2,12 @@
 
 const expenseServices = require('../services/expense.services');
 const userServices = require('../services/user.service');
+const codeStuses = require('../variables');
 
 const getAll = (req, res) => {
   const { userId, categories, from, to } = req.query;
 
-  res.statusCode = 200;
+  res.statusCode = codeStuses.SUCCESS_CODE_STATUS;
 
   res.send(expenseServices.getAll({
     userId, categories, from, to,
@@ -19,7 +20,7 @@ const get = (req, res) => {
   const choosedExpense = expenseServices.getById(id);
 
   if (!choosedExpense) {
-    res.sendStatus(404);
+    res.sendStatus(codeStuses.NOT_FOUND_CODE_STATUS);
 
     return;
   }
@@ -31,7 +32,7 @@ const create = (req, res) => {
   const data = req.body;
 
   if (!userServices.getById(data.userId)) {
-    res.sendStatus(400);
+    res.sendStatus(codeStuses.BAD_REQUEST_CODE_STATUS);
 
     return;
   }
@@ -45,14 +46,14 @@ const remove = (req, res) => {
   const { id } = req.params;
 
   if (!expenseServices.getById(id)) {
-    res.sendStatus(404);
+    res.sendStatus(codeStuses.NOT_FOUND_CODE_STATUS);
 
     return;
   }
 
   expenseServices.remove(id);
 
-  res.sendStatus(204);
+  res.sendStatus(codeStuses.UNDERSTANDING_CODE_STATUS);
 };
 
 const update = (req, res) => {
@@ -61,7 +62,7 @@ const update = (req, res) => {
   const choosedExpense = expenseServices.getById(id);
 
   if (!choosedExpense) {
-    res.sendStatus(404);
+    res.sendStatus(codeStuses.NOT_FOUND_CODE_STATUS);
 
     return;
   }

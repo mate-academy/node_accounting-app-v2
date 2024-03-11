@@ -1,9 +1,10 @@
 'use strict';
 
 const userServices = require('../services/user.service');
+const codeStuses = require('../variables');
 
 const get = (_, res) => {
-  res.statusCode = 200;
+  res.statusCode = codeStuses.SUCCESS_CODE_STATUS;
   res.send(userServices.getAll());
 };
 
@@ -12,24 +13,24 @@ const getById = (req, res) => {
   const choosedUser = userServices.getById(id);
 
   if (!choosedUser) {
-    res.sendStatus(404);
+    res.sendStatus(codeStuses.NOT_FOUND_CODE_STATUS);
 
     return;
   }
 
-  res.status(200).send(choosedUser);
+  res.status(codeStuses.SUCCESS_CODE_STATUS).send(choosedUser);
 };
 
 const create = (req, res) => {
   const { name } = req.body;
 
   if (!name) {
-    res.sendStatus(400);
+    res.sendStatus(codeStuses.BAD_REQUEST_CODE_STATUS);
 
     return;
   }
 
-  res.statusCode = 201;
+  res.statusCode = codeStuses.CREATED_CODE_STATUS;
   res.send(userServices.create(name));
 };
 
@@ -37,14 +38,14 @@ const remove = (req, res) => {
   const { id } = req.params;
 
   if (!userServices.getById(id)) {
-    res.sendStatus(404);
+    res.sendStatus(codeStuses.NOT_FOUND_CODE_STATUS);
 
     return;
   }
 
   userServices.remove(id);
 
-  res.sendStatus(204);
+  res.sendStatus(codeStuses.UNDERSTANDING_CODE_STATUS);
 };
 
 const update = (req, res) => {
@@ -53,7 +54,7 @@ const update = (req, res) => {
   const choosedUser = userServices.getById(id);
 
   if (!choosedUser) {
-    res.sendStatus(404);
+    res.sendStatus(codeStuses.NOT_FOUND_CODE_STATUS);
 
     return;
   }
