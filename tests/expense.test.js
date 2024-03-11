@@ -2,6 +2,7 @@
 
 const supertest = require('supertest');
 const { createServer } = require('../src/createServer');
+const { expenses } = require('../src/controllers/expanses');
 
 describe('Expense', () => {
   let server;
@@ -10,6 +11,7 @@ describe('Expense', () => {
   beforeEach(() => {
     server = createServer();
     api = supertest(server);
+    expenses.length = 0;
   });
 
   describe('createExpense', () => {

@@ -2,6 +2,7 @@
 
 const supertest = require('supertest');
 const { createServer } = require('../src/createServer');
+const { users } = require('../src/controllers/users');
 
 describe('User', () => {
   let server;
@@ -10,6 +11,7 @@ describe('User', () => {
   beforeEach(() => {
     server = createServer();
     api = supertest(server);
+    users.length = 0;
   });
 
   describe('createUser', () => {
@@ -53,7 +55,7 @@ describe('User', () => {
     });
 
     it('should return all users', async() => {
-      const users = [
+      const usersTest = [
         {
           name: 'John Doe',
         },
@@ -63,7 +65,7 @@ describe('User', () => {
       ];
 
       const createdUsers = await Promise.all(
-        users.map(
+        usersTest.map(
           async(user) => {
             const res = await api
               .post('/users')
