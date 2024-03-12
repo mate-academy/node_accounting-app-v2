@@ -1,6 +1,7 @@
 'use strict';
 
 const userService = require('../services/user.service');
+const { NOT_FOUND, BAD_REQUEST, NO_CONTENT, CREATED } = require('../variables');
 
 const get = (req, res) => {
   res.send(userService.getAllUsers());
@@ -12,7 +13,7 @@ const getOne = (req, res) => {
   const user = userService.getUserById(id);
 
   if (!user) {
-    res.sendStatus(404);
+    res.sendStatus(NOT_FOUND);
 
     return;
   }
@@ -24,14 +25,14 @@ const create = (req, res) => {
   const { name } = req.body;
 
   if (typeof name !== 'string') {
-    res.sendStatus(400);
+    res.sendStatus(BAD_REQUEST);
 
     return;
   }
 
   const user = userService.createUser(name);
 
-  res.status(201).send(user);
+  res.status(CREATED).send(user);
 };
 
 const remove = (req, res) => {
@@ -40,13 +41,13 @@ const remove = (req, res) => {
   const user = userService.getUserById(id);
 
   if (!user) {
-    res.sendStatus(404);
+    res.sendStatus(NOT_FOUND);
 
     return;
   }
 
   userService.deleteUser(id);
-  res.sendStatus(204);
+  res.sendStatus(NO_CONTENT);
 };
 
 const update = (req, res) => {
@@ -54,7 +55,7 @@ const update = (req, res) => {
   const { name } = req.body;
 
   if (typeof name !== 'string') {
-    res.sendStatus(400);
+    res.sendStatus(BAD_REQUEST);
 
     return;
   }
@@ -62,7 +63,7 @@ const update = (req, res) => {
   const user = userService.getUserById(id);
 
   if (!user) {
-    res.sendStatus(404);
+    res.sendStatus(NOT_FOUND);
 
     return;
   }
