@@ -39,10 +39,10 @@ const remove = (id) => {
   }
 };
 
-const update = ({
+const update = (
   id,
   name,
-}) => {
+) => {
   return Object.assign(getById(id), {
     name,
   });
