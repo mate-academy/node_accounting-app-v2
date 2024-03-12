@@ -8,8 +8,8 @@ const expenses = [];
 function createExpense(req, res) {
   const { userId, spentAt, title, amount, category, note } = req.body;
 
-  if (!userId || !spentAt || !title || !amount || !category
-    || !note || !findUser(userId, users)) {
+  if (!userId || !spentAt || !title || !amount
+      || !category || !note || !findUser(userId, users)) {
     res.sendStatus(400);
   } else {
     const newExpense = {
@@ -25,30 +25,27 @@ function createExpense(req, res) {
 function getExpenses(req, res) {
   const { userId, from, to, categories } = req.query;
 
-  let filteredExpenses = [...expenses];
+  const filteredExpenses = expenses.filter(expense => {
+    if (userId && expense.userId !== parseInt(userId)) {
+      return false;
+    }
 
-  if (userId) {
-    filteredExpenses = filteredExpenses
-      .filter(expense => expense.userId === parseInt(userId));
-  }
-
-  if (from && to) {
-    const fromDate = new Date(from);
-    const toDate = new Date(to);
-
-    filteredExpenses = filteredExpenses.filter(expense => {
+    if (from && to) {
+      const fromDate = new Date(from);
+      const toDate = new Date(to);
       const spentAt = new Date(expense.spentAt);
 
-      return spentAt >= fromDate && spentAt <= toDate;
-    });
-  }
+      if (spentAt < fromDate || spentAt > toDate) {
+        return false;
+      }
+    }
 
-  if (categories) {
-    const selectedCategories = categories.split(',');
+    if (categories && !categories.split(',').includes(expense.category)) {
+      return false;
+    }
 
-    filteredExpenses = filteredExpenses
-      .filter(expense => selectedCategories.includes(expense.category));
-  }
+    return true;
+  });
 
   res.send(filteredExpenses);
 }
