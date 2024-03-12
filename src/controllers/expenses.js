@@ -1,24 +1,25 @@
 'use strict';
 
-const { findUser } = require('../services');
-const { users } = require('./users');
-
-const expenses = [];
+const { findUserService } = require('../services/users.service');
+const {
+  createExpenseService,
+  findExpenseService,
+  updateExpenseService,
+  deleteExpenseService,
+  expenses,
+} = require('../services/expenses.service');
 
 function createExpense(req, res) {
-  const { userId, spentAt, title, amount, category, note } = req.body;
+  const expense = req.body;
+  const { userId, spentAt, title, amount, category, note } = expense;
 
   if (!userId || !spentAt || !title || !amount
-      || !category || !note || !findUser(userId, users)) {
+      || !category || !note || !findUserService(userId)) {
     res.sendStatus(400);
   } else {
-    const newExpense = {
-      id: expenses.length + 1, userId, spentAt, title, amount, category, note,
-    };
+    const newExpense = createExpenseService(expense);
 
-    expenses.push(newExpense);
-
-    res.status(201).json(newExpense);
+    res.status(201).send(newExpense);
   }
 }
 
@@ -52,12 +53,14 @@ function getExpenses(req, res) {
 
 function getExpense(req, res) {
   const expenseId = parseInt(req.params.id);
-  const expense = expenses.find(expens => expens.id === expenseId);
+  const expense = findExpenseService(expenseId);
 
   if (!expense) {
-    return res.status(404).json({ error: 'Expense not found' });
+    res.sendStatus(404);
+
+    return;
   }
-  res.json(expense);
+  res.status(200).send(expense);
 }
 
 function updateExpense(req, res) {
@@ -77,8 +80,9 @@ function updateExpense(req, res) {
     return;
   }
 
-  expenses[expenseIndex].title = title;
-  res.send(expenses[expenseIndex]);
+  const updatedExpense = updateExpenseService(expenseIndex, title);
+
+  res.send(updatedExpense);
 }
 
 function deleteExpense(req, res) {
@@ -86,11 +90,14 @@ function deleteExpense(req, res) {
   const expenseIndex = expenses.findIndex(expense => expense.id === expenseId);
 
   if (expenseIndex === -1) {
-    return res.status(404).json({ error: 'Expense not found' });
+    res.sendStatus(404);
+
+    return;
   }
 
-  expenses.splice(expenseIndex, 1);
-  res.status(204).end();
+  deleteExpenseService(expenseIndex);
+
+  res.sendStatus(204);
 }
 
 module.exports = {
@@ -99,5 +106,4 @@ module.exports = {
   getExpense,
   updateExpense,
   deleteExpense,
-  expenses,
 };

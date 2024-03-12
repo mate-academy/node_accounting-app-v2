@@ -8,7 +8,7 @@ const {
   getExpense,
   updateExpense,
   deleteExpense,
-} = require('./controllers/expanses');
+} = require('./controllers/expenses');
 const {
   createUser,
   getUsers,
