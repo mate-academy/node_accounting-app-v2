@@ -53,7 +53,7 @@ describe('User', () => {
     });
 
     it('should return all users', async() => {
-      const users = [
+      const usersTest = [
         {
           name: 'John Doe',
         },
@@ -63,7 +63,7 @@ describe('User', () => {
       ];
 
       const createdUsers = await Promise.all(
-        users.map(
+        usersTest.map(
           async(user) => {
             const res = await api
               .post('/users')
