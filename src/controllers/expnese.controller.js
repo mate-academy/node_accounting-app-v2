@@ -68,7 +68,7 @@ const deleteExpense = (req, res) => {
 
   try {
     expenseService.deleteExpense(+id);
-    res.sendStatus(statusCode.NO_CONTENT);
+    res.sendStatus(statusCode.UNDERSTOOD);
   } catch (ex) {
     res.status(statusCode.NOT_FOUND);
     res.send(ex.message);

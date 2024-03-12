@@ -5,7 +5,7 @@ const userService = require('../services/user.service');
 const { isIdValid } = require('../helpers/isIdValid');
 const BAD_REQUEST_MESSAGE = 'Bad request';
 
-const getUsers = (req, res) => {
+const getUsers = (_, res) => {
   res.status(statusCode.OK);
   res.send(userService.getUsers());
 };
@@ -55,7 +55,7 @@ const deleteUser = (req, res) => {
 
   try {
     userService.deleteUser(+id);
-    res.sendStatus(statusCode.NO_CONTENT);
+    res.sendStatus(statusCode.UNDERSTOOD);
   } catch (ex) {
     res.status(statusCode.NOT_FOUND);
     res.send(ex.message);

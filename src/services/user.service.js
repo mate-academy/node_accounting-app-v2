@@ -2,10 +2,10 @@
 
 const { getNextId } = require('../helpers/getNextId');
 
-let users = [];
+const users = [];
 
 const init = () => {
-  users = [];
+  users.length = 0;
 };
 
 const getUsers = () => users;
@@ -32,13 +32,13 @@ const createUser = (name) => {
 };
 
 const deleteUser = (id) => {
-  const newUsers = users.filter(user => user.id !== id);
+  const userToDeleteId = users.findIndex(user => user.id === id);
 
-  if (newUsers.length === users.length) {
+  if (userToDeleteId === -1) {
     throw new Error('User doesn\'t exist');
   }
 
-  users = newUsers;
+  users.splice(userToDeleteId, 1);
 };
 
 const changeUser = (name, id) => {

@@ -3,10 +3,10 @@
 const { getNextId } = require('../helpers/getNextId');
 const { filterExpenses } = require('../helpers/expenseHelper');
 
-let expenses = [];
+const expenses = [];
 
 const init = () => {
-  expenses = [];
+  expenses.length = 0;
 };
 
 const getExpenses = (filterOptions) => filterExpenses(expenses, filterOptions);
@@ -38,13 +38,13 @@ const createExpense = ({ userId, spentAt, title, amount, category, note }) => {
 };
 
 const deleteExpense = (id) => {
-  const newExpenses = expenses.filter(expense => expense.id !== id);
+  const expemseToDeleteId = expenses.findIndex(expense => expense.id === id);
 
-  if (newExpenses.length === expenses.length) {
+  if (expemseToDeleteId === -1) {
     throw new Error('Expense doesn\'t exist');
   }
 
-  expenses = newExpenses;
+  expenses.splice(expemseToDeleteId, 1);
 };
 
 const changeExpense = (updatedExpenseFields, id) => {
