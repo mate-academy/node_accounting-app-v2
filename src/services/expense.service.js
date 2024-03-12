@@ -9,7 +9,6 @@ const init = () => {
 };
 
 const getAll = (params) => {
-  let filteredExpenses = expenses;
   const {
     userId,
     categories,
@@ -17,24 +16,25 @@ const getAll = (params) => {
     to,
   } = params;
 
-  if (userId) {
-    filteredExpenses = filteredExpenses
-      .filter(expense => expense.userId === +userId);
-  }
+  const filteredExpenses = expenses.filter(expense => {
+    if (userId && expense.userId !== +userId) {
+      return false;
+    }
 
-  if (categories) {
-    filteredExpenses = filteredExpenses
-      .filter(expense => expense.category === categories);
-  }
+    if (categories && !categories.includes(expense.category)) {
+      return false;
+    }
 
-  if (from && to) {
-    const dateFrom = new Date(from);
-    const dateTo = new Date(to);
+    if (from && Date.parse(expense.spentAt) < Date.parse(from)) {
+      return false;
+    }
 
-    filteredExpenses = filteredExpenses
-      .filter(expense => dateFrom <= new Date(expense.spentAt)
-      && new Date(expense.spentAt) <= dateTo);
-  }
+    if (to && Date.parse(expense.spentAt) > Date.parse(to)) {
+      return false;
+    }
+
+    return true;
+  });
 
   return filteredExpenses;
 };
