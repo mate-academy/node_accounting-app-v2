@@ -53,7 +53,7 @@ describe('Expense', () => {
 
     it('should return 400 if user not found', async() => {
       const expenseData = {
-        userId: 2,
+        userId: 1,
         spentAt: '2022-10-19T11:01:43.462Z',
         title: 'Buy a new laptop',
         amount: 999,
