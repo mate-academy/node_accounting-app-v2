@@ -10,20 +10,26 @@ const init = () => {
 
 const getAll = (params) => {
   let filteredExpenses = expenses;
+  const {
+    userId,
+    categories,
+    from,
+    to,
+  } = params;
 
-  if (params.userId) {
+  if (userId) {
     filteredExpenses = filteredExpenses
-      .filter(expense => expense.userId === +params.userId);
+      .filter(expense => expense.userId === +userId);
   }
 
-  if (params.categories) {
+  if (categories) {
     filteredExpenses = filteredExpenses
-      .filter(expense => expense.category === params.categories);
+      .filter(expense => expense.category === categories);
   }
 
-  if (params.from && params.to) {
-    const dateFrom = new Date(params.from);
-    const dateTo = new Date(params.to);
+  if (from && to) {
+    const dateFrom = new Date(from);
+    const dateTo = new Date(to);
 
     filteredExpenses = filteredExpenses
       .filter(expense => dateFrom <= new Date(expense.spentAt)
