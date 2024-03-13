@@ -1,5 +1,7 @@
 'use strict';
 
+const HttpStatus = require('http-status-codes');
+
 const {
   getAllExpenses,
   getOneExpense,
@@ -10,9 +12,14 @@ const {
   updateExpense,
 } = require('../services/expenses.service');
 
+const {
+  INVALID_REQUEST_BODY,
+  USER_NOT_FOUND,
+  EXPENSE_NOT_FOUND,
+} = require('../constants/errorMessages');
+
 const getAll = (req, res) => {
   const { userId, categories, from, to } = req.query;
-
   const expensesQuery = getAllExpenses(userId, categories, from, to);
 
   res.send(expensesQuery);
@@ -20,11 +27,12 @@ const getAll = (req, res) => {
 
 const getOneById = (req, res) => {
   const { id } = req.params;
-
   const expenseIdFound = getOneExpense(id);
 
   if (!expenseIdFound) {
-    res.status(404).send('Expense not found');
+    res.status(HttpStatus.NOT_FOUND).send(EXPENSE_NOT_FOUND);
+
+    return;
   }
 
   res.send(expenseIdFound);
@@ -34,7 +42,7 @@ const createExpenseController = (req, res) => {
   const { title, category, note, amount, userId, spentAt } = req.body;
 
   if (!title || !category || !note || !amount || !userId || !spentAt) {
-    res.status(400).send('Invalid request body');
+    res.status(HttpStatus.BAD_REQUEST).send(INVALID_REQUEST_BODY);
 
     return;
   }
@@ -42,7 +50,7 @@ const createExpenseController = (req, res) => {
   const userExists = checkAtleastOneUser(userId);
 
   if (!userExists) {
-    res.status(400).send('User not found');
+    res.status(HttpStatus.BAD_REQUEST).send(USER_NOT_FOUND);
 
     return;
   }
@@ -59,20 +67,17 @@ const createExpenseController = (req, res) => {
 
   createExpense(newExpense);
 
-  res.status(201).send(newExpense);
+  res.status(HttpStatus.CREATED).send(newExpense);
 };
 
 const updateExpenseController = (req, res) => {
   const { id } = req.params;
-
-  const {
-    ...paramsToUpdate
-  } = req.body;
+  const { ...paramsToUpdate } = req.body;
 
   const checkedExpense = getOneExpense(id);
 
   if (!checkedExpense) {
-    res.sendStatus(404);
+    res.sendStatus(HttpStatus.NOT_FOUND);
 
     return;
   }
@@ -89,12 +94,14 @@ const deleteExpenseController = (req, res) => {
   const expenseUpdateIndex = findIndexOneExpense(checkedExpense);
 
   if (expenseUpdateIndex < 0) {
-    res.sendStatus(404);
+    res.sendStatus(HttpStatus.NOT_FOUND);
+
+    return;
   }
 
   deleteExpense(expenseUpdateIndex);
 
-  res.sendStatus(204);
+  res.sendStatus(HttpStatus.NO_CONTENT);
 };
 
 module.exports = {

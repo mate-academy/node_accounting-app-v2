@@ -1,5 +1,7 @@
 'use strict';
 
+const HttpStatus = require('http-status-codes');
+
 const {
   getAllUsers,
   getUserById,
@@ -8,15 +10,20 @@ const {
   addUser,
 } = require('../services/user.service');
 
+const {
+  INVALID_USER_ID,
+  USER_NOT_FOUND,
+} = require('../constants/errorMessages');
+
 const get = (req, res) => {
-  res.status(200).send(getAllUsers());
+  res.status(HttpStatus.OK).send(getAllUsers());
 };
 
 const getOne = (req, res) => {
   const { userId } = req.params;
 
   if (isNaN(+userId)) {
-    res.status(400).send('Invalid user ID');
+    res.status(HttpStatus.BAD_REQUEST).send(INVALID_USER_ID);
 
     return;
   }
@@ -26,7 +33,7 @@ const getOne = (req, res) => {
   if (userFind) {
     res.send(userFind);
   } else {
-    res.status(404).send('User not found');
+    res.status(HttpStatus.NOT_FOUND).send(USER_NOT_FOUND);
   }
 };
 
@@ -34,7 +41,7 @@ const createUser = (req, res) => {
   const { name } = req.body;
 
   if (!name) {
-    res.sendStatus(400);
+    res.sendStatus(HttpStatus.BAD_REQUEST);
 
     return;
   }
@@ -46,25 +53,24 @@ const createUser = (req, res) => {
 
   addUser(user);
 
-  res.status(201).send(user);
+  res.status(HttpStatus.CREATED).send(user);
 };
 
 const updateUser = (req, res) => {
   const { name } = req.body;
-
   const { userId } = req.params;
 
   const userCheck = getUserById(userId);
 
   if (!userCheck) {
-    res.status(404).send('User not found');
+    res.status(HttpStatus.NOT_FOUND).send(USER_NOT_FOUND);
 
     return;
   }
 
   Object.assign(userCheck, { name });
 
-  res.status(200).send(userCheck);
+  res.status(HttpStatus.OK).send(userCheck);
 };
 
 const deleteUserId = (req, res) => {
@@ -73,7 +79,7 @@ const deleteUserId = (req, res) => {
   const userToDelete = getUserById(userId);
 
   if (!userToDelete) {
-    res.status(404).send('User not found');
+    res.status(HttpStatus.NOT_FOUND).send(USER_NOT_FOUND);
 
     return;
   }
@@ -82,7 +88,7 @@ const deleteUserId = (req, res) => {
 
   deleteUser(indexDeleteUser);
 
-  res.sendStatus(204);
+  res.sendStatus(HttpStatus.NO_CONTENT);
 };
 
 module.exports = {
