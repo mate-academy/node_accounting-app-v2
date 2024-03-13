@@ -1,5 +1,6 @@
 'use strict';
 
+const STATUS_CODES = require('../constants/statuses');
 const usersService = require('./../services/users.service');
 
 const get = (req, res) => {
@@ -10,7 +11,7 @@ const getOne = (req, res) => {
   const { id } = req.params;
 
   if (!id || !isFinite(id)) {
-    res.sendStatus(400);
+    res.sendStatus(STATUS_CODES.BAD_REQUEST);
 
     return;
   }
@@ -18,7 +19,7 @@ const getOne = (req, res) => {
   const user = usersService.getById(+id);
 
   if (!user) {
-    res.sendStatus(404);
+    res.sendStatus(STATUS_CODES.NOT_FOUND);
 
     return;
   }
@@ -30,34 +31,34 @@ const remove = (req, res) => {
   const { id } = req.params;
 
   if (!id || !isFinite(id)) {
-    res.sendStatus(400);
+    res.sendStatus(STATUS_CODES.BAD_REQUEST);
 
     return;
   }
 
   if (!usersService.getById(+id)) {
-    res.sendStatus(404);
+    res.sendStatus(STATUS_CODES.NOT_FOUND);
 
     return;
   }
 
   usersService.remove(+id);
 
-  res.sendStatus(204);
+  res.sendStatus(STATUS_CODES.NO_CONTENT);
 };
 
 const create = (req, res) => {
   const { name } = req.body;
 
   if (!name || typeof name !== 'string') {
-    res.sendStatus(400);
+    res.sendStatus(STATUS_CODES.BAD_REQUEST);
 
     return;
   }
 
   const user = usersService.create(name);
 
-  res.statusCode = 201;
+  res.statusCode = STATUS_CODES.CREATED;
   res.send(user);
 };
 
@@ -66,13 +67,13 @@ const update = (req, res) => {
   const { name } = req.body;
 
   if (!id || !isFinite(id) || !name || typeof name !== 'string') {
-    res.sendStatus(400);
+    res.sendStatus(STATUS_CODES.BAD_REQUEST);
 
     return;
   }
 
   if (!usersService.getById(+id)) {
-    res.sendStatus(404);
+    res.sendStatus(STATUS_CODES.NOT_FOUND);
 
     return;
   }

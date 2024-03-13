@@ -1,5 +1,6 @@
 'use strict';
 
+const STATUS_CODES = require('../constants/statuses');
 const expensesService = require('./../services/expenses.service');
 const usersService = require('./../services/users.service');
 
@@ -30,14 +31,14 @@ const create = (req, res) => {
   const expense = req.body;
 
   if (!usersService.getById(expense.userId)) {
-    res.sendStatus(400);
+    res.sendStatus(STATUS_CODES.BAD_REQUEST);
 
     return;
   }
 
   const newExpense = expensesService.create(expense);
 
-  res.statusCode = 201;
+  res.statusCode = STATUS_CODES.CREATED;
   res.send(newExpense);
 };
 
@@ -45,7 +46,7 @@ const getOne = (req, res) => {
   const { id } = req.params;
 
   if (!id || !isFinite(id)) {
-    res.sendStatus(400);
+    res.sendStatus(STATUS_CODES.BAD_REQUEST);
 
     return;
   }
@@ -53,7 +54,7 @@ const getOne = (req, res) => {
   const expense = expensesService.getById(+id);
 
   if (!expense) {
-    res.sendStatus(404);
+    res.sendStatus(STATUS_CODES.NOT_FOUND);
 
     return;
   }
@@ -65,7 +66,7 @@ const remove = (req, res) => {
   const { id } = req.params;
 
   if (!id || !isFinite(id)) {
-    res.sendStatus(400);
+    res.sendStatus(STATUS_CODES.BAD_REQUEST);
 
     return;
   }
@@ -73,12 +74,12 @@ const remove = (req, res) => {
   if (expensesService.getById(+id)) {
     expensesService.remove(+id);
 
-    res.sendStatus(204);
+    res.sendStatus(STATUS_CODES.NO_CONTENT);
 
     return;
   }
 
-  res.sendStatus(404);
+  res.sendStatus(STATUS_CODES.NOT_FOUND);
 };
 
 const update = (req, res) => {
@@ -86,13 +87,13 @@ const update = (req, res) => {
   const body = req.body;
 
   if (!id || !isFinite(id) || !body) {
-    res.sendStatus(400);
+    res.sendStatus(STATUS_CODES.BAD_REQUEST);
 
     return;
   }
 
   if (!expensesService.getById(+id)) {
-    res.sendStatus(404);
+    res.sendStatus(STATUS_CODES.NOT_FOUND);
 
     return;
   }

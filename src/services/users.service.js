@@ -1,9 +1,9 @@
 'use strict';
 
-let users = [];
+const users = [];
 
 const clearUsers = () => {
-  users = [];
+  users.length = 0;
 };
 
 const getAll = () => users;
@@ -26,13 +26,15 @@ const create = (name) => {
 };
 
 const remove = (id) => {
-  users = users.filter(user => user.id !== id);
+  users.splice(users.findIndex(user => user.id === id), 1);
 };
 
 const update = (id, name) => {
   const user = getById(id);
 
-  Object.assign(user, { name });
+  if (user) {
+    user.name = name;
+  }
 
   return user;
 };
