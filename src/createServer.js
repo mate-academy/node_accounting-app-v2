@@ -1,11 +1,15 @@
+/* eslint-disable no-param-reassign */
 'use strict';
 
 const express = require('express');
 const app = express();
 
+let users = [];
+let expenses = [];
+
 function createServer() {
-  let users = [];
-  const expenses = [];
+  users = [];
+  expenses = [];
 
   app.get('/users', (req, res) => {
     if (users.length === 0) {
@@ -87,15 +91,41 @@ function createServer() {
   });
 
   app.get('/expenses', express.json(), (req, res) => {
-    res.send(expenses);
+    const { userId, from, to, categories } = req.query;
+
+    let filteredExpenses = [...expenses];
+
+    if (userId) {
+      filteredExpenses = expenses.filter(e => e.userId === +userId);
+    }
+
+    if (from && to) {
+      filteredExpenses = expenses.filter(expense => {
+        const expenseDate = new Date(expense.spentAt);
+        const fromDate = new Date(from);
+        const toDate = new Date(to);
+
+        return expenseDate >= fromDate && expenseDate <= toDate;
+      });
+    }
+
+    if (categories) {
+      filteredExpenses = expenses.filter(expense =>
+        expense.category === categories);
+    }
+
+    res.send(filteredExpenses);
   });
 
   app.get('/expenses/:id', express.json(), (req, res) => {
     const { id } = req.params || undefined;
+    const userExpens = expenses.find(e => e.id === +id);
 
-    const userExpenses = expenses.filter(e => e.userId === +id);
-
-    res.send(userExpenses.map(e => e));
+    if (userExpens === undefined || +id > expenses.length) {
+      res.status(404).send(`Expens with id:${id} not found`);
+    } else {
+      res.send(userExpens);
+    }
   });
 
   app.post('/expenses', express.json(), (req, res) => {
@@ -134,6 +164,46 @@ function createServer() {
     expenses.push(expens);
     res.status(201);
     res.send(expens);
+  });
+
+  app.delete('/expenses/:id', express.json(), (req, res) => {
+    const { id } = req.params || undefined;
+
+    if (expenses.some(expens => expens.id === +id)) {
+      expenses = expenses.filter(e => e.id !== +id);
+      res.status(204).send();
+    } else {
+      res.status(404).send(`Expense with id:${id} does not exist`);
+    }
+  });
+
+  app.patch('/expenses/:id', express.json(), (req, res) => {
+    const { id } = req.params || undefined;
+    const updateExpense = req.body || undefined;
+
+    if (!(expenses.some(e => e.id === +id))) {
+      res.status(404);
+      res.send('Expense not found');
+
+      return;
+    }
+
+    expenses = expenses.map(expens => {
+      if (expens.id === +id) {
+        expens = {
+          ...expens, ...updateExpense,
+        };
+
+        return expens;
+      }
+
+      return expens;
+    });
+
+    const changedExpens = expenses.find(e => e.id === +id);
+
+    res.status(200);
+    res.send(changedExpens);
   });
 
   return app;
