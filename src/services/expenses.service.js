@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 'use strict';
 
-let expenses = [];
+const expenses = [];
 
 const getAll = () => {
   return expenses;
@@ -56,11 +56,13 @@ const update = ({
 };
 
 const remove = (id) => {
-  expenses = expenses.filter(expense => expense.id !== id);
+  const index = expenses.findIndex(expense => expense.id === id);
+
+  expenses.splice(index, 1);
 };
 
 const clearExpenses = () => {
-  expenses = [];
+  expenses.length = 0;
 };
 
 module.exports = {

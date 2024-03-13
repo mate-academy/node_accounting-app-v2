@@ -8,6 +8,8 @@ const {
   NO_CONTENT,
   BAD_REQUEST,
   NOT_FOUND,
+  EXPENSE_NOT_FOUND_MESSAGE,
+  MISSING_PARAM_MESSAGE,
 } = require('../variables');
 
 const getExpenses = (req, res) => {
@@ -43,7 +45,7 @@ const getOne = (req, res) => {
   const expense = expenseService.getById(expenseId);
 
   if (!expense) {
-    res.status(NOT_FOUND).send({ message: 'Expense not found' });
+    res.status(NOT_FOUND).send({ message: EXPENSE_NOT_FOUND_MESSAGE });
   }
 
   res.status(OK).send(expense);
@@ -53,7 +55,7 @@ const create = (req, res) => {
   const { userId, spentAt, title, amount, category, note } = req.body;
 
   if (!userId || !spentAt || !title || !amount || !category || !note) {
-    res.status(BAD_REQUEST).send({ message: 'Required parameter(s) missing' });
+    res.status(BAD_REQUEST).send({ message: MISSING_PARAM_MESSAGE });
 
     return;
   }
@@ -61,7 +63,7 @@ const create = (req, res) => {
   const user = userService.getById(parseInt(userId));
 
   if (!user) {
-    res.status(BAD_REQUEST).send({ message: 'Required parameter(s) missing' });
+    res.status(BAD_REQUEST).send({ message: MISSING_PARAM_MESSAGE });
 
     return;
   }
@@ -78,7 +80,7 @@ const update = (req, res) => {
   const expense = expenseService.getById(id);
 
   if (!expense) {
-    res.status(NOT_FOUND).send({ message: 'Expense not found' });
+    res.status(NOT_FOUND).send({ message: EXPENSE_NOT_FOUND_MESSAGE });
 
     return;
   }
@@ -102,7 +104,7 @@ const remove = (req, res) => {
   const expenseId = parseInt(req.params.id);
 
   if (!expenseService.getById(expenseId)) {
-    return res.status(NOT_FOUND).send({ message: 'Expense not found' });
+    return res.status(NOT_FOUND).send({ message: EXPENSE_NOT_FOUND_MESSAGE });
   }
 
   expenseService.remove(expenseId);

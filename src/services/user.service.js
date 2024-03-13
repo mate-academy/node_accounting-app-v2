@@ -1,6 +1,6 @@
 'use strict';
 
-let users = [];
+const users = [];
 
 const getAll = () => {
   return users;
@@ -30,11 +30,13 @@ const update = (id, name) => {
 };
 
 const remove = (id) => {
-  users = users.filter(user => user.id !== id);
+  const index = users.findIndex(user => user.id === id);
+
+  users.splice(index, 1);
 };
 
 const clearUsers = () => {
-  users = [];
+  users.length = 0;
 };
 
 module.exports = {

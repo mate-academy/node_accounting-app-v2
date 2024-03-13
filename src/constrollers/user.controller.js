@@ -8,6 +8,8 @@ const {
   NO_CONTENT,
   BAD_REQUEST,
   NOT_FOUND,
+  USER_NOT_FOUND_MESSAGE,
+  MISSING_PARAM_MESSAGE,
 } = require('../variables');
 
 const get = (req, res) => {
@@ -19,7 +21,7 @@ const getOne = (req, res) => {
   const user = userService.getById(userId);
 
   if (!user) {
-    res.status(NOT_FOUND).send({ message: 'User not found' });
+    res.status(NOT_FOUND).send({ message: USER_NOT_FOUND_MESSAGE });
 
     return;
   }
@@ -31,7 +33,7 @@ const create = (req, res) => {
   const { name } = req.body;
 
   if (!name) {
-    res.status(BAD_REQUEST).send({ message: 'Required parameter(s) missing' });
+    res.status(BAD_REQUEST).send({ message: MISSING_PARAM_MESSAGE });
 
     return;
   }
@@ -47,7 +49,7 @@ const update = (req, res) => {
   const { name } = req.body;
 
   if (!user) {
-    res.status(NOT_FOUND).send({ message: 'User not found' });
+    res.status(NOT_FOUND).send({ message: USER_NOT_FOUND_MESSAGE });
 
     return;
   }
@@ -67,7 +69,7 @@ const remove = (req, res) => {
   const userId = parseInt(req.params.id);
 
   if (!userService.getById(userId)) {
-    res.status(NOT_FOUND).send({ message: 'User not found' });
+    res.status(NOT_FOUND).send({ message: USER_NOT_FOUND_MESSAGE });
 
     return;
   }
