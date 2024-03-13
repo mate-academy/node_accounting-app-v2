@@ -10,6 +10,12 @@ const {
   updateExpense,
 } = require('../services/expense.service');
 const { getById } = require('../services/user.service');
+const {
+  BAD_REQUEST,
+  NOT_FOUND,
+  NO_CONTENT,
+  CREATED,
+} = require('../variables');
 const expensesRouter = express.Router();
 
 expensesRouter.get('/', (req, res) => {
@@ -24,7 +30,7 @@ expensesRouter.post('/', (req, res) => {
   const user = getById(userId);
 
   if (!user || !title) {
-    res.sendStatus(400);
+    res.sendStatus(BAD_REQUEST);
 
     return;
   }
@@ -33,13 +39,13 @@ expensesRouter.post('/', (req, res) => {
     userId, spentAt, title, amount, category, note, id
   );
 
-  res.status(201);
+  res.status(CREATED);
   res.send(expense);
 });
 
 expensesRouter.get('/:id', (req, res) => {
   if (!req.params.id) {
-    res.sendStatus(400);
+    res.sendStatus(BAD_REQUEST);
 
     return;
   }
@@ -47,7 +53,7 @@ expensesRouter.get('/:id', (req, res) => {
   const expense = getExpenseById(req.params.id);
 
   if (!expense) {
-    res.sendStatus(404);
+    res.sendStatus(NOT_FOUND);
 
     return;
   }
@@ -57,7 +63,7 @@ expensesRouter.get('/:id', (req, res) => {
 
 expensesRouter.delete('/:id', (req, res) => {
   if (!req.params.id) {
-    res.sendStatus(400);
+    res.sendStatus(BAD_REQUEST);
 
     return;
   }
@@ -65,17 +71,17 @@ expensesRouter.delete('/:id', (req, res) => {
   const expense = deleteExpense(req.params.id);
 
   if (!expense) {
-    res.sendStatus(404);
+    res.sendStatus(NOT_FOUND);
 
     return;
   }
 
-  res.sendStatus(204);
+  res.sendStatus(NO_CONTENT);
 });
 
 expensesRouter.patch('/:id', (req, res) => {
   if (!req.params.id) {
-    res.sendStatus(400);
+    res.sendStatus(BAD_REQUEST);
 
     return;
   }
@@ -83,7 +89,7 @@ expensesRouter.patch('/:id', (req, res) => {
   const expense = getExpenseById(req.params.id);
 
   if (!expense) {
-    res.sendStatus(404);
+    res.sendStatus(NOT_FOUND);
 
     return;
   }

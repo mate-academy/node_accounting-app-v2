@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 'use strict';
 
-let users = [];
+const users = [];
 
 const getUsers = () => {
   return users;
@@ -23,25 +23,31 @@ const createUser = (title) => {
 };
 
 const deleteUser = (id) => {
-  const user = getById(id);
+  const userIndex = users.findIndex(u => u.id === +id);
 
-  const newUser = users.filter(u => u.id !== +id);
+  if (userIndex !== -1) {
+    const deletedUser = users.splice(userIndex, 1)[0];
 
-  users = newUser;
+    return deletedUser;
+  }
 
-  return user;
+  return null;
 };
 
 const updateUser = (id, title) => {
   const user = getById(id);
 
-  return Object.assign(user, {
-    ...user, name: title,
-  });
+  if (user) {
+    user.name = title;
+
+    return user;
+  }
+
+  return null;
 };
 
 const setInitialValue = () => {
-  users = [];
+  users.length = 0;
 };
 
 module.exports = {

@@ -1,11 +1,9 @@
 /* eslint-disable no-console */
 'use strict';
 
-let expenses = [];
+const expenses = [];
 
 const getExpenses = ({ userId, categories, from, to }) => {
-  console.log(userId);
-
   return expenses.filter(expense => {
     const isUserMatch = userId
       ? expense.userId === +userId
@@ -50,9 +48,7 @@ const getExpenseById = (id) => {
 const deleteExpense = (id) => {
   const user = getExpenseById(id);
 
-  const newUser = expenses.filter(u => u.id !== +id);
-
-  expenses = newUser;
+  expenses.splice(expenses.findIndex(item => item.id === id), 1);
 
   return user;
 };
@@ -71,7 +67,7 @@ const updateExpense = (body, id) => {
 };
 
 const setInitialExpense = () => {
-  expenses = [];
+  expenses.length = 0;
 };
 
 module.exports = {
