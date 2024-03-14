@@ -1,6 +1,7 @@
 'use strict';
 
 let expenses = [];
+let increment = 1;
 
 function clearAllExpenses() {
   expenses = [];
@@ -23,7 +24,7 @@ function createExpense({
   note,
 }) {
   const newExpense = {
-    id: expenses.length,
+    id: increment,
     userId,
     title,
     amount,
@@ -33,12 +34,15 @@ function createExpense({
   };
 
   expenses.push(newExpense);
+  increment++;
 
   return newExpense;
 }
 
 function deleteExpenseById(id) {
-  return expenses.filter(exp => exp.id !== id);
+  const filteredExpenses = expenses.filter(exp => exp.id !== id);
+
+  return filteredExpenses;
 }
 
 function setAllExpenses(newExpenses) {
@@ -46,7 +50,7 @@ function setAllExpenses(newExpenses) {
 }
 
 function updateExpense(expense, title) {
-  Object.assign(expense, { title });
+  return Object.assign(expense, { ...title });
 }
 
 module.exports = {

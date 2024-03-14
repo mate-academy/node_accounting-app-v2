@@ -31,7 +31,7 @@ function addUser(req, res) {
 
 function getOneUser(req, res) {
   const { id } = req.params;
-  const user = getUserById(id);
+  const user = getUserById(+id);
 
   if (!user) {
     res.sendStatus(404);
@@ -39,12 +39,12 @@ function getOneUser(req, res) {
     return;
   }
 
-  res.status(200).send(user);
+  res.send(user);
 }
 
 function deleteUser(req, res) {
   const { id } = req.params;
-  const newUsers = deleteUserById(id);
+  const newUsers = deleteUserById(+id);
   const allUsers = getAllUsers();
 
   if (allUsers.length === newUsers.length) {
@@ -60,7 +60,7 @@ function deleteUser(req, res) {
 function updateOneUser(req, res) {
   const { id } = req.params;
   const { name } = req.body;
-  const user = getUserById(id);
+  const user = getUserById(+id);
 
   if (!user) {
     res.sendStatus(404);

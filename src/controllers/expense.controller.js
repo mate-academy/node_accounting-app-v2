@@ -48,7 +48,7 @@ function get(req, res) {
 
 function getOneExpense(req, res) {
   const { id } = req.params;
-  const expense = getExpenseById(id);
+  const expense = getExpenseById(+id);
 
   if (!expense) {
     res.sendStatus(404);
@@ -69,7 +69,13 @@ function addExpense(req, res) {
     note,
   } = req.body;
 
-  const user = getAllUsers.find(u => u.id === +userId);
+  if (!title || !category || !note || !amount || !userId || !spentAt) {
+    res.status(400).send('Invalid request body');
+
+    return;
+  }
+
+  const user = getAllUsers().find(u => u.id === +userId);
 
   if (!title || !user) {
     res.sendStatus(400);
@@ -86,16 +92,17 @@ function addExpense(req, res) {
     note,
   });
 
-  res.status(201).json(newExpense);
+  console.log(newExpense);
+  res.status(201).send(newExpense);
 }
 
 function deleteExpense(req, res) {
   const { id } = req.params;
 
-  const newExpenses = deleteExpenseById(id);
+  const newExpenses = deleteExpenseById(+id);
 
   if (newExpenses.length === getAllExpenses().length) {
-    res.status(404);
+    res.sendStatus(404);
 
     return;
   }
@@ -106,8 +113,8 @@ function deleteExpense(req, res) {
 
 function changeExpense(req, res) {
   const { id } = req.params;
-  const { title } = req.body;
-  const expense = getExpenseById(id);
+  const { ...updatedParams } = req.body;
+  const expense = getExpenseById(+id);
 
   if (!expense) {
     res.sendStatus(404);
@@ -115,7 +122,7 @@ function changeExpense(req, res) {
     return;
   }
 
-  const updatedExpense = updateExpense(expense, title);
+  const updatedExpense = updateExpense(expense, updatedParams);
 
   return res.send(updatedExpense);
 }

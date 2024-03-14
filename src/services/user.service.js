@@ -1,6 +1,7 @@
 'use strict';
 
 let users = [];
+let increment = 1;
 
 function clearAllUsers() {
   users = [];
@@ -17,10 +18,11 @@ function getUserById(id) {
 function createNewUser(name) {
   const user = {
     name,
-    id: users.length,
+    id: increment,
   };
 
   users.push(user);
+  increment++;
 
   return user;
 }
@@ -35,7 +37,7 @@ function setAllUsers(newUsers) {
 }
 
 function updateUser(user, name) {
-  Object.assign(user, { name });
+  return Object.assign(user, { name });
 }
 
 module.exports = {

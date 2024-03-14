@@ -15,7 +15,7 @@ function createServer() {
 
   // Add a routes to the server
   app.use('/users', express.json(), userRouter);
-  app.use('/users', express.json(), expenseRouter);
+  app.use('/expenses', express.json(), expenseRouter);
 
   // Return the server (express app)
   return app;
