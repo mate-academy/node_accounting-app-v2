@@ -329,7 +329,7 @@ describe('Expense', () => {
     });
   });
 
-  describe('removeExpense', () => {
+  describe('deleteExpense', () => {
     it('should delete expense', async() => {
       const { body: { id: userId } } = await api
         .post('/users')

@@ -46,7 +46,7 @@ const remove = (req, res) => {
     return;
   }
 
-  userService.removeUser(id);
+  userService.deleteUser(id);
   res.sendStatus(NO_CONTENT);
 };
 

@@ -27,7 +27,7 @@ const createUser = (name) => {
   return user;
 };
 
-const removeUser = (id) => {
+const deleteUser = (id) => {
   users = users.filter(user => user.id !== +id);
 };
 
@@ -44,6 +44,6 @@ module.exports = {
   getAllUsers,
   getUserById,
   createUser,
-  removeUser,
+  deleteUser,
   updateUser,
 };

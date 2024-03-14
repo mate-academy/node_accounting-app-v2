@@ -53,7 +53,7 @@ const remove = (req, res) => {
     return;
   }
 
-  expensesService.removeExpense(id);
+  expensesService.deleteExpense(id);
   res.sendStatus(NO_CONTENT);
 };
 

@@ -160,7 +160,7 @@ describe('User', () => {
     });
   });
 
-  describe('removeUser', () => {
+  describe('deleteUser', () => {
     it('should return 404 if user does not exist', async() => {
       await api
         .delete('/users/1')
