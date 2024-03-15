@@ -25,7 +25,6 @@
     "supertest": "^6.3.0"
   },
   "dependencies": {
-    "express": "^4.18.2",
-    "uuidv4": "^6.2.13"
+    "express": "^4.18.2"
   }
 }
