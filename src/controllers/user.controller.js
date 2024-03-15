@@ -1,5 +1,11 @@
 'use strict';
 
+const NOT_FOUND = 404;
+const BAD_REQUEST = 400;
+const CREATED = 201;
+const NO_CONTENT = 204;
+const OK = 200;
+
 const {
   getAllUsers,
   getUserById,
@@ -9,14 +15,14 @@ const {
 } = require('../services/user.service');
 
 const get = (req, res) => {
-  res.status(200).send(getAllUsers());
+  res.status(OK).send(getAllUsers());
 };
 
 const getOne = (req, res) => {
   const { userId } = req.params;
 
   if (isNaN(+userId)) {
-    res.status(400).send('Invalid user ID');
+    res.status(BAD_REQUEST).send('Invalid user ID');
 
     return;
   }
@@ -26,7 +32,7 @@ const getOne = (req, res) => {
   if (userFind) {
     res.send(userFind);
   } else {
-    res.status(404).send('User not found');
+    res.status(NOT_FOUND).send('User not found');
   }
 };
 
@@ -34,7 +40,7 @@ const createUser = (req, res) => {
   const { name } = req.body;
 
   if (!name) {
-    res.sendStatus(400);
+    res.sendStatus(BAD_REQUEST);
 
     return;
   }
@@ -46,7 +52,7 @@ const createUser = (req, res) => {
 
   addUser(user);
 
-  res.status(201).send(user);
+  res.status(CREATED).send(user);
 };
 
 const updateUser = (req, res) => {
@@ -57,14 +63,14 @@ const updateUser = (req, res) => {
   const userCheck = getUserById(userId);
 
   if (!userCheck) {
-    res.status(404).send('User not found');
+    res.status(NOT_FOUND).send('User not found');
 
     return;
   }
 
   Object.assign(userCheck, { name });
 
-  res.status(200).send(userCheck);
+  res.status(OK).send(userCheck);
 };
 
 const deleteUserId = (req, res) => {
@@ -73,7 +79,7 @@ const deleteUserId = (req, res) => {
   const userToDelete = getUserById(userId);
 
   if (!userToDelete) {
-    res.status(404).send('User not found');
+    res.status(NOT_FOUND).send('User not found');
 
     return;
   }
@@ -82,7 +88,7 @@ const deleteUserId = (req, res) => {
 
   deleteUser(indexDeleteUser);
 
-  res.sendStatus(204);
+  res.sendStatus(NO_CONTENT);
 };
 
 module.exports = {
