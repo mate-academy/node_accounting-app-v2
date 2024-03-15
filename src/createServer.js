@@ -1,192 +1,198 @@
-/* eslint-disable no-console */
 'use strict';
 
 const express = require('express');
+const { userRouter } = require('./routes/user.route');
+const { expenseRouter } = require('./routes/expense.route');
+const userService = require('./services/user.service');
+const expenseService = require('./services/expense.service');
 
 function createServer() {
-  const users = [];
-  const expenses = [];
-
   const app = express();
 
   app.use(express.json());
 
-  app.get('/users', (req, res) => {
-    res.send(users);
-  });
+  userService.restart();
+  expenseService.restart();
 
-  app.get('/users/:id', (req, res) => {
-    const { id } = req.params;
-    const user = users.find((u) => u.id === +id);
+  app.use('/users', userRouter);
+  app.use('/expenses', expenseRouter);
 
-    if (!user) {
-      res.status(404).send('User not found');
+  // app.get('/users', (req, res) => {
+  //   res.send(users);
+  // });
 
-      return;
-    }
+  // app.get('/users/:id', (req, res) => {
+  //   const { id } = req.params;
+  //   const user = users.find((u) => u.id === +id);
 
-    res.status(200).send(user);
-  });
+  //   if (!user) {
+  //     res.status(404).send('User not found');
 
-  app.post('/users', (req, res) => {
-    const { name } = req.body;
+  //     return;
+  //   }
 
-    if (!name) {
-      res.status(400).send('Name is required');
+  //   res.status(200).send(user);
+  // });
 
-      return;
-    }
+  // app.post('/users', (req, res) => {
+  //   const { name } = req.body;
 
-    const user = {
-      id: users.length + 1, name,
-    };
+  //   if (!name) {
+  //     res.status(400).send('Name is required');
 
-    users.push(user);
+  //     return;
+  //   }
 
-    res.status(201).send(user);
-  });
+  //   const user = {
+  //     id: users.length + 1, name,
+  //   };
 
-  app.delete('/users/:id', (req, res) => {
-    const { id } = req.params;
+  //   users.push(user);
 
-    const index = users.findIndex((u) => u.id === +id);
+  //   res.status(201).send(user);
+  // });
 
-    if (index === -1) {
-      res.status(404).send('User not found');
+  // app.delete('/users/:id', (req, res) => {
+  //   const { id } = req.params;
 
-      return;
-    }
+  //   const index = users.findIndex((u) => u.id === +id);
 
-    users.splice(index, 1);
+  //   if (index === -1) {
+  //     res.status(404).send('User not found');
 
-    res.status(204).send('User deleted');
-  });
+  //     return;
+  //   }
 
-  app.patch('/users/:id', (req, res) => {
-    const { id } = req.params;
-    const { name } = req.body;
-    const user = users.find((u) => u.id === +id);
+  //   users.splice(index, 1);
 
-    if (!name) {
-      res.status(400).send('Name is required');
+  //   res.status(204).send('User deleted');
+  // });
 
-      return;
-    }
+  // app.patch('/users/:id', (req, res) => {
+  //   const { id } = req.params;
+  //   const { name } = req.body;
+  //   const user = users.find((u) => u.id === +id);
 
-    if (!user) {
-      res.status(404).send('User not found');
+  //   if (!name) {
+  //     res.status(400).send('Name is required');
 
-      return;
-    }
+  //     return;
+  //   }
 
-    user.name = name;
+  //   if (!user) {
+  //     res.status(404).send('User not found');
 
-    res.status(200).send(user);
-  });
+  //     return;
+  //   }
 
-  app.get('/expenses', (req, res) => {
-    const { userId, categories, from, to } = req.query;
+  //   user.name = name;
 
-    if (userId && !categories) {
-      const userExpenses = expenses
-        .filter((e) => e.userId === +userId);
+  //   res.status(200).send(user);
+  // });
 
-      res.send(userExpenses);
+  // app.get('/expenses', (req, res) => {
+  //   const { userId, categories, from, to } = req.query;
 
-      return;
-    }
+  //   if (userId && !categories) {
+  //     const userExpenses = expenses
+  //       .filter((e) => e.userId === +userId);
 
-    if (from && to) {
-      const dateExpenses = expenses
-        .filter((e) => e.spentAt >= from && e.spentAt <= to);
+  //     res.send(userExpenses);
 
-      res.send(dateExpenses);
+  //     return;
+  //   }
 
-      return;
-    }
+  //   if (from && to) {
+  //     const dateExpenses = expenses
+  //       .filter((e) => e.spentAt >= from && e.spentAt <= to);
 
-    if (categories) {
-      const categoryExpenses = expenses
-        .filter((e) => e.category === categories);
+  //     res.send(dateExpenses);
 
-      res.send(categoryExpenses);
+  //     return;
+  //   }
 
-      return;
-    }
+  //   if (categories) {
+  //     const categoryExpenses = expenses
+  //       .filter((e) => e.category === categories);
 
-    res.send(expenses);
-  });
+  //     res.send(categoryExpenses);
 
-  app.get('/expenses/:id', (req, res) => {
-    const { id } = req.params;
+  //     return;
+  //   }
 
-    const expense = expenses.find((e) => e.id === +id);
+  //   res.send(expenses);
+  // });
 
-    if (!expense) {
-      res.status(404).send('Expense not found');
+  // app.get('/expenses/:id', (req, res) => {
+  //   const { id } = req.params;
 
-      return;
-    }
+  //   const expense = expenses.find((e) => e.id === +id);
 
-    res.status(200).send(expense);
-  });
+  //   if (!expense) {
+  //     res.status(404).send('Expense not found');
 
-  app.post('/expenses', (req, res) => {
-    const { title, amount, spentAt, userId } = req.body;
+  //     return;
+  //   }
 
-    if (!title || !amount || !spentAt) {
-      res.status(400).send('All fields are required');
+  //   res.status(200).send(expense);
+  // });
 
-      return;
-    }
+  // app.post('/expenses', (req, res) => {
+  //   const { title, amount, spentAt, userId } = req.body;
 
-    const user = users.find((u) => u.id === userId);
+  //   if (!title || !amount || !spentAt) {
+  //     res.status(400).send('All fields are required');
 
-    if (!user) {
-      res.status(400).send('User not found');
+  //     return;
+  //   }
 
-      return;
-    }
+  //   const user = users.find((u) => u.id === userId);
 
-    const expense = {
-      id: expenses.length + 1, ...req.body,
-    };
+  //   if (!user) {
+  //     res.status(400).send('User not found');
 
-    expenses.push(expense);
+  //     return;
+  //   }
 
-    res.status(201).send(expense);
-  });
+  //   const expense = {
+  //     id: expenses.length + 1, ...req.body,
+  //   };
 
-  app.delete('/expenses/:id', (req, res) => {
-    const { id } = req.params;
-    const index = expenses.findIndex((e) => e.id === +id);
+  //   expenses.push(expense);
 
-    if (index === -1) {
-      res.status(404).send('Expense not found');
+  //   res.status(201).send(expense);
+  // });
 
-      return;
-    }
+  // app.delete('/expenses/:id', (req, res) => {
+  //   const { id } = req.params;
+  //   const index = expenses.findIndex((e) => e.id === +id);
 
-    expenses.splice(index, 1);
+  //   if (index === -1) {
+  //     res.status(404).send('Expense not found');
 
-    res.status(204).send('Expense deleted');
-  });
+  //     return;
+  //   }
 
-  app.patch('/expenses/:id', (req, res) => {
-    const { id } = req.params;
+  //   expenses.splice(index, 1);
 
-    const expense = expenses.find((e) => e.id === +id);
+  //   res.status(204).send('Expense deleted');
+  // });
 
-    if (!expense) {
-      res.status(404).send('Expense not found');
+  // app.patch('/expenses/:id', (req, res) => {
+  //   const { id } = req.params;
 
-      return;
-    }
+  //   const expense = expenses.find((e) => e.id === +id);
 
-    Object.assign(expense, req.body);
+  //   if (!expense) {
+  //     res.status(404).send('Expense not found');
 
-    res.status(200).send(expense);
-  });
+  //     return;
+  //   }
+
+  //   Object.assign(expense, req.body);
+
+  //   res.status(200).send(expense);
+  // });
 
   return app;
 }
