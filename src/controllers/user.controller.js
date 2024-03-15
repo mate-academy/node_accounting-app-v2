@@ -1,6 +1,7 @@
 'use strict';
 
 const userService = require('../services/user.service');
+const { messages } = require('../types/messages');
 
 const getAll = (req, res) => {
   res.send(userService.getAll());
@@ -8,10 +9,10 @@ const getAll = (req, res) => {
 
 const getById = (req, res) => {
   const { id } = req.params;
-  const user = userService.getById(id);
+  const user = userService.getById(+id);
 
   if (!user) {
-    res.status(404).send('User not found');
+    res.status(404).send(messages.user.notFound);
 
     return;
   }
@@ -23,7 +24,7 @@ const create = (req, res) => {
   const { name } = req.body;
 
   if (!name) {
-    res.status(400).send('Name is required');
+    res.status(400).send(messages.user.requiredFields);
 
     return;
   }
@@ -35,15 +36,15 @@ const create = (req, res) => {
 
 const remove = (req, res) => {
   const { id } = req.params;
-  const user = userService.remove(id);
+  const user = userService.remove(+id);
 
   if (!user) {
-    res.status(404).send('User not found');
+    res.status(404).send(messages.user.notFound);
 
     return;
   }
 
-  res.status(204).send('User deleted');
+  res.status(204).send(messages.user.deleted);
 };
 
 const update = (req, res) => {
@@ -51,12 +52,12 @@ const update = (req, res) => {
   const { name } = req.body;
 
   if (!name) {
-    res.status(400).send('Name is required');
+    res.status(400).send(messages.user.requiredFields);
 
     return;
   }
 
-  const user = userService.update(id, name);
+  const user = userService.update(+id, name);
 
   if (!user) {
     res.status(404).send('User not found');

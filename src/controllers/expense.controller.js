@@ -2,6 +2,7 @@
 
 const expensesService = require('../services/expense.service');
 const usersService = require('../services/user.service');
+const { messages } = require('../types/messages');
 
 const getAll = (req, res) => {
   const { userId, categories, from, to } = req.query;
@@ -33,7 +34,7 @@ const getById = (req, res) => {
   const expense = expensesService.getById(+id);
 
   if (!expense) {
-    res.status(404).send('Expense not found');
+    res.status(404).send(messages.expense.notFound);
 
     return;
   }
@@ -45,7 +46,7 @@ const create = (req, res) => {
   const { title, amount, spentAt, userId } = req.body;
 
   if (!title || !amount || !spentAt) {
-    res.status(400).send('Missing required fields');
+    res.status(400).send(messages.expense.requiredFields);
 
     return;
   }
@@ -53,7 +54,7 @@ const create = (req, res) => {
   const user = usersService.getById(userId);
 
   if (!user) {
-    res.status(400).send('User not found');
+    res.status(400).send(messages.user.userNotFound);
 
     return;
   }
@@ -69,12 +70,12 @@ const remove = (req, res) => {
   const removed = expensesService.remove(+id);
 
   if (!removed) {
-    res.status(404).send('Expense not found');
+    res.status(404).send(messages.expense.notFound);
 
     return;
   }
 
-  res.status(204).send('Expense deleted');
+  res.status(204).send(messages.expense.deleted);
 };
 
 const update = (req, res) => {
@@ -83,7 +84,7 @@ const update = (req, res) => {
   const expense = expensesService.getById(+id);
 
   if (!expense) {
-    res.status(404).send('Expense not found');
+    res.status(404).send(messages.expense.notFound);
 
     return;
   }
@@ -91,7 +92,7 @@ const update = (req, res) => {
   const updated = expensesService.update(expense, toUpdate);
 
   if (!updated) {
-    res.status(404).send('Expense not found');
+    res.status(404).send(messages.expense.notFound);
 
     return;
   }

@@ -9,10 +9,10 @@ expenseRouter.get('/', expenseController.getAll);
 
 expenseRouter.get('/:id', expenseController.getById);
 
-expenseRouter.delete('/:id', expenseController.remove);
-
 expenseRouter.post('/', expenseController.create);
 
 expenseRouter.patch('/:id', expenseController.update);
+
+expenseRouter.delete('/:id', expenseController.remove);
 
 module.exports = { expenseRouter };

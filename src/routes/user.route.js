@@ -11,8 +11,8 @@ userRouter.get('/:id', userController.getById);
 
 userRouter.post('/', userController.create);
 
-userRouter.delete('/:id', userController.remove);
-
 userRouter.patch('/:id', userController.update);
+
+userRouter.delete('/:id', userController.remove);
 
 module.exports = { userRouter };
