@@ -1,10 +1,10 @@
 'use strict';
 
-let users = [];
+const users = [];
 let increment = 1;
 
 function clearAllUsers() {
-  users = [];
+  users.length = 0;
 };
 
 function getAllUsers() {
@@ -32,7 +32,8 @@ function deleteUserById(id) {
 }
 
 function setAllUsers(newUsers) {
-  users = newUsers;
+  users.length = 0;
+  users.push(...newUsers);
 }
 
 function updateUser(user, name) {

@@ -1,10 +1,10 @@
 'use strict';
 
-let expenses = [];
+const expenses = [];
 let increment = 1;
 
 function clearAllExpenses() {
-  expenses = [];
+  expenses.length = 0;
 }
 
 function getAllExpenses() {
@@ -46,7 +46,8 @@ function deleteExpenseById(id) {
 }
 
 function setAllExpenses(newExpenses) {
-  expenses = newExpenses;
+  expenses.length = 0;
+  expenses.push(...newExpenses);
 }
 
 function updateExpense(expense, title) {
