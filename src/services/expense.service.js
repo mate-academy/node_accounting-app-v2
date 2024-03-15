@@ -12,7 +12,7 @@ function getAllExpenses() {
 }
 
 function getExpenseById(id) {
-  return expenses.find(exp => exp.id === id);
+  return expenses.find(item => item.id === id);
 }
 
 function createExpense({
@@ -40,7 +40,7 @@ function createExpense({
 }
 
 function deleteExpenseById(id) {
-  const filteredExpenses = expenses.filter(exp => exp.id !== id);
+  const filteredExpenses = expenses.filter(item => item.id !== id);
 
   return filteredExpenses;
 }

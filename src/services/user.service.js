@@ -32,8 +32,7 @@ function deleteUserById(id) {
 }
 
 function setAllUsers(newUsers) {
-  users.length = 0;
-  users = [...newUsers];
+  users = newUsers;
 }
 
 function updateUser(user, name) {

@@ -68,7 +68,7 @@ function updateOneUser(req, res) {
     return;
   }
 
-  if (typeof name !== 'string') {
+  if (!name) {
     res.sendStatus(422);
 
     return;

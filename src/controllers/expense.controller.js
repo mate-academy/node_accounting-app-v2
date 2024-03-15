@@ -10,6 +10,12 @@ const {
   createExpense,
 } = require('../services/expense.service');
 
+const STATUS_INVALID_REQUEST = 400;
+const MESSAGE_INVALID_REQUEST
+  = 'Invalid request data, please check and send again';
+const STATUS_NOT_FOUND = 404;
+const MESSAGE_NOT_FOUND = 'Data not found';
+
 function get(req, res) {
   const allExpenses = getAllExpenses();
   const { userId, categories, from, to } = req.query;
@@ -51,7 +57,7 @@ function getOneExpense(req, res) {
   const expense = getExpenseById(+id);
 
   if (!expense) {
-    res.sendStatus(404);
+    res.sendStatus(STATUS_NOT_FOUND).send(MESSAGE_NOT_FOUND);
 
     return;
   }
@@ -70,15 +76,15 @@ function addExpense(req, res) {
   } = req.body;
 
   if (!title || !category || !note || !amount || !userId || !spentAt) {
-    res.status(400).send('Invalid request body');
+    res.sendStatus(STATUS_INVALID_REQUEST).send(MESSAGE_INVALID_REQUEST);
 
     return;
   }
 
-  const user = getAllUsers().find(u => u.id === +userId);
+  const user = getAllUsers().find(userToCheck => userToCheck.id === +userId);
 
   if (!title || !user) {
-    res.sendStatus(400);
+    res.sendStatus(STATUS_INVALID_REQUEST).send(MESSAGE_INVALID_REQUEST);
 
     return;
   }
@@ -92,7 +98,6 @@ function addExpense(req, res) {
     note,
   });
 
-  console.log(newExpense);
   res.status(201).send(newExpense);
 }
 
@@ -102,7 +107,7 @@ function deleteExpense(req, res) {
   const newExpenses = deleteExpenseById(+id);
 
   if (newExpenses.length === getAllExpenses().length) {
-    res.sendStatus(404);
+    res.sendStatus(STATUS_NOT_FOUND).send(MESSAGE_NOT_FOUND);
 
     return;
   }
@@ -117,7 +122,7 @@ function changeExpense(req, res) {
   const expense = getExpenseById(+id);
 
   if (!expense) {
-    res.sendStatus(404);
+    res.sendStatus(STATUS_NOT_FOUND).send(MESSAGE_NOT_FOUND);
 
     return;
   }
