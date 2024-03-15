@@ -1,9 +1,6 @@
 'use strict';
 
-const NOT_FOUND = 404;
-const BAD_REQUEST = 400;
-const CREATED = 201;
-const NO_CONTENT = 204;
+const { statusCodes } = require('../variables/status_codes');
 
 const {
   getAllExpenses,
@@ -29,7 +26,7 @@ const getOneById = (req, res) => {
   const expenseIdFound = getOneExpense(id);
 
   if (!expenseIdFound) {
-    res.status(NOT_FOUND).send('Expense not found');
+    res.status(statusCodes.NOT_FOUND).send('Expense not found');
   }
 
   res.send(expenseIdFound);
@@ -39,7 +36,7 @@ const createExpenseController = (req, res) => {
   const { title, category, note, amount, userId, spentAt } = req.body;
 
   if (!title || !category || !note || !amount || !userId || !spentAt) {
-    res.status(BAD_REQUEST).send('Invalid request body');
+    res.status(statusCodes.BAD_REQUEST).send('Invalid request body');
 
     return;
   }
@@ -47,7 +44,7 @@ const createExpenseController = (req, res) => {
   const userExists = checkAtleastOneUser(userId);
 
   if (!userExists) {
-    res.status(BAD_REQUEST).send('User not found');
+    res.status(statusCodes.BAD_REQUEST).send('User not found');
 
     return;
   }
@@ -64,7 +61,7 @@ const createExpenseController = (req, res) => {
 
   createExpense(newExpense);
 
-  res.status(CREATED).send(newExpense);
+  res.status(statusCodes.CREATED).send(newExpense);
 };
 
 const updateExpenseController = (req, res) => {
@@ -77,7 +74,7 @@ const updateExpenseController = (req, res) => {
   const checkedExpense = getOneExpense(id);
 
   if (!checkedExpense) {
-    res.sendStatus(NOT_FOUND);
+    res.sendStatus(statusCodes.NOT_FOUND);
 
     return;
   }
@@ -94,12 +91,12 @@ const deleteExpenseController = (req, res) => {
   const expenseUpdateIndex = findIndexOneExpense(checkedExpense);
 
   if (expenseUpdateIndex < 0) {
-    res.sendStatus(NOT_FOUND);
+    res.sendStatus(statusCodes.NOT_FOUND);
   }
 
   deleteExpense(expenseUpdateIndex);
 
-  res.sendStatus(NO_CONTENT);
+  res.sendStatus(statusCodes.NO_CONTENT);
 };
 
 module.exports = {

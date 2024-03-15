@@ -1,10 +1,6 @@
 'use strict';
 
-const NOT_FOUND = 404;
-const BAD_REQUEST = 400;
-const CREATED = 201;
-const NO_CONTENT = 204;
-const OK = 200;
+const { statusCodes } = require('../variables/status_codes');
 
 const {
   getAllUsers,
@@ -15,14 +11,14 @@ const {
 } = require('../services/user.service');
 
 const get = (req, res) => {
-  res.status(OK).send(getAllUsers());
+  res.status(statusCodes.OK).send(getAllUsers());
 };
 
 const getOne = (req, res) => {
   const { userId } = req.params;
 
   if (isNaN(+userId)) {
-    res.status(BAD_REQUEST).send('Invalid user ID');
+    res.status(statusCodes.BAD_REQUEST).send('Invalid user ID');
 
     return;
   }
@@ -32,7 +28,7 @@ const getOne = (req, res) => {
   if (userFind) {
     res.send(userFind);
   } else {
-    res.status(NOT_FOUND).send('User not found');
+    res.status(statusCodes.NOT_FOUND).send('User not found');
   }
 };
 
@@ -40,7 +36,7 @@ const createUser = (req, res) => {
   const { name } = req.body;
 
   if (!name) {
-    res.sendStatus(BAD_REQUEST);
+    res.sendStatus(statusCodes.BAD_REQUEST);
 
     return;
   }
@@ -52,7 +48,7 @@ const createUser = (req, res) => {
 
   addUser(user);
 
-  res.status(CREATED).send(user);
+  res.status(statusCodes.CREATED).send(user);
 };
 
 const updateUser = (req, res) => {
@@ -63,14 +59,14 @@ const updateUser = (req, res) => {
   const userCheck = getUserById(userId);
 
   if (!userCheck) {
-    res.status(NOT_FOUND).send('User not found');
+    res.status(statusCodes.NOT_FOUND).send('User not found');
 
     return;
   }
 
   Object.assign(userCheck, { name });
 
-  res.status(OK).send(userCheck);
+  res.status(statusCodes.OK).send(userCheck);
 };
 
 const deleteUserId = (req, res) => {
@@ -79,7 +75,7 @@ const deleteUserId = (req, res) => {
   const userToDelete = getUserById(userId);
 
   if (!userToDelete) {
-    res.status(NOT_FOUND).send('User not found');
+    res.status(statusCodes.NOT_FOUND).send('User not found');
 
     return;
   }
@@ -88,7 +84,7 @@ const deleteUserId = (req, res) => {
 
   deleteUser(indexDeleteUser);
 
-  res.sendStatus(NO_CONTENT);
+  res.sendStatus(statusCodes.NO_CONTENT);
 };
 
 module.exports = {
