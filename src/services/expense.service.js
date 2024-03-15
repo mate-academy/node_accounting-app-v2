@@ -1,12 +1,8 @@
 'use strict';
 
-const expenses = [];
+const getMaxId = require('../getMaxId.js');
 
-const getMaxId = () => {
-  return expenses.length
-    ? Math.max(...expenses.map(expense => expense.id))
-    : 0;
-};
+const expenses = [];
 
 const initExpenses = () => {
   expenses.length = 0;
@@ -55,7 +51,7 @@ const updateExpense = (expenseId, data) => {
 const addNewExpense = data => {
   const newExpense = {
     ...data,
-    id: getMaxId() + 1,
+    id: getMaxId(expenses) + 1,
   };
 
   expenses.push(newExpense);

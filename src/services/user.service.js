@@ -1,5 +1,7 @@
 'use strict';
 
+const getMaxId = require('../getMaxId.js');
+
 const users = [];
 
 const initUsers = () => {
@@ -20,7 +22,7 @@ const updateUser = (id, name) => {
 
 const addNewUser = name => {
   const newUser = {
-    'id': getMaxId() + 1,
+    'id': getMaxId(users) + 1,
     name,
   };
 
@@ -33,12 +35,6 @@ const deleteUser = id => {
   const index = users.findIndex(user => user.id === +id);
 
   users.splice(index, 1);
-};
-
-const getMaxId = () => {
-  return users.length
-    ? Math.max(...users.map(user => user.id))
-    : 0;
 };
 
 module.exports = {
