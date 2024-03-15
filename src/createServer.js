@@ -7,17 +7,14 @@ const { clearAllExpenses } = require('./services/expense.service.js');
 const { expenseRouter } = require('./routes/expense.route.js');
 
 function createServer() {
-  // Use express to create a server
   const app = express();
 
   clearAllUsers();
   clearAllExpenses();
 
-  // Add a routes to the server
   app.use('/users', express.json(), userRouter);
   app.use('/expenses', express.json(), expenseRouter);
 
-  // Return the server (express app)
   return app;
 }
 
