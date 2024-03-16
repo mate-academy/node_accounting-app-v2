@@ -1,7 +1,8 @@
 'use strict';
 
+const { createId } = require('../utils/helper');
+
 const expenses = [];
-let increment = 1;
 
 function clearAllExpenses() {
   expenses.length = 0;
@@ -24,7 +25,7 @@ function createExpense({
   note,
 }) {
   const newExpense = {
-    id: increment,
+    id: createId(expenses),
     userId,
     title,
     amount,
@@ -34,7 +35,6 @@ function createExpense({
   };
 
   expenses.push(newExpense);
-  increment++;
 
   return newExpense;
 }

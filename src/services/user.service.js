@@ -1,7 +1,8 @@
 'use strict';
 
+const { createId } = require('../utils/helper');
+
 const users = [];
-let increment = 1;
 
 function clearAllUsers() {
   users.length = 0;
@@ -18,11 +19,10 @@ function getUserById(id) {
 function createNewUser(name) {
   const user = {
     name,
-    id: increment,
+    id: createId(users),
   };
 
   users.push(user);
-  increment++;
 
   return user;
 }
