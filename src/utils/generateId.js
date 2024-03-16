@@ -1,7 +1,7 @@
 'use strict';
 
 const generateId = () => {
-  return Math.floor(Math.random() * 1000);
+  return Date.now() + Math.floor(Math.random() * 1000);
 };
 
 module.exports = {
