@@ -2,6 +2,7 @@
 
 const userService = require('../services/user.service');
 const { messages } = require('../types/messages');
+const { statusCode } = require('../types/status.messages');
 
 const getAll = (req, res) => {
   res.send(userService.getAll());
@@ -12,26 +13,26 @@ const getById = (req, res) => {
   const user = userService.getById(+id);
 
   if (!user) {
-    res.status(404).send(messages.user.notFound);
+    res.status(statusCode.notFound).send(messages.user.notFound);
 
     return;
   }
 
-  res.status(200).send(user);
+  res.status(statusCode.ok).send(user);
 };
 
 const create = (req, res) => {
   const { name } = req.body;
 
   if (!name) {
-    res.status(400).send(messages.user.requiredFields);
+    res.status(statusCode.badRequest).send(messages.user.requiredFields);
 
     return;
   }
 
   const user = userService.create(name);
 
-  res.status(201).send(user);
+  res.status(statusCode.created).send(user);
 };
 
 const remove = (req, res) => {
@@ -39,12 +40,12 @@ const remove = (req, res) => {
   const user = userService.remove(+id);
 
   if (!user) {
-    res.status(404).send(messages.user.notFound);
+    res.status(statusCode.notFound).send(messages.user.notFound);
 
     return;
   }
 
-  res.status(204).send(messages.user.deleted);
+  res.status(statusCode.deleted).send(messages.user.deleted);
 };
 
 const update = (req, res) => {
@@ -52,7 +53,7 @@ const update = (req, res) => {
   const { name } = req.body;
 
   if (!name) {
-    res.status(400).send(messages.user.requiredFields);
+    res.status(statusCode.badRequest).send(messages.user.requiredFields);
 
     return;
   }
@@ -60,12 +61,12 @@ const update = (req, res) => {
   const user = userService.update(+id, name);
 
   if (!user) {
-    res.status(404).send('User not found');
+    res.status(statusCode.notFound).send('User not found');
 
     return;
   }
 
-  res.status(200).send(user);
+  res.status(statusCode.ok).send(user);
 };
 
 module.exports = {

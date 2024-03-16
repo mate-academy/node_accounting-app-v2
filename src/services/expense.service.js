@@ -1,5 +1,7 @@
 'use strict';
 
+const { generateItem } = require('../utils/generateItem');
+
 const expenses = [];
 
 function restart() {
@@ -28,10 +30,7 @@ function getByCategory(userId, categories) {
 };
 
 function create(expense) {
-  const newExpense = {
-    id: expenses.length + 1,
-    ...expense,
-  };
+  const newExpense = generateItem(expense);
 
   expenses.push(newExpense);
 

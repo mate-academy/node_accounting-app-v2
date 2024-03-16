@@ -3,6 +3,7 @@
 const expensesService = require('../services/expense.service');
 const usersService = require('../services/user.service');
 const { messages } = require('../types/messages');
+const { statusCode } = require('../types/status.messages');
 
 const getAll = (req, res) => {
   const { userId, categories, from, to } = req.query;
@@ -34,19 +35,19 @@ const getById = (req, res) => {
   const expense = expensesService.getById(+id);
 
   if (!expense) {
-    res.status(404).send(messages.expense.notFound);
+    res.status(statusCode.notFound).send(messages.expense.notFound);
 
     return;
   }
 
-  res.status(200).send(expense);
+  res.status(statusCode.ok).send(expense);
 };
 
 const create = (req, res) => {
   const { title, amount, spentAt, userId } = req.body;
 
   if (!title || !amount || !spentAt) {
-    res.status(400).send(messages.expense.requiredFields);
+    res.status(statusCode.badRequest).send(messages.expense.requiredFields);
 
     return;
   }
@@ -54,14 +55,14 @@ const create = (req, res) => {
   const user = usersService.getById(userId);
 
   if (!user) {
-    res.status(400).send(messages.user.userNotFound);
+    res.status(statusCode.badRequest).send(messages.user.userNotFound);
 
     return;
   }
 
   const expense = expensesService.create(req.body);
 
-  res.status(201).send(expense);
+  res.status(statusCode.created).send(expense);
 };
 
 const remove = (req, res) => {
@@ -70,12 +71,12 @@ const remove = (req, res) => {
   const removed = expensesService.remove(+id);
 
   if (!removed) {
-    res.status(404).send(messages.expense.notFound);
+    res.status(statusCode.notFound).send(messages.expense.notFound);
 
     return;
   }
 
-  res.status(204).send(messages.expense.deleted);
+  res.status(statusCode.deleted).send(messages.expense.deleted);
 };
 
 const update = (req, res) => {
@@ -84,7 +85,7 @@ const update = (req, res) => {
   const expense = expensesService.getById(+id);
 
   if (!expense) {
-    res.status(404).send(messages.expense.notFound);
+    res.status(statusCode.notFound).send(messages.expense.notFound);
 
     return;
   }
@@ -92,12 +93,12 @@ const update = (req, res) => {
   const updated = expensesService.update(expense, toUpdate);
 
   if (!updated) {
-    res.status(404).send(messages.expense.notFound);
+    res.status(statusCode.notFound).send(messages.expense.notFound);
 
     return;
   }
 
-  res.status(200).send(updated);
+  res.status(statusCode.ok).send(updated);
 };
 
 module.exports = {

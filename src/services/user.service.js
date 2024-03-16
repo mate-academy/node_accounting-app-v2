@@ -1,5 +1,7 @@
 'use strict';
 
+const { generateItem } = require('../utils/generateItem');
+
 const users = [];
 
 function restart() {
@@ -11,14 +13,11 @@ function getAll() {
 }
 
 function getById(id) {
-  return users.find((u) => u.id === id);
+  return users.find((currentUser) => currentUser.id === id);
 }
 
 function create(name) {
-  const user = {
-    id: users.length + 1,
-    name,
-  };
+  const user = generateItem({ name });
 
   users.push(user);
 
@@ -26,7 +25,7 @@ function create(name) {
 }
 
 function remove(id) {
-  const index = users.findIndex((u) => u.id === id);
+  const index = users.findIndex((currentUser) => currentUser.id === id);
 
   if (index === -1) {
     return null;
@@ -36,7 +35,7 @@ function remove(id) {
 }
 
 function update(id, name) {
-  const user = users.find((u) => u.id === id);
+  const user = users.find((currentUser) => currentUser.id === id);
 
   if (!user) {
     return null;
