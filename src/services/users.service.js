@@ -1,13 +1,13 @@
 'use strict';
 
-let users = [];
+const users = [];
 
 const getAllUsers = () => {
   return users;
 };
 
 const getUserById = (id) => {
-  const user = users.find(u => u.id === +id);
+  const user = users.find(userItem => userItem.id === +id);
 
   return user;
 };
@@ -33,7 +33,10 @@ const updateUser = (id, newName) => {
 };
 
 const removeUser = (id) => {
-  users = users.filter(u => u.id !== +id);
+  const filteredUsers = users.filter(user => user.id !== +id);
+
+  users.length = 0;
+  users.push(...filteredUsers);
 };
 
 const refreshUsers = () => {

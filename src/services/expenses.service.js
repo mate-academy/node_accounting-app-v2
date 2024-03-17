@@ -1,6 +1,6 @@
 'use strict';
 
-let expenses = [];
+const expenses = [];
 
 const getAllExpenses = (userId, categories, from, to) => {
   let filteredExpenses = [...expenses];
@@ -25,13 +25,14 @@ const getAllExpenses = (userId, categories, from, to) => {
 };
 
 const getExpenseById = (id) => {
-  const expense = expenses.find(e => e.id === +id);
+  const expense = expenses.find(expenseItem => expenseItem.id === +id);
 
   return expense;
 };
 
 const getExpenseByUserId = (userId) => {
-  const expense = expenses.filter(e => e.userId === +userId);
+  const expense = expenses
+    .filter(expenseItem => expenseItem.userId === +userId);
 
   return expense;
 };
@@ -76,7 +77,10 @@ const updateExpense = (id, updatedData) => {
 };
 
 const removeExpense = (id) => {
-  expenses = expenses.filter(expense => expense.id !== +id);
+  const filteredUsers = expenses.filter(expense => expense.id !== +id);
+
+  expenses.length = 0;
+  expenses.push(...filteredUsers);
 };
 
 const refreshExpense = () => {

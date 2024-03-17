@@ -2,6 +2,13 @@
 
 const expenseService = require('../services/expenses.service');
 const { getUserById } = require('../services/users.service');
+const
+  {
+    NOT_FOUND,
+    BAD_REQUEST,
+    NO_CONTENT,
+    CREATED,
+  } = require('../constants');
 
 const getAll = (req, res) => {
   const { userId, categories, from, to } = req.query;
@@ -14,7 +21,7 @@ const getOneById = (req, res) => {
   const expense = expenseService.getExpenseById(+id);
 
   if (!expense) {
-    res.status(404).send();
+    res.status(NOT_FOUND).send();
   }
 
   res.send(expense);
@@ -25,20 +32,20 @@ const create = (req, res) => {
   const { userId } = req.body;
 
   if (!userId || !getUserById(userId)) {
-    res.status(400).send();
+    res.status(BAD_REQUEST).send();
 
     return;
   }
 
   if (!expenseService.getExpenseByUserId(+userId)) {
-    res.status(404).send();
+    res.status(NOT_FOUND).send();
 
     return;
   }
 
   const createdExpense = expenseService.createExpense(newExpense);
 
-  res.status(201).send(createdExpense);
+  res.status(CREATED).send(createdExpense);
 };
 
 const update = (req, res) => {
@@ -46,7 +53,7 @@ const update = (req, res) => {
   const newExpense = req.body;
 
   if (!newExpense) {
-    res.sendStatus(400);
+    res.sendStatus(BAD_REQUEST);
 
     return;
   }
@@ -54,7 +61,7 @@ const update = (req, res) => {
   const expense = expenseService.getExpenseById(id);
 
   if (!expense) {
-    res.status(404).send();
+    res.status(NOT_FOUND).send();
 
     return;
   }
@@ -62,7 +69,7 @@ const update = (req, res) => {
   const updatedExpense = expenseService.updateExpense(id, newExpense);
 
   if (!updatedExpense) {
-    res.status(404).send();
+    res.status(NOT_FOUND).send();
 
     return;
   }
@@ -75,13 +82,13 @@ const remove = (req, res) => {
   const expense = expenseService.getExpenseById(id);
 
   if (!expense) {
-    res.status(404).send();
+    res.status(NOT_FOUND).send();
 
     return;
   }
 
   expenseService.removeExpense(+id);
-  res.status(204).send();
+  res.status(NO_CONTENT).send();
 };
 
 module.exports = {
