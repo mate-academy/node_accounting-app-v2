@@ -1,7 +1,9 @@
 /* eslint-disable no-param-reassign */
 'use strict';
 
-let expenses = [];
+const newId = require('./index');
+
+const expenses = [];
 
 const clearExpenses = () => {
   expenses.length = 0;
@@ -11,12 +13,12 @@ const getExpenses = (userId, from, to, categories) => {
   let filteredExpenses = [...expenses];
 
   if (userId) {
-    filteredExpenses = expenses.filter((e) => e.userId === +userId);
+    filteredExpenses = expenses.filter((expens) => expens.userId === +userId);
   }
 
   if (from && to) {
-    filteredExpenses = expenses.filter((expense) => {
-      const expenseDate = new Date(expense.spentAt);
+    filteredExpenses = expenses.filter((expens) => {
+      const expenseDate = new Date(expens.spentAt);
       const fromDate = new Date(from);
       const toDate = new Date(to);
 
@@ -26,7 +28,7 @@ const getExpenses = (userId, from, to, categories) => {
 
   if (categories) {
     filteredExpenses = expenses.filter(
-      (expense) => expense.category === categories
+      (expens) => expens.category === categories
     );
   }
 
@@ -34,7 +36,7 @@ const getExpenses = (userId, from, to, categories) => {
 };
 
 const getExpensesById = (id) => {
-  const userExpens = expenses.find((e) => e.id === +id);
+  const userExpens = expenses.find((expens) => expens.id === +id);
 
   return userExpens;
 };
@@ -43,10 +45,7 @@ const createExpense = (newExpense) => {
   const { userId, spentAt, title, amount, category, note } = newExpense;
 
   const expens = {
-    id:
-      expenses.length > 0
-        ? +expenses[expenses.length - 1].id + 1
-        : expenses.length + 1,
+    id: newId.generateID(expenses),
     userId,
     spentAt,
     title,
@@ -61,26 +60,26 @@ const createExpense = (newExpense) => {
 };
 
 const changeExpense = (id, updateExpense) => {
-  expenses = expenses.map((expens) => {
-    if (expens.id === +id) {
-      expens = {
-        ...expens,
-        ...updateExpense,
-      };
+  const indexToUpdate = expenses.findIndex((expense) => expense.id === +id);
 
-      return expens;
-    }
+  if (indexToUpdate !== -1) {
+    expenses[indexToUpdate] = {
+      ...expenses[indexToUpdate],
+      ...updateExpense,
+    };
 
-    return expens;
-  });
+    return expenses[indexToUpdate];
+  }
 
-  const changedExpens = expenses.find((e) => e.id === +id);
-
-  return changedExpens;
+  return null;
 };
 
 const deleteExpense = (id) => {
-  expenses = expenses.filter((e) => e.id !== +id);
+  const indexToDelete = expenses.findIndex((expense) => expense.id === +id);
+
+  if (indexToDelete !== -1) {
+    expenses.splice(indexToDelete, 1);
+  }
 };
 
 module.exports = {

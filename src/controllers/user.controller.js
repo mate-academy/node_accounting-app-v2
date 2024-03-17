@@ -13,7 +13,7 @@ const getOne = (req, res) => {
   const user = userService.getUserById(id);
 
   if (!user) {
-    res.status(statusCode.NOT_FOUND).send(`User with id:${id} does not exist`);
+    res.status(statusCode.NOT_FOUND).send();
   } else {
     res.send(user);
   }
@@ -24,7 +24,7 @@ const create = (req, res) => {
 
   if (typeof name !== 'string') {
     res.status(statusCode.BAD_REQUEST);
-    res.send('Invalid user data');
+    res.send();
 
     return;
   }
@@ -41,7 +41,7 @@ const update = (req, res) => {
 
   if (typeof name !== 'string') {
     res.status(statusCode.NOT_FOUND);
-    res.send('Invalid user data');
+    res.send();
 
     return;
   }
@@ -58,7 +58,7 @@ const remove = (req, res) => {
     userService.deleteUser(id);
     res.status(statusCode.NO_CONTENT).send();
   } else {
-    res.status(statusCode.NOT_FOUND).send(`User with id:${id} does not exist`);
+    res.status(statusCode.NOT_FOUND).send();
   }
 };
 

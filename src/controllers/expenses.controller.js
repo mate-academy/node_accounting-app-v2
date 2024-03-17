@@ -22,7 +22,7 @@ const getOne = (req, res) => {
   const userExpens = expensesService.getExpensesById(id);
 
   if (!userExpens) {
-    res.status(statusCode.NOT_FOUND).send(`Expens with id:${id} not found`);
+    res.status(statusCode.NOT_FOUND).send();
   } else {
     res.send(userExpens);
   }
@@ -33,14 +33,14 @@ const create = (req, res) => {
 
   if (typeof newExpense.title !== 'string') {
     res.status(statusCode.BAD_REQUEST);
-    res.send('Invalid user data');
+    res.send();
 
     return;
   }
 
   if (!userService.getUserById(newExpense.userId)) {
     res.status(statusCode.BAD_REQUEST);
-    res.send('User not exist');
+    res.send();
 
     return;
   }
@@ -57,7 +57,7 @@ const update = (req, res) => {
 
   if (!expensesService.getExpensesById(id)) {
     res.status(statusCode.NOT_FOUND);
-    res.send('Expense not found');
+    res.send();
 
     return;
   }
@@ -75,7 +75,7 @@ const remove = (req, res) => {
     expensesService.deleteExpense(id);
     res.status(statusCode.NO_CONTENT).send();
   } else {
-    res.status(statusCode.NOT_FOUND).send(`Expense with id:${id} not exist`);
+    res.status(statusCode.NOT_FOUND).send();
   }
 };
 
