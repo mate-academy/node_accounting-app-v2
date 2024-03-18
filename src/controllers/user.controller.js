@@ -1,5 +1,6 @@
 'use strict';
 
+const { statusCode } = require('../helpers/statusCode');
 const userService = require('../services/user.service');
 
 const getAll = (req, res) => {
@@ -13,12 +14,12 @@ const getOne = (req, res) => {
   const user = userService.getById(+id);
 
   if (!user) {
-    res.sendStatus(404);
+    res.sendStatus(statusCode.NOT_FOUND);
 
     return;
   }
 
-  res.status(200);
+  res.status(statusCode.OK);
   res.send(user);
 };
 
@@ -26,14 +27,14 @@ const create = (req, res) => {
   const { name } = req.body;
 
   if (!name) {
-    res.sendStatus(400);
+    res.sendStatus(statusCode.BAD_REQUEST);
 
     return;
   }
 
   const user = userService.create(name);
 
-  res.status(201);
+  res.status(statusCode.CREATED);
   res.send(user);
 };
 
@@ -43,13 +44,13 @@ const remove = (req, res) => {
   const user = userService.getById(+id);
 
   if (!user) {
-    res.sendStatus(404);
+    res.sendStatus(statusCode.NOT_FOUND);
 
     return;
   }
 
   userService.remove(+id);
-  res.sendStatus(204);
+  res.sendStatus(statusCode.NO_CONTENT);
 };
 
 const update = (req, res) => {
@@ -58,14 +59,14 @@ const update = (req, res) => {
   const user = userService.getById(+id);
 
   if (!user) {
-    res.sendStatus(404);
+    res.sendStatus(statusCode.NOT_FOUND);
 
     return;
   }
 
   const updatedUser = userService.update({ id, name });
 
-  res.status(200);
+  res.status(statusCode.OK);
   res.send(updatedUser);
 };
 

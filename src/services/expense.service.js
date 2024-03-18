@@ -9,28 +9,29 @@ function clearAll() {
 }
 
 function getAll({ userId, categories, from, to }) {
-  let userExpenses = [...expenses];
-
-  if (userId) {
-    userExpenses = userExpenses.filter((exp) => exp.userId === +userId);
-  }
-
-  if (categories) {
-    userExpenses = userExpenses.filter((exp) => {
-      return categories.includes(exp.category);
-    });
-  }
-
-  if (from && to) {
+  const userExpenses = [...expenses].filter((exp) => {
     const fromDate = new Date(from);
     const toDate = new Date(to);
+    const spentAt = new Date(exp.spentAt);
 
-    userExpenses = userExpenses.filter((exp) => {
-      return (
-        new Date(exp.spentAt) >= fromDate && new Date(exp.spentAt) <= toDate
-      );
-    });
-  }
+    if (userId && exp.userId !== +userId) {
+      return false;
+    }
+
+    if (categories && !categories.includes(exp.category)) {
+      return false;
+    }
+
+    if (fromDate && spentAt < fromDate) {
+      return false;
+    }
+
+    if (toDate && spentAt > toDate) {
+      return false;
+    }
+
+    return true;
+  });
 
   return userExpenses;
 }
