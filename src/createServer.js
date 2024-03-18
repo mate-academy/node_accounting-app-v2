@@ -3,11 +3,12 @@
 const express = require('express');
 const { usersRouter } = require('./Routers/UsersRouter');
 const { expensesRouter } = require('./Routers/ExpensesRouter');
-const { myStore } = require('./Data/Store');
+const { clearUsers } = require('./Services/User.services');
+const { clearExpenses } = require('./Services/Expenses.services');
 
 function createServer() {
-  myStore.clearUsers();
-  myStore.clearExpenses();
+  clearUsers();
+  clearExpenses();
 
   const server = express();
 

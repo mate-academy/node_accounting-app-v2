@@ -2,71 +2,27 @@
 
 const express = require('express');
 const bodyParser = require('body-parser');
-const { myStore } = require('../Data/Store');
+const {
+  createExpenseControll,
+  getAllExpensesControll,
+  getExpenseByIdControll,
+  deleteExpenseControll,
+  updateExpenseControll,
+} = require('../Controllers/Expenses.controller');
 
 const expensesRouter = express.Router();
 
 expensesRouter.use(bodyParser.json());
 
-expensesRouter.post('/', (req, res) => {
-  const { title, userId } = req.body;
+expensesRouter.post('/', createExpenseControll);
 
-  if (!title || !myStore.getUser(userId)) {
-    res.sendStatus(400);
+expensesRouter.get('/', getAllExpensesControll);
 
-    return;
-  }
+expensesRouter.get('/:id', getExpenseByIdControll);
 
-  res.status(201).send(myStore.postExpenses(req.body));
-});
+expensesRouter.delete('/:id', deleteExpenseControll);
 
-expensesRouter.get('/', (req, res) => {
-  const { userId, categories, from, to } = req.query;
-
-  res.status(200).send(myStore.getAllExpenses(userId, categories, from, to));
-});
-
-expensesRouter.get('/:id', (req, res) => {
-  const { id } = req.params;
-
-  if (myStore.getExpenses(id) === undefined) {
-    res.sendStatus(404);
-
-    return;
-  } else if (!id) {
-    res.sendStatus(400);
-
-    return;
-  }
-
-  res.status(200).send(myStore.getExpenses(id));
-});
-
-expensesRouter.delete('/:id', (req, res) => {
-  const { id } = req.params;
-
-  if (myStore.getExpenses(id) === undefined) {
-    res.sendStatus(404);
-
-    return;
-  }
-
-  res.status(204).send(myStore.deleteExpenses(id));
-});
-
-expensesRouter.patch('/:id', (req, res) => {
-  const { id } = req.params;
-  const { spentAt, title, amount, category, note } = req.body;
-
-  if (!myStore.getExpenses(id)) {
-    res.sendStatus(404);
-
-    return;
-  }
-
-  res.status(200)
-    .send(myStore.patchExpenses(id, spentAt, title, amount, category, note));
-});
+expensesRouter.patch('/:id', updateExpenseControll);
 
 module.exports = {
   expensesRouter,
