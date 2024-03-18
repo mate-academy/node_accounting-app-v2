@@ -2,10 +2,10 @@
 
 const { generateUniqueID } = require('../utils/IdGenerator');
 
-let users = [];
+const users = [];
 
 const clearUsers = () => {
-  users = [];
+  users.length = 0;
 };
 
 const getAllUsers = () => {
@@ -19,7 +19,11 @@ const getUser = (userId) => {
 };
 
 const deleteUser = (userId) => {
-  users = users.filter(user => user.id !== +userId);
+  const indexToDelete = users.findIndex((user) => user.id === +userId);
+
+  if (indexToDelete !== -1) {
+    users.splice(indexToDelete, 1);
+  }
 };
 
 const createUser = (name) => {

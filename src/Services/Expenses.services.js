@@ -2,10 +2,10 @@
 
 const { generateUniqueID } = require('../utils/IdGenerator');
 
-let expenses = [];
+const expenses = [];
 
 const clearExpenses = () => {
-  expenses = [];
+  expenses.length = 0;
 };
 
 const postExpenses = (expenseData) => {
@@ -14,7 +14,7 @@ const postExpenses = (expenseData) => {
     ...expenseData,
   };
 
-  expenses = [...expenses, newExpense];
+  expenses.push(newExpense);
 
   return newExpense;
 };
@@ -50,7 +50,11 @@ const getExpense = (id) => {
 };
 
 const deleteExpense = (id) => {
-  expenses = expenses.filter((expense) => expense.userId !== +id);
+  const indexToDelete = expenses.findIndex((expense) => expense.userId === +id);
+
+  if (indexToDelete !== -1) {
+    expenses.splice(indexToDelete, 1);
+  }
 };
 
 const patchExpense = (id, newExpense) => {
