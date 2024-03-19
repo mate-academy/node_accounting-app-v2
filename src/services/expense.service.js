@@ -14,19 +14,12 @@ function getAll({ userId, categories, from, to }) {
     const toDate = new Date(to);
     const spentAt = new Date(exp.spentAt);
 
-    if (userId && exp.userId !== +userId) {
-      return false;
-    }
-
-    if (categories && !categories.includes(exp.category)) {
-      return false;
-    }
-
-    if (fromDate && spentAt < fromDate) {
-      return false;
-    }
-
-    if (toDate && spentAt > toDate) {
+    if (
+      (userId && exp.userId !== +userId) ||
+      (categories && !categories.includes(exp.category)) ||
+      (fromDate && spentAt < fromDate) ||
+      (toDate && spentAt > toDate)
+    ) {
       return false;
     }
 
