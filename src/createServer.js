@@ -18,10 +18,8 @@ function createServer() {
   app.use('/users', usersRouter);
   app.use('/expenses', expensesRouter);
 
-  return app.listen(3005);
+  return app;
 }
-
-createServer();
 
 module.exports = {
   createServer,
