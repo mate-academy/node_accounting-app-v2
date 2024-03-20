@@ -49,7 +49,7 @@ const addExpense = (req, res) => {
 
 const updateExpense = (req, res) => {
   const { id } = req.params;
-  const { data } = req.body;
+  const data = req.body;
   const choosedExpense = expensesService.getExpenseById(id);
 
   if (!choosedExpense) {
@@ -58,7 +58,7 @@ const updateExpense = (req, res) => {
     return;
   }
 
-  const updatedExpense = expensesService.updateUserName({ id, data });
+  const updatedExpense = expensesService.updateExpense(choosedExpense, data);
 
   res.send(updatedExpense);
 };
@@ -74,7 +74,7 @@ const deleteExpense = (req, res) => {
 
   expensesService.deleteExpense(id);
 
-  res.sendStatus(codeStatus.UNDERSTOOD);
+  res.sendStatus(codeStatus.NO_CONTENT);
 };
 
 module.exports = {

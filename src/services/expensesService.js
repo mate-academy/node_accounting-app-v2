@@ -13,7 +13,7 @@ const getFilteredExpenses = (searchParams) => {
 
   if (userId) {
     filteredExpenses = filteredExpenses.filter(
-      (expense) => expense.userId === userId,
+      (expense) => expense.userId === +userId,
     );
   }
 
@@ -38,7 +38,7 @@ const getFilteredExpenses = (searchParams) => {
 };
 
 const getExpenseById = (id) => {
-  return expenses.find((expense) => expense.id === id);
+  return expenses.find((expense) => expense.id === +id);
 };
 
 const addExpense = (data) => {
@@ -57,7 +57,7 @@ const updateExpense = (choosedExpense, data) => {
 };
 
 const deleteExpense = (id) => {
-  const foundedIndex = expenses.findIndex((expense) => expense.id === id);
+  const foundedIndex = expenses.findIndex((expense) => expense.id === +id);
 
   if (foundedIndex > -1) {
     expenses.splice(foundedIndex, 1);

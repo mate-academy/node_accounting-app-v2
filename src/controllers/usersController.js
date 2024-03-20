@@ -59,7 +59,7 @@ const deleteUser = (req, res) => {
 
   usersService.deleteUser(id);
 
-  res.sendStatus(codeStatus.UNDERSTOOD);
+  res.sendStatus(codeStatus.NO_CONTENT);
 };
 
 module.exports = {

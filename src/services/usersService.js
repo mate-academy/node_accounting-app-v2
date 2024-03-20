@@ -9,7 +9,7 @@ const getAllUsers = () => {
 };
 
 const getUserById = (userId) => {
-  return users.find((user) => user.id === userId);
+  return users.find((user) => user.id === +userId);
 };
 
 const addUser = (name) => {
@@ -28,7 +28,7 @@ const updateUserName = ({ id, name }) => {
 };
 
 const deleteUser = (id) => {
-  const foundedIndex = users.findIndex((user) => user.id === id);
+  const foundedIndex = users.findIndex((user) => user.id === +id);
 
   if (foundedIndex > -1) {
     users.splice(foundedIndex, 1);
