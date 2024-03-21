@@ -2,7 +2,7 @@ const usersService = require('../services/usersService');
 const codeStatus = require('../codeStatuses');
 
 const getAllUsers = (_, res) => {
-  res.codeStatus = codeStatus.SUCCESS;
+  res.statusCode = codeStatus.SUCCESS;
   res.send(usersService.getAllUsers());
 };
 

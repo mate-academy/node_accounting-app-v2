@@ -10,29 +10,18 @@ const getFilteredExpenses = (searchParams) => {
   let filteredExpenses = expenses;
 
   const { userId, categories, from, to } = searchParams;
+  const fromDate = new Date(from);
+  const toDate = new Date(to);
 
-  if (userId) {
-    filteredExpenses = filteredExpenses.filter(
-      (expense) => expense.userId === +userId,
-    );
-  }
-
-  if (categories) {
-    filteredExpenses = filteredExpenses.filter(
-      (expense) => expense.category === categories,
-    );
-  }
-
-  if (from && to) {
-    const fromDate = new Date(from);
-    const toDate = new Date(to);
-
-    filteredExpenses = filteredExpenses.filter(
-      (expense) =>
-        fromDate <= new Date(expense.spentAt) &&
-        toDate >= new Date(expense.spentAt),
-    );
-  }
+  filteredExpenses = filteredExpenses.filter(
+    (expense) =>
+      (!userId || expense.userId === +userId) &&
+      (!categories || expense.category === categories) &&
+      (!from ||
+        !to ||
+        (fromDate <= new Date(expense.spentAt) &&
+          toDate >= new Date(expense.spentAt))),
+  );
 
   return filteredExpenses;
 };
@@ -61,7 +50,11 @@ const deleteExpense = (id) => {
 
   if (foundedIndex > -1) {
     expenses.splice(foundedIndex, 1);
+
+    return true;
   }
+
+  return false;
 };
 
 module.exports = {

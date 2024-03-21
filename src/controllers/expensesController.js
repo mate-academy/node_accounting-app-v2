@@ -58,9 +58,9 @@ const updateExpense = (req, res) => {
     return;
   }
 
-  const updatedExpense = expensesService.updateExpense(choosedExpense, data);
+  const updatedExpenses = expensesService.updateExpense(choosedExpense, data);
 
-  res.send(updatedExpense);
+  res.send(updatedExpenses);
 };
 
 const deleteExpense = (req, res) => {
