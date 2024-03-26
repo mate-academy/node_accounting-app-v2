@@ -1,9 +1,6 @@
 const { v4: uuidv4 } = require('uuid');
 
-let users = [
-  { id: '1', name: 'Alex' },
-  { id: '2', name: 'Bob' },
-];
+let users = [];
 
 const getAll = () => {
   return users;
