@@ -1,7 +1,7 @@
 const expenseServise = require('../services/expense.servise.js');
 
 const getAll = (req, res) => {
-  res.send(expenseServise.getAll());
+  res.send(expenseServise.getAll(req.query));
 };
 
 const getOne = (req, res) => {
@@ -23,10 +23,12 @@ const create = (req, res) => {
   const newExpense = expenseServise.create(expense);
 
   if (!newExpense) {
-    res.sendStatus(422);
+    res.sendStatus(400);
 
     return;
   }
+
+  res.statusCode = 201;
   res.send(newExpense);
 };
 
@@ -47,7 +49,7 @@ const update = (req, res) => {
   const expense = expenseServise.update(id, req.body);
 
   if (expense === 'Wrong body') {
-    res.sendStatus(422);
+    res.sendStatus(400);
 
     return;
   }

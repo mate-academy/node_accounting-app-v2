@@ -1,20 +1,21 @@
-const { v4: uuidv4 } = require('uuid');
-
-let users = [];
+let users = [
+  // { id: 2, name: 'Alice' },
+  // { id: 1, name: 'Bob' },
+];
 
 const getAll = () => {
   return users;
 };
 
 const getOne = (id) => {
-  const user = users.find((item) => item.id === id) || null;
+  const user = users.find((item) => item.id === +id) || null;
 
   return user;
 };
 
 const create = (name) => {
   const user = {
-    id: uuidv4(),
+    id: Date.now(),
     name,
   };
 
@@ -24,7 +25,7 @@ const create = (name) => {
 };
 
 const remove = (id) => {
-  const newUsers = users.filter((el) => el.id !== id);
+  const newUsers = users.filter((el) => el.id !== +id);
   const notFound = newUsers.length === users.length;
 
   users = newUsers;
@@ -33,7 +34,7 @@ const remove = (id) => {
 };
 
 const update = (id, name) => {
-  const user = users.find((el) => el.id === id) || null;
+  const user = users.find((el) => el.id === +id) || null;
 
   if (!user) {
     return;
@@ -45,6 +46,7 @@ const update = (id, name) => {
 };
 
 module.exports = {
+  users,
   getAll,
   getOne,
   create,
