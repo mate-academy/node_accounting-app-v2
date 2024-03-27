@@ -65,12 +65,16 @@ const create = (expense) => {
   const user = users.find((el) => el.id === expense.userId) || null;
 
   if (!user) {
+    expenses = [];
+
     return false;
   }
 
   const isValid = validateExpense(expense);
 
   if (!isValid) {
+    expenses = [];
+
     return false;
   }
 
@@ -93,7 +97,7 @@ const remove = (id) => {
 };
 
 const update = (id, body) => {
-  const isValid = validateExpense({ ...body, id, userId: 0 });
+  const isValid = validateUpdateData({ ...body, id, userId: 0 });
 
   if (!isValid) {
     return 'Wrong body';
@@ -105,15 +109,7 @@ const update = (id, body) => {
     return 'Not found';
   }
 
-  const { spentAt, title, amount, category, note } = body;
-
-  Object.assign(expense, {
-    spentAt,
-    title,
-    amount,
-    category,
-    note,
-  });
+  Object.assign(expense, { ...body });
 
   return expense;
 };
@@ -140,6 +136,36 @@ const validateExpense = (expense) => {
   }
 
   if (typeof expense.note !== 'string') {
+    return false;
+  }
+
+  return true;
+};
+
+const validateUpdateData = (expense) => {
+  const { userId, spentAt, title, amount, category, note } = expense;
+
+  if (userId && typeof userId !== 'number') {
+    return false;
+  }
+
+  if (spentAt && (typeof spentAt !== 'string' || !spentAt.length)) {
+    return false;
+  }
+
+  if (title && (typeof title !== 'string' || !title.length)) {
+    return false;
+  }
+
+  if (amount && typeof amount !== 'number') {
+    return false;
+  }
+
+  if (category && (typeof category !== 'string' || !category.length)) {
+    return false;
+  }
+
+  if (note && typeof note !== 'string') {
     return false;
   }
 

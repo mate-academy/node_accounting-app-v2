@@ -14,6 +14,12 @@ const getOne = (id) => {
 };
 
 const create = (name) => {
+  if (typeof name !== 'string' || !name) {
+    users = [];
+
+    return false;
+  }
+
   const user = {
     id: Date.now(),
     name,

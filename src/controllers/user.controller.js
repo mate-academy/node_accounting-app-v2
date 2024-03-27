@@ -17,14 +17,13 @@ const getOne = (req, res) => {
 
 const create = (req, res) => {
   const { name } = req.body;
+  const user = userServices.create(name);
 
-  if (typeof name !== 'string' || !name) {
+  if (!user) {
     res.sendStatus(400);
 
     return;
   }
-
-  const user = userServices.create(name);
 
   res.statusCode = 201;
   res.send(user);

@@ -3,7 +3,7 @@
 const supertest = require('supertest');
 const { createServer } = require('../src/createServer');
 
-describe.skip('User', () => {
+describe('User', () => {
   let server;
   let api;
 

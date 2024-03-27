@@ -3,7 +3,7 @@
 const supertest = require('supertest');
 const { createServer } = require('../src/createServer');
 
-describe.skip('Expense', () => {
+describe('Expense', () => {
   let server;
   let api;
 
@@ -176,7 +176,7 @@ describe.skip('Expense', () => {
       const response = await api
         // eslint-disable-next-line max-len
         .get(
-          `/expenses?&from=2022-10-19T00:00:00.000Z&to=2022-10-19T23:59:59.999Z`,
+          `/expenses?userId=${expenseData.userId}&from=2022-10-19T00:00:00.000Z&to=2022-10-19T23:59:59.999Z`,
         )
         .expect(200)
         .expect('Content-Type', /application\/json/);
