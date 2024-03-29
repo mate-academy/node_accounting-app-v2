@@ -1,25 +1,6 @@
 const getExpensesByPeriod = require('../helpers/getExpensesByPeriod');
 
-let expenses = [
-  // {
-  //   userId: 1,
-  //   id: 10,
-  //   spentAt: '2022-10-19T11:01:43.462Z',
-  //   title: 'Buy a new laptop',
-  //   amount: 999,
-  //   category: 'Electronics',
-  //   note: 'I need a new laptop',
-  // },
-  // {
-  //   userId: 2,
-  //   id: 20,
-  //   spentAt: '2022-10-20T11:01:43.462Z',
-  //   title: 'Buy a new laptop',
-  //   amount: 999,
-  //   category: 'Electronics',
-  //   note: 'I need a new laptop',
-  // },
-];
+let expenses = [];
 
 const getAll = ({ userId, categories, from, to }) => {
   let filtered = expenses;
@@ -55,11 +36,7 @@ const remove = (id) => {
 };
 
 const update = (expense, data) => {
-  // const expenseToUpdate = getById(expense.id);
-
   return Object.assign(expense, data);
-
-  // return expenseToUpdate;
 };
 
 module.exports = {

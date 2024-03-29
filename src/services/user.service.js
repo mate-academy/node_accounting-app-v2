@@ -1,9 +1,4 @@
-// const { v4: uuidv4 } = require('uuid');
-
-let users = [
-  // { id: '1', name: 'test1' },
-  // { id: '2', name: 'test2' },
-];
+let users = [];
 
 let idCounter = users.length;
 
