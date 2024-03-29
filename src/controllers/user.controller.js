@@ -1,15 +1,24 @@
-const userServices = require('../services/user.service.js');
+const userServises = require('../services/user.service.js');
 
 const getUsers = (req, res) => {
-  res.send(userServices.getAll());
+  res.send(userServises.getAll());
 };
 
 const getOne = (req, res) => {
   const { id } = req.params;
-  const user = userServices.getOne(id);
+
+  if (!id) {
+    res.sendStatus(400);
+
+    return;
+  }
+
+  const user = userServises.getOne(id);
 
   if (!user) {
     res.sendStatus(404);
+
+    return;
   }
 
   res.send(user);
@@ -17,13 +26,14 @@ const getOne = (req, res) => {
 
 const create = (req, res) => {
   const { name } = req.body;
-  const user = userServices.create(name);
 
-  if (!user) {
+  if (!name) {
     res.sendStatus(400);
 
     return;
   }
+
+  const user = userServises.create(name);
 
   res.statusCode = 201;
   res.send(user);
@@ -31,7 +41,7 @@ const create = (req, res) => {
 
 const remove = (req, res) => {
   const { id } = req.params;
-  const notFound = userServices.remove(id);
+  const notFound = userServises.remove(id);
 
   if (notFound) {
     res.sendStatus(404);
@@ -52,7 +62,7 @@ const update = (req, res) => {
     return;
   }
 
-  const updatedUser = userServices.update(id, name);
+  const updatedUser = userServises.update(id, name);
 
   if (!updatedUser) {
     res.sendStatus(404);

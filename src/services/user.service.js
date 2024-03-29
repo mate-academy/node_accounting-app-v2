@@ -1,7 +1,8 @@
-let users = [
-  // { id: 2, name: 'Alice' },
-  // { id: 1, name: 'Bob' },
-];
+let users = [];
+
+function init() {
+  users = [];
+}
 
 const getAll = () => {
   return users;
@@ -14,9 +15,7 @@ const getOne = (id) => {
 };
 
 const create = (name) => {
-  if (typeof name !== 'string' || !name) {
-    users = [];
-
+  if (typeof name !== 'string' || !name.trim()) {
     return false;
   }
 
@@ -58,4 +57,5 @@ module.exports = {
   create,
   remove,
   update,
+  init,
 };

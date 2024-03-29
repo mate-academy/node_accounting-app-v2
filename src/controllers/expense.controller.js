@@ -1,4 +1,5 @@
 const expenseServise = require('../services/expense.servise.js');
+const userServise = require('../services/user.service.js');
 
 const getAll = (req, res) => {
   res.send(expenseServise.getAll(req.query));
@@ -6,6 +7,12 @@ const getAll = (req, res) => {
 
 const getOne = (req, res) => {
   const { id } = req.params;
+
+  if (!id) {
+    res.sendStatus(400);
+
+    return;
+  }
 
   const expense = expenseServise.getOne(id);
 
@@ -20,6 +27,14 @@ const getOne = (req, res) => {
 
 const create = (req, res) => {
   const expense = req.body;
+  const user = userServise.getOne(expense.userId);
+
+  if (!user) {
+    res.sendStatus(400);
+
+    return;
+  }
+
   const newExpense = expenseServise.create(expense);
 
   if (!newExpense) {

@@ -1,60 +1,18 @@
-const { users } = require('../services/user.service');
 const filterByPeriod = require('../helpers/filterExpensesByPeriod.js');
-let expenses = [
-  // {
-  //   userId: 1,
-  //   id: 10,
-  //   spentAt: '2022-10-19T11:01:43.462Z',
-  //   title: 'Buy a new laptop',
-  //   amount: 999,
-  //   category: 'Electronics',
-  //   note: 'I need a new laptop',
-  // },
-  // {
-  //   userId: 2,
-  //   id: 20,
-  //   spentAt: '2022-10-20T11:01:43.462Z',
-  //   title: 'Buy a new laptop',
-  //   amount: 999,
-  //   category: 'Electronics',
-  //   note: 'I need a new laptop',
-  // },
-  // {
-  //   userId: 1,
-  //   id: 30,
-  //   spentAt: '2022-10-21T11:01:43.462Z',
-  //   title: 'Buy a new laptop',
-  //   amount: 999,
-  //   category: 'Electronics',
-  //   note: 'I need a new laptop',
-  // },
-  // {
-  //   userId: 1,
-  //   id: 40,
-  //   spentAt: '2022-11-21T11:01:43.462Z',
-  //   title: 'Buy a new laptop',
-  //   amount: 999,
-  //   category: 'Cars',
-  //   note: 'I need a new laptop',
-  // },
-];
+let expenses = [];
+
+function init() {
+  expenses = [];
+}
 
 const getAll = ({ userId, from, to, categories }) => {
-  let filtered = expenses;
-
-  if (userId) {
-    filtered = filtered.filter((el) => el.userId === +userId);
-  }
-
-  if (categories) {
-    filtered = filtered.filter((el) => categories.includes(el.category));
-  }
-
-  if (from) {
-    filtered = filtered.filter((el) => filterByPeriod(el, from, to));
-  }
-
-  return filtered;
+  return expenses.filter((el) => {
+    return (
+      (!userId || el.userId === +userId) &&
+      (!categories || categories.includes(el.category)) &&
+      (!from || filterByPeriod(el, from, to))
+    );
+  });
 };
 
 const getOne = (id) => {
@@ -62,19 +20,9 @@ const getOne = (id) => {
 };
 
 const create = (expense) => {
-  const user = users.find((el) => el.id === expense.userId) || null;
-
-  if (!user) {
-    expenses = [];
-
-    return false;
-  }
-
   const isValid = validateExpense(expense);
 
   if (!isValid) {
-    expenses = [];
-
     return false;
   }
 
@@ -178,4 +126,5 @@ module.exports = {
   create,
   remove,
   update,
+  init,
 };
