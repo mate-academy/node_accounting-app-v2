@@ -7,15 +7,22 @@ const get = (req, res) => {
 
 const getById = (req, res) => {
   const { id } = req.params;
-  const User = usersService.getById(id);
 
-  if (!User) {
+  if (!id) {
+    res.sendStatus(400);
+
+    return;
+  }
+
+  const user = usersService.getById(id);
+
+  if (!user) {
     res.sendStatus(404);
 
     return;
   }
 
-  res.status(200).send(User);
+  res.status(200).send(user);
 };
 
 const create = (req, res) => {
@@ -34,6 +41,12 @@ const create = (req, res) => {
 const remove = (req, res) => {
   const { id } = req.params;
 
+  if (!id) {
+    res.sendStatus(400);
+
+    return;
+  }
+
   if (!usersService.getById(id)) {
     res.sendStatus(404);
 
@@ -49,14 +62,20 @@ const update = (req, res) => {
   const { id } = req.params;
   const { name } = req.body;
 
-  const User = usersService.update(id, name);
+  if (!id || !name) {
+    res.sendStatus(400);
 
-  if (!User) {
+    return;
+  }
+
+  const user = usersService.update(id, name);
+
+  if (!user) {
     res.sendStatus(404);
 
     return;
   }
-  res.send(User);
+  res.send(user);
 };
 
 module.exports = {

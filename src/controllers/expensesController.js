@@ -9,15 +9,22 @@ const get = (req, res) => {
 
 const getById = (req, res) => {
   const { id } = req.params;
-  const Expense = expensesService.getById(id);
 
-  if (!Expense) {
+  if (!id) {
+    res.sendStatus(400);
+
+    return;
+  }
+
+  const expense = expensesService.getById(id);
+
+  if (!expense) {
     res.sendStatus(404);
 
     return;
   }
 
-  res.status(200).send(Expense);
+  res.status(200).send(expense);
 };
 
 const create = (req, res) => {
@@ -52,6 +59,12 @@ const create = (req, res) => {
 const remove = (req, res) => {
   const { id } = req.params;
 
+  if (!id) {
+    res.sendStatus(400);
+
+    return;
+  }
+
   if (!expensesService.getById(id)) {
     res.sendStatus(404);
 
@@ -66,6 +79,12 @@ const remove = (req, res) => {
 const update = (req, res) => {
   const { id } = req.params;
   const body = req.body;
+
+  if (!id || !body) {
+    res.sendStatus(400);
+
+    return;
+  }
 
   const Expense = expensesService.update(id, body);
 

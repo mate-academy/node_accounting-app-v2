@@ -1,10 +1,14 @@
 const { v4: uuidv4 } = require('uuid');
 const usersService = require('../services/user');
 
-let Expenses = [];
+let expenses = [];
+
+const init = () => {
+  expenses = [];
+};
 
 const getAll = (userId, categories, from, to) => {
-  let filteredExpenses = [...Expenses];
+  let filteredExpenses = [...expenses];
 
   filteredExpenses = filteredExpenses.filter((expense) => {
     if (userId && expense.userId !== +userId) {
@@ -34,7 +38,7 @@ const getAll = (userId, categories, from, to) => {
 };
 
 const getById = (id) => {
-  return Expenses.find((expense) => expense.id === id);
+  return expenses.find((expense) => expense.id === id);
 };
 
 const create = (data) => {
@@ -49,7 +53,7 @@ const create = (data) => {
     ...data,
   };
 
-  Expenses.push(newExpense);
+  expenses.push(newExpense);
 
   return newExpense;
 };
@@ -65,7 +69,7 @@ const update = (id, body) => {
 };
 
 const remove = (id) => {
-  Expenses = Expenses.filter((expense) => expense.id !== id);
+  expenses = expenses.filter((expense) => expense.id !== id);
 };
 
 module.exports = {
@@ -74,4 +78,5 @@ module.exports = {
   create,
   update,
   remove,
+  init,
 };
