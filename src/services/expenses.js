@@ -6,28 +6,29 @@ let Expenses = [];
 const getAll = (userId, categories, from, to) => {
   let filteredExpenses = [...Expenses];
 
-  if (userId) {
-    filteredExpenses = filteredExpenses.filter(
-      (expense) => expense.userId === +userId,
-    );
-  }
+  filteredExpenses = filteredExpenses.filter((expense) => {
+    if (userId && expense.userId !== +userId) {
+      return false;
+    }
 
-  if (categories) {
-    filteredExpenses = filteredExpenses.filter(
-      (expense) => expense.category === categories,
-    );
-  }
+    if (categories && expense.category !== categories) {
+      return false;
+    }
 
-  if (from && to) {
-    const dateFrom = new Date(from);
-    const dateTo = new Date(to);
+    if (from && to) {
+      const dateFrom = new Date(from);
+      const dateTo = new Date(to);
 
-    filteredExpenses = filteredExpenses.filter(
-      (expense) =>
-        dateFrom <= new Date(expense.spentAt) &&
-        new Date(expense.spentAt) <= dateTo,
-    );
-  }
+      if (
+        dateFrom <= new Date(expense.spentAt) ||
+        new Date(expense.spentAt) >= dateTo
+      ) {
+        return false;
+      }
+
+      return true;
+    }
+  });
 
   return filteredExpenses;
 };
