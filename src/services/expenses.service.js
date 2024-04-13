@@ -14,8 +14,8 @@ const getAll = (params) => {
 
   if (categories) {
     filteredExpenses = filteredExpenses.filter((item) =>
-      categories.includes(item.category),
-    );
+      // eslint-disable-next-line prettier/prettier
+      categories.includes(item.category));
   }
 
   if (from) {
