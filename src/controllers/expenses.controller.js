@@ -61,7 +61,7 @@ const remove = (req, res) => {
 
 const update = (req, res) => {
   const { id } = req.params;
-  const body = req.body;
+  const { spentAt, title, amount, category, note } = req.body;
   const expense = serviceExpenses.getById(id);
 
   if (!expense) {
@@ -70,7 +70,13 @@ const update = (req, res) => {
     return;
   }
 
-  const updatedExp = serviceExpenses.update(id, body);
+  const updatedExp = serviceExpenses.update(id, {
+    spentAt,
+    title,
+    amount,
+    category,
+    note,
+  });
 
   if (!updatedExp) {
     res.sendStatus(404);
