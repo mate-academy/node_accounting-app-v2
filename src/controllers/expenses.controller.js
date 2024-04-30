@@ -1,16 +1,11 @@
 const expensesService = require('./../services/expenses.service.js');
+const userService = require('./../services/user.service.js');
 
 const get = (req, res) => {
   const { userId, categories, from, to } = req.query;
 
-  if (!(userId || categories || from || to)) {
-    res.statusCode = 404;
-
-    res.end();
-  }
-
   res.statusCode = 200;
-  res.send(expensesService.getAll(userId, categories));
+  res.send(expensesService.getAll(userId, categories, from, to));
 };
 
 const getOne = (req, res) => {
@@ -37,10 +32,18 @@ const getOne = (req, res) => {
 const post = (req, res) => {
   const { userId, spentAt, title, amount, category, note } = req.body;
 
-  if (!(userId || spentAt || title || amount || category || note)) {
+  if (!(userId && spentAt && title && amount && category && note)) {
     res.statusCode = 400;
 
     res.end();
+  }
+
+  const user = userService.getById(userId);
+
+  if (!user) {
+    res.sendStatus(400);
+
+    return;
   }
 
   const item = expensesService.create(
@@ -64,22 +67,16 @@ const remove = (req, res) => {
 
     res.end();
   }
+
   expensesService.remove(id);
 
   res.statusCode = 204;
   res.end();
-  // res.send(newUsers)
 };
 
 const patch = (req, res) => {
   const { id } = req.params;
-  const { spentAt, title, amount, category, note } = req.body;
-
-  if (!(spentAt || title || amount || category || note)) {
-    res.statusCode = 400;
-
-    res.end();
-  }
+  const { title } = req.body;
 
   if (!expensesService.getById(id)) {
     res.statusCode = 404;
@@ -87,14 +84,13 @@ const patch = (req, res) => {
     res.end();
   }
 
-  const user = expensesService.change(
-    id,
-    spentAt,
-    title,
-    amount,
-    category,
-    note,
-  );
+  if (typeof title !== 'string') {
+    res.sendStatus(400);
+
+    return;
+  }
+
+  const user = expensesService.change(id, title);
 
   res.statusCode = 200;
   res.send(user);

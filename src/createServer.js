@@ -4,14 +4,8 @@ const cors = require('cors');
 const express = require('express');
 const userRouter = require('./routes/user.router');
 const expensesRouter = require('./routes/expenses.router');
-
-const users = [];
-const expenses = [];
-
-function init() {
-  users.length = 0;
-  expenses.length = 0;
-}
+const userService = require('./services/user.service.js');
+const expensesService = require('./services/expenses.service.js');
 
 function createServer() {
   // Use express to create a server
@@ -19,9 +13,9 @@ function createServer() {
   // Return the server (express app)
   const app = express();
 
-  init();
-
   app.use(cors());
+  userService.start();
+  expensesService.start();
 
   app.use('/users', express.json(), userRouter);
 
@@ -32,6 +26,4 @@ function createServer() {
 
 module.exports = {
   createServer,
-  users,
-  expenses,
 };

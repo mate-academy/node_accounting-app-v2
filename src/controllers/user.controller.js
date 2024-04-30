@@ -8,12 +8,6 @@ const get = (req, res) => {
 const getOne = (req, res) => {
   const { id } = req.params;
 
-  if (!id) {
-    res.statusCode = 400;
-
-    res.end();
-  }
-
   const user = userService.getById(id);
 
   if (!user) {
@@ -27,9 +21,9 @@ const getOne = (req, res) => {
 };
 
 const post = (req, res) => {
-  const { name } = req.body; // ПРИКЛАД
+  const { name } = req.body;
 
-  if (!name) {
+  if (!name || !userService.create(name)) {
     res.statusCode = 400;
 
     res.end();
@@ -53,18 +47,11 @@ const remove = (req, res) => {
 
   res.statusCode = 204;
   res.end();
-  // res.send(newUsers)
 };
 
 const patch = (req, res) => {
   const { id } = req.params;
   const { name } = req.body;
-
-  if (typeof id !== 'number' || typeof name !== 'string') {
-    res.statusCode = 400;
-
-    res.end();
-  }
 
   if (!userService.getById(id)) {
     res.statusCode = 404;

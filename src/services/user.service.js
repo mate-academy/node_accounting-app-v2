@@ -1,16 +1,26 @@
-const { v4: uuidv4 } = require('uuid');
-const users = require('./../createServer');
+let users = [];
+
+function getRandomNumber() {
+  const min = 0;
+  const max = 100;
+
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+const start = () => {
+  users = [];
+};
 
 const getAll = () => {
   return users;
 };
 
 const getById = (id) => {
-  return users.find((item) => item.id === id);
+  return users.find((item) => item.id === +id);
 };
 
 const create = (title) => {
-  const item = { name: title, id: uuidv4() };
+  const item = { name: title, id: getRandomNumber() };
 
   users.push(item);
 
@@ -18,7 +28,7 @@ const create = (title) => {
 };
 
 const remove = (id) => {
-  return users.filter((item) => item.id !== id);
+  users = users.filter((item) => item.id !== +id);
 };
 
 const change = (id, title) => {
@@ -30,6 +40,7 @@ const change = (id, title) => {
 };
 
 module.exports = {
+  start,
   getAll,
   getById,
   create,
