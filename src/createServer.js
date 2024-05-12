@@ -1,23 +1,14 @@
 'use strict';
 
 const express = require('express');
-const usersController = require('./controllers/users.controller');
-// const getCreateMaxId = require('./utils/getCreateMaxId');
+const usersRouter = require('./routes/users.route');
 
-// const users = [];
 let expenses = [];
-
-// function getUserById(userId) {
-//   return users.find((user) => user.id === userId) || null;
-// }
-
-// let expenses = expensesArray.map((expense) => ({
-//   ...expense,
-//   user: getUserById(expense.userId),
-// }));
 
 function createServer() {
   const app = express();
+
+  app.use('/users', express.json(), usersRouter);
 
   app.get('/expenses', (req, res) => {
     if (!expenses) {
@@ -78,16 +69,6 @@ function createServer() {
     expenses = newExpenses;
     res.sendStatus(204);
   });
-
-  app.get('/users', usersController.getAllUsers);
-
-  app.get('/users/:id', usersController.getOneUser);
-
-  app.post('/users', express.json(), usersController.createNewUser);
-
-  app.delete('/users/:id', usersController.deleteUser);
-
-  app.patch('/users/:id', express.json(), usersController.updateUser);
 
   return app;
 }
