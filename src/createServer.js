@@ -1,7 +1,7 @@
 'use strict';
 
 const express = require('express');
-const usersService = require('./services/users.service');
+const usersController = require('./controllers/users.controller');
 // const getCreateMaxId = require('./utils/getCreateMaxId');
 
 // const users = [];
@@ -79,68 +79,15 @@ function createServer() {
     res.sendStatus(204);
   });
 
-  app.get('/users', (req, res) => {
-    res.statusCode = 200;
-    res.send(usersService.getUsers());
-  });
+  app.get('/users', usersController.getAllUsers);
 
-  app.get('/users/:id', (req, res) => {
-    const { id } = req.params;
+  app.get('/users/:id', usersController.getOneUser);
 
-    const user = usersService.getUserById(id);
+  app.post('/users', express.json(), usersController.createNewUser);
 
-    if (!user) {
-      res.sendStatus(404);
-    }
-    res.statusCode = 200;
-    res.send(user);
-  });
+  app.delete('/users/:id', usersController.deleteUser);
 
-  app.post('/users', express.json(), (req, res) => {
-    const { name } = req.body;
-
-    if (!name) {
-      res.sendStatus(400);
-    }
-
-    const user = usersService.createUser(name);
-
-    res.statusCode = 201;
-
-    res.send(user);
-  });
-
-  app.delete('/users/:id', (req, res) => {
-    const { id } = req.params;
-
-    if (!usersService.getUserById(id)) {
-      res.sendStatus(404);
-
-      return;
-    }
-
-    usersService.removeUser(id);
-
-    res.sendStatus(204);
-  });
-
-  app.patch('/users/:id', express.json(), (req, res) => {
-    const { id } = req.params;
-    const { name } = req.body;
-    const user = usersService.getUserById(id);
-
-    if (!user) {
-      res.sendStatus(400);
-    }
-
-    if (typeof name !== 'string') {
-      res.status(422);
-    }
-
-    const updatedUser = usersService.updateUser({ id, name });
-
-    res.send(updatedUser);
-  });
+  app.patch('/users/:id', express.json(), usersController.updateUser);
 
   return app;
 }
