@@ -1,28 +1,20 @@
 'use strict';
 
 const express = require('express');
+const usersService = require('./services/users.service');
+// const getCreateMaxId = require('./utils/getCreateMaxId');
 
-let users = [];
-const expensesArray = [];
+// const users = [];
+let expenses = [];
 
-function getNextId(array) {
-  if (array.length === 0) {
-    return 1;
-  } else {
-    const maxId = Math.max(...array.map((obj) => obj.id));
+// function getUserById(userId) {
+//   return users.find((user) => user.id === userId) || null;
+// }
 
-    return maxId + 1;
-  }
-}
-
-function getUserById(userId) {
-  return users.find((user) => user.id === userId) || null;
-}
-
-let expenses = expensesArray.map((expense) => ({
-  ...expense,
-  user: getUserById(expense.userId),
-}));
+// let expenses = expensesArray.map((expense) => ({
+//   ...expense,
+//   user: getUserById(expense.userId),
+// }));
 
 function createServer() {
   const app = express();
@@ -57,8 +49,8 @@ function createServer() {
     }
 
     const expense = {
-      id: getNextId(users),
-      userId: getNextId(users),
+      // id: getCreateMaxId(users),
+      // userId: getCreateMaxId(users),
 
       spentAt: new Date().toISOString(),
       title,
@@ -89,13 +81,13 @@ function createServer() {
 
   app.get('/users', (req, res) => {
     res.statusCode = 200;
-    res.send(users);
+    res.send(usersService.getUsers());
   });
 
   app.get('/users/:id', (req, res) => {
     const { id } = req.params;
 
-    const user = users.find((item) => item.id === parseInt(id));
+    const user = usersService.getUserById(id);
 
     if (!user) {
       res.sendStatus(404);
@@ -111,41 +103,31 @@ function createServer() {
       res.sendStatus(400);
     }
 
-    const user = {
-      id: getNextId(users),
-      name,
-    };
+    const user = usersService.createUser(name);
 
     res.statusCode = 201;
-    users.push(user);
+
     res.send(user);
   });
 
   app.delete('/users/:id', (req, res) => {
     const { id } = req.params;
 
-    // const user = users.find((item) => item.id === parseInt(id));
-
-    // if (!user) {
-    //   res.sendStatus(404);
-
-    //   return;
-    // }
-
-    const newUsers = users.filter((item) => item.id !== parseInt(id));
-
-    if (newUsers.length === users.length) {
+    if (!usersService.getUserById(id)) {
       res.sendStatus(404);
+
+      return;
     }
 
-    users = newUsers;
+    usersService.removeUser(id);
+
     res.sendStatus(204);
   });
 
   app.patch('/users/:id', express.json(), (req, res) => {
     const { id } = req.params;
     const { name } = req.body;
-    const user = users.find((item) => item.id === parseInt(id));
+    const user = usersService.getUserById(id);
 
     if (!user) {
       res.sendStatus(400);
@@ -155,9 +137,9 @@ function createServer() {
       res.status(422);
     }
 
-    Object.assign(user, { name });
+    const updatedUser = usersService.updateUser({ id, name });
 
-    res.send(user);
+    res.send(updatedUser);
   });
 
   return app;
