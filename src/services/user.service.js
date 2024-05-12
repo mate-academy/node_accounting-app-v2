@@ -1,4 +1,4 @@
-const { getId } = require('../helpers/getId');
+const { getId } = require('../utils/getId');
 
 let users = [];
 
