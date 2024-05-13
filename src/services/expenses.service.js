@@ -1,22 +1,25 @@
 let expenses = [];
 const getId = require('../utils/getCreateMaxId');
+const { getFilteredExpenses } = require('../utils/getFilteredExpenses');
 
 const expensesInit = () => {
   expenses = [];
 };
 
-const getExpenses = () => {
+const getExpenses = (query) => {
+  expenses = getFilteredExpenses(expenses, query);
+
   return expenses;
 };
 
 const getExpense = (id) => {
   return expenses.find((expense) => expense.id === parseInt(id) || null);
 };
-const createExpence = (userId, title, amount, category, note) => {
+const createExpence = ({ userId, spentAt, title, amount, category, note }) => {
   const expense = {
     id: getId.getCreateMaxId(expenses),
     userId,
-    spentAt: new Date().toISOString(),
+    spentAt,
     title,
     amount,
     category,

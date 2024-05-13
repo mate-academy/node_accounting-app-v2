@@ -1,7 +1,6 @@
 const usersService = require('../services/users.service');
 
 const getAllUsers = (req, res) => {
-  res.statusCode = 200;
   res.send(usersService.getUsers());
 };
 
@@ -49,7 +48,7 @@ const deleteUser = (req, res) => {
 const updateUser = (req, res) => {
   const { id } = req.params;
   const { name } = req.body;
-  const user = usersService.getUserById(id);
+  const user = usersService.getUserById(parseInt(id));
 
   if (!user) {
     res.sendStatus(400);
