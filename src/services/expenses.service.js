@@ -38,14 +38,6 @@ const updateExpence = (id, body) => {
   Object.assign(expense, {
     ...body,
   });
-  // Object.assign(expense, {
-  //   id,
-  //   userId,
-  //   title,
-  //   amount,
-  //   category,
-  //   note,
-  // });
 
   return expense;
 };

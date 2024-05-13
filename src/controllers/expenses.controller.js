@@ -11,11 +11,11 @@ const getExpenceById = (req, res) => {
   const expense = expensesService.getExpense(id);
 
   if (!expense) {
-    res.sendStatus(400);
+    res.sendStatus(404);
 
     return;
   }
-  res.statusCode = 201;
+  res.statusCode = 200;
   res.send(expense);
 };
 
@@ -34,6 +34,11 @@ const createNewExpense = (req, res) => {
     note,
   );
 
+  // if (!expense) {
+  //   res.sendStatus(400);
+
+  //   return;
+  // }
   res.statusCode = 201;
 
   res.send(expense);
@@ -42,7 +47,7 @@ const createNewExpense = (req, res) => {
 const removeExpence = (req, res) => {
   const { id } = req.params;
 
-  if (!expensesService.getExpense(id)) {
+  if (!expensesService.getExpense(parseInt(id))) {
     res.sendStatus(404);
 
     return;
@@ -54,17 +59,15 @@ const removeExpence = (req, res) => {
 const updateExpenceById = (req, res) => {
   const { id } = req.params;
   const body = req.body;
-  const expense = expensesService.getExpense(id);
-
-  if (!body) {
-    res.sendStatus(422);
-  }
+  const expense = expensesService.getExpense(parseInt(id));
 
   if (!expense) {
     res.sendStatus(404);
   }
 
   const updatedExpense = expensesService.updateExpence(id, body);
+
+  res.statusCode = 200;
 
   res.send(updatedExpense);
 };

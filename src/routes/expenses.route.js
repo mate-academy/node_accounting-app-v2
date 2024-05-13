@@ -10,6 +10,6 @@ expensesRouter.post('/', expencesController.createNewExpense);
 
 expensesRouter.delete('/:id', expencesController.removeExpence);
 
-expensesRouter.put('/:id', expencesController.updateExpenceById);
+expensesRouter.patch('/:id', expencesController.updateExpenceById);
 
 module.exports = expensesRouter;
