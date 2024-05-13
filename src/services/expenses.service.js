@@ -7,9 +7,7 @@ const expensesInit = () => {
 };
 
 const getExpenses = (query) => {
-  expenses = getFilteredExpenses(expenses, query);
-
-  return expenses;
+  return getFilteredExpenses(expenses, query);
 };
 
 const getExpense = (id) => {

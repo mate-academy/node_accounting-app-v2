@@ -1,21 +1,22 @@
 const getFilteredExpenses = (expenses, query) => {
   return expenses.filter((expense) => {
+    let isFiltered = true;
+
     if (query.categories) {
-      return expense.category === query.categories;
+      isFiltered = isFiltered && expense.category === query.categories;
     }
 
     if (query.userId) {
-      return expense.userId === +query.userId;
+      isFiltered = isFiltered && expense.userId === +query.userId;
     }
 
     if (query.from && query.to) {
-      return (
+      isFiltered =
         new Date(expense.spentAt) > new Date(query.from) &&
-        new Date(expense.spentAt) < new Date(query.to)
-      );
+        new Date(expense.spentAt) < new Date(query.to);
     }
 
-    return true;
+    return isFiltered;
   });
 };
 
