@@ -1,4 +1,4 @@
-const { getNextAvailableId } = require('../utils/getNextAvailableId');
+const getNextAvailableId = require('../utils/getNextAvailableId');
 let users = [];
 
 const clearUsers = () => {

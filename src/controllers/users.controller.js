@@ -1,6 +1,7 @@
 const usersService = require('../services/users.service');
+const HTTP_STATUS_CODES = require('../variables/httpStatusCodes');
 
-const get = (req, res) => {
+const getAll = (req, res) => {
   res.send(usersService.getAll());
 };
 
@@ -10,7 +11,7 @@ const getOne = (req, res) => {
   const user = usersService.getById(id);
 
   if (!user) {
-    res.sendStatus(404);
+    res.sendStatus(HTTP_STATUS_CODES.NOT_FOUND);
 
     return;
   }
@@ -22,12 +23,12 @@ const create = (req, res) => {
   const { name } = req.body;
 
   if (!name) {
-    res.sendStatus(400);
+    res.sendStatus(HTTP_STATUS_CODES.BAD_REQUEST);
   }
 
   const user = usersService.create(name);
 
-  res.statusCode = 201;
+  res.statusCode = HTTP_STATUS_CODES.CREATED;
   res.send(user);
 };
 
@@ -38,20 +39,20 @@ const update = (req, res) => {
   const user = usersService.getById(id);
 
   if (!user) {
-    res.sendStatus(404);
+    res.sendStatus(HTTP_STATUS_CODES.NOT_FOUND);
 
     return;
   }
 
   if (typeof name !== 'string') {
-    res.sendStatus(400);
+    res.sendStatus(HTTP_STATUS_CODES.BAD_REQUEST);
 
     return;
   }
 
   const updatedUser = usersService.update(id, name);
 
-  res.statusCode = 200;
+  res.statusCode = HTTP_STATUS_CODES.OK;
 
   res.send(updatedUser);
 };
@@ -60,17 +61,17 @@ const remove = (req, res) => {
   const { id } = req.params;
 
   if (!usersService.getById(id)) {
-    res.sendStatus(404);
+    res.sendStatus(HTTP_STATUS_CODES.NOT_FOUND);
 
     return;
   }
 
   usersService.remove(id);
-  res.sendStatus(204);
+  res.sendStatus(HTTP_STATUS_CODES.NO_CONTENT);
 };
 
 module.exports = {
-  get,
+  getAll,
   getOne,
   create,
   remove,

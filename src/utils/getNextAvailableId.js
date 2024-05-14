@@ -9,4 +9,4 @@ const getNextAvailableId = (array) => {
   return nexId;
 };
 
-module.exports = { getNextAvailableId };
+module.exports = getNextAvailableId;

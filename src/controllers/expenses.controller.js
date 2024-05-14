@@ -1,9 +1,10 @@
 const expensesService = require('../services/expenses.service');
 const { getById } = require('../services/users.service');
+const HTTP_STATUS_CODES = require('../variables/httpStatusCodes');
 
-const get = (req, res) => {
-  const query = req.query;
-  const expenses = expensesService.getExpenses(query);
+const getAll = (req, res) => {
+  const { query } = req;
+  const expenses = expensesService.getAll(query);
 
   res.send(expenses);
 };
@@ -14,7 +15,7 @@ const getOne = (req, res) => {
   const expense = expensesService.getById(id);
 
   if (!expense) {
-    res.sendStatus(404);
+    res.sendStatus(HTTP_STATUS_CODES.NOT_FOUND);
 
     return;
   }
@@ -23,19 +24,25 @@ const getOne = (req, res) => {
 };
 
 const create = (req, res) => {
-  const body = req.body;
-  const { userId, spentAt, title, amount, category } = body;
+  const { userId, spentAt, title, amount, category, note } = req.body;
   const user = getById(userId);
 
   if (!user || !spentAt || !title || !amount || !category) {
-    res.sendStatus(400);
+    res.sendStatus(HTTP_STATUS_CODES.BAD_REQUEST);
 
     return;
   }
 
-  const expense = expensesService.create(body);
+  const expense = expensesService.create({
+    userId,
+    spentAt,
+    title,
+    amount,
+    category,
+    note,
+  });
 
-  res.statusCode = 201;
+  res.statusCode = HTTP_STATUS_CODES.CREATED;
   res.send(expense);
 };
 
@@ -46,14 +53,14 @@ const update = (req, res) => {
   const expense = expensesService.getById(id);
 
   if (!expense) {
-    res.sendStatus(404);
+    res.sendStatus(HTTP_STATUS_CODES.NOT_FOUND);
 
     return;
   }
 
   const updatedExpense = expensesService.update(id, body);
 
-  res.statusCode = 200;
+  res.statusCode = HTTP_STATUS_CODES.OK;
 
   res.send(updatedExpense);
 };
@@ -62,17 +69,17 @@ const remove = (req, res) => {
   const { id } = req.params;
 
   if (!expensesService.getById(id)) {
-    res.sendStatus(404);
+    res.sendStatus(HTTP_STATUS_CODES.NOT_FOUND);
 
     return;
   }
 
   expensesService.remove(id);
-  res.sendStatus(204);
+  res.sendStatus(HTTP_STATUS_CODES.NO_CONTENT);
 };
 
 module.exports = {
-  get,
+  getAll,
   getOne,
   create,
   remove,

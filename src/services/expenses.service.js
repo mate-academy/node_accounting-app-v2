@@ -1,12 +1,12 @@
-const { getNextAvailableId } = require('../utils/getNextAvailableId');
-const { getFilteredExpenses } = require('../utils/getFilteredExpenses');
+const getNextAvailableId = require('../utils/getNextAvailableId');
+const getFilteredExpenses = require('../utils/getFilteredExpenses');
 
 let expenses = [];
 const clearExpenses = () => {
   expenses = [];
 };
 
-const getExpenses = (query) => {
+const getAll = (query) => {
   return getFilteredExpenses(expenses, query);
 };
 
@@ -14,15 +14,10 @@ const getById = (id) => {
   return expenses.find((expense) => expense.id === Number(id)) || null;
 };
 
-const create = ({ userId, spentAt, title, amount, category, note }) => {
+const create = (body) => {
   const expense = {
     id: getNextAvailableId(expenses),
-    userId,
-    spentAt,
-    title,
-    amount,
-    category,
-    note: note || null,
+    ...body,
   };
 
   expenses.push(expense);
@@ -43,7 +38,7 @@ const remove = (id) => {
 };
 
 module.exports = {
-  getExpenses,
+  getAll,
   getById,
   create,
   update,

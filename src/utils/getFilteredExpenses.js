@@ -1,32 +1,29 @@
 const getFilteredExpenses = (expenses, query) => {
   const { userId, categories, from, to } = query;
-  let filteredExpenses = [...expenses];
 
-  if (userId) {
-    filteredExpenses = filteredExpenses.filter(
-      (expense) => expense.userId === Number(userId),
-    );
-  }
+  return expenses.filter((expense) => {
+    let isFiltered = true;
 
-  if (categories) {
-    filteredExpenses = filteredExpenses.filter(
-      (expense) => categories.includes(expense.category),
-      // eslint-disable-next-line function-paren-newline
-    );
-  }
+    if (userId && expense.userId !== Number(userId)) {
+      isFiltered = false;
+    }
 
-  if (from && to) {
-    const fromDate = new Date(from);
-    const toDate = new Date(to);
+    if (categories && !categories.includes(expense.category)) {
+      isFiltered = false;
+    }
 
-    filteredExpenses = filteredExpenses.filter((expense) => {
+    if (from && to) {
+      const fromDate = new Date(from);
+      const toDate = new Date(to);
       const spentAtDate = new Date(expense.spentAt);
 
-      return spentAtDate >= fromDate && spentAtDate <= toDate;
-    });
-  }
+      if (!(spentAtDate >= fromDate && spentAtDate <= toDate)) {
+        isFiltered = false;
+      }
+    }
 
-  return filteredExpenses;
+    return isFiltered;
+  });
 };
 
-module.exports = { getFilteredExpenses };
+module.exports = getFilteredExpenses;
