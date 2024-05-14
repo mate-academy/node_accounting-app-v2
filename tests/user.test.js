@@ -121,6 +121,8 @@ describe('User', () => {
         name,
       });
 
+      console.log({createdUser: createdUser.body});
+
       const newName = 'Jane Doe';
 
       const response = await api
