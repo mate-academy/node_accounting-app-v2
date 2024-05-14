@@ -1,3 +1,5 @@
+const { generateUniqueId } = require('../utils/uniqueGenerator');
+
 let expenses = [];
 
 const init = () => {
@@ -7,23 +9,25 @@ const init = () => {
 const getExpenses = (userId, categories, from, to) => {
   let filteredExpenses = [...expenses];
 
-  if (userId) {
-    filteredExpenses = filteredExpenses.filter(
-      (item) => item.userId === Number(userId),
-    );
-  }
+  filteredExpenses = filteredExpenses.filter((item) => {
+    if (userId && item.userId !== Number(userId)) {
+      return false;
+    }
 
-  if (categories) {
-    filteredExpenses = filteredExpenses.filter(
-      (item) => item.category === categories,
-    );
-  }
+    if (categories && item.category !== categories) {
+      return false;
+    }
 
-  if (from || to) {
-    filteredExpenses = filteredExpenses.filter(
-      (item) => item.spentAt >= from && item.spentAt <= to,
-    );
-  }
+    if (from && item.spentAt < from) {
+      return false;
+    }
+
+    if (to && item.spentAt > to) {
+      return false;
+    }
+
+    return true;
+  });
 
   return filteredExpenses;
 };
@@ -32,17 +36,14 @@ const getExpenseById = (id) => {
   return expenses.find((expense) => expense.id === Number(id)) || null;
 };
 
-const create = (
-  userId,
-  spentAt = new Date().toISOString(),
-  title,
-  amount = 1,
-  category,
-  note,
-) => {
+const create = (expenseData) => {
+  const { userId, title, category, note } = expenseData;
+  const spentAt = expenseData.spentAt || new Date().toISOString();
+  const amount = expenseData.amount || 1;
+
   const newExpense = {
     userId,
-    id: expenses.length,
+    id: generateUniqueId(),
     spentAt,
     title,
     amount,

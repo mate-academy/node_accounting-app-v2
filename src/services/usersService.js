@@ -1,3 +1,5 @@
+const { generateUniqueId } = require('../utils/uniqueGenerator');
+
 let users = [];
 
 const init = () => {
@@ -10,7 +12,7 @@ const getById = (id) => users.find((user) => user.id === Number(id)) || null;
 
 const create = (name) => {
   const user = {
-    id: users.length,
+    id: generateUniqueId(),
     name,
   };
 
