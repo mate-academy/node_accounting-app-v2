@@ -1,78 +1,93 @@
+const { validationResult, matchedData } = require('express-validator');
 const expensesService = require('../services/expenses.service.js');
 const usersService = require('../services/user.service.js');
 
 const getAll = (req, res) => {
-  const expenses = expensesService.getAll();
+  const validationResults = validationResult(req);
+
+  if (!validationResults.isEmpty()) {
+    return res.status(400).send(validationResults.array());
+  }
+
+  const params = matchedData(req, { locations: ['query'] });
+
+  const expenses = expensesService.getAll(params);
 
   res.send(expenses);
 };
 
 const getOne = (req, res) => {
+  const validationResults = validationResult(req);
+
+  if (!validationResults.isEmpty()) {
+    return res.status(400).send(validationResults.array());
+  }
+
   const expensesId = req.params.id;
 
-  const expenses = expensesService.getOne(expensesId);
+  const expenses = expensesService.getById(expensesId);
 
   if (!expenses) {
-    res.status(404).send('Bad request');
-
-    return;
+    return res.status(404).send('Not Found');
   }
 
   res.send(expenses);
 };
 
 const create = (req, res) => {
-  const { userId, spentAt, title, amount, category, note } = req.body;
+  const validationResults = validationResult(req);
 
-  if (!userId || !spentAt || !title || !amount || !category || !note) {
-    res.status(400).send('Bad request');
-
-    return;
+  if (!validationResults.isEmpty()) {
+    return res.status(400).send(validationResults.array());
   }
 
-  const user = usersService.getById(userId);
+  const data = matchedData(req, { locations: ['body'] });
+
+  const user = usersService.getById(data.userId);
 
   if (!user) {
-    res.status(400).send('Bad Request');
-
-    return;
+    return res.status(400).send('Bad Request');
   }
 
-  const newExpenses = expensesService.create({ ...req.body });
+  const newExpenses = expensesService.create({ ...data });
 
   res.status(201).send(newExpenses);
 };
 
 const update = (req, res) => {
-  const expensesId = req.params.id;
-  const { userId, spentAt, title, amount, category, note } = req.body;
+  const validationResults = validationResult(req);
 
-  const expenses = expensesService.getOne(expensesId);
+  if (!validationResults.isEmpty()) {
+    return res.status(400).send(validationResults.array());
+  }
+
+  const data = matchedData(req, { locations: ['body'] });
+  const expensesId = req.params.id;
+
+  const expenses = expensesService.getById(expensesId);
 
   if (!expenses) {
-    res.status(404).send('Not Found');
-
-    return;
+    return res.status(404).send('Not Found');
   }
 
-  if (!userId || !spentAt || !title || !amount || !category || !note) {
-    res.status(400).send('Bad request');
-
-    return;
-  }
-
-  const updatedExpenses = expensesService.update({
+  const updatedExpenses = expensesService.updateById({
     id: expenses.id,
-    ...req.body,
+    ...data,
   });
 
   res.send(updatedExpenses);
 };
 
 const remove = (req, res) => {
+  const validationResults = validationResult(req);
+
+  if (!validationResults.isEmpty()) {
+    return res.status(400).send(validationResults.array());
+  }
+
   const expensesId = req.params.id;
 
-  const expenses = expensesService.getOne(expensesId);
+  const expenses = expensesService.getById(expensesId);
 
   if (!expenses) {
     res.status(404).send('Not Found');
@@ -80,7 +95,7 @@ const remove = (req, res) => {
     return;
   }
 
-  expensesService.remove(expenses.id);
+  expensesService.deleteById(expensesId);
 
   res.status(204).send('Expenses removed');
 };

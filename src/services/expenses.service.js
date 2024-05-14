@@ -1,8 +1,38 @@
 let expenses = [];
 
-const getAll = () => expenses;
+const start = () => {
+  expenses = [];
+};
 
-const getById = (id) => expenses.find((expense) => expense.id === id) || null;
+const getAll = (params) => {
+  const { userId, categories, from, to } = params;
+  let filteredExpenses = [...expenses];
+
+  if (userId) {
+    filteredExpenses = filteredExpenses.filter(
+      (expense) => expense.userId === +userId,
+    );
+  }
+
+  if (categories) {
+    const categoriesArray = categories.split(',');
+
+    // eslint-disable-next-line prettier/prettier
+    filteredExpenses = filteredExpenses.filter(
+      (expense) => categoriesArray.includes(expense.category),
+    );
+  }
+
+  if (from && to) {
+    filteredExpenses = filteredExpenses.filter(
+      (expense) => expense.spentAt >= from && expense.spentAt <= to,
+    );
+  }
+
+  return filteredExpenses;
+};
+
+const getById = (id) => expenses.find((expense) => expense.id === +id) || null;
 
 const create = ({ userId, spentAt, title, amount, category, note }) => {
   const newExpense = {
@@ -10,7 +40,7 @@ const create = ({ userId, spentAt, title, amount, category, note }) => {
     userId,
     spentAt,
     title,
-    amount,
+    amount: +amount,
     category,
     note,
   };
@@ -21,25 +51,21 @@ const create = ({ userId, spentAt, title, amount, category, note }) => {
 };
 
 const deleteById = (id) => {
-  expenses = expenses.filter((expense) => expense.id !== id);
+  expenses = expenses.filter((expense) => expense.id !== +id);
 };
 
-const updateById = ({ id, userId, spentAt, title, amount, category, note }) => {
-  const expense = getById(id);
+const updateById = (keys) => {
+  const expense = getById(keys.id);
 
   Object.assign(expense, {
-    userId,
-    spentAt,
-    title,
-    amount,
-    category,
-    note,
+    ...keys,
   });
 
   return expense;
 };
 
 module.exports = {
+  start,
   getAll,
   getById,
   create,

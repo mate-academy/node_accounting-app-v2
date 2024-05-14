@@ -1,3 +1,4 @@
+const { validationResult, matchedData } = require('express-validator');
 const userService = require('../services/user.service');
 
 const getAll = (req, res) => {
@@ -7,70 +8,76 @@ const getAll = (req, res) => {
 };
 
 const getOne = (req, res) => {
+  const validationResults = validationResult(req);
+
+  if (!validationResults.isEmpty()) {
+    return res.status(400).send(validationResults.array());
+  }
+
   const userId = req.params.id;
 
-  const user = userService.getOne(userId);
+  const user = userService.getById(userId);
 
   if (!user) {
-    res.status(404).send('Bad request');
-
-    return;
+    return res.status(404).send('Not Found');
   }
 
   res.send(user);
 };
 
 const create = (req, res) => {
-  const { name } = req.body;
+  const validationResults = validationResult(req);
 
-  if (!name) {
-    res.status(400).send('Bad request');
-
-    return;
+  if (!validationResults.isEmpty()) {
+    return res.status(400).send(validationResults.array());
   }
 
-  const newUser = userService.create({ name });
+  const data = matchedData(req, { locations: ['body'] });
+
+  const newUser = userService.create(data);
 
   res.status(201).send(newUser);
 };
 
 const update = (req, res) => {
-  const userId = req.params.id;
-  const { name } = req.body;
+  const validationResults = validationResult(req);
 
-  const user = userService.getOne(userId);
+  if (!validationResults.isEmpty()) {
+    return res.status(400).send(validationResults.array());
+  }
+
+  const userId = req.params.id;
+  const data = matchedData(req, { locations: ['body'] });
+
+  const user = userService.getById(userId);
 
   if (!user) {
-    res.status(404).send('Not Found');
-
-    return;
+    return res.status(404).send('Not Found');
   }
 
-  if (!name) {
-    res.status(400).send('Bad request');
-
-    return;
-  }
-
-  const updatedUser = userService.update({ id: user.id, name });
+  const updatedUser = userService.updateById(userId, data);
 
   res.send(updatedUser);
 };
 
 const remove = (req, res) => {
-  const userId = +req.params.id;
+  const validationResults = validationResult(req);
 
-  const user = userService.getById(userId);
-
-  if (!user) {
-    res.status(404).send('Not Found');
-
-    return;
+  if (!validationResults.isEmpty()) {
+    return res.status(400).send(validationResults.array());
   }
 
-  userService.remove(user.id);
+  const id = req.params.id;
 
-  res.status(204).send('User removed');
+  const user = userService.getById(id);
+
+  if (!user) {
+    return res.status(404).send('Not Found');
+  }
+
+  userService.deleteById(id);
+
+  res.status(204).send();
 };
 
 module.exports = {
