@@ -1,18 +1,19 @@
+const status = require('../constants/httpStatusCodes');
 const usersService = require('../services/users.service');
 
 const getAllUsers = (req, res) => {
-  res.send(usersService.getUsers());
+  res.send(usersService.getAllUsers());
 };
 
 const getOneUser = (req, res) => {
   const { id } = req.params;
-
   const user = usersService.getUserById(Number(id));
 
   if (!user) {
-    res.sendStatus(404);
+    res.sendStatus(status.notFound);
   }
-  res.statusCode = 200;
+
+  res.statusCode = status.successful;
   res.send(user);
 };
 
@@ -20,12 +21,12 @@ const createNewUser = (req, res) => {
   const { name } = req.body;
 
   if (!name) {
-    res.sendStatus(400);
+    res.sendStatus(status.badRequest);
   }
 
   const user = usersService.createUser(name);
 
-  res.statusCode = 201;
+  res.statusCode = status.created;
 
   res.send(user);
 };
@@ -35,14 +36,14 @@ const deleteUser = (req, res) => {
   const user = usersService.getUserById(Number(id));
 
   if (!user) {
-    res.sendStatus(404);
+    res.sendStatus(status.notFound);
 
     return;
   }
 
   usersService.removeUser(id);
 
-  res.sendStatus(204);
+  res.sendStatus(status.noContent);
 };
 
 const updateUser = (req, res) => {
@@ -51,11 +52,11 @@ const updateUser = (req, res) => {
   const user = usersService.getUserById(Number(id));
 
   if (!user) {
-    res.sendStatus(400);
+    res.sendStatus(status.badRequest);
   }
 
   if (typeof name !== 'string') {
-    res.status(422);
+    res.status(status.unprocessableEntity);
   }
 
   const updatedUser = usersService.updateUser({ id, name });

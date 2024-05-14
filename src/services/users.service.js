@@ -1,22 +1,21 @@
-const getId = require('../utils/getCreateMaxId');
+const getId = require('../utils/createMaxId');
 let users = [];
 
 const initUsers = () => {
   users = [];
 };
 
-const getUsers = () => {
+const getAllUsers = () => {
   return users;
 };
 
 const getUserById = (id) => {
-  return users.find((user) => user.id === parseInt(id) || null);
+  return users.find((user) => user.id === Number(id) || null);
 };
 
 const createUser = (name) => {
   const user = {
-    id: getId.getCreateMaxId(users),
-
+    id: getId.createMaxId(users),
     name,
   };
 
@@ -26,7 +25,7 @@ const createUser = (name) => {
 };
 
 const removeUser = (id) => {
-  users = users.filter((item) => item.id !== parseInt(id));
+  users = users.filter((item) => item.id !== Number(id));
 };
 
 const updateUser = ({ id, name }) => {
@@ -39,7 +38,7 @@ const updateUser = ({ id, name }) => {
 
 module.exports = {
   initUsers,
-  getUsers,
+  getAllUsers,
   getUserById,
   createUser,
   removeUser,

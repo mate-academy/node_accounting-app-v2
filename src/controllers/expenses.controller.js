@@ -1,3 +1,4 @@
+const status = require('../constants/httpStatusCodes');
 const expensesService = require('../services/expenses.service');
 const { getUserById } = require('../services/users.service');
 
@@ -15,11 +16,11 @@ const getExpenceById = (req, res) => {
   const expense = expensesService.getExpenseById(id);
 
   if (!expense) {
-    res.sendStatus(404);
+    res.sendStatus(status.notFound);
 
     return;
   }
-  res.statusCode = 200;
+  res.statusCode = status.successful;
   res.send(expense);
 };
 
@@ -28,12 +29,12 @@ const createNewExpense = (req, res) => {
   const user = getUserById(body.userId);
 
   if (!user) {
-    res.sendStatus(400);
+    res.sendStatus(status.badRequest);
   }
 
   const expense = expensesService.createExpence(body);
 
-  res.statusCode = 201;
+  res.statusCode = status.created;
 
   res.send(expense);
 };
@@ -43,12 +44,12 @@ const removeExpence = (req, res) => {
   const expense = expensesService.getExpenseById(Number(id));
 
   if (!expense) {
-    res.sendStatus(404);
+    res.sendStatus(status.notFound);
 
     return;
   }
   expensesService.deleteExpense(id);
-  res.sendStatus(204);
+  res.sendStatus(status.noContent);
 };
 
 const updateExpenceById = (req, res) => {
@@ -57,12 +58,12 @@ const updateExpenceById = (req, res) => {
   const expense = expensesService.getExpenseById(Number(id));
 
   if (!expense) {
-    res.sendStatus(404);
+    res.sendStatus(status.notFound);
   }
 
   const updatedExpense = expensesService.updateExpence(id, body);
 
-  res.statusCode = 200;
+  res.statusCode = status.successful;
 
   res.send(updatedExpense);
 };

@@ -1,5 +1,5 @@
 let expenses = [];
-const getId = require('../utils/getCreateMaxId');
+const getId = require('../utils/createMaxId');
 const { getFilteredExpenses } = require('../utils/getFilteredExpenses');
 
 const initExpenses = () => {
@@ -15,15 +15,11 @@ const getAllExpenses = (query) => {
 const getExpenseById = (id) => {
   return expenses.find((expense) => expense.id === Number(id) || null);
 };
-const createExpence = ({ userId, spentAt, title, amount, category, note }) => {
+
+const createExpence = (body) => {
   const expense = {
-    id: getId.getCreateMaxId(expenses),
-    userId,
-    spentAt,
-    title,
-    amount,
-    category,
-    note,
+    id: getId.createMaxId(expenses),
+    ...body,
   };
 
   expenses.push(expense);
