@@ -18,9 +18,9 @@ const getExpenses = (userId, categories = [], from, to) => {
   if (categories.length > 0) {
     const categoriesList = categories.split(',');
 
-    filteredExpenses = filteredExpenses.filter((expense) =>
-      categoriesList.includes(expense.category),
-    );
+    filteredExpenses = filteredExpenses.filter((expense) => {
+      return categoriesList.includes(expense.category);
+    });
   }
 
   if (from) {
