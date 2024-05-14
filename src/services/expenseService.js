@@ -22,14 +22,11 @@ const getAllExpenses = (id, categories, from, to) => {
 
   const fromDate = new Date(from);
   const toDate = new Date(to);
-  // to create server
 
-  const earliestDate = !isNaN(fromDate)
+  const earliestDate = from
     ? fromDate.toISOString()
     : new Date(0).toISOString();
-  const latestDate = !isNaN(toDate)
-    ? toDate.toISOString()
-    : new Date().toISOString();
+  const latestDate = to ? toDate.toISOString() : new Date().toISOString();
 
   if (from || to) {
     preparedExpenses = preparedExpenses.filter(

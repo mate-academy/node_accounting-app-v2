@@ -1,5 +1,5 @@
 const createUniqueID = () => {
-  return Math.floor(Math.random() * Date.now());
+  return Math.round(Math.random() * Date.now());
 };
 
 module.exports = { createUniqueID };
