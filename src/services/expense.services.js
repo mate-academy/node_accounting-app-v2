@@ -8,33 +8,14 @@ const reset = () => {
 
 const getAll = (data) => {
   const { userId, categories, from, to } = data;
-  let filteredExpenses = expenses;
 
-  if (userId) {
-    filteredExpenses = filteredExpenses.filter(
-      (expense) => expense.userId === Number(userId),
-    );
-  }
-
-  if (categories) {
-    filteredExpenses = filteredExpenses.filter(
-      (expense) => expense.category === categories,
-    );
-  }
-
-  if (from) {
-    filteredExpenses = filteredExpenses.filter((expense) => {
-      return new Date(expense.spentAt) >= new Date(from);
-    });
-  }
-
-  if (to) {
-    filteredExpenses = filteredExpenses.filter((expense) => {
-      return new Date(expense.spentAt) <= new Date(to);
-    });
-  }
-
-  return filteredExpenses;
+  return expenses.filter(
+    (expense) =>
+      (!userId || expense.userId === Number(userId)) &&
+      (!categories || expense.category === categories) &&
+      (!from || new Date(expense.spentAt) >= new Date(from)) &&
+      (!to || new Date(expense.spentAt) <= new Date(to)),
+  );
 };
 
 const getById = (id) => {
