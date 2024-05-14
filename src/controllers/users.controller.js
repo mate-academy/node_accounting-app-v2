@@ -7,7 +7,7 @@ const getAllUsers = (req, res) => {
 const getOneUser = (req, res) => {
   const { id } = req.params;
 
-  const user = usersService.getUserById(parseInt(id));
+  const user = usersService.getUserById(Number(id));
 
   if (!user) {
     res.sendStatus(404);
@@ -32,7 +32,7 @@ const createNewUser = (req, res) => {
 
 const deleteUser = (req, res) => {
   const { id } = req.params;
-  const user = usersService.getUserById(parseInt(id));
+  const user = usersService.getUserById(Number(id));
 
   if (!user) {
     res.sendStatus(404);
@@ -48,7 +48,7 @@ const deleteUser = (req, res) => {
 const updateUser = (req, res) => {
   const { id } = req.params;
   const { name } = req.body;
-  const user = usersService.getUserById(parseInt(id));
+  const user = usersService.getUserById(Number(id));
 
   if (!user) {
     res.sendStatus(400);

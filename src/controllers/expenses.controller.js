@@ -4,7 +4,7 @@ const { getUserById } = require('../services/users.service');
 const getAllExpenses = (req, res) => {
   const query = req.query;
 
-  const expenses = expensesService.getExpenses(query);
+  const expenses = expensesService.getAllExpenses(query);
 
   res.send(expenses);
 };
@@ -12,7 +12,7 @@ const getAllExpenses = (req, res) => {
 const getExpenceById = (req, res) => {
   const { id } = req.params;
 
-  const expense = expensesService.getExpense(id);
+  const expense = expensesService.getExpenseById(id);
 
   if (!expense) {
     res.sendStatus(404);
@@ -40,7 +40,7 @@ const createNewExpense = (req, res) => {
 
 const removeExpence = (req, res) => {
   const { id } = req.params;
-  const expense = expensesService.getExpense(parseInt(id));
+  const expense = expensesService.getExpenseById(Number(id));
 
   if (!expense) {
     res.sendStatus(404);
@@ -54,7 +54,7 @@ const removeExpence = (req, res) => {
 const updateExpenceById = (req, res) => {
   const { id } = req.params;
   const body = req.body;
-  const expense = expensesService.getExpense(parseInt(id));
+  const expense = expensesService.getExpenseById(Number(id));
 
   if (!expense) {
     res.sendStatus(404);

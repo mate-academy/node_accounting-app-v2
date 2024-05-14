@@ -2,18 +2,18 @@ let expenses = [];
 const getId = require('../utils/getCreateMaxId');
 const { getFilteredExpenses } = require('../utils/getFilteredExpenses');
 
-const expensesInit = () => {
+const initExpenses = () => {
   expenses = [];
 };
 
-const getExpenses = (query) => {
+const getAllExpenses = (query) => {
   expenses = getFilteredExpenses(expenses, query);
 
   return expenses;
 };
 
-const getExpense = (id) => {
-  return expenses.find((expense) => expense.id === parseInt(id) || null);
+const getExpenseById = (id) => {
+  return expenses.find((expense) => expense.id === Number(id) || null);
 };
 const createExpence = ({ userId, spentAt, title, amount, category, note }) => {
   const expense = {
@@ -32,11 +32,11 @@ const createExpence = ({ userId, spentAt, title, amount, category, note }) => {
 };
 
 const deleteExpense = (id) => {
-  expenses = expenses.filter((expense) => expense.id !== parseInt(id));
+  expenses = expenses.filter((expense) => expense.id !== Number(id));
 };
 
 const updateExpence = (id, body) => {
-  const expense = getExpense(id);
+  const expense = getExpenseById(id);
 
   Object.assign(expense, {
     ...body,
@@ -46,9 +46,9 @@ const updateExpence = (id, body) => {
 };
 
 module.exports = {
-  expensesInit,
-  getExpenses,
-  getExpense,
+  initExpenses,
+  getAllExpenses,
+  getExpenseById,
   createExpence,
   deleteExpense,
   updateExpence,

@@ -1,7 +1,7 @@
 const getId = require('../utils/getCreateMaxId');
 let users = [];
 
-const usersInit = () => {
+const initUsers = () => {
   users = [];
 };
 
@@ -38,7 +38,7 @@ const updateUser = ({ id, name }) => {
 };
 
 module.exports = {
-  usersInit,
+  initUsers,
   getUsers,
   getUserById,
   createUser,
