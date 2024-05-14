@@ -19,9 +19,6 @@ function createServer() {
     expensesService,
   });
 
-  // const users = [];
-  // let expenses = [];
-
   const app = express();
   // Add a routes to the server
 

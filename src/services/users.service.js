@@ -47,12 +47,7 @@ function deleteOne(id) {
 }
 
 const createService = () => {
-  users = [
-    // {
-    // id: 1,
-    // name: 'Vlad',
-    // }
-  ];
+  users = [];
 
   return {
     getAll,

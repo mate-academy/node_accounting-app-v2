@@ -50,23 +50,11 @@ function updateOne(id, expenseData) {
     expense[key] = expenseData[key];
   }
 
-  // Object.assign(expense, expenseData);
-
   return expense;
 }
 
 const createService = () => {
-  expenses = [
-    // {
-    // id: 1,
-    // userId: 1,
-    // spentAt: '2022-10-19T11:01:43.462Z',
-    // title: 'Buy a new laptop',
-    // amount: 999,
-    // category: 'Electronics',
-    // note: 'I need a new laptop'
-    // }
-  ];
+  expenses = [];
 
   return {
     getAll,
