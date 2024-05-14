@@ -17,10 +17,10 @@ const getAll = (params) => {
   if (categories) {
     const categoriesArray = categories.split(',');
 
-    // eslint-disable-next-line prettier/prettier
-    filteredExpenses = filteredExpenses.filter(
-      (expense) => categoriesArray.includes(expense.category),
-    );
+    const filterCallback = (expense) =>
+      categoriesArray.includes(expense.category);
+
+    filteredExpenses = filteredExpenses.filter(filterCallback);
   }
 
   if (from && to) {
