@@ -9,21 +9,27 @@ const start = () => {
 };
 
 const getExpenses = (userId, categories, from, to) => {
+  let filteredExpenses = [...expenses];
+
   if (userId) {
-    expenses = expenses.filter((item) => item.userId === Number(userId));
+    filteredExpenses = filteredExpenses.filter(
+      (item) => item.userId === Number(userId),
+    );
   }
 
   if (categories) {
-    expenses = expenses.filter((item) => item.category === categories);
+    filteredExpenses = filteredExpenses.filter(
+      (item) => item.category === categories,
+    );
   }
 
   if (from || to) {
-    expenses = expenses.filter(
+    filteredExpenses = filteredExpenses.filter(
       (item) => item.spentAt >= from && item.spentAt <= to,
     );
   }
 
-  return expenses;
+  return filteredExpenses;
 };
 
 const getExpenseById = (id) => {

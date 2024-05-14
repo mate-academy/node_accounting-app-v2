@@ -1,18 +1,7 @@
-const userService = require('../services/user.service');
 const expenseService = require('../services/expense.service');
 
-const isUserExist = (userId, res) => {
-  if (!userService.getById(userId)) {
-    res.status(400).send('User not found');
-
-    return true;
-  }
-};
-
-const isExpenseExist = (id, res) => {
+const isExpenseExist = (id) => {
   if (!expenseService.getExpenseById(id)) {
-    res.status(404).send('Expense with this id not found');
-
     return true;
   }
 };
@@ -23,48 +12,34 @@ const validateRequestBodyFields = ({
   amount,
   category,
   note,
-  res,
   isCreatingExpense = true,
 }) => {
   if (isCreatingExpense && !userId) {
-    res.status(400).send('provide userId');
-
-    return true;
+    throw new Error('provide userId');
   }
 
   if (!title || typeof title !== 'string') {
-    res
-      .status(400)
-      .send('Invalid request: "title" is required and must be a string.');
-
-    return true;
+    throw new Error(
+      'Invalid request: "title" is required and must be a string.',
+    );
   }
 
   if (typeof amount !== 'number') {
-    res.status(400).send('Invalid request: "amount" must be a number.');
-
-    return true;
+    throw new Error('Invalid request: "amount" must be a number.');
   }
 
   if (!category || typeof category !== 'string') {
-    res
-      .status(400)
-      .send('Invalid request: "category" is required and must be a string.');
-
-    return true;
+    throw new Error(
+      'Invalid request: "category" is required and must be a string.',
+    );
   }
 
   if (!note || typeof note !== 'string') {
-    res
-      .status(400)
-      .send('Invalid request: "note" is required and must be a note.');
-
-    return true;
+    throw new Error('Invalid request: "note" is required and must be a note.');
   }
 };
 
 module.exports = {
-  isUserExist,
   isExpenseExist,
   validateRequestBodyFields,
 };

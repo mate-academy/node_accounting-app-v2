@@ -1,5 +1,6 @@
 const expensesService = require('../services/expense.service');
 const expensesHelpers = require('../helpers/expense.helpers');
+const userHelpers = require('../helpers/user.helpers');
 
 const get = (req, res) => {
   const { userId, categories, from, to } = req.query;
@@ -14,7 +15,9 @@ const getOne = (req, res) => {
 
   const expense = expensesService.getExpenseById(id);
 
-  if (expensesHelpers.isExpenseExist(id, res)) {
+  if (expensesHelpers.isExpenseExist(id)) {
+    res.status(404).send('Expense with this id not found');
+
     return;
   }
 
@@ -24,38 +27,38 @@ const getOne = (req, res) => {
 const create = (req, res) => {
   const { userId, spentAt, title, amount, category, note } = req.body;
 
-  if (
-    expensesHelpers.isUserExist(userId, res) ||
-    expensesHelpers.validateRequestBodyFields({
+  if (userHelpers.isUserExist(userId)) {
+    res.status(400).send('User with this id not found');
+
+    return;
+  }
+
+  try {
+    expensesHelpers.validateRequestBodyFields(req.body);
+
+    const expense = expensesService.create(
       userId,
+      spentAt,
       title,
       amount,
       category,
       note,
-      res,
-    })
-  ) {
-    return;
+    );
+
+    res.statusCode = 201;
+
+    res.send(expense);
+  } catch (error) {
+    res.status(400).send(error.message);
   }
-
-  const expense = expensesService.create(
-    userId,
-    spentAt,
-    title,
-    amount,
-    category,
-    note,
-  );
-
-  res.statusCode = 201;
-
-  res.send(expense);
 };
 
 const remove = (req, res) => {
   const { id } = req.params;
 
-  if (expensesHelpers.isExpenseExist(id, res)) {
+  if (expensesHelpers.isExpenseExist(id)) {
+    res.status(404).send('Expense with this id not found');
+
     return;
   }
 
@@ -68,7 +71,9 @@ const update = (req, res) => {
   const { id } = req.params;
   const { title } = req.body;
 
-  if (expensesHelpers.isExpenseExist(id, res)) {
+  if (expensesHelpers.isExpenseExist(id)) {
+    res.status(404).send('Expense with this id not found');
+
     return;
   }
 
