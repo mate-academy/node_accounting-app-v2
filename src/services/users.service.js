@@ -1,5 +1,9 @@
 const { getId } = require('../utils/utils.js');
-let users;
+let users = [];
+
+function init() {
+  users.length = 0;
+}
 
 function getAll() {
   return users;
@@ -46,18 +50,11 @@ function deleteOne(id) {
   return true;
 }
 
-const createService = () => {
-  users = [];
-
-  return {
-    getAll,
-    getOne,
-    createOne,
-    updateOne,
-    deleteOne,
-  };
-};
-
 module.exports = {
-  createService,
+  init,
+  getAll,
+  getOne,
+  createOne,
+  updateOne,
+  deleteOne,
 };

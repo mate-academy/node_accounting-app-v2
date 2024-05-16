@@ -1,6 +1,9 @@
-// let expenses = [];
+let expenses = [];
 const { getId } = require('../utils/utils.js');
-let expenses;
+
+function init() {
+  expenses.length = 0;
+}
 
 function getAll() {
   return expenses;
@@ -53,18 +56,11 @@ function updateOne(id, expenseData) {
   return expense;
 }
 
-const createService = () => {
-  expenses = [];
-
-  return {
-    getAll,
-    getOne,
-    createOne,
-    updateOne,
-    deleteOne,
-  };
-};
-
 module.exports = {
-  createService,
+  init,
+  getAll,
+  getOne,
+  createOne,
+  updateOne,
+  deleteOne,
 };
