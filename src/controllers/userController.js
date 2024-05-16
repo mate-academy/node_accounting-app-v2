@@ -2,7 +2,7 @@ const userService = require('../services/userService');
 const { STATUS_CODE } = require('../utils/statusCodes');
 
 const getAll = (req, res) => {
-  const allUsers = userService.getAllUsers();
+  const allUsers = userService.getAll();
 
   res.send(allUsers);
 };
@@ -16,14 +16,14 @@ const create = (req, res) => {
     return;
   }
 
-  const user = userService.createUser(name);
+  const user = userService.create(name);
 
   res.status(STATUS_CODE.CREATED).send(user);
 };
 
 const get = (req, res) => {
   const { id } = req.params;
-  const user = userService.getUserById(id);
+  const user = userService.getById(id);
 
   if (!user) {
     res.sendStatus(STATUS_CODE.BAD_REQUEST);
@@ -37,13 +37,13 @@ const get = (req, res) => {
 const remove = (req, res) => {
   const { id } = req.params;
 
-  if (!userService.getUserById(id)) {
+  if (!userService.getById(id)) {
     res.sendStatus(STATUS_CODE.BAD_REQUEST);
 
     return;
   }
 
-  userService.removeUser(id);
+  userService.remove(id);
 
   res.sendStatus(STATUS_CODE.NO_CONTENT);
 };
@@ -51,7 +51,7 @@ const remove = (req, res) => {
 const update = (req, res) => {
   const { id } = req.params;
   const { name } = req.body;
-  const user = userService.getUserById(id);
+  const user = userService.getById(id);
 
   if (!user) {
     res.sendStatus(STATUS_CODE.BAD_REQUEST);
@@ -65,7 +65,7 @@ const update = (req, res) => {
     return;
   }
 
-  const updatedUser = userService.updateUser({ id, name });
+  const updatedUser = userService.update({ id, name });
 
   res.send(updatedUser);
 };

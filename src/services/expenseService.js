@@ -3,23 +3,15 @@ const { createUniqueID } = require('../utils/createUniqueID');
 
 let expenses = [];
 
-const initExpenses = () => {
+const init = () => {
   expenses = [];
 };
 
-const getAllExpenses = (id, categories, from, to) => {
+const getAll = (query) => {
   let preparedExpenses = expenses;
 
-  if (id) {
-    preparedExpenses = preparedExpenses.filter(({ userId }) => userId === id);
-  }
-
-  if (categories) {
-    preparedExpenses = preparedExpenses.filter(({ category }) =>
-      categories.includes(category),
-    );
-  }
-
+  const { userId: id, categories, from, to } = query;
+  const isQueryExist = id || categories || from || to;
   const fromDate = new Date(from);
   const toDate = new Date(to);
 
@@ -28,20 +20,36 @@ const getAllExpenses = (id, categories, from, to) => {
     : new Date(0).toISOString();
   const latestDate = to ? toDate.toISOString() : new Date().toISOString();
 
-  if (from || to) {
+  if (isQueryExist) {
     preparedExpenses = preparedExpenses.filter(
-      ({ spentAt }) => spentAt >= earliestDate && spentAt <= latestDate,
+      ({ userId, category, spentAt }) => {
+        let isRelevant = true;
+
+        if (id) {
+          isRelevant = userId === Number(id);
+        }
+
+        if (categories) {
+          isRelevant = categories.includes(category);
+        }
+
+        if (from || to) {
+          isRelevant = spentAt >= earliestDate && spentAt <= latestDate;
+        }
+
+        return isRelevant;
+      },
     );
   }
 
   return preparedExpenses;
 };
 
-const getExpenseById = (id) => {
-  return expenses.find((user) => user.id === Number(id)) || null;
+const getById = (id) => {
+  return expenses.find((expense) => expense.id === Number(id)) || null;
 };
 
-const createExpense = (expense) => {
+const create = (expense) => {
   const newExpense = { id: createUniqueID(), ...expense };
 
   expenses.push(newExpense);
@@ -49,23 +57,24 @@ const createExpense = (expense) => {
   return newExpense;
 };
 
-const updateExpense = (fieldsToUpdate) => {
-  const expense = expenses.find((usr) => usr.id === fieldsToUpdate.id) || null;
+const update = (fieldsToUpdate) => {
+  const updatingExpense =
+    expenses.find((expense) => expense.id === fieldsToUpdate.id) || null;
 
-  Object.assign(expense, fieldsToUpdate);
+  Object.assign(updatingExpense, fieldsToUpdate);
 
-  return expense;
+  return updatingExpense;
 };
 
-const removeExpense = (id) => {
-  expenses = expenses.filter((usr) => usr.id !== Number(id));
+const remove = (id) => {
+  expenses = expenses.filter((expense) => expense.id !== Number(id));
 };
 
 module.exports = {
-  initExpenses,
-  getAllExpenses,
-  getExpenseById,
-  createExpense,
-  removeExpense,
-  updateExpense,
+  init,
+  getAll,
+  getById,
+  create,
+  remove,
+  update,
 };

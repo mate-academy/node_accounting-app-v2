@@ -2,19 +2,19 @@ const { createUniqueID } = require('../utils/createUniqueID');
 
 let users = [];
 
-const initUsers = () => {
+const init = () => {
   users = [];
 };
 
-const getAllUsers = () => {
+const getAll = () => {
   return users;
 };
 
-const getUserById = (id) => {
+const getById = (id) => {
   return users.find((user) => user.id === Number(id)) || null;
 };
 
-const createUser = (name) => {
+const create = (name) => {
   const user = {
     id: createUniqueID(),
     name,
@@ -25,7 +25,7 @@ const createUser = (name) => {
   return user;
 };
 
-const updateUser = ({ id, name }) => {
+const update = ({ id, name }) => {
   const user = users.find((usr) => usr.id === Number(id)) || null;
 
   Object.assign(user, { name });
@@ -33,15 +33,15 @@ const updateUser = ({ id, name }) => {
   return user;
 };
 
-const removeUser = (id) => {
+const remove = (id) => {
   users = users.filter((usr) => usr.id !== Number(id));
 };
 
 module.exports = {
-  getAllUsers,
-  getUserById,
-  createUser,
-  removeUser,
-  updateUser,
-  initUsers,
+  getAll,
+  getById,
+  create,
+  remove,
+  update,
+  init,
 };

@@ -1,5 +1,3 @@
-const createUniqueID = () => {
-  return Math.round(Math.random() * Date.now());
-};
+const createUniqueID = () => Math.round(Math.random() * Date.now());
 
 module.exports = { createUniqueID };
