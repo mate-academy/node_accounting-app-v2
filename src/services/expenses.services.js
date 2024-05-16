@@ -1,44 +1,28 @@
-'use strict';
-
 const { getUserById } = require('./user.services');
 
 let expenses = [];
 
-const getExpenses = (userId, categories = [], from, to) => {
-  let filteredExpenses = [...expenses];
+const get = (userId, categories = [], from, to) => {
+  return expenses.filter((expense) => {
+    const idMatch = !userId || expense.userId === +userId;
 
-  if (userId) {
-    const id = +userId;
+    const categoryMatch =
+      categories.length === 0 ||
+      categories.split(',').includes(expense.category);
 
-    filteredExpenses = filteredExpenses.filter(
-      (expense) => expense.userId === id,
-    );
-  }
+    const fromDate = from ? new Date(from) : null;
 
-  if (categories.length > 0) {
-    const categoriesList = categories.split(',');
+    const toDate = to ? new Date(to) : null;
 
-    filteredExpenses = filteredExpenses.filter((expense) => {
-      return categoriesList.includes(expense.category);
-    });
-  }
+    const dateMatch =
+      (!fromDate || new Date(expense.spentAt) >= fromDate) &&
+      (!toDate || new Date(expense.spentAt) <= toDate);
 
-  if (from) {
-    filteredExpenses = filteredExpenses.filter(
-      (expense) => new Date(expense.spentAt) >= new Date(from),
-    );
-  }
-
-  if (to) {
-    filteredExpenses = filteredExpenses.filter(
-      (expense) => new Date(expense.spentAt) <= new Date(to),
-    );
-  }
-
-  return filteredExpenses;
+    return idMatch && categoryMatch && dateMatch;
+  });
 };
 
-const getExpenseById = (id) => {
+const getById = (id) => {
   const expense = expenses.find((exp) => exp.id === Number(id));
 
   if (!expense) {
@@ -48,7 +32,7 @@ const getExpenseById = (id) => {
   return expense;
 };
 
-const addExpense = (userId, expenseData) => {
+const add = (userId, expenseData) => {
   const user = getUserById(userId);
 
   if (!user) {
@@ -66,7 +50,7 @@ const addExpense = (userId, expenseData) => {
   return newExpense;
 };
 
-const deleteExpense = (id) => {
+const remove = (id) => {
   const index = expenses.findIndex((expense) => expense.id === Number(id));
 
   if (index === -1) {
@@ -76,7 +60,7 @@ const deleteExpense = (id) => {
   expenses.splice(index, 1);
 };
 
-const updateExpense = (id, expenseData) => {
+const update = (id, expenseData) => {
   const index = expenses.findIndex((expense) => expense.id === Number(id));
 
   if (index === -1) {
@@ -96,10 +80,10 @@ const resetExpenses = () => {
 };
 
 module.exports = {
-  getExpenses,
-  addExpense,
-  getExpenseById,
-  deleteExpense,
-  updateExpense,
+  get,
+  add,
+  getById,
+  remove,
+  update,
   resetExpenses,
 };

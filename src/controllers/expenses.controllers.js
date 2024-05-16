@@ -1,18 +1,20 @@
-'use strict';
-
 const expensesService = require('../services/expenses.services');
 
-const getExpenses = (req, res) => {
-  const { userId, categories, from, to } = req.query;
-  const expenses = expensesService.getExpenses(userId, categories, from, to);
+const getAll = (req, res) => {
+  const expenses = expensesService.get(
+    req.query.userId,
+    req.query.categories,
+    req.query.from,
+    req.query.to,
+  );
 
   res.status(200).json(expenses);
 };
 
-const getExpenseById = (req, res) => {
+const getOne = (req, res) => {
   try {
     const { id } = req.params;
-    const expense = expensesService.getExpenseById(id);
+    const expense = expensesService.getById(id);
 
     res.status(200).json(expense);
   } catch (error) {
@@ -20,13 +22,13 @@ const getExpenseById = (req, res) => {
   }
 };
 
-const addExpense = (req, res) => {
+const add = (req, res) => {
   const userId = parseInt(req.body.userId);
 
   const expenseData = req.body;
 
   try {
-    const expense = expensesService.addExpense(userId, expenseData);
+    const expense = expensesService.add(userId, expenseData);
 
     res.status(201).json(expense);
   } catch (error) {
@@ -34,11 +36,11 @@ const addExpense = (req, res) => {
   }
 };
 
-const deleteExpense = (req, res) => {
+const remove = (req, res) => {
   const { id } = req.params;
 
   try {
-    expensesService.deleteExpense(id);
+    expensesService.remove(id);
 
     res.sendStatus(204);
   } catch (error) {
@@ -46,12 +48,12 @@ const deleteExpense = (req, res) => {
   }
 };
 
-const updateExpense = (req, res) => {
+const update = (req, res) => {
   const { id } = req.params;
   const expenseData = req.body;
 
   try {
-    const expense = expensesService.updateExpense(id, expenseData);
+    const expense = expensesService.update(id, expenseData);
 
     res.status(200).json(expense);
   } catch (error) {
@@ -60,9 +62,9 @@ const updateExpense = (req, res) => {
 };
 
 module.exports = {
-  getExpenses,
-  addExpense,
-  getExpenseById,
-  deleteExpense,
-  updateExpense,
+  getAll,
+  add,
+  getOne,
+  remove,
+  update,
 };

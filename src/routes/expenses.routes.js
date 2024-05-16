@@ -1,20 +1,18 @@
-'use strict';
-
 const express = require('express');
 
-const expenseConrollers = require('../controllers/expenses.controllers');
+const expenseConroller = require('../controllers/expenses.controllers');
 
 const expensesRouter = express.Router();
 
-expensesRouter.get('/', expenseConrollers.getExpenses);
+expensesRouter.get('/', expenseConroller.getAll);
 
-expensesRouter.get('/:id', expenseConrollers.getExpenseById);
+expensesRouter.get('/:id', expenseConroller.getOne);
 
-expensesRouter.post('/', expenseConrollers.addExpense);
+expensesRouter.post('/', expenseConroller.add);
 
-expensesRouter.delete('/:id', expenseConrollers.deleteExpense);
+expensesRouter.delete('/:id', expenseConroller.remove);
 
-expensesRouter.patch('/:id', expenseConrollers.updateExpense);
+expensesRouter.patch('/:id', expenseConroller.update);
 
 module.exports = {
   expensesRouter,

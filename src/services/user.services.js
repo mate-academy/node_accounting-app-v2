@@ -1,8 +1,6 @@
-'use strict';
-
 let users = [];
 
-const getUsers = () => {
+const getAll = () => {
   return users;
 };
 
@@ -12,7 +10,7 @@ const getUserById = (id) => {
   return oneUser;
 };
 
-const createUser = (name) => {
+const create = (name) => {
   const newUser = {
     id: Date.now(),
     name,
@@ -23,11 +21,11 @@ const createUser = (name) => {
   return newUser;
 };
 
-const removeUser = (id) => {
+const remove = (id) => {
   users = users.filter((user) => user.id !== Number(id));
 };
 
-const updateUser = ({ id, name }) => {
+const update = ({ id, name }) => {
   const user = getUserById(id);
 
   Object.assign(user, { name });
@@ -40,10 +38,10 @@ const resetUsers = () => {
 };
 
 module.exports = {
-  getUsers,
+  getAll,
   getUserById,
-  createUser,
-  removeUser,
-  updateUser,
+  create,
+  remove,
+  update,
   resetUsers,
 };
