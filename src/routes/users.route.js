@@ -1,34 +1,33 @@
 const express = require('express');
 const usersController = require('../controllers/users.controller');
 const validationMiddleware = require('../middleware/validationMiddleware');
-const { handleErrors } = require('../middleware/handleErrorsMiddleware');
 
 const usersRouter = express.Router();
 
-usersRouter.get('/', handleErrors(usersController.getAll));
+usersRouter.get('/', usersController.getAll);
 
 usersRouter.post(
   '/',
   validationMiddleware.validateUserInput,
-  handleErrors(usersController.createUser),
+  usersController.createUser,
 );
 
 usersRouter.get(
   '/:id',
   validationMiddleware.validateId,
-  handleErrors(usersController.getUserById),
+  usersController.getUserById,
 );
 
 usersRouter.delete(
   '/:id',
   validationMiddleware.validateId,
-  handleErrors(usersController.removeUser),
+  usersController.removeUser,
 );
 
 usersRouter.patch(
   '/:id',
   validationMiddleware.validateId,
-  handleErrors(usersController.updateUser),
+  usersController.updateUser,
 );
 
 module.exports = {

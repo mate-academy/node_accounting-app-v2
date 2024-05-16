@@ -1,34 +1,33 @@
 const express = require('express');
 const expensesController = require('../controllers/expenses.controller');
 const validationMiddleware = require('../middleware/validationMiddleware');
-const { handleErrors } = require('../middleware/handleErrorsMiddleware');
 
 const expensesRouter = express.Router();
 
-expensesRouter.get('/', handleErrors(expensesController.getAll));
+expensesRouter.get('/', expensesController.getAll);
 
 expensesRouter.post(
   '/',
   validationMiddleware.validateExpenseInput,
-  handleErrors(expensesController.createExpense),
+  expensesController.createExpense,
 );
 
 expensesRouter.get(
   '/:id',
   validationMiddleware.validateId,
-  handleErrors(expensesController.getById),
+  expensesController.getById,
 );
 
 expensesRouter.delete(
   '/:id',
   validationMiddleware.validateId,
-  handleErrors(expensesController.removeExpense),
+  expensesController.removeExpense,
 );
 
 expensesRouter.patch(
   '/:id',
   validationMiddleware.validateId,
-  handleErrors(expensesController.updateExpense),
+  expensesController.updateExpense,
 );
 
 module.exports = {
