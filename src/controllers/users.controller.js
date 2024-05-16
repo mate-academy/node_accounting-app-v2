@@ -9,10 +9,6 @@ const getAll = (req, res) => {
 const createUser = (req, res) => {
   const { name } = req.body;
 
-  if (!name) {
-    return res.sendStatus(400);
-  }
-
   const user = usersService.createUser(name);
 
   res.statusCode = 201;
@@ -21,10 +17,6 @@ const createUser = (req, res) => {
 
 const getUserById = (req, res) => {
   const { id } = req.params;
-
-  if (!id) {
-    return res.sendStatus(400);
-  }
 
   const user = usersService.getById(id);
 
@@ -37,10 +29,6 @@ const getUserById = (req, res) => {
 
 const removeUser = (req, res) => {
   const { id } = req.params;
-
-  if (!id) {
-    return res.sendStatus(400);
-  }
 
   const user = usersService.getById(id);
 
@@ -55,10 +43,6 @@ const removeUser = (req, res) => {
 const updateUser = (req, res) => {
   const { id } = req.params;
   const body = req.body;
-
-  if (!id) {
-    return res.sendStatus(400);
-  }
 
   const user = usersService.getById(id);
 
