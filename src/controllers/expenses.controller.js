@@ -2,27 +2,25 @@ const expensesService = require('../services/expenses.service');
 const usersService = require('../services/users.service');
 
 const getAll = (req, res) => {
-  const { userId, categories, from, to } = req.query;
+  try {
+    const { userId, categories, from, to } = req.query;
 
-  if (!userId && !categories && !from && !to) {
-    const allExpenses = expensesService.getAllExpenses();
+    const expenses = expensesService.getAllExpenses(
+      userId,
+      categories,
+      from,
+      to,
+    );
 
-    return res.status(200).send(allExpenses);
+    res.status(200).send(expenses);
+  } catch (error) {
+    res.sendStatus(500);
   }
-
-  const expenses = expensesService.getAllExpenses(userId, categories, from, to);
-
-  res.status(200).send(expenses);
 };
 
 const createExpense = (req, res) => {
   const body = req.body;
-
-  const { userId, spentAt, title, amount, category, note } = body;
-
-  if ((!userId || !spentAt || !title || !amount || !category, !note)) {
-    return res.sendStatus(400);
-  }
+  const { userId } = body;
 
   const newExpense = expensesService.createNewExpense(body);
 
