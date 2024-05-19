@@ -1,5 +1,5 @@
 /* eslint-disable indent */
-const { findItemById, getId, getFilteredArray } = require('./helper');
+const { findItemById, getId, getFilteredArrayById } = require('./helper');
 
 let expenses = [];
 
@@ -8,31 +8,31 @@ const clearExpensesData = () => {
 };
 
 const getFilteredExpenses = (query) => {
-  let filteredExpenses = expenses;
-
-  if (query) {
-    const { userId, categories, from, to } = query;
-
-    filteredExpenses = userId
-      ? expenses.filter((exp) => String(exp.userId) === String(userId))
-      : expenses;
-
-    filteredExpenses = categories
-      ? expenses.filter((exp) => categories.includes(exp.category))
-      : filteredExpenses;
-
-    filteredExpenses = from
-      ? filteredExpenses.filter(
-          (exp) => new Date(exp.spentAt) >= new Date(from),
-        )
-      : filteredExpenses;
-
-    filteredExpenses = to
-      ? filteredExpenses.filter((exp) => new Date(exp.spentAt) <= new Date(to))
-      : filteredExpenses;
+  if (!query) {
+    return expenses;
   }
 
-  return filteredExpenses;
+  const { userId, categories, from, to } = query;
+
+  return expenses.filter((exp) => {
+    if (userId && Number(exp.userId) !== Number(userId)) {
+      return false;
+    }
+
+    if (categories && !categories.includes(exp.category)) {
+      return false;
+    }
+
+    if (from && new Date(exp.spentAt) < new Date(from)) {
+      return false;
+    }
+
+    if (to && new Date(exp.spentAt) > new Date(to)) {
+      return false;
+    }
+
+    return true;
+  });
 };
 
 const getExpensesData = (query) => {
@@ -45,25 +45,33 @@ const getOneExpenseData = (id) => {
   return findItemById(expenses, id);
 };
 
-const addExpense = (expense) => {
+const addExpense = ({ userId, spentAt, title, amount, category, note }) => {
+  const expense = {
+    id: getId(expenses),
+    userId,
+    spentAt,
+    title,
+    amount,
+    category,
+    note,
+  };
+
   expenses.push(expense);
+
+  return expense;
 };
 
-const getNewId = () => {
-  return getId(expenses);
-};
+const removeExpense = (id) => {
+  const newExpenses = getFilteredArrayById(expenses, id);
 
-const getFilteredExpensesById = (id) => {
-  return getFilteredArray(expenses, id);
-};
-
-const setNewExpenses = (newExpenses) => {
   expenses = newExpenses;
+
+  return newExpenses;
 };
 
 const updatedExpenseData = (id, newData) => {
   expenses = expenses.map((expense) => {
-    if (String(expense.id) === String(id)) {
+    if (Number(expense.id) === Number(id)) {
       return {
         ...expense,
         spentAt: newData.spentAt || expense.spentAt,
@@ -83,10 +91,8 @@ const updatedExpenseData = (id, newData) => {
 module.exports = {
   getExpensesData,
   getOneExpenseData,
-  getNewId,
   addExpense,
-  getFilteredExpensesById,
-  setNewExpenses,
+  removeExpense,
   updatedExpenseData,
   clearExpensesData,
 };

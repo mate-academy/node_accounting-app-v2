@@ -1,4 +1,8 @@
-const { findItemById, getId, getFilteredArray } = require('../services/helper');
+const {
+  findItemById,
+  getId,
+  getFilteredArrayById,
+} = require('../services/helper');
 
 let users = [];
 
@@ -14,21 +18,28 @@ const getOneUserData = (id) => {
   return findItemById(users, id);
 };
 
-const getNewId = () => {
-  return getId(users);
-};
+const addUser = ({ name }) => {
+  const user = {
+    id: getId(users),
+    name,
+  };
 
-const addUser = (user) => {
   users.push(user);
+
+  return user;
 };
 
 const removeUser = (id) => {
-  return getFilteredArray(users, id);
+  const newUsers = getFilteredArrayById(users, id);
+
+  users = newUsers;
+
+  return newUsers;
 };
 
 const updateUserData = (userId, newName) => {
   users = users.map((user) => {
-    if (String(user.id) === String(userId)) {
+    if (Number(user.id) === Number(userId)) {
       return {
         ...user,
         name: newName,
@@ -41,17 +52,11 @@ const updateUserData = (userId, newName) => {
   return getOneUserData(userId);
 };
 
-const setNewUsers = (newUsers) => {
-  users = newUsers;
-};
-
 module.exports = {
   getUsersData,
   getOneUserData,
-  getNewId,
   addUser,
   removeUser,
-  setNewUsers,
   updateUserData,
   clearUsersData,
 };

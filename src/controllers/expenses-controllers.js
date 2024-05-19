@@ -1,14 +1,17 @@
 const {
   getExpensesData,
   getOneExpenseData,
-  getNewId,
   addExpense,
-  getFilteredExpensesById,
-  setNewExpenses,
+  removeExpense,
   updatedExpenseData,
 } = require('../services/expenses-service');
 
 const { getOneUserData } = require('../services/users-service');
+const { STATUS_CODES } = require('../utils/constants');
+
+function isSomeDataInvalid({ userId, spentAt, title, amount, category, note }) {
+  return userId || spentAt || title || amount || category || note;
+}
 
 const getExpenses = (req, res) => {
   const filteredExpenses = getExpensesData(req.query);
@@ -21,57 +24,57 @@ const getExpenseById = (req, res) => {
   const expense = getOneExpenseData(id);
 
   if (!expense) {
-    res.statusCode = 404;
+    res.statusCode = STATUS_CODES.NOT_FOUND;
     res.send(res.statusCode);
-  } else {
-    res.statusCode = 200;
-    res.send(expense);
+
+    return;
   }
+
+  res.statusCode = STATUS_CODES.OK;
+  res.send(expense);
 };
 
 const postExpense = (req, res) => {
   const { userId, spentAt, title, amount, category, note } = req.body;
 
-  if (!userId || !spentAt || !title || !amount || !category || !note) {
-    res.statusCode = 400;
+  if (!isSomeDataInvalid) {
+    res.statusCode = STATUS_CODES.BAD_REQUEST;
     res.send(res.statusCode);
 
     return;
   }
 
   if (!getOneUserData(userId)) {
-    res.statusCode = 400;
+    res.statusCode = STATUS_CODES.BAD_REQUEST;
     res.send(res.statusCode);
 
     return;
   }
 
-  const expense = {
-    id: getNewId(),
+  const expense = addExpense({
     userId,
     spentAt,
     title,
     amount,
     category,
     note,
-  };
+  });
 
-  addExpense(expense);
-  res.statusCode = 201;
+  res.statusCode = STATUS_CODES.CREATED;
   res.send(expense);
 };
 
 const deleteExpense = (req, res) => {
   const { id } = req.params;
+  const previousExpenses = getExpensesData();
 
-  const newExpenses = getFilteredExpensesById(id);
+  const newExpenses = removeExpense(id);
 
-  if (getExpensesData().length === newExpenses.length) {
-    res.statusCode = 404;
+  if (previousExpenses.length === newExpenses.length) {
+    res.statusCode = STATUS_CODES.NOT_FOUND;
     res.send(res.statusCode);
   } else {
-    setNewExpenses(newExpenses);
-    res.statusCode = 204;
+    res.statusCode = STATUS_CODES.NO_CONTENT;
     res.send(res.statusCode);
   }
 };
@@ -82,7 +85,7 @@ const updateExpense = (req, res) => {
   const expense = getOneExpenseData(id);
 
   if (!expense) {
-    res.statusCode = 404;
+    res.statusCode = STATUS_CODES.NOT_FOUND;
     res.send('Expense not found');
   } else {
     const newExpense = updatedExpenseData(id, {
@@ -93,7 +96,7 @@ const updateExpense = (req, res) => {
       note,
     });
 
-    res.statusCode = 200;
+    res.statusCode = STATUS_CODES.OK;
     res.send(newExpense);
   }
 };
