@@ -1,22 +1,20 @@
 const expenseServise = require('../services/expenseService');
 const usersService = require('../services/userService');
+const statusCodes = require('../types/statusCode');
 
-const expenseController = {};
-
-expenseController.get = (req, res) => {
-  const { userId, categories, from, to } = req.query;
-  const filteredExpenses = expenseServise.getAll(userId, categories, from, to);
+const getAll = (req, res) => {
+  const filteredExpenses = expenseServise.getAll(req.query);
 
   res.json(filteredExpenses);
 };
 
-expenseController.getOne = (req, res) => {
+const getById = (req, res) => {
   const { id } = req.params;
 
   const expense = expenseServise.getById(id);
 
   if (!expense) {
-    res.sendStatus(404);
+    res.sendStatus(statusCodes.NOT_FOUND);
 
     return;
   }
@@ -24,32 +22,28 @@ expenseController.getOne = (req, res) => {
   res.json(expense);
 };
 
-expenseController.create = (req, res) => {
-  const { userId, title, amount, category, spentAt, note } = req.body;
+const create = (req, res) => {
+  const body = req.body;
+  const userChecking = usersService.getById(body.userId);
 
-  const userChecking = usersService.getById(userId);
-
-  if (
-    (!userId || !title || !amount || !category,
-    !spentAt || !userChecking || !note)
-  ) {
-    res.sendStatus(400);
+  if (!userChecking) {
+    res.sendStatus(statusCodes.BAD_REQUEST);
 
     return;
   }
 
-  const expense = expenseServise.create(req.body);
+  const expense = expenseServise.create(body);
 
-  res.status(201).json(expense);
+  res.status(statusCodes.CREATED).json(expense);
 };
 
-expenseController.update = (req, res) => {
+const update = (req, res) => {
   const { id } = req.params;
 
   const expense = expenseServise.getById(id);
 
   if (!expense) {
-    res.sendStatus(404);
+    res.sendStatus(statusCodes.NOT_FOUND);
   }
 
   const updatedExpense = expenseServise.update(id, req.body);
@@ -57,18 +51,24 @@ expenseController.update = (req, res) => {
   res.json(updatedExpense);
 };
 
-expenseController.remove = (req, res) => {
+const remove = (req, res) => {
   const { id } = req.params;
 
   if (!expenseServise.getById(id)) {
-    res.sendStatus(404);
+    res.sendStatus(statusCodes.NOT_FOUND);
 
     return;
   }
 
   expenseServise.remove(id);
 
-  res.sendStatus(204);
+  res.sendStatus(statusCodes.NO_CONTENT);
 };
 
-module.exports = expenseController;
+module.exports = {
+  getAll,
+  getById,
+  create,
+  update,
+  remove,
+};

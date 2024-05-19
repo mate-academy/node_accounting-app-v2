@@ -1,18 +1,17 @@
 const usersService = require('../services/userService');
+const statusCodes = require('../types/statusCode');
 
-const userController = {};
-
-userController.get = (req, res) => {
+const getAll = (req, res) => {
   res.json(usersService.getAll());
 };
 
-userController.getOne = (req, res) => {
+const getById = (req, res) => {
   const { id } = req.params;
 
   const user = usersService.getById(id);
 
   if (!user) {
-    res.sendStatus(404);
+    res.sendStatus(statusCodes.NOT_FOUND);
 
     return;
   }
@@ -20,32 +19,32 @@ userController.getOne = (req, res) => {
   res.json(user);
 };
 
-userController.create = (req, res) => {
+const create = (req, res) => {
   const { name } = req.body;
 
   if (!name) {
-    res.sendStatus(400);
+    res.sendStatus(statusCodes.BAD_REQUEST);
 
     return;
   }
 
   const user = usersService.create(name);
 
-  res.status(201).json(user);
+  res.status(statusCodes.CREATED).json(user);
 };
 
-userController.update = (req, res) => {
+const update = (req, res) => {
   const { id } = req.params;
   const { name } = req.body;
 
   const user = usersService.getById(id);
 
   if (!user) {
-    res.sendStatus(404);
+    res.sendStatus(statusCodes.NOT_FOUND);
   }
 
   if (!name) {
-    res.sendStatus(400);
+    res.sendStatus(statusCodes.BAD_REQUEST);
   }
 
   const updatedTodo = usersService.update({ id, name });
@@ -53,18 +52,24 @@ userController.update = (req, res) => {
   res.json(updatedTodo);
 };
 
-userController.remove = (req, res) => {
+const remove = (req, res) => {
   const { id } = req.params;
 
   if (!usersService.getById(id)) {
-    res.sendStatus(404);
+    res.sendStatus(statusCodes.NOT_FOUND);
 
     return;
   }
 
   usersService.remove(id);
 
-  res.sendStatus(204);
+  res.sendStatus(statusCodes.NO_CONTENT);
 };
 
-module.exports = userController;
+module.exports = {
+  getAll,
+  getById,
+  create,
+  update,
+  remove,
+};

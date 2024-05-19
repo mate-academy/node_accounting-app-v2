@@ -1,23 +1,23 @@
+const getMaxId = require('../utils/getMaxId');
+
 const users = [];
 
-const userServise = {};
-
-userServise.reset = () => {
+const reset = () => {
   users.length = 0;
 };
 
-userServise.getAll = () => {
+const getAll = () => {
   return users;
 };
 
-userServise.getById = (id) => {
+const getById = (id) => {
   return users.find((person) => person.id === Number(id)) || null;
 };
 
-userServise.create = (name) => {
+const create = (name) => {
   const user = {
     name,
-    id: Math.floor(Math.random() * 10000),
+    id: getMaxId(users),
   };
 
   users.push(user);
@@ -25,18 +25,25 @@ userServise.create = (name) => {
   return user;
 };
 
-userServise.update = ({ id, name }) => {
-  const user = userServise.getById(id);
+const update = ({ id, name }) => {
+  const user = getById(id);
 
   Object.assign(user, { name });
 
   return user;
 };
 
-userServise.remove = (id) => {
+const remove = (id) => {
   const index = users.findIndex((user) => user.id === Number(id));
 
   users.splice(index, 1);
 };
 
-module.exports = userServise;
+module.exports = {
+  reset,
+  getAll,
+  getById,
+  create,
+  update,
+  remove,
+};

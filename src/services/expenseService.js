@@ -1,62 +1,36 @@
-/* eslint-disable function-paren-newline */
+const getMaxId = require('../utils/getMaxId');
 
 const expenses = [];
 
-const expenseServise = {};
-
-expenseServise.reset = () => {
+const reset = () => {
   expenses.length = 0;
 };
 
-expenseServise.getAll = (userId, categories, from, to) => {
-  let filteredExpenses = expenses;
+const getAll = (query) => {
+  const { from, to, userId, categories } = query;
+  const fromDate = from ? new Date(from) : null;
+  const toDate = to ? new Date(to) : null;
 
-  if (userId) {
-    filteredExpenses = filteredExpenses.filter(
-      (exp) => exp.userId === Number(userId),
+  const filteredExpenses = expenses.filter((exp) => {
+    return (
+      (!userId || exp.userId === Number(userId)) &&
+      (!categories || categories.includes(exp.category)) &&
+      (!fromDate || new Date(exp.spentAt) >= fromDate) &&
+      (!toDate || new Date(exp.spentAt) <= toDate)
     );
-  }
-
-  if (categories) {
-    filteredExpenses = filteredExpenses.filter((exp) =>
-      categories.includes(exp.category),
-    );
-  }
-
-  if (from) {
-    const fromDate = new Date(from);
-
-    filteredExpenses = filteredExpenses.filter(
-      (exp) => new Date(exp.spentAt) >= fromDate,
-    );
-  }
-
-  if (to) {
-    const toDate = new Date(to);
-
-    filteredExpenses = filteredExpenses.filter(
-      (exp) => new Date(exp.spentAt) <= toDate,
-    );
-  }
+  });
 
   return filteredExpenses;
 };
 
-expenseServise.getById = (id) => {
+const getById = (id) => {
   return expenses.find((outlay) => outlay.id === Number(id)) || null;
 };
 
-expenseServise.create = (body) => {
-  const { userId, title, amount, category, note, spentAt } = body;
-
+const create = (body) => {
   const expense = {
-    id: Math.floor(Math.random() * 10000),
-    userId,
-    spentAt,
-    title,
-    category,
-    amount,
-    note,
+    id: getMaxId(expenses),
+    ...body,
   };
 
   expenses.push(expense);
@@ -64,18 +38,25 @@ expenseServise.create = (body) => {
   return expense;
 };
 
-expenseServise.update = (id, body) => {
-  const expense = expenseServise.getById(id);
+const update = (id, body) => {
+  const expense = getById(id);
 
   Object.assign(expense, body);
 
   return expense;
 };
 
-expenseServise.remove = (id) => {
+const remove = (id) => {
   const index = expenses.findIndex((user) => user.id === Number(id));
 
   expenses.splice(index, 1);
 };
 
-module.exports = expenseServise;
+module.exports = {
+  reset,
+  getAll,
+  getById,
+  create,
+  update,
+  remove,
+};
