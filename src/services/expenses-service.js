@@ -15,19 +15,12 @@ const getFilteredExpenses = (query) => {
   const { userId, categories, from, to } = query;
 
   return expenses.filter((exp) => {
-    if (userId && Number(exp.userId) !== Number(userId)) {
-      return false;
-    }
-
-    if (categories && !categories.includes(exp.category)) {
-      return false;
-    }
-
-    if (from && new Date(exp.spentAt) < new Date(from)) {
-      return false;
-    }
-
-    if (to && new Date(exp.spentAt) > new Date(to)) {
+    if (
+      (userId && Number(exp.userId) !== Number(userId)) ||
+      (categories && !categories.includes(exp.category)) ||
+      (from && new Date(exp.spentAt) < new Date(from)) ||
+      (to && new Date(exp.spentAt) > new Date(to))
+    ) {
       return false;
     }
 

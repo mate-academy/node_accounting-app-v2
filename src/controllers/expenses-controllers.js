@@ -37,14 +37,7 @@ const getExpenseById = (req, res) => {
 const postExpense = (req, res) => {
   const { userId, spentAt, title, amount, category, note } = req.body;
 
-  if (!isSomeDataInvalid) {
-    res.statusCode = STATUS_CODES.BAD_REQUEST;
-    res.send(res.statusCode);
-
-    return;
-  }
-
-  if (!getOneUserData(userId)) {
+  if (!isSomeDataInvalid || !getOneUserData(userId)) {
     res.statusCode = STATUS_CODES.BAD_REQUEST;
     res.send(res.statusCode);
 
