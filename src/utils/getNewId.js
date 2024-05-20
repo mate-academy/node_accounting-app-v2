@@ -1,4 +1,4 @@
-const newId = (arr) => {
+const getNewId = (arr) => {
   // finds biggest id in array and adds 1
   return (
     arr.reduce((acc, val) => {
@@ -8,5 +8,5 @@ const newId = (arr) => {
 };
 
 module.exports = {
-  newId,
+  getNewId,
 };

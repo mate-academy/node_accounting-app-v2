@@ -1,5 +1,5 @@
 let users = [];
-const { newId } = require('../utils/newId');
+const { getNewId } = require('../utils/getNewId');
 
 const reset = () => {
   users = [];
@@ -15,10 +15,10 @@ const getById = (id) => {
   return users.find((user) => user.id === Number(id));
 };
 
-const create = ({ name }) => {
+const create = (userBody) => {
   const user = {
-    id: newId(users),
-    name,
+    id: getNewId(users),
+    ...userBody,
   };
 
   users.push(user);
@@ -26,18 +26,16 @@ const create = ({ name }) => {
   return user;
 };
 
-const update = ({ id, name }) => {
+const update = (id, updatedUserBody) => {
   const user = getById(id);
 
-  Object.assign(user, { name });
+  Object.assign(user, updatedUserBody);
 
   return user;
 };
 
 const remove = (id) => {
-  const index = getById(id);
-
-  users.splice(index, 1);
+  users = users.filter((user) => user.id !== Number(id));
 };
 
 module.exports = {

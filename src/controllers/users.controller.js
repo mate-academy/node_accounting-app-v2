@@ -1,5 +1,5 @@
 const usersService = require('../services/users.service');
-
+const { HTTP_STATUS } = require('../consts');
 const getAll = async (req, res) => {
   res.send(usersService.getAll());
 };
@@ -8,21 +8,21 @@ const create = async (req, res) => {
   const { name } = req.body;
 
   if (!name) {
-    res.sendStatus(400);
+    res.sendStatus(HTTP_STATUS.BAD_REQUEST);
 
     return;
   }
 
-  res.statusCode = 201;
-  res.send(usersService.create({ name }));
+  res.statusCode = HTTP_STATUS.CREATED;
+  res.send(usersService.create(req.body));
 };
 
 const getById = async (req, res) => {
   const { id } = req.params;
   const user = usersService.getById(id);
 
-  if (user === undefined) {
-    res.sendStatus(404);
+  if (!user) {
+    res.sendStatus(HTTP_STATUS.NOT_FOUND);
 
     return;
   }
@@ -35,7 +35,7 @@ const update = async (req, res) => {
   const { name } = req.body;
 
   if (!name) {
-    res.sendStatus(400);
+    res.sendStatus(HTTP_STATUS.BAD_REQUEST);
 
     return;
   }
@@ -43,13 +43,13 @@ const update = async (req, res) => {
   const user = usersService.getById(id);
 
   if (!user) {
-    res.sendStatus(404);
+    res.sendStatus(HTTP_STATUS.NOT_FOUND);
 
     return;
   }
 
-  res.statusCode = 200;
-  res.send(usersService.update({ id, name }));
+  res.statusCode = HTTP_STATUS.OK;
+  res.send(usersService.update(id, req.body));
 };
 
 const remove = async (req, res) => {
@@ -58,12 +58,12 @@ const remove = async (req, res) => {
   const user = usersService.getById(id);
 
   if (!user) {
-    res.sendStatus(404);
+    res.sendStatus(HTTP_STATUS.NOT_FOUND);
 
     return;
   }
 
-  res.statusCode = 204;
+  res.statusCode = HTTP_STATUS.NO_CONTENT;
   res.send(usersService.remove(user.id));
 };
 

@@ -1,17 +1,9 @@
 const expensesService = require('../services/expenses.service');
 const usersService = require('../services/users.service');
+const { HTTP_STATUS } = require('../consts');
 
 const getAll = async (req, res) => {
-  const { from, to, userId, categories } = req.query;
-
-  res.send(
-    expensesService.getAll({
-      from,
-      to,
-      userId,
-      categories,
-    }),
-  );
+  res.send(expensesService.getAll(req.query));
 };
 
 const getById = async (req, res) => {
@@ -20,7 +12,7 @@ const getById = async (req, res) => {
   const expense = expensesService.getById(id);
 
   if (!expense) {
-    res.sendStatus(404);
+    res.sendStatus(HTTP_STATUS.NOT_FOUND);
 
     return;
   }
@@ -29,64 +21,50 @@ const getById = async (req, res) => {
 };
 
 const create = async (req, res) => {
-  const { userId, title, amount, category, note, spentAt } = req.body;
+  const { userId, title, amount, category, spentAt } = req.body;
 
-  if (!userId || !title || !amount || !category || !spentAt) {
-    res.sendStatus(400);
+  if (
+    !userId ||
+    !title ||
+    !amount ||
+    !category ||
+    !spentAt ||
+    !usersService.getById(userId)
+  ) {
+    res.sendStatus(HTTP_STATUS.BAD_REQUEST);
 
     return;
   }
 
-  if (!usersService.getById(userId)) {
-    res.sendStatus(400);
+  res.statusCode = HTTP_STATUS.CREATED;
 
-    return;
-  }
-
-  res.statusCode = 201;
-
-  res.send(
-    expensesService.create({
-      userId,
-      title,
-      amount,
-      category,
-      note,
-      spentAt,
-    }),
-  );
+  res.send(expensesService.create(req.body));
 };
 
 const update = async (req, res) => {
   const { id } = req.params;
-  const newExpense = req.body;
 
   if (!expensesService.getById(id)) {
-    res.sendStatus(404);
+    res.sendStatus(HTTP_STATUS.NOT_FOUND);
 
     return;
   }
 
-  res.statusCode = 200;
+  res.statusCode = HTTP_STATUS.OK;
 
-  res.send(
-    expensesService.update({
-      id,
-      newExpense,
-    }),
-  );
+  res.send(expensesService.update(id, req.body));
 };
 
 const remove = async (req, res) => {
   const { id } = req.params;
 
   if (!expensesService.getById(id)) {
-    res.sendStatus(404);
+    res.sendStatus(HTTP_STATUS.NOT_FOUND);
 
     return;
   }
 
-  res.statusCode = 204;
+  res.statusCode = HTTP_STATUS.NO_CONTENT;
   res.send(expensesService.remove(id));
 };
 
