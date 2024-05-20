@@ -17,8 +17,7 @@
   "license": "GPL-3.0",
   "dependencies": {
     "cors": "^2.8.5",
-    "express": "^4.19.2",
-    "uuid": "^9.0.1"
+    "express": "^4.19.2"
   },
   "devDependencies": {
     "@mate-academy/eslint-config": "latest",
