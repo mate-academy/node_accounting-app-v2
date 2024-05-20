@@ -1,8 +1,32 @@
 const expensesService = require('../services/expenses.services');
 const usersService = require('../services/users.services');
 
+const STATUS_CODES = {
+  OK: 200,
+  CREATED: 201,
+  BAD_REQUEST: 400,
+  NOT_FOUND: 404,
+  NO_CONTENT: 204,
+};
+
+const validateExpense = ({ userId, spentAt, title, amount, category }) => {
+  if (
+    !userId ||
+    typeof spentAt !== 'string' ||
+    !title ||
+    typeof title !== 'string' ||
+    typeof amount !== 'number' ||
+    !category ||
+    typeof category !== 'string'
+  ) {
+    return false;
+  }
+
+  return true;
+};
+
 const getAll = (req, res) => {
-  res.statusCode = 200;
+  res.statusCode = STATUS_CODES.OK;
   res.send(expensesService.getAll(req.query));
 };
 
@@ -12,37 +36,27 @@ const getById = (req, res) => {
   const expense = expensesService.getById(id);
 
   if (!expense) {
-    res.sendStatus(404);
+    res.sendStatus(STATUS_CODES.NOT_FOUND);
 
     return;
   }
 
-  res.statusCode = 200;
+  res.statusCode = STATUS_CODES.OK;
   res.send(expense);
 };
 
 const createExpenses = (req, res) => {
-  const { userId, spentAt, title, amount, category } = req.body;
+  const { userId } = req.body;
 
   const user = usersService.getByUserId(userId);
 
-  if (
-    !user ||
-    !spentAt ||
-    typeof spentAt !== 'string' ||
-    !title ||
-    typeof title !== 'string' ||
-    !amount ||
-    typeof amount !== 'number' ||
-    !category ||
-    typeof category !== 'string'
-  ) {
-    return res.sendStatus(400);
+  if (!user || !validateExpense(req.body)) {
+    return res.sendStatus(STATUS_CODES.BAD_REQUEST);
   }
 
   const newExpense = expensesService.createExpenses(req.body);
 
-  res.statusCode = 201;
+  res.statusCode = STATUS_CODES.CREATED;
   res.send(newExpense);
 };
 
@@ -53,14 +67,14 @@ const updateExpenses = (req, res) => {
   const expense = expensesService.getById(id);
 
   if (!expense) {
-    res.sendStatus(404);
+    res.sendStatus(STATUS_CODES.NOT_FOUND);
 
     return;
   }
 
   const updateExpense = expensesService.updateExpenses(id, body);
 
-  res.statusCode = 200;
+  res.statusCode = STATUS_CODES.OK;
   res.send(updateExpense);
 };
 
@@ -68,14 +82,14 @@ const removeExpenses = (req, res) => {
   const { id } = req.params;
 
   if (!expensesService.getById(id)) {
-    res.sendStatus(404);
+    res.sendStatus(STATUS_CODES.NOT_FOUND);
 
     return;
   }
 
   expensesService.deleteExpenses(id);
 
-  res.sendStatus(204);
+  res.sendStatus(STATUS_CODES.NO_CONTENT);
 };
 
 module.exports = {
