@@ -32,32 +32,30 @@ function createServer() {
   });
 
   app.get('/users/:id', (req, res) => {
-    const user = users.find((u) => u.id === parseInt(req.params.id));
+    const userGet = users.find((user) => user.id === parseInt(req.params.id));
 
-    if (!user) {
+    if (!userGet) {
       return res.status(404).json({ message: 'User not found' });
     }
-    res.status(200).json(user);
+    res.status(200).json(userGet);
   });
 
   app.patch('/users/:id', (req, res) => {
     const { name } = req.body;
-    const user = users.find((u) => u.id === parseInt(req.params.id));
+    const userPatch = users.find((user) => user.id === parseInt(req.params.id));
 
-    if (!user) {
+    if (!userPatch) {
       return res.status(404).json({ message: 'User not found' });
     }
 
-    if (!name) {
-      return res.status(400).json({ message: 'Missing required parameters' });
-    }
-
-    user.name = name;
-    res.status(200).json(user);
+    userPatch.name = name;
+    res.status(200).json(userPatch);
   });
 
   app.delete('/users/:id', (req, res) => {
-    const userIndex = users.findIndex((u) => u.id === parseInt(req.params.id));
+    const userIndex = users.findIndex(
+      (user) => user.id === parseInt(req.params.id),
+    );
 
     if (userIndex === -1) {
       return res.status(404).json({ message: 'User not found' });
@@ -74,9 +72,9 @@ function createServer() {
       return res.status(400).json({ message: 'Missing required parameters' });
     }
 
-    const user = users.find((u) => u.id === userId);
+    const userPost = users.find((user) => user.id === userId);
 
-    if (!user) {
+    if (!userPost) {
       return res.status(400).json({ message: 'User not found' });
     }
 
@@ -97,41 +95,25 @@ function createServer() {
   app.get('/expenses', (req, res) => {
     const { userId, categories, from, to } = req.query;
 
-    let filteredExpenses = expenses;
-
-    if (userId) {
-      filteredExpenses = filteredExpenses.filter(
-        (e) => e.userId === parseInt(userId),
+    const filteredExpenses = expenses.filter((expense) => {
+      return (
+        (!userId || expense.userId === parseInt(userId)) &&
+        (!categories ||
+          (Array.isArray(categories) ? categories : [categories]).includes(
+            expense.category,
+          )) &&
+        (!from || new Date(expense.spentAt) >= new Date(from)) &&
+        (!to || new Date(expense.spentAt) <= new Date(to))
       );
-    }
-
-    if (categories) {
-      const categoriesArray = Array.isArray(categories)
-        ? categories
-        : [categories];
-
-      filteredExpenses = filteredExpenses.filter((e) =>
-        categoriesArray.includes(e.category),
-      );
-    }
-
-    if (from) {
-      filteredExpenses = filteredExpenses.filter(
-        (e) => new Date(e.spentAt) >= new Date(from),
-      );
-    }
-
-    if (to) {
-      filteredExpenses = filteredExpenses.filter(
-        (e) => new Date(e.spentAt) <= new Date(to),
-      );
-    }
+    });
 
     res.status(200).json(filteredExpenses);
   });
 
   app.get('/expenses/:id', (req, res) => {
-    const expense = expenses.find((e) => e.id === parseInt(req.params.id));
+    const expense = expenses.find(
+      (expenc) => expenc.id === parseInt(req.params.id),
+    );
 
     if (!expense) {
       return res.status(404).json({ message: 'Expense not found' });
@@ -141,38 +123,28 @@ function createServer() {
 
   app.patch('/expenses/:id', (req, res) => {
     const { spentAt, title, amount, category, note } = req.body;
-    const expense = expenses.find((e) => e.id === parseInt(req.params.id));
+    const expense = expenses.find(
+      (expens) => expens.id === parseInt(req.params.id),
+    );
 
     if (!expense) {
       return res.status(404).json({ message: 'Expense not found' });
     }
 
-    if (spentAt) {
-      expense.spentAt = spentAt;
-    }
-
-    if (title) {
-      expense.title = title;
-    }
-
-    if (amount) {
-      expense.amount = amount;
-    }
-
-    if (category) {
-      expense.category = category;
-    }
-
-    if (note) {
-      expense.note = note;
-    }
+    Object.assign(expense, {
+      spentAt: spentAt || expense.spentAt,
+      title: title || expense.title,
+      amount: amount || expense.amount,
+      category: category || expense.category,
+      note: note || expense.note,
+    });
 
     res.status(200).json(expense);
   });
 
   app.delete('/expenses/:id', (req, res) => {
     const expenseIndex = expenses.findIndex(
-      (e) => e.id === parseInt(req.params.id),
+      (expenc) => expenc.id === parseInt(req.params.id),
     );
 
     if (expenseIndex === -1) {
