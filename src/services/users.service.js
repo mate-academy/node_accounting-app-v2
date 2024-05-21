@@ -1,4 +1,5 @@
 const { generateId } = require('../helpers/generateId');
+const { ERRORS } = require('../variables/variables');
 
 let users = [];
 
@@ -11,6 +12,10 @@ const getUsers = () => {
 };
 
 const createUser = (user) => {
+  if (!user.name) {
+    throw new Error(ERRORS.nameRequired);
+  }
+
   const newUser = { ...user, id: generateId() };
 
   users.push(newUser);
@@ -18,18 +23,52 @@ const createUser = (user) => {
   return newUser;
 };
 
-const getUserById = (id) => users.find((u) => u.id === id);
+const getUserById = (id) => {
+  if (!id) {
+    throw new Error(ERRORS.idRequired);
+  }
+
+  const user = users.find((usr) => usr.id === id);
+
+  if (!user) {
+    throw new Error(ERRORS.userNotFound);
+  }
+
+  return user;
+};
 
 const deleteUser = (id) => {
-  users = users.filter((u) => u.id !== id);
+  if (!id) {
+    throw new Error(ERRORS.idRequired);
+  }
+
+  if (!users.length) {
+    throw new Error(ERRORS.userNotFound);
+  }
+
+  users = users.filter((usr) => usr.id !== id);
 };
 
 const updateUser = (id, params) => {
-  const updatedUser = { ...getUserById(id), ...params };
+  if (!id) {
+    throw new Error(ERRORS.idRequired);
+  }
 
-  const index = users.findIndex((u) => u.id === id);
+  if (!params) {
+    throw new Error(ERRORS.nameRequired);
+  }
 
-  users[index] = updatedUser;
+  let updatedUser = null;
+
+  users = users.map((user) => {
+    if (user.id === id) {
+      updatedUser = { ...user, ...params };
+
+      return updatedUser;
+    }
+
+    return user;
+  });
 
   return updatedUser;
 };

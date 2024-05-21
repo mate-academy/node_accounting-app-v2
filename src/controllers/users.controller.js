@@ -1,74 +1,68 @@
-const { sendErrorResponse } = require('../helpers/sendErrorMessage');
+const { errorHandler } = require('../helpers/errorHandler');
 const { usersService, initUserService } = require('../services/users.service');
-const { validateUser, validateId } = require('../validators/users.validator');
-const { STATUS_CODES, ERRORS } = require('../variables/variables');
+const { STATUS_CODES } = require('../variables/variables');
+const express = require('express');
 
-const usersUrl = '/users';
-
-const usersController = (server) => {
+const usersController = () => {
   initUserService();
 
-  server.get(usersUrl, (req, res) => {
+  const usersRoutes = express.Router();
+
+  usersRoutes.get('/', (req, res) => {
     const users = usersService.getUsers();
 
-    res.status(STATUS_CODES.OK).send(users);
+    res.status(STATUS_CODES.ok).send(users);
   });
 
-  server.post(usersUrl, (req, res) => {
-    const user = req.body;
+  usersRoutes.post('/', (req, res) => {
+    try {
+      const user = req.body;
 
-    validateUser(user, res);
+      const newUser = usersService.createUser(user);
 
-    const newUser = usersService.createUser(user);
-
-    res.status(STATUS_CODES.CREATED).send(newUser);
-  });
-
-  server.get(`${usersUrl}/:id`, (req, res) => {
-    const id = req.params.id;
-
-    validateId(id, res);
-
-    const user = usersService.getUserById(+id);
-
-    if (!user) {
-      sendErrorResponse(res, STATUS_CODES.NOT_FOUND, ERRORS.USER_NOT_FOUND);
+      res.status(STATUS_CODES.created).send(newUser);
+    } catch (err) {
+      errorHandler(err, res);
     }
-
-    res.status(STATUS_CODES.OK).send(user);
   });
 
-  server.delete(`${usersUrl}/:id`, (req, res) => {
-    const id = req.params.id;
+  usersRoutes.get('/:id', (req, res) => {
+    try {
+      const id = req.params.id;
 
-    validateId(id, res);
+      const user = usersService.getUserById(+id);
 
-    const user = usersService.getUserById(+id);
-
-    if (!user) {
-      sendErrorResponse(res, STATUS_CODES.NOT_FOUND, ERRORS.USER_NOT_FOUND);
+      res.status(STATUS_CODES.ok).send(user);
+    } catch (err) {
+      errorHandler(err, res);
     }
-
-    usersService.deleteUser(+id);
-    res.status(STATUS_CODES.NO_CONTENT).end();
   });
 
-  server.patch(`${usersUrl}/:id`, (req, res) => {
-    const id = req.params.id;
-    const params = req.body;
+  usersRoutes.delete('/:id', (req, res) => {
+    try {
+      const id = req.params.id;
 
-    validateId(id, res);
-
-    const user = usersService.getUserById(+id);
-
-    if (!user) {
-      sendErrorResponse(res, STATUS_CODES.NOT_FOUND, ERRORS.USER_NOT_FOUND);
+      usersService.deleteUser(+id);
+      res.status(STATUS_CODES.noContent).end();
+    } catch (err) {
+      errorHandler(err, res);
     }
-
-    const updatedUser = usersService.updateUser(+id, params);
-
-    res.status(STATUS_CODES.OK).send(updatedUser);
   });
+
+  usersRoutes.patch('/:id', (req, res) => {
+    try {
+      const id = req.params.id;
+      const params = req.body;
+
+      const updatedUser = usersService.updateUser(+id, params);
+
+      res.status(STATUS_CODES.ok).send(updatedUser);
+    } catch (err) {
+      errorHandler(err, res);
+    }
+  });
+
+  return usersRoutes;
 };
 
 module.exports = {

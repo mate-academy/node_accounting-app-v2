@@ -1,86 +1,73 @@
-const { sendErrorResponse } = require('../helpers/sendErrorMessage');
+const { errorHandler } = require('../helpers/errorHandler');
 const {
   expensesService,
   initExpensesService,
 } = require('../services/expenses.service');
-const { validateExpenses } = require('../validators/expenses.validator');
-const { validateId } = require('../validators/users.validator');
-const { STATUS_CODES, ERRORS } = require('../variables/variables');
+const { STATUS_CODES } = require('../variables/variables');
+const express = require('express');
 
-const expensesUrl = '/expenses';
-
-const expensesController = (server) => {
+const expensesController = () => {
   initExpensesService();
 
-  server.get(expensesUrl, (req, res) => {
+  const expensesRoutes = express.Router();
+
+  expensesRoutes.get('/', (req, res) => {
     const params = req.query;
 
     const expenses = expensesService.getExpenses(params);
 
-    res.status(STATUS_CODES.OK).send(expenses);
+    res.status(STATUS_CODES.ok).send(expenses);
   });
 
-  server.post(expensesUrl, (req, res) => {
+  expensesRoutes.post('/', (req, res) => {
     try {
       const expenses = req.body;
 
-      validateExpenses(expenses, res);
-
       const newExpenses = expensesService.createExpenses(expenses);
 
-      res.status(STATUS_CODES.CREATED).send(newExpenses);
-    } catch (e) {
-      if (e.message === ERRORS.USER_NOT_FOUND) {
-        sendErrorResponse(res, STATUS_CODES.BAD_REQUEST, ERRORS.USER_NOT_FOUND);
-      }
+      res.status(STATUS_CODES.created).send(newExpenses);
+    } catch (err) {
+      errorHandler(err, res);
     }
   });
 
-  server.get(`${expensesUrl}/:id`, (req, res) => {
-    const id = req.params.id;
+  expensesRoutes.get('/:id', (req, res) => {
+    try {
+      const id = req.params.id;
 
-    validateId(id, res);
+      const expenses = expensesService.getExpensesById(+id);
 
-    const expenses = expensesService.getExpensesById(+id);
-
-    if (!expenses) {
-      sendErrorResponse(res, STATUS_CODES.NOT_FOUND, ERRORS.EXPENSES_NOT_FOUND);
+      res.status(STATUS_CODES.ok).send(expenses);
+    } catch (err) {
+      errorHandler(err, res);
     }
-
-    res.status(STATUS_CODES.OK).send(expenses);
   });
 
-  server.delete(`${expensesUrl}/:id`, (req, res) => {
-    const id = req.params.id;
+  expensesRoutes.delete('/:id', (req, res) => {
+    try {
+      const id = req.params.id;
 
-    validateId(id, res);
-
-    const expenses = expensesService.getExpensesById(+id);
-
-    if (!expenses) {
-      sendErrorResponse(res, STATUS_CODES.NOT_FOUND, ERRORS.EXPENSES_NOT_FOUND);
+      expensesService.deleteExpenses(+id);
+      res.status(STATUS_CODES.noContent).end();
+    } catch (err) {
+      errorHandler(err, res);
     }
-
-    expensesService.deleteExpenses(+id);
-    res.status(STATUS_CODES.NO_CONTENT).end();
   });
 
-  server.patch(`${expensesUrl}/:id`, (req, res) => {
-    const id = req.params.id;
-    const params = req.body;
+  expensesRoutes.patch('/:id', (req, res) => {
+    try {
+      const id = req.params.id;
+      const params = req.body;
 
-    validateId(id, res);
+      const updatedExpenses = expensesService.updateExpenses(+id, params);
 
-    const expenses = expensesService.getExpensesById(+id);
-
-    if (!expenses) {
-      sendErrorResponse(res, STATUS_CODES.NOT_FOUND, ERRORS.EXPENSES_NOT_FOUND);
+      res.status(STATUS_CODES.ok).send(updatedExpenses);
+    } catch (err) {
+      errorHandler(err, res);
     }
-
-    const updatedExpenses = expensesService.updateExpenses(+id, params);
-
-    res.status(STATUS_CODES.OK).send(updatedExpenses);
   });
+
+  return expensesRoutes;
 };
 
 module.exports = {

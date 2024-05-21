@@ -2,7 +2,8 @@
 
 const express = require('express');
 const bodyParser = require('body-parser');
-const { addRouting } = require('./routing');
+const { expensesController } = require('./controllers/expenses.controller');
+const { usersController } = require('./controllers/users.controller');
 
 function createServer() {
   const server = express();
@@ -10,7 +11,10 @@ function createServer() {
   server.use(bodyParser.urlencoded({ extended: true }));
   server.use(bodyParser.json());
 
-  return addRouting(server);
+  server.use('/users', usersController());
+  server.use('/expenses', expensesController());
+
+  return server;
 }
 
 module.exports = {

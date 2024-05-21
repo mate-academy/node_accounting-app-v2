@@ -16,24 +16,60 @@ const getExpenses = (params) => {
 const createExpenses = (expenses) => {
   const newExpenses = { ...expenses, id: generateId() };
 
-  const user = usersService.getUserById(newExpenses.userId);
+  const REQUIRED_FIELDS = ['userId', 'spentAt', 'title', 'amount', 'category'];
 
-  if (!user) {
-    throw new Error(ERRORS.USER_NOT_FOUND);
+  if (REQUIRED_FIELDS.some((field) => !expenses[field])) {
+    throw new Error(ERRORS.bodyRequired);
   }
 
-  expensesArray.push(newExpenses);
+  try {
+    usersService.getUserById(newExpenses.userId);
+
+    expensesArray.push(newExpenses);
+  } catch (err) {
+    throw new Error(ERRORS.badUserRequest);
+  }
 
   return newExpenses;
 };
 
-const getExpensesById = (id) => expensesArray.find((exp) => exp.id === id);
+const getExpensesById = (id) => {
+  if (!id) {
+    throw new Error(ERRORS.idRequired);
+  }
+
+  if (!expensesArray.length) {
+    throw new Error(ERRORS.expensesNotFound);
+  }
+
+  return expensesArray.find((exp) => exp.id === id);
+};
 
 const deleteExpenses = (id) => {
+  if (!id) {
+    throw new Error(ERRORS.idRequired);
+  }
+
+  if (!expensesArray.length) {
+    throw new Error(ERRORS.expensesNotFound);
+  }
+
   expensesArray = expensesArray.filter((exp) => exp.id !== id);
 };
 
 const updateExpenses = (id, params) => {
+  if (!id) {
+    throw new Error(ERRORS.idRequired);
+  }
+
+  if (!params) {
+    throw new Error(ERRORS.bodyRequired);
+  }
+
+  if (!expensesArray.length) {
+    throw new Error(ERRORS.expensesNotFound);
+  }
+
   const updatedUser = { ...getExpensesById(id), ...params };
 
   const index = expensesArray.findIndex((exp) => exp.id === id);
