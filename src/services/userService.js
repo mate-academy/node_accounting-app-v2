@@ -1,8 +1,21 @@
-const users = [];
-let userIdCounter = 1;
+let users = [];
+
+const initUsers = () => {
+  users = [];
+};
+
+const idGenerator = () => {
+  if (!users.length) {
+    return 1;
+  }
+
+  const userIds = users.map((user) => user.id);
+
+  return Math.max(...userIds) + 1;
+};
 
 const createUserService = (name) => {
-  const newUser = { id: userIdCounter++, name };
+  const newUser = { id: idGenerator(), name };
 
   users.push(newUser);
 
@@ -11,8 +24,9 @@ const createUserService = (name) => {
 
 const getUsersService = () => users;
 
-const getUserByIdService = (id) =>
-  users.find((user) => user.id === parseInt(id));
+const getUserByIdService = (id) => {
+  return users.find((user) => user.id === Number(id));
+};
 
 const updateUserService = (id, name) => {
   const user = users.find((use) => use.id === parseInt(id));
@@ -42,4 +56,5 @@ module.exports = {
   getUserByIdService,
   updateUserService,
   deleteUserService,
+  initUsers,
 };

@@ -1,5 +1,18 @@
-const expenses = [];
-let expenseIdCounter = 1;
+let expenses = [];
+
+const initExpenses = () => {
+  expenses = [];
+};
+
+const idGenerator = () => {
+  if (!expenses.length) {
+    return 1;
+  }
+
+  const expensesIds = expenses.map((user) => user.id);
+
+  return Math.max(...expensesIds) + 1;
+};
 
 const createExpenseService = (
   userId,
@@ -10,7 +23,7 @@ const createExpenseService = (
   note,
 ) => {
   const newExpense = {
-    id: expenseIdCounter++,
+    id: idGenerator(),
     userId,
     spentAt,
     title,
@@ -25,17 +38,31 @@ const createExpenseService = (
 };
 
 const getExpensesService = (userId, categories, from, to) => {
-  return expenses.filter((expense) => {
-    return (
-      (!userId || expense.userId === parseInt(userId)) &&
-      (!categories ||
-        (Array.isArray(categories) ? categories : [categories]).includes(
-          expense.category,
-        )) &&
-      (!from || new Date(expense.spentAt) >= new Date(from)) &&
-      (!to || new Date(expense.spentAt) <= new Date(to))
+  let preparedExpenses = expenses;
+
+  if (userId) {
+    preparedExpenses = preparedExpenses.filter(
+      (expense) => expense.userId === Number(userId),
     );
-  });
+  }
+
+  if (from || to) {
+    preparedExpenses = preparedExpenses.filter((expense) => {
+      const date = expense.spentAt;
+
+      if (date >= from && date <= to) {
+        return expense;
+      }
+    });
+  }
+
+  if (categories) {
+    preparedExpenses = preparedExpenses.filter((expense) => {
+      return categories.includes(expense.category);
+    });
+  }
+
+  return preparedExpenses;
 };
 
 const getExpenseByIdService = (id) =>
@@ -43,18 +70,18 @@ const getExpenseByIdService = (id) =>
 
 const updateExpenseService = (id, spentAt, title, amount, category, note) => {
   // eslint-disable-next-line no-shadow
-  const expense = expenses.find((expense) => expense.id === parseInt(id));
+  const expense = expenses.find((expense) => expense.id === Number(id));
 
   if (!expense) {
     return null;
   }
 
   Object.assign(expense, {
-    spentAt,
-    title,
-    amount,
-    category,
-    note,
+    spentAt: spentAt || expense.spentAt,
+    title: title || expense.title,
+    amount: amount || expense.amount,
+    category: category || expense.category,
+    note: note || expense.note,
   });
 
   return expense;
@@ -79,4 +106,5 @@ module.exports = {
   getExpenseByIdService,
   updateExpenseService,
   deleteExpenseService,
+  initExpenses,
 };

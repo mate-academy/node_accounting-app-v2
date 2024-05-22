@@ -12,8 +12,10 @@ const createExpense = (req, res) => {
 
   const user = getUserByIdService(userId);
 
-  if (!userId || !spentAt || !title || !amount || !category || !user) {
-    return res.status(400).json({ message: 'Missing required parameters' });
+  if (!title || !user) {
+    res.sendStatus(400);
+
+    return;
   }
 
   const newExpense = createExpenseService(
@@ -30,9 +32,16 @@ const createExpense = (req, res) => {
 
 const getExpenses = (req, res) => {
   const { userId, categories, from, to } = req.query;
+
+  // eslint-disable-next-line no-console
+  console.log(userId);
+
   const filteredExpenses = getExpensesService(userId, categories, from, to);
 
-  res.status(200).json(filteredExpenses);
+  // eslint-disable-next-line no-console
+  console.log(filteredExpenses);
+
+  res.status(200).send(filteredExpenses);
 };
 
 const getExpenseById = (req, res) => {
@@ -56,8 +65,11 @@ const updateExpense = (req, res) => {
   );
 
   if (!expense) {
-    return res.status(404).json({ message: 'Expense not found' });
+    res.sendStatus(404);
+
+    return;
   }
+
   res.status(200).json(expense);
 };
 
