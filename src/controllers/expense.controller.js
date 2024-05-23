@@ -47,19 +47,7 @@ const update = (req, res) => {
     return;
   }
 
-  const elements = ['spentAt', 'title', 'amount', 'category', 'note'];
-  const values = {};
-
-  elements.forEach((el) => {
-    const value = req.body[el];
-
-    if (value) {
-      values[el] = value;
-    }
-  });
-
-  const newExpense = expenseService.update(expense, values);
-  // const newExpense = expenseService.update(expense, req.body);
+  const newExpense = expenseService.update(expense, req.body);
 
   res.status(statusCodes['OK']).send(newExpense);
 };
