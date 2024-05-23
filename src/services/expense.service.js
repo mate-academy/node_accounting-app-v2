@@ -1,21 +1,12 @@
 const userService = require('./user.service');
+const { getMaxID } = require('./../utils/getMaxID');
 let expenses = [];
 
 const initExpenses = () => {
   expenses = [];
 };
 
-const createNewId = () => {
-  if (!expenses.length) {
-    return 1;
-  }
-
-  const expensesIdsArr = expenses.map((expense) => expense.id);
-
-  return Math.max(...expensesIdsArr) + 1;
-};
-
-const get = ({ userId, from, to, categories }) => {
+const getAll = ({ userId, from, to, categories }) => {
   let preparedExpenses = expenses;
 
   if (userId) {
@@ -52,7 +43,7 @@ const create = (expenseData) => {
     return;
   }
 
-  const id = createNewId();
+  const id = getMaxID(expenses);
   const newExpense = Object.assign(expenseData, { id });
 
   expenses.push(newExpense);
@@ -70,7 +61,7 @@ const remove = (id) => {
 
 module.exports = {
   initExpenses,
-  get,
+  getAll,
   getById,
   create,
   update,

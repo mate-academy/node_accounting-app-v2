@@ -1,17 +1,10 @@
+const { getMaxID } = require('../utils/getMaxID');
+// console.log(getMaxID);
+
 let users = [];
 
 const initUsers = () => {
   users = [];
-};
-
-const createNewId = () => {
-  if (!users.length) {
-    return 1;
-  }
-
-  const usersIdsArr = users.map((user) => user.id);
-
-  return Math.max(...usersIdsArr) + 1;
 };
 
 const getAll = () => {
@@ -24,7 +17,7 @@ const getById = (id) => {
 
 const create = (name) => {
   const user = {
-    id: createNewId(),
+    id: getMaxID(users),
     name,
   };
 

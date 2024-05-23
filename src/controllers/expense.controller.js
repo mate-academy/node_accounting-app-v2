@@ -1,10 +1,11 @@
+const statusCodes = require('./../utils/statusCodes');
 const expenseService = require('./../services/expense.service');
 const userService = require('./../services/user.service');
 
-const get = (req, res) => {
-  const expenses = expenseService.get(req.query);
+const getAll = (req, res) => {
+  const expenses = expenseService.getAll(req.query);
 
-  res.status(200).send(expenses);
+  res.status(statusCodes['OK']).send(expenses);
 };
 
 const getOne = (req, res) => {
@@ -13,26 +14,26 @@ const getOne = (req, res) => {
   const expense = expenseService.getById(id);
 
   if (!expense) {
-    res.sendStatus(404);
+    res.sendStatus(statusCodes['NOT_FOUND']);
 
     return;
   }
 
-  res.status(200).send(expense);
+  res.status(statusCodes['OK']).send(expense);
 };
 
 const create = (req, res) => {
   const expenseData = req.body;
 
   if (!expenseData.title || !userService.getById(expenseData.userId)) {
-    res.sendStatus(400);
+    res.sendStatus(statusCodes['BAD_REQUEST']);
 
     return;
   }
 
   const newExpense = expenseService.create(expenseData);
 
-  res.status(201).send(newExpense);
+  res.status(statusCodes['CREATED']).send(newExpense);
 };
 
 const update = (req, res) => {
@@ -41,7 +42,7 @@ const update = (req, res) => {
   const expense = expenseService.getById(id);
 
   if (!expense) {
-    res.sendStatus(404);
+    res.sendStatus(statusCodes['NOT_FOUND']);
 
     return;
   }
@@ -58,25 +59,26 @@ const update = (req, res) => {
   });
 
   const newExpense = expenseService.update(expense, values);
+  // const newExpense = expenseService.update(expense, req.body);
 
-  res.status(200).send(newExpense);
+  res.status(statusCodes['OK']).send(newExpense);
 };
 
 const remove = (req, res) => {
   const { id } = req.params;
 
   if (!expenseService.getById(id)) {
-    res.sendStatus(404);
+    res.sendStatus(statusCodes['NOT_FOUND']);
 
     return;
   }
 
   expenseService.remove(id);
-  res.sendStatus(204);
+  res.sendStatus(statusCodes['NO_CONTENT']);
 };
 
 module.exports = {
-  get,
+  getAll,
   getOne,
   create,
   update,

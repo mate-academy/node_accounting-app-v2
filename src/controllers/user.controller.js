@@ -1,7 +1,10 @@
 const userService = require('./../services/user.service');
+const statusCodes = require('../utils/statusCodes');
 
-const get = (_, res) => {
-  res.status(200).send(userService.getAll());
+const getAll = (_, res) => {
+  const users = userService.getAll();
+
+  res.status(statusCodes['OK']).send(users);
 };
 
 const getOne = (req, res) => {
@@ -9,24 +12,24 @@ const getOne = (req, res) => {
   const user = userService.getById(id);
 
   if (!user) {
-    res.sendStatus(404);
+    res.sendStatus(statusCodes['NOT_FOUND']);
   }
 
-  res.status(200).send(user);
+  res.status(statusCodes['OK']).send(user);
 };
 
 const create = (req, res) => {
   const { name } = req.body;
 
   if (!name) {
-    res.sendStatus(400);
+    res.sendStatus(statusCodes['BAD_REQUEST']);
 
     return;
   }
 
   const user = userService.create(name);
 
-  res.status(201).send(user);
+  res.status(statusCodes['CREATED']).send(user);
 };
 
 const update = (req, res) => {
@@ -36,37 +39,37 @@ const update = (req, res) => {
   const user = userService.getById(id);
 
   if (!user) {
-    res.sendStatus(404);
+    res.sendStatus(statusCodes['NOT_FOUND']);
 
     return;
   }
 
   if (!name) {
-    res.sendStatus(422);
+    res.sendStatus(statusCodes['UNPROCESSABLE_ENTITY']);
 
     return;
   }
 
   const newUser = userService.update(user, { name });
 
-  res.status(200).send(newUser);
+  res.status(statusCodes['OK']).send(newUser);
 };
 
 const remove = (req, res) => {
   const { id } = req.params;
 
   if (!userService.getById(id)) {
-    res.sendStatus(404);
+    res.sendStatus(statusCodes['NOT_FOUND']);
 
     return;
   }
 
   userService.remove(id);
-  res.sendStatus(204);
+  res.sendStatus(statusCodes['NO_CONTENT']);
 };
 
 module.exports = {
-  get,
+  getAll,
   getOne,
   create,
   update,
