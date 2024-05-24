@@ -1,14 +1,10 @@
-const statusCodes = {
-  OK: 200,
-  CREATED: 201,
-  NO_CONTENT: 204,
-  BAD_REQUEST: 400,
-  UNAUTHORIZED: 401,
-  FORBIDDEN: 403,
-  NOT_FOUND: 404,
-  CONFLICT: 409,
-  UNPROCESSABLE_ENTITY: 422,
-  INTERNAL_SERVER_ERROR: 500,
+const STATUS_CODES = {
+  ok: 200,
+  created: 201,
+  no_content: 204,
+  bad_request: 400,
+  not_found: 404,
+  unprocessable_entity: 422,
 };
 
-module.exports = statusCodes;
+module.exports = STATUS_CODES;

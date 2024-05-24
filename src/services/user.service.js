@@ -1,5 +1,4 @@
 const { getMaxID } = require('../utils/getMaxID');
-// console.log(getMaxID);
 
 let users = [];
 
