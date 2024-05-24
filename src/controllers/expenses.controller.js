@@ -43,6 +43,12 @@ async function httpPostExpense(req, res) {
 
   const newExpense = await postExpense(expense);
 
+  if (!newExpense) {
+    return res
+      .status(response[400].statusCode)
+      .json({ success: false, error: response[400].messages.noUser });
+  }
+
   return res.status(response[201].statusCode).json(newExpense);
 }
 

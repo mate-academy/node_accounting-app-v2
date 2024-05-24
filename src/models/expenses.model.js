@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const { Expense } = require('../helpers/newExpense');
+const { getAllUsers } = require('./user.model');
 
 async function getAllExpenses() {
   const fullPath = path.join(__dirname, '..', 'db', 'expenses.json');
@@ -18,6 +19,14 @@ async function postExpense({
   category,
   note = '',
 }) {
+  const { users } = await getAllUsers();
+
+  const user = users.find((item) => item.id === userId);
+
+  if (!user) {
+    return;
+  }
+
   const newExpense = new Expense(
     userId,
     spentAt,
@@ -77,6 +86,10 @@ async function updateExpenseById(id, data) {
 
     return expense;
   });
+
+  if (!updatedExpense) {
+    return;
+  }
 
   const fullPath = path.join(__dirname, '..', 'db', 'expenses.json');
 

@@ -13,6 +13,7 @@ const response = {
     messages: {
       noName: `Please make sure you pass correct data. The name should be a strings`,
       noID: `Please make sure you pass correct search params.`,
+      noUser: `There are no such user. Please check id number`,
       noData: `Please make sure you pass correct data.`,
       noDataExpense: `Please make sure you pass all and correct data: userId, spentAt, title, amount, category.`,
     },
