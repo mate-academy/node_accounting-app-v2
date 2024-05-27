@@ -1,8 +1,9 @@
 const expenseService = require('../services/expense.service');
-const userService = require('../services/user.service');
+const STATUS_CODES = require('../constant/statusCode');
+const { validateExpense } = require('../function/validation');
 
 const getAll = (req, res) => {
-  res.statusCode = 200;
+  res.statusCode = STATUS_CODES.successful;
   res.send(expenseService.getAll(req.query));
 };
 
@@ -11,48 +12,35 @@ const getById = (req, res) => {
   const expense = expenseService.getById(id);
 
   if (!expense) {
-    return res.sendStatus(404);
+    return res.sendStatus(STATUS_CODES.notFound);
   }
 
-  res.statusCode = 200;
+  res.statusCode = STATUS_CODES.successful;
   res.send(expense);
 };
 
-const postExpense = (req, res) => {
-  const { userId, spentAt, title, amount, category } = req.body;
+const postExpense = async (req, res) => {
+  const validation = validateExpense(req.body);
 
-  if (!userService.getById(userId)) {
-    return res.sendStatus(400);
+  if (!validation.isValid) {
+    return res.sendStatus(validation.statusCode);
   }
 
-  if (
-    !spentAt ||
-    !title ||
-    typeof title !== 'string' ||
-    !amount ||
-    typeof amount !== 'number' ||
-    !category ||
-    typeof category !== 'string'
-  ) {
-    return res.sendStatus(400);
-  }
+  const expense = await expenseService.create(req.body);
 
-  const expense = expenseService.create(req.body);
-
-  res.statusCode = 201;
-  res.send(expense);
+  res.status(STATUS_CODES.created).send(expense);
 };
 
 const deleteExpense = (req, res) => {
   const { id } = req.params;
 
   if (!expenseService.getById(id)) {
-    return res.sendStatus(404);
+    return res.sendStatus(STATUS_CODES.notFound);
   }
 
   expenseService.remove(id);
 
-  return res.sendStatus(204);
+  return res.sendStatus(STATUS_CODES.noContent);
 };
 
 const updateExpense = (req, res) => {
@@ -61,10 +49,10 @@ const updateExpense = (req, res) => {
   const expense = expenseService.getById(id);
 
   if (!expense) {
-    return res.sendStatus(404);
+    return res.sendStatus(STATUS_CODES.notFound);
   }
 
-  res.statusCode = 200;
+  res.statusCode = STATUS_CODES.successful;
   res.send(expenseService.update(id, req.body));
 };
 
