@@ -7,3 +7,5 @@ node_modules
 
 # MacOS
 .DS_Store
+expense.test.js
+user.test.js
