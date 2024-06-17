@@ -4,7 +4,7 @@
 const express = require('express');
 const { userRouter } = require('./routers/user.router');
 const { expensesRouter } = require('./routers/expenses.router');
-const expenseServices = require('./services/expenses.service');
+const expenseServices = require('./services/expense.service');
 const usersServices = require('./services/user.service');
 
 function createServer() {

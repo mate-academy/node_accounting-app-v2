@@ -1,5 +1,5 @@
-let users = [];
-let nextId = 0;
+let users = [{ id: 1 }];
+let nextId = 2;
 
 const getAllUsers = () => {
   return users;
@@ -9,9 +9,7 @@ const getUserById = (userId) => {
   return users.find((u) => u.id === Number(userId));
 };
 
-const existUser = (id) => {
-  return users.some((u) => u.id === Number(id));
-};
+const existUser = (userId) => users.some((user) => user.id === userId);
 
 const addUser = (name) => {
   const newUser = {
