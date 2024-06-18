@@ -11,9 +11,9 @@ const getAllExpense = (request, response) => {
     return;
   }
 
-  const categories = query.categories ? query.categories.split(',') : undefined;
+  const categories = query.categories?.split(',');
 
-  const filteredExpenses = expensesService.filter({
+  const filteredExpenses = expensesService.filterQuery({
     userId: query.userId,
     from: query.from,
     to: query.to,
@@ -94,7 +94,7 @@ const updateExpense = (request, response) => {
     return;
   }
 
-  if (title !== undefined) {
+  if (title) {
     expenseToUpdate.title = title;
   }
 

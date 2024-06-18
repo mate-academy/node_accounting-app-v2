@@ -10,7 +10,7 @@ const getExpenseById = (expenseId) => {
   return expenses.find((e) => e.id === Number(expenseId));
 };
 
-const filter = ({ from, to, userId, categories }) => {
+const filterQuery = ({ from, to, userId, categories }) => {
   return expenses.filter((e) => {
     const userIdMatch = !userId || e.userId === Number(userId);
     const fromMatch = !from || new Date(e.spentAt) >= new Date(from);
@@ -87,5 +87,5 @@ module.exports = {
   deleteExpense,
   updateExpense,
   reset,
-  filter,
+  filterQuery,
 };
