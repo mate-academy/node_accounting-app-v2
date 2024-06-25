@@ -78,7 +78,36 @@ const removeExpenseById = (id) => {
   expenses = expenses.filter((expense) => Number(expense.id) !== Number(id));
 };
 
-const updateExpenseById = (id) => {};
+const updateExpenseById = (
+  { spentAt, title, amount, category, note },
+  currentExpense,
+) => {
+  if (spentAt) {
+    currentExpense.spentAt = spentAt;
+  }
+
+  if (title) {
+    currentExpense.title = title;
+  }
+
+  if (amount) {
+    currentExpense.amount = amount;
+  }
+
+  if (category) {
+    currentExpense.category = category;
+  }
+
+  if (note) {
+    currentExpense.note = note;
+  }
+
+  return currentExpense;
+};
+
+const init = () => {
+  expenses = [];
+};
 
 module.exports = {
   getAllExpenses,
@@ -88,4 +117,5 @@ module.exports = {
   getExpenseByIdIndex,
   removeExpenseById,
   updateExpenseById,
+  init,
 };

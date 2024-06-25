@@ -4,6 +4,7 @@ const {
   getExpenseById,
   getExpenseByIdIndex,
   removeExpenseById,
+  updateExpenseById,
 } = require('../services/expenses.service');
 
 const { getUserById } = require('../services/users.service');
@@ -77,25 +78,16 @@ const updateExpense = (req, res) => {
     res.status(404).send('Not found');
   }
 
-  if (spentAt) {
-    currentExpense.spentAt = spentAt;
-  }
-
-  if (title) {
-    currentExpense.title = title;
-  }
-
-  if (amount) {
-    currentExpense.amount = amount;
-  }
-
-  if (category) {
-    currentExpense.category = category;
-  }
-
-  if (note) {
-    currentExpense.note = note;
-  }
+  updateExpenseById(
+    {
+      spentAt,
+      title,
+      amount,
+      category,
+      note,
+    },
+    currentExpense,
+  );
 
   res.send(currentExpense);
 };

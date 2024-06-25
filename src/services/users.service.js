@@ -39,7 +39,12 @@ const updateUserById = (currentUser, name) => {
   return Object.assign(currentUser, { name });
 };
 
+const init = () => {
+  users = [];
+};
+
 module.exports = {
+  init,
   users,
   getAllUsers,
   getUserById,

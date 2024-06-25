@@ -5,8 +5,14 @@ const express = require('express');
 const { router: expenseRouter } = require('./routes/expense.route');
 const { router: userRouter } = require('./routes/users.route');
 
+const { init: initExpenses } = require('./services/expenses.service');
+const { init: initUsers } = require('./services/users.service');
+
 function createServer() {
   const app = express();
+
+  initExpenses();
+  initUsers();
 
   app.use(express.json());
 
