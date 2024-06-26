@@ -1,4 +1,8 @@
 const {
+  requestValidatorUser,
+  currentUserValidator,
+} = require('../middlewars/requestValidator.middlewar');
+const {
   getUsers,
   createUser,
   getCurrentUser,
@@ -12,13 +16,13 @@ const router = express.Router();
 
 router.get('/users', getUsers);
 
-router.post('/users', createUser);
+router.post('/users', requestValidatorUser, createUser);
 
-router.get('/users/:id', getCurrentUser);
+router.get('/users/:id', currentUserValidator, getCurrentUser);
 
-router.delete('/users/:id', removeCurrentUser);
+router.delete('/users/:id', currentUserValidator, removeCurrentUser);
 
-router.patch('/users/:id', updateCurrentUser);
+router.patch('/users/:id', currentUserValidator, updateCurrentUser);
 
 module.exports = {
   router,

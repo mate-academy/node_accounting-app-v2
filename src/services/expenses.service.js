@@ -70,10 +70,6 @@ const getExpenseById = (id) => {
   return expenses.find((expense) => Number(expense.id) === Number(id));
 };
 
-const getExpenseByIdIndex = (id) => {
-  return expenses.findIndex((expense) => Number(expense.id) === Number(id));
-};
-
 const removeExpenseById = (id) => {
   expenses = expenses.filter((expense) => Number(expense.id) !== Number(id));
 };
@@ -114,7 +110,6 @@ module.exports = {
   getFilteredExpenses,
   addExpense,
   getExpenseById,
-  getExpenseByIdIndex,
   removeExpenseById,
   updateExpenseById,
   init,

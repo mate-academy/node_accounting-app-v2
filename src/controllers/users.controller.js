@@ -7,64 +7,62 @@ const {
 } = require('../services/users.service');
 
 const getUsers = (req, res) => {
-  res.status(200).send(getAllUsers());
+  try {
+    res.status(200).send(getAllUsers());
+  } catch (err) {
+    return res.status(500).send('An error occurred while creating expense.');
+  }
 };
 
 const createUser = (req, res) => {
   const { name } = req.body;
 
-  if (!name || typeof name !== 'string') {
-    return res.sendStatus(400);
+  try {
+    const user = addUserByName(name);
+
+    return res.status(201).send(user);
+  } catch (err) {
+    return res.status(500).send('An error occurred while creating user.');
   }
-
-  const user = addUserByName(name);
-
-  res.status(201).send(user);
 };
 
 const getCurrentUser = (req, res) => {
   const { id } = req.params;
 
-  const currentUser = getUserById(id);
+  try {
+    const currentUser = getUserById(id);
 
-  if (!currentUser) {
-    return res.sendStatus(404);
+    return res.status(200).send(currentUser);
+  } catch (err) {
+    return res.status(500).send('An error occurred while fetching user.');
   }
-
-  return res.status(200).send(currentUser);
 };
 
 const removeCurrentUser = (req, res) => {
-  const { id } = req.params;
+  try {
+    const { id } = req.params;
 
-  const userExists = getUserById(id);
+    removeUserById(id);
 
-  if (!userExists) {
-    return res.sendStatus(404);
+    return res.sendStatus(204);
+  } catch (err) {
+    return res.status(500).send('An error occurred while deleting user.');
   }
-
-  removeUserById(id);
-
-  return res.sendStatus(204);
 };
 
 const updateCurrentUser = (req, res) => {
-  const { id } = req.params;
-  const { name } = req.body;
+  try {
+    const { id } = req.params;
+    const { name } = req.body;
 
-  const currentUser = getUserById(id);
+    const currentUser = getUserById(id);
 
-  if (!currentUser) {
-    return res.sendStatus(400);
+    updateUserById(currentUser, name);
+
+    return res.send(currentUser);
+  } catch (err) {
+    return res.status(500).send('An error occurred while updating user.');
   }
-
-  if (typeof name !== 'string') {
-    return res.sendStatus(422);
-  }
-
-  updateUserById(currentUser, name);
-
-  res.send(currentUser);
 };
 
 module.exports = {

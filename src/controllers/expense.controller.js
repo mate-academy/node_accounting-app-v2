@@ -2,71 +2,68 @@ const {
   getFilteredExpenses,
   addExpense,
   getExpenseById,
-  getExpenseByIdIndex,
   removeExpenseById,
   updateExpenseById,
 } = require('../services/expenses.service');
 
-const { getUserById } = require('../services/users.service');
-
 const getFilteredExpense = (req, res) => {
   const { userId, from, to, categories } = req.query;
 
-  const expense = getFilteredExpenses({
-    userId,
-    from,
-    to,
-    categories,
-  });
+  try {
+    const expense = getFilteredExpenses({
+      userId,
+      from,
+      to,
+      categories,
+    });
 
-  return res.status(200).send(expense);
+    return res.status(200).send(expense);
+  } catch (err) {
+    return res.status(500).send('An error occurred while fetching expense.');
+  }
 };
 
 const setExpense = (req, res) => {
   const { userId, spentAt, title, amount, category, note } = req.body;
 
-  const userExists = getUserById(userId);
+  try {
+    const newExpense = addExpense({
+      userId,
+      spentAt,
+      title,
+      amount,
+      category,
+      note,
+    });
 
-  if (!title || !userExists) {
-    return res.sendStatus(400);
+    return res.status(201).send(newExpense);
+  } catch (err) {
+    return res.status(500).send('An error occurred while sending expense.');
   }
-
-  const newExpense = addExpense({
-    userId,
-    spentAt,
-    title,
-    amount,
-    category,
-    note,
-  });
-
-  res.status(201).send(newExpense);
 };
 
 const getCurrentExpense = (req, res) => {
   const { id } = req.params;
 
-  const currentExpense = getExpenseById(id);
+  try {
+    const currentExpense = getExpenseById(id);
 
-  if (!currentExpense) {
-    return res.sendStatus(404);
+    return res.status(200).send(currentExpense);
+  } catch (err) {
+    return res.status(500).send('An error occurred while fetching expense.');
   }
-
-  return res.status(200).send(currentExpense);
 };
 
 const deleteExpense = (req, res) => {
   const { id } = req.params;
 
-  const expenseIndex = getExpenseByIdIndex(id);
+  try {
+    removeExpenseById(id);
 
-  if (expenseIndex === -1) {
-    return res.sendStatus(404);
+    return res.sendStatus(204);
+  } catch (err) {
+    return res.status(500).send('An error occurred while deleting expense.');
   }
-
-  removeExpenseById(id);
-
-  return res.sendStatus(204);
 };
 
 const updateExpense = (req, res) => {
@@ -74,22 +71,22 @@ const updateExpense = (req, res) => {
   const { spentAt, title, amount, category, note } = req.body;
   const currentExpense = getExpenseById(id);
 
-  if (!currentExpense) {
-    res.status(404).send('Not found');
+  try {
+    updateExpenseById(
+      {
+        spentAt,
+        title,
+        amount,
+        category,
+        note,
+      },
+      currentExpense,
+    );
+
+    return res.send(currentExpense);
+  } catch (err) {
+    return res.status(500).send('An error occurred while updating expense.');
   }
-
-  updateExpenseById(
-    {
-      spentAt,
-      title,
-      amount,
-      category,
-      note,
-    },
-    currentExpense,
-  );
-
-  res.send(currentExpense);
 };
 
 module.exports = {

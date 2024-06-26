@@ -8,17 +8,23 @@ const {
   updateExpense,
 } = require('./../controllers/expense.controller');
 
+const {
+  requestValidatorUserExpense,
+  currentExpenseValidator,
+  validateExpenseData,
+} = require('../middlewars/requestValidator.middlewar');
+
 const router = express.Router();
 
-router.get('/expenses', getFilteredExpense);
+router.get('/expenses', validateExpenseData, getFilteredExpense);
 
-router.post('/expenses', setExpense);
+router.post('/expenses', requestValidatorUserExpense, setExpense);
 
-router.get('/expenses/:id', getCurrentExpense);
+router.get('/expenses/:id', currentExpenseValidator, getCurrentExpense);
 
-router.delete('/expenses/:id', deleteExpense);
+router.delete('/expenses/:id', currentExpenseValidator, deleteExpense);
 
-router.patch('/expenses/:id', updateExpense);
+router.patch('/expenses/:id', currentExpenseValidator, updateExpense);
 
 module.exports = {
   router,
