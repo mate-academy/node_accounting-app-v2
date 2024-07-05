@@ -2,11 +2,10 @@
 'use strict';
 
 const users = [];
-let currentId = 1;
 
 const userModel = {
   createUser(name, email) {
-    const newUser = { id: currentId++, name, email };
+    const newUser = { id: users.length + 1, name, email };
 
     users.push(newUser);
 
@@ -21,12 +20,11 @@ const userModel = {
     return users.find((user) => user.id === id);
   },
 
-  updateUser(id, name, email) {
+  updateUser(id, name) {
     const user = users.find((user) => user.id === id);
 
     if (user) {
       user.name = name;
-      user.email = email;
 
       return user;
     }
@@ -45,6 +43,10 @@ const userModel = {
 
     return false;
   },
+
+  resetUsers() {
+    users.length = 0;
+  },
 };
 
-module.exports = { userModel };
+module.exports = userModel;

@@ -1,26 +1,37 @@
+/* eslint-disable eqeqeq */
+/* eslint-disable no-console */
 'use strict';
 
 const expenseModel = require('../models/expenseModel');
 const userModel = require('../models/userModel');
 
 function createExpense(req, res) {
-  const { amount, description, userId } = req.body;
+  const { userId, spentAt, title, amount, category, note } = req.body;
 
-  if (!amount || !description || !userId) {
-    return res.status(400).send('Amount, description, and userId are required');
+  if (!spentAt || !title || !amount || !category || !note || !userId) {
+    return res.status(400).send('All fields are required');
   }
 
-  if (!userModel.getUserById(userId)) {
-    return res.status(404).send('User not found');
+  const user = userModel.getUserById(userId);
+
+  if (!user) {
+    return res.status(400).send('Bad Request');
   }
 
-  const newExpense = expenseModel.createExpense(amount, description, userId);
+  const newExpense = expenseModel.createExpense(
+    userId,
+    spentAt,
+    title,
+    amount,
+    category,
+    note,
+  );
 
   res.status(201).json(newExpense);
 }
 
 function getAllExpenses(req, res) {
-  const expenses = expenseModel.getAllExpenses();
+  const expenses = expenseModel.getAllExpenses(req.query);
 
   res.json(expenses);
 }
@@ -35,18 +46,10 @@ function getExpenseById(req, res) {
 }
 
 function updateExpense(req, res) {
-  const { amount, description, userId } = req.body;
-
-  if (!amount || !description || !userId) {
-    return res.status(400).send('Amount, description, and userId are required');
-  }
-
-  const expense = expenseModel.updateExpense(
-    parseInt(req.params.id),
-    amount,
-    description,
-    userId,
-  );
+  const expense = expenseModel.updateExpense({
+    ...req.body,
+    id: parseInt(req.params.id),
+  });
 
   if (!expense) {
     return res.status(404).send('Expense not found');

@@ -1,16 +1,20 @@
+/* eslint-disable no-console */
+/* eslint-disable function-paren-newline */
 /* eslint-disable no-shadow */
 'use strict';
 
 const expenses = [];
-let currentId = 1;
 
 const expenseModel = {
-  createExpense(amount, description, userId) {
+  createExpense(userId, spentAt, title, amount, category, note) {
     const newExpense = {
-      id: currentId++,
-      amount,
-      description,
       userId,
+      id: expenses.length + 1,
+      spentAt,
+      title,
+      amount,
+      category,
+      note,
     };
 
     expenses.push(newExpense);
@@ -18,21 +22,41 @@ const expenseModel = {
     return newExpense;
   },
 
-  getAllExpenses() {
-    return expenses;
+  getAllExpenses(filters = {}) {
+    const filteringTests = {
+      userId: (id, expense) => Number(id) === expense.userId,
+      id: (id, expense) => Number(id) === expense.id,
+      from: (to, expense) => new Date(expense.spentAt) > new Date(to),
+      to: (to, expense) => new Date(expense.spentAt) < new Date(to),
+      categories: (category, expense) => category === expense.category,
+    };
+
+    return expenses.filter((expense) =>
+      Object.entries(filters).reduce((result, [currKey, currVal]) => {
+        const test = filteringTests[currKey];
+
+        return result && test
+          ? test(currVal, expense)
+          : currVal === expense[currKey];
+      }, true),
+    );
   },
 
   getExpenseById(id) {
     return expenses.find((expense) => expense.id === id);
   },
 
-  updateExpense(id, amount, description, userId) {
-    const expense = expenses.find((expense) => expense.id === id);
+  updateExpense(newExpense = {}) {
+    const expenseIndex = expenses.findIndex(
+      (expense) => expense.id === Number(newExpense.id),
+    );
 
-    if (expense) {
-      expense.amount = amount;
-      expense.description = description;
-      expense.userId = userId;
+    if (expenseIndex >= 0) {
+      let expense = expenses[expenseIndex];
+
+      console.log(expense);
+      expense = { ...expense, ...newExpense };
+      console.log(expense);
 
       return expense;
     }
@@ -51,6 +75,10 @@ const expenseModel = {
 
     return false;
   },
+
+  resetExpenses() {
+    expenses.length = 0;
+  },
 };
 
-module.exports = { expenseModel };
+module.exports = expenseModel;

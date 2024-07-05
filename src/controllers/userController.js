@@ -5,8 +5,8 @@ const userModel = require('../models/userModel');
 function createUser(req, res) {
   const { name, email } = req.body;
 
-  if (!name || !email) {
-    return res.status(400).send('Name and email are required');
+  if (!name && !email) {
+    return res.status(400).send('Name or email are required');
   }
 
   const newUser = userModel.createUser(name, email);
@@ -30,13 +30,13 @@ function getUserById(req, res) {
 }
 
 function updateUser(req, res) {
-  const { name, email } = req.body;
+  const { name } = req.body;
 
-  if (!name || !email) {
-    return res.status(400).send('Name and email are required');
+  if (!name) {
+    return res.status(404).send('Name is required');
   }
 
-  const user = userModel.updateUser(parseInt(req.params.id), name, email);
+  const user = userModel.updateUser(parseInt(req.params.id), name);
 
   if (!user) {
     return res.status(404).send('User not found');
