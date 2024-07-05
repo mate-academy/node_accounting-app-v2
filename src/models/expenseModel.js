@@ -54,9 +54,7 @@ const expenseModel = {
     if (expenseIndex >= 0) {
       let expense = expenses[expenseIndex];
 
-      console.log(expense);
       expense = { ...expense, ...newExpense };
-      console.log(expense);
 
       return expense;
     }

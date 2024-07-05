@@ -1,5 +1,4 @@
 /* eslint-disable eqeqeq */
-/* eslint-disable no-console */
 'use strict';
 
 const expenseModel = require('../models/expenseModel');
