@@ -1,21 +1,22 @@
-/* eslint-disable max-len */
 'use strict';
 
 const express = require('express');
-const cors = require('cors');
-// const uuidv4 = require('uuidv4').v4;
-const { usersRoute } = require('./users/users.route/users.route');
-
-const app = express();
+const usersService = require('./services/users.service');
+const expensesService = require('./services/expenses.service');
 
 function createServer() {
-  // Use express to create a server
-  // Add a routes to the server
-  // Return the server (express app)
-  app.use(cors());
+  const app = express();
+
   app.use(express.json());
 
+  usersService.reset();
+  expensesService.reset();
+
+  const { usersRoute } = require('./routes/users.route');
+  const { expensesRoute } = require('./routes/expenses.route');
+
   app.use('/users', usersRoute);
+  app.use('/expenses', expensesRoute);
 
   return app;
 }
