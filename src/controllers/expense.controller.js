@@ -5,10 +5,9 @@ const {
   remove,
   update,
 } = require('../services/expense.service');
-/* eslint-disable max-len */
 const { getAll: getAllUsers } = require('../services/user.service');
 
-const get = (req, res) => {
+const parseQueryParameters = (req) => {
   const userId = req.query.userId ? Number(req.query.userId) : null;
   const from = req.query.from ? new Date(req.query.from) : null;
   const to = req.query.to ? new Date(req.query.to) : null;
@@ -16,14 +15,25 @@ const get = (req, res) => {
     ? req.query.categories.split(',')
     : [];
 
-  let expenses = getAll();
+  return {
+    userId,
+    from,
+    to,
+    categories,
+  };
+};
+
+const filterExpenses = (expenses, userId, from, to, categories) => {
+  let filteredExpenses = expenses;
 
   if (userId !== null) {
-    expenses = expenses.filter((expense) => expense.userId === userId);
+    filteredExpenses = filteredExpenses.filter(
+      (expense) => expense.userId === userId,
+    );
   }
 
   if (from && to) {
-    expenses = expenses.filter((expense) => {
+    filteredExpenses = filteredExpenses.filter((expense) => {
       const spentAt = new Date(expense.spentAt);
 
       return spentAt >= from && spentAt <= to;
@@ -31,11 +41,23 @@ const get = (req, res) => {
   }
 
   if (categories.length > 0) {
-    expenses = expenses.filter((expense) =>
-      categories.includes(expense.category),
-    );
+    filteredExpenses = filteredExpenses.reduce((acc, expense) => {
+      if (categories.includes(expense.category)) {
+        acc.push(expense);
+      }
+
+      return acc;
+    }, []);
   }
 
+  return filteredExpenses;
+};
+
+const get = (req, res) => {
+  const { userId, from, to, categories } = parseQueryParameters(req);
+  let expenses = getAll();
+
+  expenses = filterExpenses(expenses, userId, from, to, categories);
   res.send(expenses);
 };
 
@@ -54,17 +76,17 @@ const getByIdController = (req, res) => {
 const createController = (req, res) => {
   const { userId, spentAt, title, amount, category, note } = req.body;
 
+  if (!userId || !spentAt || !title || amount === undefined || !category) {
+    return res.status(400).send({
+      message: 'UserId, spentAt, title, amount, and category are required',
+    });
+  }
+
   const users = getAllUsers();
   const userExists = users.some((user) => user.id === userId);
 
   if (!userExists) {
     return res.status(400).send({ message: 'User not found' });
-  }
-
-  if (!userId || !spentAt || !title || amount === undefined || !category) {
-    return res.status(400).send({
-      message: 'UserId, spentAt, title, amount, and category are required',
-    });
   }
 
   const expense = create(userId, spentAt, title, amount, category, note);
