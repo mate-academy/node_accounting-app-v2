@@ -5,14 +5,14 @@ const {
   create,
   remove,
   update,
-} = require('../controllers/user.controller');
+} = require('../controllers/expense.controller');
 
-const userRouter = express.Router();
+const expenseRouter = express.Router();
 
-userRouter.get('/', get);
-userRouter.get('/:id', getById);
-userRouter.post('/', create);
-userRouter.delete('/:id', remove);
-userRouter.patch('/:id', update);
+expenseRouter.get('/', get);
+expenseRouter.get('/:id', getById);
+expenseRouter.post('/', create);
+expenseRouter.delete('/:id', remove);
+expenseRouter.patch('/:id', update);
 
-module.exports = userRouter;
+module.exports = expenseRouter;

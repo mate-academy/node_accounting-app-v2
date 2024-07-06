@@ -1,49 +1,63 @@
-const { v4: uuidv4 } = require('uuid');
-
-let users = [
-  { id: '1', name: 'katya' },
-  { id: '2', name: 'lyosha' },
-];
+let expenses = [];
 
 const getAll = () => {
-  return users;
+  return expenses;
 };
 
 const getById = (id) => {
-  return users.find((item) => item.id === id) || null;
+  return expenses.find((item) => item.id === id) || null;
 };
 
-const create = (name) => {
-  const user = {
-    id: uuidv4(),
-    name,
+const generateUniqueId = () => {
+  let id;
+
+  do {
+    id = Math.floor(Math.random() * 1000000);
+  } while (expenses.some((expense) => expense.id === id));
+
+  return id;
+};
+
+const create = (userId, spentAt, title, amount, category, note = '') => {
+  const expense = {
+    id: generateUniqueId(),
+    userId,
+    spentAt,
+    title,
+    amount,
+    category,
+    note,
   };
 
-  users.push(user);
+  expenses.push(expense);
 
-  return user;
+  return expense;
 };
 
 const remove = (id) => {
-  const newUsers = users.filter((item) => item.id !== id);
-  const success = newUsers.length !== users.length;
+  const newExpenses = expenses.filter((item) => item.id !== id);
+  const success = newExpenses.length !== expenses.length;
 
   if (success) {
-    users = newUsers;
+    expenses = newExpenses;
   }
 
   return success;
 };
 
 const update = (id, updates) => {
-  const user = users.find((item) => item.id === id);
+  const expense = expenses.find((item) => item.id === id);
 
-  if (!user) {
+  if (!expense) {
     return null;
   }
-  Object.assign(user, updates);
+  Object.assign(expense, updates);
 
-  return user;
+  return expense;
+};
+
+const resetExpenses = () => {
+  expenses = [];
 };
 
 module.exports = {
@@ -52,4 +66,5 @@ module.exports = {
   create,
   remove,
   update,
+  resetExpenses,
 };

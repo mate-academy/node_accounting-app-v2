@@ -1,9 +1,4 @@
-const { v4: uuidv4 } = require('uuid');
-
-let users = [
-  { id: '1', name: 'katya' },
-  { id: '2', name: 'lyosha' },
-];
+let users = [];
 
 const getAll = () => {
   return users;
@@ -13,9 +8,19 @@ const getById = (id) => {
   return users.find((item) => item.id === id) || null;
 };
 
+const generateUniqueId = () => {
+  let id;
+
+  do {
+    id = Math.floor(Math.random() * 1000000);
+  } while (users.some((user) => user.id === id));
+
+  return id;
+};
+
 const create = (name) => {
   const user = {
-    id: uuidv4(),
+    id: generateUniqueId(),
     name,
   };
 
@@ -46,10 +51,15 @@ const update = (id, updates) => {
   return user;
 };
 
+const resetUsers = () => {
+  users = [];
+};
+
 module.exports = {
   getAll,
   getById,
   create,
   remove,
   update,
+  resetUsers,
 };

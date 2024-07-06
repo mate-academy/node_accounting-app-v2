@@ -4,7 +4,16 @@ module.exports = {
     jest: true
   },
   rules: {
-    'no-proto': 0
+    'no-proto': 0,
+    'comma-dangle': 0
   },
-  plugins: ['jest']
+  plugins: ['jest'],
+  overrides: [
+    {
+      files: ['src/controllers/expense.controller.js'],
+      rules: {
+        'function-paren-newline': 0
+      }
+    }
+  ]
 };

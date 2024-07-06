@@ -12,7 +12,7 @@ const get = (req, res) => {
 
 const getByIdController = (req, res) => {
   const { id } = req.params;
-  const user = getById(id);
+  const user = getById(Number(id));
 
   if (!user) {
     res.status(404).send({ message: 'User not found' });
@@ -38,7 +38,7 @@ const createController = (req, res) => {
 
 const removeController = (req, res) => {
   const { id } = req.params;
-  const success = remove(id);
+  const success = remove(Number(id));
 
   if (!success) {
     res.status(404).send({ message: 'User not found' });
@@ -58,7 +58,7 @@ const updateController = (req, res) => {
     return;
   }
 
-  const user = update(id, updates);
+  const user = update(Number(id), updates);
 
   if (!user) {
     res.status(404).send({ message: 'User not found' });
