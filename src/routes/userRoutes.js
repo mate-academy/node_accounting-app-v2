@@ -1,8 +1,9 @@
 const { Router } = require('express');
+const { GetUsersController } = require('../controllers/user');
 
 const userRoutes = Router();
 
-userRoutes.get('/');
+userRoutes.get('/', GetUsersController.handle);
 userRoutes.get('/:id');
 userRoutes.post('/');
 userRoutes.patch('/:id');
