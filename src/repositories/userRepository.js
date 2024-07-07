@@ -1,49 +1,50 @@
 const mockUsers = require('../api/mockUser');
 
 const userRepository = {
-    create: (userData) => {
-        const currentMockUsersLength = mockUsers.length;
+  create: (userData) => {
+    const newUser = {
+      id: mockUsers.length + 1,
+      ...userData,
+    };
 
-        mockUsers.push(userData);
+    mockUsers.push(newUser);
 
-        return userData;
-    },
+    return newUser;
+  },
 
-    findAll: () => {
-        const users = mockUsers;
+  findAll: () => {
+    const users = mockUsers;
 
-        return users;
-    },
+    return users;
+  },
 
-    findByPk: (userId) => {
-        const user = mockUsers.find(user => user.id === userId);
+  findByPk: (userId) => {
+    return mockUsers.find((user) => user.id === userId);
+  },
 
-        return user;
-    },
+  findOne: (field, value) => {
+    return mockUsers.find((user) => user[field] === value);
+  },
 
-    findOne: (field, value) => {
-        const user = mockUsers.find(user => user[field] === value);
+  update: (userId, userData) => {
+    const { name } = userData;
 
-        return user;
-    },
+    const updatedUser = mockUsers.find((user) => user.id === userId);
 
-    update: (userId, userData) => {
-        const { name } = userData;
+    updatedUser.name = name;
 
-        const user = mockUsers.find(user => user.id === userId);
+    return updatedUser;
+  },
 
-        user.name = name;
+  destroy: (userId) => {
+    const userIndex = mockUsers.findIndex((user) => user.id === userId);
 
-        return user;
-    },
+    return mockUsers.splice(userIndex, 1)[0];
+  },
 
-    destroy: (userId) => {
-        const userIndex = mockUsers.findIndex(user => user.id === userId);
-
-        const removedUser =  mockUsers.splice(userIndex, 1);
-
-        return removedUser[0];
-    }
-}
+  resetUsers: () => {
+    mockUsers.length = 0;
+  }
+};
 
 module.exports = userRepository;
