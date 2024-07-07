@@ -1,11 +1,11 @@
 const userRepository = require('../../repositories/userRepository');
 
 class GetUserService {
-	execute() {
-		const users = userRepository.findAll();
+  execute() {
+    const users = userRepository.findAll();
 
-		return users;
-	}
+    return users;
+  }
 }
 
 module.exports = GetUserService;

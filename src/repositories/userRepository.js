@@ -44,7 +44,7 @@ const userRepository = {
 
   resetUsers: () => {
     mockUsers.length = 0;
-  }
+  },
 };
 
 module.exports = userRepository;
