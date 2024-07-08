@@ -2,6 +2,7 @@
 
 const supertest = require('supertest');
 const { createServer } = require('../src/createServer');
+const userService = require('../src/services/userService');
 
 describe('User', () => {
   let server;
@@ -10,6 +11,7 @@ describe('User', () => {
   beforeEach(() => {
     server = createServer();
     api = supertest(server);
+    userService.removeAll();
   });
 
   describe('createUser', () => {
