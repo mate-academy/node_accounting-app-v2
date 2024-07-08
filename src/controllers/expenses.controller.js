@@ -1,6 +1,25 @@
 const expensesService = require('../services/expenses.service');
 const usersService = require('../services/users.service');
 
+const checkId = (req, res, next, value) => {
+  if (!value) {
+    res.status(400).send();
+
+    return;
+  }
+
+  const expense = expensesService.getOneExpense(value);
+
+  if (!expense) {
+    res.status(404).send();
+
+    return;
+  }
+
+  req.check = expense;
+  next();
+};
+
 const get = (req, res) => {
   const all = expensesService.getAll(req.query);
 
@@ -8,54 +27,25 @@ const get = (req, res) => {
 };
 
 const getOne = (req, res) => {
-  const { id } = req.params;
-
-  if (!id) {
-    return res.status(400).send();
-  }
-
-  const expense = expensesService.getOneExpense(id);
-
-  if (!expense) {
-    return res.status(404).send();
-  }
-
-  return res.status(200).send(expense);
+  return res.status(200).send(req.check);
 };
 
 const deleting = (req, res) => {
-  const { id } = req.params;
-
-  if (!id) {
-    res.status(400).send();
-  }
-
-  const expense = expensesService.getOneExpense(id);
-
-  if (!expense) {
-    res.status(404).send();
-  }
-
-  expensesService.deletingExpense(id);
+  expensesService.deletingExpense(req.check.id);
   res.status(204).send();
 };
 
-const update = (req, res) => {
-  const { id } = req.params;
+const patch = (req, res) => {
   const { title } = req.body;
 
-  const item = expensesService.getOneExpense(id);
+  if (title) {
+    const updated = expensesService.updateExpense(req.check.id, title);
 
-  if (!item) {
-    return res.status(404).send();
+    res.status(200).send(updated);
   }
-
-  const updated = expensesService.updateExpense(id, title);
-
-  res.status(200).send(updated);
 };
 
-const create = (req, res) => {
+const post = (req, res) => {
   const { userId, spentAt, title, amount, category, note } = req.body;
 
   const user = usersService.getUser(userId);
@@ -80,6 +70,7 @@ module.exports = {
   get,
   getOne,
   deleting,
-  update,
-  create,
+  patch,
+  post,
+  checkId,
 };

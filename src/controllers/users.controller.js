@@ -1,5 +1,24 @@
 const usersServise = require('../services/users.service');
 
+const checkId = (req, res, next, value) => {
+  if (!value) {
+    res.status(400).send();
+
+    return;
+  }
+
+  const user = usersServise.getUser(value);
+
+  if (!user) {
+    res.status(404).send();
+
+    return;
+  }
+
+  req.check = user;
+  next();
+};
+
 const get = (req, res) => {
   const users = usersServise.getAll();
 
@@ -7,18 +26,7 @@ const get = (req, res) => {
 };
 
 const getOne = (req, res) => {
-  const { id } = req.params;
-  const user = usersServise.getUser(id);
-
-  if (!id) {
-    res.status(400).send();
-  }
-
-  if (!user) {
-    res.status(404).send();
-  }
-
-  res.status(200).send(user);
+  res.status(200).send(req.check);
 };
 
 const post = (req, res) => {
@@ -34,35 +42,20 @@ const post = (req, res) => {
 };
 
 const patch = (req, res) => {
-  const { id } = req.params;
   const { name } = req.body;
 
-  if (id && name) {
-    const finded = usersServise.getUser(id);
+  if (name) {
+    const updated = usersServise.updateUser(req.check.id, name);
 
-    if (finded) {
-      const updated = usersServise.updateUser(id, name);
-
-      res.status(200).send(updated);
-    } else {
-      res.status(404).send();
-    }
+    res.status(200).send(updated);
+  } else {
+    req.status(400).send();
   }
-
-  req.status(400).send();
 };
 
 const deleting = (req, res) => {
-  const { id } = req.params;
-  const user = usersServise.getUser(id);
-
-  if (user) {
-    usersServise.deleteUser(id);
-
-    res.status(204).send();
-  }
-
-  res.status(404).send();
+  usersServise.deleteUser(req.check.id);
+  res.status(204).send();
 };
 
 module.exports = {
@@ -71,4 +64,5 @@ module.exports = {
   post,
   patch,
   deleting,
+  checkId,
 };

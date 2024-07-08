@@ -3,6 +3,8 @@
 const express = require('express');
 const usersService = require('./services/users.service');
 const expensesService = require('./services/expenses.service');
+const { usersRoute } = require('./routes/users.route');
+const { expensesRoute } = require('./routes/expenses.route');
 
 function createServer() {
   const app = express();
@@ -11,9 +13,6 @@ function createServer() {
 
   usersService.reset();
   expensesService.reset();
-
-  const { usersRoute } = require('./routes/users.route');
-  const { expensesRoute } = require('./routes/expenses.route');
 
   app.use('/users', usersRoute);
   app.use('/expenses', expensesRoute);
