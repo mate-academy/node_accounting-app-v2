@@ -1,11 +1,12 @@
 const { Router } = require('express');
-const {GetAllExpensesController} = require('../controllers/expense');
+const { GetAllExpensesController, CreateExpenseController } = require('../controllers/expense');
+const { verifyExpenseFields } = require('../middlewares');
 
 const expenseRoutes = Router();
 
 expenseRoutes.get('/', GetAllExpensesController.handle);
 expenseRoutes.get('/:id');
-expenseRoutes.post('/');
+expenseRoutes.post('/', verifyExpenseFields, CreateExpenseController.handle);
 expenseRoutes.patch('/:id');
 expenseRoutes.delete('/:id');
 
