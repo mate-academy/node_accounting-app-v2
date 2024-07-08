@@ -4,6 +4,7 @@ const {
   CreateExpenseController,
   GetExpenseController,
   EditExpenseController,
+  DeleteExpenseController,
 } = require('../controllers/expense');
 const {
   verifyExpenseFields,
@@ -29,7 +30,15 @@ expenseRoutes.post(
   verifyExpenseFields,
   CreateExpenseController.handle,
 );
-expenseRoutes.patch('/:id',  verifyIfIdIsANumber, verifyIfExpenseExists, verifyIfUserExists, verifyExpenseFields, EditExpenseController.handle);
-expenseRoutes.delete('/:id');
+
+expenseRoutes.patch(
+  '/:id',
+  verifyIfIdIsANumber,
+  verifyIfExpenseExists,
+  verifyIfUserExists,
+  verifyExpenseFields,
+  EditExpenseController.handle,
+);
+expenseRoutes.delete('/:id', verifyIfIdIsANumber, verifyIfExpenseExists, DeleteExpenseController.handle);
 
 module.exports = expenseRoutes;
