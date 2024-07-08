@@ -1,7 +1,7 @@
 'use strict';
 
 const express = require('express');
-const userRoutes = require('./routes/userRoutes');
+const { userRoutes, expenseRoutes } = require('./routes');
 
 function createServer() {
   const app = express();
@@ -9,6 +9,7 @@ function createServer() {
   app.use(express.json());
 
   app.use('/users', userRoutes);
+  app.use('/expenses', expenseRoutes)
 
   return app;
 }
