@@ -2,12 +2,14 @@
 
 const supertest = require('supertest');
 const { createServer } = require('../src/createServer');
+const { resetMockUsers } = require('../src/routes/usersRouter');
 
 describe('User', () => {
   let server;
   let api;
 
   beforeEach(() => {
+    resetMockUsers();
     server = createServer();
     api = supertest(server);
   });
