@@ -40,10 +40,17 @@ const expenseRepository = {
     }
 
     if (categories && categories.length > 0) {
-      expenses = expenses.filter((expense) =>
-        // eslint-disable-next-line function-paren-newline
-        categories.includes(expense.category)
-      );
+      /* eslint-disable */
+      const normalizedCategories = Array.isArray(categories)
+        ? categories.map(cat => cat.toLowerCase())
+        : categories.split(',').map(cat => cat.trim().toLowerCase());
+
+      if (normalizedCategories.length > 0) {
+        expenses = expenses.filter((expense) =>
+          normalizedCategories.includes(expense.category.toLowerCase())
+        );
+      }
+      /* eslint-enable */
     }
 
     return expenses;
