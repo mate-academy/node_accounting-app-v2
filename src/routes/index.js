@@ -1,7 +1,7 @@
 const userRoutes = require('./userRoutes');
-const expensesRoutes = require('./expensesRoutes');
+const expenseRoutes = require('./expenseRoutes');
 
 module.exports = {
   userRoutes,
-  expensesRoutes,
+  expenseRoutes,
 };
