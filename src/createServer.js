@@ -1,63 +1,12 @@
 /* eslint-disable function-paren-newline */
 'use strict';
 
+let users = [];
+
+let expenses = [];
+
 const uuid = require('uuid');
-
 const express = require('express');
-
-let users = [
-  {
-    id: 1,
-    name: 'Jake',
-  },
-  {
-    id: 2,
-    name: 'Jake',
-  },
-  {
-    id: 3,
-    name: 'Jake',
-  },
-];
-
-let expenses = [
-  {
-    id: 1,
-    userId: 1,
-    spentAt: new Date(),
-    title: 'some',
-    amount: 100,
-    category: '',
-    note: '',
-  },
-  {
-    id: 1,
-    userId: 1,
-    spentAt: new Date(),
-    title: 'someOne',
-    amount: 100,
-    category: '',
-    note: '',
-  },
-  {
-    id: 22,
-    userId: 111,
-    spentAt: new Date(),
-    title: 'some',
-    amount: 100,
-    category: '',
-    note: '',
-  },
-  {
-    id: 11,
-    userId: 11,
-    spentAt: new Date(),
-    title: 'some',
-    amount: 100,
-    category: '',
-    note: '',
-  },
-];
 
 function createServer() {
   const app = express();
@@ -219,21 +168,17 @@ function createServer() {
   app.delete('/expenses/:id', (req, res) => {
     const { id } = req.params;
 
-    if (expenses.find((expense) => expense.id === +id)) {
-      const newExpenses = expenses.filter((expense) => expense.id !== +id);
-
-      expenses = newExpenses;
-
-      if (expenses.find((expense) => expense.id === +id)) {
-        res.sendStatus(500);
-
-        return;
-      }
-
-      res.sendStatus(204);
-    } else {
+    if (!expenses.find((expense) => expense.id === +id)) {
       res.sendStatus(404);
+
+      return;
     }
+
+    const newExpenses = expenses.filter((expense) => expense.id !== +id);
+
+    expenses = newExpenses;
+
+    res.sendStatus(204);
   });
 
   app.patch('/expenses/:id', (req, res) => {
@@ -251,6 +196,9 @@ function createServer() {
 
     res.send(expenseById);
   });
+
+  users = [];
+  expenses = [];
 
   return app;
 }
