@@ -1,9 +1,13 @@
 'use strict';
 
-let expenses = [];
+const expenses = [];
 
 const reset = () => {
-  expenses = [];
+  expenses.length = 0;
+};
+
+const generateId = () => {
+  return expenses.length ? expenses[expenses.length - 1].id + 1 : 1;
 };
 
 const getAll = ({ userId, categories, from, to }) => {
@@ -49,9 +53,8 @@ const getById = (id) => {
 };
 
 const create = (data) => {
-  const newId = expenses.length ? expenses[expenses.length - 1].id + 1 : 1;
   const newExpense = {
-    id: newId,
+    id: generateId(),
     ...data,
     note: data?.note ?? '',
   };
@@ -76,7 +79,11 @@ const updateById = (id, data) => {
 const removeById = (id) => {
   const idNum = Number(id);
 
-  expenses = expenses.filter((exp) => exp.id !== idNum);
+  const index = expenses.findIndex((exp) => exp.id === idNum);
+
+  if (index !== -1) {
+    expenses.splice(index, 1);
+  }
 };
 
 module.exports = {

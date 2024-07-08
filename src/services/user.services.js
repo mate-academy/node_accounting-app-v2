@@ -1,12 +1,16 @@
 'use strict';
 
-let users = [];
+const users = [];
 
 const getAll = () => users;
 
+const generateId = () => {
+  return users.length ? users[users.length - 1].id + 1 : 1;
+};
+
 const create = (name) => {
   const newUser = {
-    id: users.length ? users[users.length - 1].id + 1 : 1,
+    id: generateId(),
     name,
   };
 
@@ -37,11 +41,15 @@ const updateById = (id, name) => {
 const removeById = (id) => {
   const userId = Number(id);
 
-  users = users.filter((user) => user.id !== userId);
+  const index = users.findIndex((user) => user.id === userId);
+
+  if (index !== -1) {
+    users.splice(index, 1);
+  }
 };
 
 const reset = () => {
-  users = [];
+  users.length = 0;
 };
 
 module.exports = {
