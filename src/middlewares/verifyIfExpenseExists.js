@@ -5,13 +5,13 @@ const verifyIfExpenseExists = (req, res, next) => {
 
   const expenseExists = expenseRepository
     .findAll()
-    .find(expense => expense.id === Number(id));
+    .find((expense) => expense.id === Number(id));
 
-    if (!expenseExists) {
-      return res.status(404).json({ error: 'Expense not found' });
-    }
-  
-    return next();
-}
+  if (!expenseExists) {
+    return res.status(404).json({ error: 'Expense not found' });
+  }
+
+  return next();
+};
 
 module.exports = verifyIfExpenseExists;

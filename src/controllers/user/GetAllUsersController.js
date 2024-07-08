@@ -1,9 +1,9 @@
-const { GetUserService } = require('../../services/user');
+const { GetAllUserService } = require('../../services/user');
 
-class GetUsersController {
+class GetAllUsersController {
   async handle(req, res) {
     try {
-      const service = new GetUserService();
+      const service = new GetAllUserService();
 
       const users = service.execute();
 
@@ -14,4 +14,4 @@ class GetUsersController {
   }
 }
 
-module.exports = new GetUsersController();
+module.exports = new GetAllUsersController();

@@ -26,8 +26,8 @@ expenseRoutes.get(
 
 expenseRoutes.post(
   '/',
-  verifyIfUserExists,
   verifyExpenseFields,
+  verifyIfUserExists,
   CreateExpenseController.handle,
 );
 
@@ -36,9 +36,14 @@ expenseRoutes.patch(
   verifyIfIdIsANumber,
   verifyIfExpenseExists,
   verifyIfUserExists,
-  verifyExpenseFields,
   EditExpenseController.handle,
 );
-expenseRoutes.delete('/:id', verifyIfIdIsANumber, verifyIfExpenseExists, DeleteExpenseController.handle);
+
+expenseRoutes.delete(
+  '/:id',
+  verifyIfIdIsANumber,
+  verifyIfExpenseExists,
+  DeleteExpenseController.handle,
+);
 
 module.exports = expenseRoutes;

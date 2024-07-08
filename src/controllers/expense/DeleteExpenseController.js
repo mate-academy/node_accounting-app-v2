@@ -2,14 +2,16 @@ const { DeleteExpenseService } = require('../../services/expense');
 
 class DeleteExpenseController {
   handle(req, res) {
-    const {id} = req.params;
-  
+    const { id } = req.params;
+
     try {
       const service = new DeleteExpenseService();
 
-      const updatedExpense = service.execute(id);
+      const removedExpense = service.execute(id);
 
-      return res.status(200).json(updatedExpense);
+      if (removedExpense) {
+        return res.status(204).json();
+      }
     } catch (error) {
       return res.status(500).json({ error: 'Internal Server error' });
     }

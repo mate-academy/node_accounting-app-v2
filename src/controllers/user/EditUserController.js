@@ -2,7 +2,7 @@ const { EditUserService } = require('../../services/user');
 
 class EditUserController {
   async handle(req, res) {
-    const {id} = req.params;
+    const { id } = req.params;
 
     try {
       const service = new EditUserService();

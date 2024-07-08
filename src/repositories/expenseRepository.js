@@ -12,7 +12,7 @@ const expenseRepository = {
     return newExpense;
   },
 
-  findAll: (filters) => {
+  findAll: (filters = {}) => {
     let expenses = mockExpenses;
 
     const { userId, from, to, categories } = filters;
@@ -42,12 +42,12 @@ const expenseRepository = {
     if (categories && categories.length > 0) {
       /* eslint-disable */
       const normalizedCategories = Array.isArray(categories)
-        ? categories.map(cat => cat.toLowerCase())
-        : categories.split(',').map(cat => cat.trim().toLowerCase());
+        ? categories.map((cat) => cat.toLowerCase())
+        : categories.split(',').map((cat) => cat.trim().toLowerCase());
 
       if (normalizedCategories.length > 0) {
         expenses = expenses.filter((expense) =>
-          normalizedCategories.includes(expense.category.toLowerCase())
+          normalizedCategories.includes(expense.category.toLowerCase()),
         );
       }
       /* eslint-enable */

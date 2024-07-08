@@ -2,14 +2,18 @@
 
 const supertest = require('supertest');
 const { createServer } = require('../src/createServer');
+const userRepository = require('../src/repositories/userRepository');
+const expenseRepository = require('../src/repositories/expenseRepository');
 
-describe('Expense', () => {
+describe.only('Expense', () => {
   let server;
   let api;
 
   beforeEach(() => {
     server = createServer();
     api = supertest(server);
+    userRepository.resetUsers();
+    expenseRepository.resetExpenses();
   });
 
   describe('createExpense', () => {

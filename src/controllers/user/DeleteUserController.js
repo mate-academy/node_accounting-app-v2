@@ -7,9 +7,11 @@ class DeleteUserController {
     try {
       const service = new DeleteUserService();
 
-      const user = service.execute(id);
+      const removedUser = service.execute(id);
 
-      return res.status(200).json(user);
+      if (removedUser) {
+        return res.status(204).json();
+      }
     } catch (error) {
       return res.status(500).json({ error: 'Internal Server error' });
     }

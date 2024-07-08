@@ -1,4 +1,4 @@
-const mockUsers = require('../api/mockUser');
+const mockUsers = require('../api/mockUsers');
 
 const userRepository = {
   create: (userData) => {
@@ -19,7 +19,7 @@ const userRepository = {
   },
 
   findByPk: (userId) => {
-    return mockUsers.find((user) => user.id === userId);
+    return mockUsers.find((user) => user.id === Number(userId));
   },
 
   findOne: (field, value) => {
@@ -29,7 +29,7 @@ const userRepository = {
   update: (userId, userData) => {
     const { name } = userData;
 
-    const updatedUser = mockUsers.find((user) => user.id === userId);
+    const updatedUser = mockUsers.find((user) => user.id === Number(userId));
 
     updatedUser.name = name;
 
@@ -37,7 +37,7 @@ const userRepository = {
   },
 
   destroy: (userId) => {
-    const userIndex = mockUsers.findIndex((user) => user.id === userId);
+    const userIndex = mockUsers.findIndex((user) => user.id === Number(userId));
 
     return mockUsers.splice(userIndex, 1)[0];
   },

@@ -9,7 +9,7 @@ function createServer() {
   app.use(express.json());
 
   app.use('/users', userRoutes);
-  app.use('/expenses', expenseRoutes)
+  app.use('/expenses', expenseRoutes);
 
   return app;
 }
