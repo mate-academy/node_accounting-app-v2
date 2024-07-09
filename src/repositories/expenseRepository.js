@@ -1,94 +1,78 @@
-const mockExpenses = require('../api/mockExpenses');
+const expenses = require('../api/mockExpenses');
 
 const expenseRepository = {
   create: (expenseData) => {
+    const id = expenses.size + 1;
     const newExpense = {
-      id: mockExpenses.length + 1,
+      id,
       ...expenseData,
     };
 
-    mockExpenses.push(newExpense);
+    expenses.set(id, newExpense);
 
     return newExpense;
   },
 
   findAll: (filters = {}) => {
-    let expenses = mockExpenses;
+    const expensesArray = [...expenses.values()];
 
-    const { userId, from, to, categories } = filters;
+    const filteringFunctions = {
+      userId: (userId, expense) => Number(userId) === expense.userId,
+      from: (from, expense) => new Date(expense.spentAt) >= new Date(from),
+      to: (to, expense) => new Date(expense.spentAt) <= new Date(to),
+      categories: (category, expense) =>
+        category.toLowerCase() === expense.category.toLowerCase(),
+      default: (value, expense, key) => value === expense[key],
+    };
 
-    if (userId) {
-      expenses = expenses.filter(
-        (expense) => expense.userId === Number(userId),
-      );
-    }
+    const queries = Object.entries(filters);
+    /* eslint-disable */
+    return expensesArray.filter((expense) =>
+      queries.every(([queryKey, queryVal]) => {
+        const filterFunction =
+          filteringFunctions[queryKey] ?? filteringFunctions.default;
 
-    if (from) {
-      const fromDate = new Date(from);
-
-      expenses = expenses.filter(
-        (expense) => new Date(expense.spentAt) >= fromDate,
-      );
-    }
-
-    if (to) {
-      const toDate = new Date(to);
-
-      expenses = expenses.filter(
-        (expense) => new Date(expense.spentAt) <= toDate,
-      );
-    }
-
-    if (categories && categories.length > 0) {
-      /* eslint-disable */
-      const normalizedCategories = Array.isArray(categories)
-        ? categories.map((cat) => cat.toLowerCase())
-        : categories.split(',').map((cat) => cat.trim().toLowerCase());
-
-      if (normalizedCategories.length > 0) {
-        expenses = expenses.filter((expense) =>
-          normalizedCategories.includes(expense.category.toLowerCase()),
-        );
-      }
-      /* eslint-enable */
-    }
-
-    return expenses;
+        return filterFunction(queryVal, expense, queryKey);
+      }),
+    );
   },
+  /* eslint-enable */
 
+  /* eslint-disable */
   findByPk: (expenseId) => {
-    return mockExpenses.find((expense) => expense.id === Number(expenseId));
+    return expenses.get(Number(expenseId));
   },
+  /* eslint-enable */
 
   findOne: (field, value) => {
-    return mockExpenses.find((expense) => expense[field] === value);
+    return [...expenses.values()].find((expense) => expense[field] === value);
   },
 
   update: (expenseId, expenseData) => {
     const { title, amount, category, note } = expenseData;
 
-    const updatedExpense = mockExpenses.find(
-      (expense) => expense.id === Number(expenseId),
-    );
+    const updatedExpense = expenses.get(Number(expenseId));
 
     updatedExpense.title = title ?? updatedExpense.title;
     updatedExpense.amount = amount ?? updatedExpense.amount;
     updatedExpense.category = category ?? updatedExpense.category;
     updatedExpense.note = note ?? updatedExpense.note;
 
+    expenses.set(Number(expenseId), updatedExpense);
+
     return updatedExpense;
   },
 
   destroy: (expenseId) => {
-    const expenseIndex = mockExpenses.findIndex(
-      (expense) => expense.id === Number(expenseId),
-    );
+    const deletedExpense = expenses.get(Number(expenseId));
 
-    return mockExpenses.splice(expenseIndex, 1)[0];
+    expenses.delete(Number(expenseId));
+
+    return deletedExpense;
   },
 
   resetExpenses: () => {
-    mockExpenses.length = 0;
+    expenses.clear();
   },
 };
 

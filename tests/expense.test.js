@@ -5,7 +5,7 @@ const { createServer } = require('../src/createServer');
 const userRepository = require('../src/repositories/userRepository');
 const expenseRepository = require('../src/repositories/expenseRepository');
 
-describe.only('Expense', () => {
+describe('Expense', () => {
   let server;
   let api;
 

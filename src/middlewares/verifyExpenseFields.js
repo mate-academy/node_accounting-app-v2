@@ -23,7 +23,7 @@ const verifyExpenseFields = (req, res, next) => {
       .json({ error: 'The title, category, and note fields must be strings.' });
   }
 
-  if (typeof amount !== 'number' || isNaN(amount) || amount <= 0) {
+  if (isNaN(amount) || amount <= 0) {
     return res
       .status(400)
       .json({ error: 'The amount field must be a number greater than zero.' });

@@ -27,8 +27,8 @@ userRoutes.post('/', verifyUserFields, CreateUserController.handle);
 userRoutes.patch(
   '/:id',
   verifyIfIdIsANumber,
-  verifyIfUserExists,
   verifyUserFields,
+  verifyIfUserExists,
   EditUserController.handle,
 );
 

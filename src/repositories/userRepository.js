@@ -1,49 +1,52 @@
-const mockUsers = require('../api/mockUsers');
+const users = require('../api/mockUsers');
 
 const userRepository = {
   create: (userData) => {
+    const id = users.size + 1;
     const newUser = {
-      id: mockUsers.length + 1,
+      id,
       ...userData,
     };
 
-    mockUsers.push(newUser);
+    users.set(id, newUser);
 
     return newUser;
   },
 
   findAll: () => {
-    const users = mockUsers;
-
-    return users;
+    return [...users.values()];
   },
 
   findByPk: (userId) => {
-    return mockUsers.find((user) => user.id === Number(userId));
+    return users.get(Number(userId));
   },
 
   findOne: (field, value) => {
-    return mockUsers.find((user) => user[field] === value);
+    return [...users.values()].find((user) => user[field] === value);
   },
 
   update: (userId, userData) => {
-    const { name } = userData;
+    const updatedUser = users.get(Number(userId));
 
-    const updatedUser = mockUsers.find((user) => user.id === Number(userId));
+    if (userData.name) {
+      updatedUser.name = userData.name;
+    }
 
-    updatedUser.name = name;
+    users.set(Number(userId), updatedUser);
 
     return updatedUser;
   },
 
   destroy: (userId) => {
-    const userIndex = mockUsers.findIndex((user) => user.id === Number(userId));
+    const deletedUser = users.get(Number(userId));
 
-    return mockUsers.splice(userIndex, 1)[0];
+    users.delete(Number(userId));
+
+    return deletedUser;
   },
 
   resetUsers: () => {
-    mockUsers.length = 0;
+    users.clear();
   },
 };
 
