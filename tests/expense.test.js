@@ -2,6 +2,9 @@
 
 const supertest = require('supertest');
 const { createServer } = require('../src/createServer');
+const { resetUsers } = require('../src/services/userService');
+const { ExpenseService } = require('../src/services/expenseService');
+const expenseService = new ExpenseService();
 
 describe('Expense', () => {
   let server;
@@ -10,6 +13,8 @@ describe('Expense', () => {
   beforeEach(() => {
     server = createServer();
     api = supertest(server);
+    resetUsers();
+    expenseService.resetExpenses();
   });
 
   describe('createExpense', () => {
