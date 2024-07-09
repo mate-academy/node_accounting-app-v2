@@ -1,6 +1,6 @@
 'use strict';
 
-const userModel = require('../models/userModel');
+const userService = require('../services/userService');
 
 function createUser(req, res) {
   const { name, email } = req.body;
@@ -9,19 +9,19 @@ function createUser(req, res) {
     return res.status(400).send('Name or email are required');
   }
 
-  const newUser = userModel.createUser(name, email);
+  const newUser = userService.createUser(name, email);
 
   res.status(201).json(newUser);
 }
 
 function getAllUsers(req, res) {
-  const users = userModel.getAllUsers();
+  const users = userService.getAllUsers(req.query);
 
   res.json(users);
 }
 
-function getUserById(req, res) {
-  const user = userModel.getUserById(parseInt(req.params.id));
+function getUser(req, res) {
+  const [user] = userService.getAllUsers({ id: parseInt(req.params.id) });
 
   if (!user) {
     return res.status(404).send('User not found');
@@ -36,7 +36,7 @@ function updateUser(req, res) {
     return res.status(404).send('Name is required');
   }
 
-  const user = userModel.updateUser(parseInt(req.params.id), name);
+  const user = userService.updateUser(parseInt(req.params.id), name);
 
   if (!user) {
     return res.status(404).send('User not found');
@@ -45,7 +45,7 @@ function updateUser(req, res) {
 }
 
 function deleteUser(req, res) {
-  const success = userModel.deleteUser(parseInt(req.params.id));
+  const success = userService.deleteUser(parseInt(req.params.id));
 
   if (!success) {
     return res.status(404).send('User not found');
@@ -56,7 +56,7 @@ function deleteUser(req, res) {
 module.exports = {
   createUser,
   getAllUsers,
-  getUserById,
+  getUser,
   updateUser,
   deleteUser,
 };

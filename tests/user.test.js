@@ -2,7 +2,7 @@
 
 const supertest = require('supertest');
 const { createServer } = require('../src/createServer');
-const { resetUsers } = require('../src/models/userModel');
+const { resetUsers } = require('../src/services/userService');
 
 describe('User', () => {
   let server;

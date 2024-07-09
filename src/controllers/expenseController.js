@@ -1,8 +1,9 @@
-/* eslint-disable eqeqeq */
+/* eslint-disable no-console */
 'use strict';
 
-const expenseModel = require('../models/expenseModel');
-const userModel = require('../models/userModel');
+const { ExpenseService } = require('../services/expenseService');
+const expenseService = new ExpenseService();
+const userService = require('../services/userService');
 
 function createExpense(req, res) {
   const { userId, spentAt, title, amount, category, note } = req.body;
@@ -11,13 +12,13 @@ function createExpense(req, res) {
     return res.status(400).send('All fields are required');
   }
 
-  const user = userModel.getUserById(userId);
+  const user = userService.getAllUsers({ id: userId });
 
-  if (!user) {
+  if (user.length === 0) {
     return res.status(400).send('Bad Request');
   }
 
-  const newExpense = expenseModel.createExpense(
+  const newExpense = expenseService.createExpense(
     userId,
     spentAt,
     title,
@@ -30,13 +31,15 @@ function createExpense(req, res) {
 }
 
 function getAllExpenses(req, res) {
-  const expenses = expenseModel.getAllExpenses(req.query);
+  const expenses = expenseService.getAllExpenses(req.query);
 
   res.json(expenses);
 }
 
-function getExpenseById(req, res) {
-  const expense = expenseModel.getExpenseById(parseInt(req.params.id));
+function getExpense(req, res) {
+  const [expense] = expenseService.getAllExpenses({
+    id: parseInt(req.params.id),
+  });
 
   if (!expense) {
     return res.status(404).send('Expense not found');
@@ -45,7 +48,7 @@ function getExpenseById(req, res) {
 }
 
 function updateExpense(req, res) {
-  const expense = expenseModel.updateExpense({
+  const expense = expenseService.updateExpense({
     ...req.body,
     id: parseInt(req.params.id),
   });
@@ -57,7 +60,7 @@ function updateExpense(req, res) {
 }
 
 function deleteExpense(req, res) {
-  const success = expenseModel.deleteExpense(parseInt(req.params.id));
+  const success = expenseService.deleteExpense(parseInt(req.params.id));
 
   if (!success) {
     return res.status(404).send('Expense not found');
@@ -68,7 +71,7 @@ function deleteExpense(req, res) {
 module.exports = {
   createExpense,
   getAllExpenses,
-  getExpenseById,
+  getExpense,
   updateExpense,
   deleteExpense,
 };

@@ -1,9 +1,10 @@
+/* eslint-disable prettier/prettier */
 /* eslint-disable no-shadow */
 'use strict';
 
 const users = [];
 
-const userModel = {
+const userService = {
   createUser(name, email) {
     const newUser = { id: users.length + 1, name, email };
 
@@ -12,12 +13,20 @@ const userModel = {
     return newUser;
   },
 
-  getAllUsers() {
-    return users;
-  },
+  getAllUsers(filters = {}) {
+    const filteringTests = {
+      id: (id, user) => Number(id) === user.id,
+      name: (name, user) => name === user.name,
+      email: (email, user) => email === user.email,
+      default: () => true,
+    };
 
-  getUserById(id) {
-    return users.find((user) => user.id === id);
+    return users.filter((user) =>
+      Object.entries(filters).every(([key, value]) => {
+        const test = filteringTests[key] ?? filteringTests.default;
+
+        return test(value, user);
+      }));
   },
 
   updateUser(id, name) {
@@ -49,4 +58,4 @@ const userModel = {
   },
 };
 
-module.exports = userModel;
+module.exports = userService;

@@ -8,8 +8,8 @@ function createServer() {
   const app = express();
 
   app.use(express.json());
-  app.use(userRoutes);
-  app.use(expenseRoutes);
+  app.use('/users', userRoutes);
+  app.use('/expenses', expenseRoutes);
 
   return app;
 }

@@ -2,10 +2,11 @@
 
 const supertest = require('supertest');
 const { createServer } = require('../src/createServer');
-const { resetUsers } = require('../src/models/userModel');
-const { resetExpenses } = require('../src/models/expenseModel');
+const { resetUsers } = require('../src/services/userService');
+const { ExpenseService } = require('../src/services/expenseService');
+const expenseService = new ExpenseService();
 
-describe.only('Expense', () => {
+describe('Expense', () => {
   let server;
   let api;
 
@@ -13,7 +14,7 @@ describe.only('Expense', () => {
     server = createServer();
     api = supertest(server);
     resetUsers();
-    resetExpenses();
+    expenseService.resetExpenses();
   });
 
   describe('createExpense', () => {
