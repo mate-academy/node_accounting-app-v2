@@ -3,50 +3,36 @@ const { Expenses } = require('../model/expenses.model');
 
 const { getUserById } = require('./user.service');
 
-/**
- * @type {Expenses[]}
- */
-let expenses = [];
+const expenses = new Map();
 
 const getExpenses = (expensesURLParams) => {
-  const { userId, categories, from, to } = expensesURLParams;
+  const expensesAsArr = [...expenses.values()];
+  const queries = Object.entries(expensesURLParams);
 
-  let filteredExpenses = [...expenses];
-
-  if (userId) {
-    filteredExpenses = filteredExpenses.filter(
-      (expense) => expense.userId === Number(userId),
-    );
+  if (!expensesURLParams || queries.length === 0) {
+    return expensesAsArr;
   }
 
-  if (categories) {
-    filteredExpenses = filteredExpenses.filter(
-      (expense) => expense.category === categories,
-    );
-  }
+  const filteringFunctions = {
+    userId: (userId, expense) => Number(userId) === expense.id,
+    from: (from, expense) => new Date(expense.spentAt) >= new Date(from),
+    to: (to, expense) => new Date(expense.spentAt) <= new Date(to),
+    categories: (category, expense) => category === expense.category,
+    default: (value, expense, key) => value === expense[key],
+  };
 
-  if (from) {
-    filteredExpenses = filteredExpenses.filter(
-      (expense) => expense.spentAt >= from,
-    );
-  }
+  return expensesAsArr.filter((expense) => {
+    return queries.every(([queryKey, queryVal]) => {
+      const filteredFunc =
+        filteringFunctions[queryKey] ?? filteringFunctions.default;
 
-  if (to) {
-    filteredExpenses = filteredExpenses.filter(
-      (expense) => expense.spentAt <= to,
-    );
-  }
-
-  return filteredExpenses;
+      return filteredFunc(queryVal, expense, queryKey);
+    });
+  });
 };
 
 const createExpense = (expense) => {
-  const userId = expense.userId;
-  const title = expense.title;
-  const amount = expense.amount;
-  const category = expense.category;
-  const note = expense.note;
-  const spentAt = expense.spentAt;
+  const { userId, title, amount, category, note, spentAt } = expense;
 
   let newExpense;
 
@@ -60,9 +46,9 @@ const createExpense = (expense) => {
     return undefined;
   }
 
-  if (expenses.length !== 0) {
+  if (expenses.size !== 0) {
     newExpense = {
-      id: expenses[expenses.length - 1].id + 1,
+      id: expenses.get(expenses.size).id + 1,
       userId,
       spentAt,
       title,
@@ -72,9 +58,9 @@ const createExpense = (expense) => {
     };
   }
 
-  if (expenses.length === 0) {
+  if (expenses.size === 0) {
     newExpense = {
-      id: expenses.length + 1,
+      id: expenses.size + 1,
       userId,
       spentAt,
       title,
@@ -84,13 +70,13 @@ const createExpense = (expense) => {
     };
   }
 
-  expenses.push(newExpense);
+  expenses.set(newExpense.id, newExpense);
 
   return newExpense;
 };
 
 const getExpenseById = (id) => {
-  return expenses.find((expen) => expen.id === Number(id));
+  return expenses.get(Number(id));
 };
 
 const deleteExpenseById = (id) => {
@@ -100,7 +86,7 @@ const deleteExpenseById = (id) => {
     return null;
   }
 
-  expenses = expenses.filter((expen) => expen.id !== Number(id));
+  expenses.delete(Number(id));
 
   return findExpense;
 };
@@ -116,7 +102,11 @@ const updateExpense = (expense, id) => {
     return null;
   }
 
-  return Object.assign(findExpense, expense);
+  const updatedExpense = Object.assign(findExpense, expense);
+
+  expenses.set(id, updateExpense);
+
+  return updatedExpense;
 };
 
 module.exports = {

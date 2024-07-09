@@ -13,7 +13,7 @@ describe('Expense', () => {
     server = createServer();
     api = supertest(server);
     users.length = 0;
-    expenses.length = 0;
+    expenses.clear();
   });
 
   describe('createExpense', () => {

@@ -14,7 +14,7 @@ const getUsers = () => {
  * @param {User} user
  */
 const createUser = (user) => {
-  const name = user.name;
+  const { name } = user;
 
   if (!name) {
     return null;

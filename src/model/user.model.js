@@ -53,6 +53,10 @@ class User {
   set name(newName) {
     this._name = newName;
   }
+
+  addExpense(expense) {
+    this._expenses = [...this._expenses, expense];
+  }
 }
 
 module.exports = User;

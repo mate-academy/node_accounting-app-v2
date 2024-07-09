@@ -22,7 +22,7 @@ const createExpense = (req, res) => {
 
   if (newExpense === undefined) {
     return res.status(400).json({
-      message: 'Bad Request',
+      message: 'Bad Request, user not found',
     });
   }
 
