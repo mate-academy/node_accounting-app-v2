@@ -1,5 +1,8 @@
 class UsersService {
-  users = [];
+  constructor() {
+    this.users = [];
+    this.errors = {};
+  }
   getAll = () => this.users;
   resetAll = () => {
     this.users = [];

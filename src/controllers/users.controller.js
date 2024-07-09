@@ -2,62 +2,87 @@ const { usersService } = require('../services/users.service');
 
 class UsersController {
   getAllUsers = (req, res) => {
-    res.send(usersService.getAll());
+    try {
+      res.send(usersService.getAll());
+    } catch {
+      res.statusCode = 500;
+      res.send('Something went wrong');
+    }
   };
   createUser = (req, res) => {
-    const { name } = req.body;
+    try {
+      const { name } = req.body;
 
-    if (!name) {
-      res.sendStatus(400);
+      if (!name) {
+        res.sendStatus(400);
 
-      return;
+        return;
+      }
+
+      return res.status(201).json(usersService.create(name));
+    } catch {
+      res.statusCode = 500;
+      res.send('Something went wrong');
     }
-
-    return res.status(201).json(usersService.create(name));
   };
   getUser = (req, res) => {
-    const { id } = req.params;
-    const user = usersService.getById(id);
+    try {
+      const { id } = req.params;
+      const user = usersService.getById(id);
 
-    if (!user) {
-      res.sendStatus(404);
+      if (!user) {
+        res.sendStatus(404);
 
-      return;
+        return;
+      }
+
+      res.send(user);
+    } catch {
+      res.statusCode = 500;
+      res.send('Something went wrong');
     }
-
-    res.send(user);
   };
   updateUser = (req, res) => {
-    const { id } = req.params;
-    const { name } = req.body;
-    const user = usersService.getById(id);
+    try {
+      const { id } = req.params;
+      const { name } = req.body;
+      const user = usersService.getById(id);
 
-    if (!user) {
-      res.sendStatus(404);
+      if (!user) {
+        res.sendStatus(404);
 
-      return;
+        return;
+      }
+
+      if (!name) {
+        res.sendStatus(400);
+
+        return;
+      }
+
+      res.send(usersService.udpate(id, name));
+    } catch {
+      res.statusCode = 500;
+      res.send('Something went wrong');
     }
-
-    if (!name) {
-      res.sendStatus(400);
-
-      return;
-    }
-
-    res.send(usersService.udpate(id, name));
   };
   deleteUser = (req, res) => {
-    const { id } = req.params;
-    const user = usersService.getById(id);
+    try {
+      const { id } = req.params;
+      const user = usersService.getById(id);
 
-    if (!user) {
-      res.sendStatus(404);
+      if (!user) {
+        res.sendStatus(404);
 
-      return;
+        return;
+      }
+
+      usersService.delete(id);
+      res.sendStatus(204);
+    } catch {
+      res.statusCode = 500;
+      res.send('Something went wrong');
     }
-
-    usersService.delete(id);
-    res.sendStatus(204);
   };
 }
 

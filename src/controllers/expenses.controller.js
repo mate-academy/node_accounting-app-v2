@@ -3,57 +3,82 @@ const { usersService } = require('../services/users.service');
 
 class ExpensesController {
   getAllExpenses = (req, res) => {
-    res.send(expensesService.getAll(req.query));
+    try {
+      res.send(expensesService.getAll(req.query));
+    } catch {
+      res.statusCode = 500;
+      res.send('Something went wrong');
+    }
   };
   createExpense = (req, res) => {
-    const { userId } = req.body;
-    const user = usersService.getById(userId);
+    try {
+      const { userId } = req.body;
+      const user = usersService.getById(userId);
 
-    if (!user) {
-      res.sendStatus(400);
+      if (!user) {
+        res.sendStatus(400);
 
-      return;
+        return;
+      }
+
+      return res.status(201).json(expensesService.create(req.body));
+    } catch {
+      res.statusCode = 500;
+      res.send('Something went wrong');
     }
-
-    return res.status(201).json(expensesService.create(req.body));
   };
   getExpense = (req, res) => {
-    const { id } = req.params;
-    const expense = expensesService.getById(id);
+    try {
+      const { id } = req.params;
+      const expense = expensesService.getById(id);
 
-    if (!expense) {
-      res.sendStatus(404);
+      if (!expense) {
+        res.sendStatus(404);
 
-      return;
+        return;
+      }
+
+      res.send(expense);
+    } catch {
+      res.statusCode = 500;
+      res.send('Something went wrong');
     }
-
-    res.send(expense);
   };
   updateExpense = (req, res) => {
-    const { id } = req.params;
-    const data = req.body;
-    const expense = expensesService.getById(id);
+    try {
+      const { id } = req.params;
+      const data = req.body;
+      const expense = expensesService.getById(id);
 
-    if (!expense) {
-      res.sendStatus(404);
+      if (!expense) {
+        res.sendStatus(404);
 
-      return;
+        return;
+      }
+
+      res.send(expensesService.update(id, data));
+    } catch {
+      res.statusCode = 500;
+      res.send('Something went wrong');
     }
-
-    res.send(expensesService.update(id, data));
   };
   deleteExpense = (req, res) => {
-    const { id } = req.params;
-    const expense = expensesService.getById(id);
+    try {
+      const { id } = req.params;
+      const expense = expensesService.getById(id);
 
-    if (!expense) {
-      res.sendStatus(404);
+      if (!expense) {
+        res.sendStatus(404);
 
-      return;
+        return;
+      }
+
+      expensesService.delete(id);
+      res.sendStatus(204);
+    } catch {
+      res.statusCode = 500;
+      res.send('Something went wrong');
     }
-
-    expensesService.delete(id);
-    res.sendStatus(204);
   };
 }
 
