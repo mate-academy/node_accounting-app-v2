@@ -1,22 +1,21 @@
-/* eslint-disable function-paren-newline */
 'use strict';
 
 const express = require('express');
-const expenses = require('./services/expenses.service');
-const userRouter = require('./routes/usersRoute');
-const expensesRouter = require('./routes/expensesRoute');
-const users = require('./services/users.service');
+const { resetExpenses } = require('./services/expenses.service');
+const { usersRouter } = require('./routes/usersRoute');
+const { expensesRouter } = require('./routes/expensesRoute');
+const { resetUsers } = require('./services/users.service');
 
 function createServer() {
   const app = express();
 
-  expenses.resetDate();
-  users.resetDate();
+  resetUsers();
+  resetExpenses();
 
   app.use(express.json());
 
-  app.use('/users', userRouter.router);
-  app.use('/expenses', expensesRouter.router);
+  app.use('/users', usersRouter);
+  app.use('/expenses', expensesRouter);
 
   return app;
 }

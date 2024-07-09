@@ -1,22 +1,21 @@
-/* eslint-disable function-paren-newline */
 let expenses = [];
 
-const getAll = (query) => {
-  const { userId, categories, from, to } = query;
+const resetExpenses = () => {
+  expenses = [];
+};
 
+const getAllExpenses = ({ userId, categories, from, to }) => {
   let filteredExpenses = expenses;
 
   if (userId) {
     filteredExpenses = filteredExpenses.filter(
-      (expense) => expense.userId.toString() === userId.toString(),
+      (expense) => expense.userId === +userId,
     );
   }
 
   if (categories) {
-    const categoryList = categories.split(',');
-
-    filteredExpenses = filteredExpenses.filter((expense) =>
-      categoryList.includes(expense.category),
+    filteredExpenses = filteredExpenses.filter(
+      (expense) => expense.category === categories,
     );
   }
 
@@ -35,17 +34,9 @@ const getAll = (query) => {
   return filteredExpenses;
 };
 
-const getById = (id) => {
-  return (
-    expenses.find((expense) => expense.id.toString() === id.toString()) || null
-  );
-};
-
-const create = (query) => {
-  const { userId, spentAt, title, amount, category, note } = query;
-
+const createExpense = (userId, spentAt, title, amount, category, note) => {
   const newExpense = {
-    id: expenses.length + 1,
+    id: expenses.length,
     userId,
     spentAt,
     title,
@@ -59,27 +50,27 @@ const create = (query) => {
   return newExpense;
 };
 
-const remove = (id) => {
-  const newExpenses = expenses.filter(
-    (expense) => expense.id.toString() !== id.toString(),
-  );
-
-  expenses = newExpenses;
+const getExpenseById = (id) => {
+  return expenses.find((expense) => expense.id === +id);
 };
 
-const update = (expenseById, req) => {
-  Object.assign(expenseById, req.body);
+const updateExpense = (id, data) => {
+  const expense = getExpenseById(id);
+
+  Object.assign(expense, data);
+
+  return expense;
 };
 
-const resetDate = () => {
-  expenses = [];
+const deleteExpense = (id) => {
+  expenses = expenses.filter((user) => user.id !== +id);
 };
 
 module.exports = {
-  getAll,
-  getById,
-  create,
-  remove,
-  update,
-  resetDate,
+  resetExpenses,
+  getAllExpenses,
+  createExpense,
+  getExpenseById,
+  updateExpense,
+  deleteExpense,
 };

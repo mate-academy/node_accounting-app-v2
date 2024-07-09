@@ -1,77 +1,86 @@
-const {
-  getAll,
-  getById,
-  create,
-  remove,
-  update,
-} = require('./services/expenses.service');
+const expensesService = require('../services/expenses.service');
+const { getUserById } = require('../services/users.service');
 
 const getAllExpenses = (req, res) => {
-  res.send(getAll(req.query));
-};
+  const expenses = expensesService.getAllExpenses(req.query);
 
-const getByIdExpense = (req, res) => {
-  const { id } = req.params;
-
-  const expenseById = getById(id);
-
-  if (!expenseById) {
-    res.sendStatus(404);
-
-    return;
-  }
-
-  res.send(expenseById);
+  res.send(expenses);
 };
 
 const createExpense = (req, res) => {
-  const { userId } = req.body;
+  const { userId, spentAt, title, amount, category, note } = req.body;
 
-  if (!getById(userId)) {
+  const user = getUserById(userId);
+
+  if (!user) {
     res.sendStatus(400);
 
     return;
   }
 
-  res.statusCode = 201;
+  const newExpense = expensesService.createExpense(
+    userId,
+    spentAt,
+    title,
+    amount,
+    category,
+    note,
+  );
 
-  res.send(create(req.body));
+  res.status(201).send(newExpense);
 };
 
-const removeExpense = (req, res) => {
+const getExpense = (req, res) => {
   const { id } = req.params;
 
-  if (!getById(id)) {
+  const expense = expensesService.getExpenseById(id);
+
+  if (!expense) {
     res.sendStatus(404);
 
     return;
   }
 
-  remove(id);
-
-  res.sendStatus(204);
+  res.send(expense);
 };
 
 const updateExpense = (req, res) => {
   const { id } = req.params;
+  const data = req.body;
 
-  const expenseById = getById(id);
+  const expense = expensesService.getExpenseById(id);
 
-  if (!expenseById) {
+  if (!expense) {
     res.sendStatus(404);
 
     return;
   }
 
-  update(expenseById, req);
+  const updatedExpense = expensesService.updateExpense(id, data);
 
-  res.send(expenseById);
+  res.send(updatedExpense);
+};
+
+const deleteExpense = (req, res) => {
+  const { id } = req.params;
+
+  const expense = expensesService.getExpenseById(id);
+
+  if (!expense) {
+    res.sendStatus(404);
+
+    return;
+  }
+
+  expensesService.deleteExpense(id);
+
+  res.sendStatus(204);
 };
 
 module.exports = {
   getAllExpenses,
-  getByIdExpense,
   createExpense,
-  removeExpense,
+  getExpense,
   updateExpense,
+  deleteExpense,
 };

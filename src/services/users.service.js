@@ -1,43 +1,40 @@
 let users = [];
 
-const getAll = () => {
-  return users;
+const resetUsers = () => {
+  users = [];
 };
 
-const getById = (id) => {
-  return users.find((user) => user.id.toString() === id.toString()) || null;
+const getAllUsers = () => users;
+
+const getUserById = (id) => {
+  return users.find((user) => user.id === +id);
 };
 
-const create = (name) => {
-  const newUser = {
-    id: users.length + 1,
-    name,
-  };
+const createUser = (name) => {
+  const newUser = { id: users.length, name };
 
   users.push(newUser);
 
   return newUser;
 };
 
-const remove = (id) => {
-  const newUsers = users.filter((user) => user.id.toString() !== id.toString());
+const updateUser = (id, name) => {
+  const user = getUserById(id);
 
-  users = newUsers;
+  Object.assign(user, { name });
+
+  return user;
 };
 
-const update = (userById, name) => {
-  Object.assign(userById, { name });
-};
-
-const resetDate = () => {
-  users = [];
+const deleteUser = (id) => {
+  users = users.filter((user) => user.id !== +id);
 };
 
 module.exports = {
-  getAll,
-  getById,
-  create,
-  remove,
-  update,
-  resetDate,
+  resetUsers,
+  getAllUsers,
+  getUserById,
+  createUser,
+  updateUser,
+  deleteUser,
 };
