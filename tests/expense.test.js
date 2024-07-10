@@ -2,8 +2,8 @@
 
 const supertest = require('supertest');
 const { createServer } = require('../src/createServer');
-const { resetMockUsers } = require('../src/routes/usersRouter');
-const { resetMockExpenses } = require('../src/routes/expensesRouter');
+const { resetMockUsers } = require('../src/services/userServices.js');
+const { resetMockExpenses } = require('../src/services/expenseServices.js');
 
 describe('Expense', () => {
   let server;
