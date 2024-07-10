@@ -1,5 +1,4 @@
 let users = [];
-// let users = [{ id: 1, name: 'sasha' }];
 
 const resetUsers = () => {
   users = [];

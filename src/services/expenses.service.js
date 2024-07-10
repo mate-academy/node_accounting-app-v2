@@ -1,4 +1,5 @@
 let expenses = [];
+let errors = {};
 
 const resetExpenses = () => {
   expenses = [];
@@ -66,6 +67,62 @@ const updateData = (id, data) => {
   return expense;
 };
 
+const checkData = (data, name) => {
+  const requiredMessage = `"${name}" is required`;
+
+  switch (name) {
+    case 'userId': {
+      if (!data) {
+        errors[name] = requiredMessage;
+      } else if (typeof +data !== 'number') {
+        errors[name] = `"${name}" must be a number`;
+      }
+      break;
+    }
+
+    case 'spentAt': {
+      if (!data) {
+        errors[name] = requiredMessage;
+      } else if (isNaN(Date.parse(data))) {
+        errors[name] = `"${name}" is not a string date`;
+      }
+      break;
+    }
+
+    case 'amount': {
+      if (!data) {
+        errors[name] = requiredMessage;
+      } else if (typeof data !== 'number' || data < 0) {
+        errors[name] = `"${name}" must be a positive number`;
+      }
+      break;
+    }
+
+    default: {
+      if (!data) {
+        errors[name] = requiredMessage;
+      } else if (typeof data !== 'string' || !data.trim()) {
+        errors[name] = `"${name}" must be a non-empty string`;
+      }
+    }
+  }
+};
+
+const validate = ({ userId, spentAt, title, amount, category, note }) => {
+  errors = {};
+
+  [
+    { data: userId, name: 'userId' },
+    { data: spentAt, name: 'spentAt' },
+    { data: amount, name: 'amount' },
+    { data: title, name: 'title' },
+    { data: category, name: 'category' },
+    { data: note, name: 'note' },
+  ].forEach(({ data, name }) => checkData(data, name));
+};
+
+const getErrors = () => errors;
+
 module.exports = {
   resetExpenses,
   getAllExpenses,
@@ -73,4 +130,7 @@ module.exports = {
   remove,
   updateData,
   createExpense,
+  checkData,
+  validate,
+  getErrors,
 };
