@@ -1,31 +1,95 @@
-const User = require('./User');
-const { mockUsers } = require('./data');
+const userServices = require('../services/userServices.js');
 
-const getUsers = () => [...mockUsers.values()];
+const listAllUsers = (req, res) => {
+  try {
+    const users = userServices.getAll();
 
-const getUserById = (id) => mockUsers.get(id);
-
-const addUser = (name) => {
-  const maxId = Math.max(...mockUsers.keys(), 0);
-  const newId = maxId + 1;
-  const newUser = new User(newId, name);
-
-  mockUsers.set(newId, newUser);
-
-  return newUser;
+    res.status(200).send(users);
+  } catch (error) {
+    res.status(500).send('Internal Server Error');
+  }
 };
 
-const deleteUserById = (id) => {
-  const deletedUser = mockUsers.get(id);
+const getUser = (req, res) => {
+  const { id } = req.params;
 
-  mockUsers.delete(id);
+  try {
+    const user = userServices.getUserById(id);
 
-  return deletedUser;
+    if (!user) {
+      return res.sendStatus(404);
+    }
+    res.status(200).send(user);
+  } catch (error) {
+    res.sendStatus(500);
+  }
+};
+
+const createUser = (req, res) => {
+  const { name } = req.body;
+
+  if (!name) {
+    return res.status(400).send('Name is required!');
+  }
+
+  try {
+    const newUser = userServices.createUser(name);
+
+    res.status(201).json(newUser);
+  } catch (error) {
+    res.status(500).send('Internal Server Error');
+  }
+};
+
+const deleteUser = (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const userToRemove = userServices.deleteUserById(Number(id));
+
+    if (!userToRemove) {
+      return res.sendStatus(404);
+    }
+    res.sendStatus(204);
+  } catch (error) {
+    res.status(500).send('Internal Server Error');
+  }
+};
+
+const updateUser = (req, res) => {
+  const { id } = req.params;
+  const { name, spentAt, title, amount, category, note } = req.body;
+
+  if (!id || !name) {
+    return res.sendStatus(400);
+  }
+
+  try {
+    const userToUpdate = userServices.updateUserById({
+      id: Number(id),
+      name,
+      spentAt,
+      title,
+      amount,
+      category,
+      note,
+    });
+
+    if (!userToUpdate) {
+      return res.sendStatus(404);
+    }
+
+    res.setHeader('Content-Type', 'application/json');
+    res.status(200).send(userToUpdate);
+  } catch (error) {
+    res.sendStatus(500);
+  }
 };
 
 module.exports = {
-  getUsers,
-  getUserById,
-  addUser,
-  deleteUserById,
+  listAllUsers,
+  getUser,
+  createUser,
+  deleteUser,
+  updateUser,
 };

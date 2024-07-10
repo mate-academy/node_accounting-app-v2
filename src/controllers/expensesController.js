@@ -1,40 +1,90 @@
-const Expense = require('./Expense');
-const { mockExpenses } = require('./data');
+/* eslint-disable no-console */
+const expenseServices = require('../services/expenseServices.js');
+const userServices = require('../services/userServices.js');
 
-const getExpenses = () => [...mockExpenses.values()];
+const listAllExpenses = (req, res) => {
+  try {
+    const filteredExpenses = expenseServices.getAllExpenses(req.query);
 
-const getExpenseById = (id) => mockExpenses.get(id);
-
-const addExpense = (userId, spentAt, title, amount, category, note) => {
-  const maxId = Math.max(...mockExpenses.keys(), 0);
-  const newId = maxId + 1;
-
-  const newExpense = new Expense(
-    newId,
-    userId,
-    spentAt,
-    title,
-    amount,
-    category,
-    note,
-  );
-
-  mockExpenses.set(newId, newExpense);
-
-  return newExpense;
+    res.status(200).send(filteredExpenses);
+  } catch {
+    res.status(500).send('Internal Server Error');
+  }
 };
 
-const deleteExpenseById = (id) => {
-  const deletedExpense = mockExpenses.get(id);
+const getExpenseById = (req, res) => {
+  const { id } = req.params;
 
-  mockExpenses.delete(id);
+  if (!id || isNaN(Number(id))) {
+    return res.sendStatus(404);
+  }
 
-  return deletedExpense;
+  try {
+    const expense = expenseServices.getExpenseById(Number(id));
+
+    res.status(expense ? 200 : 404).json(expense);
+  } catch {
+    res.sendStatus(500);
+  }
+};
+
+const createExpense = (req, res) => {
+  const { userId } = req.body;
+
+  const user = userServices.getUserById(userId);
+
+  if (!user) {
+    return res.sendStatus(400);
+  }
+
+  try {
+    const newExpense = expenseServices.createExpense(req.body);
+
+    res.status(201).send(newExpense);
+  } catch {
+    res.status(500).send('Internal Server Error');
+  }
+};
+
+const deleteExpense = (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const expenseToRemove = expenseServices.deleteExpenseById(Number(id));
+
+    if (!expenseToRemove) {
+      return res.sendStatus(404);
+    }
+
+    res.status(204).send();
+  } catch {
+    res.status(500).send('Internal Server Error');
+  }
+};
+
+const updateExpenseById = (req, res) => {
+  const { id } = req.params;
+
+  if (!id) {
+    return res.sendStatus(404);
+  }
+
+  try {
+    const expenseToUpdate = expenseServices.updateExpenseById({
+      ...req.body,
+      id: Number(id),
+    });
+
+    res.status(expenseToUpdate ? 200 : 404).send(expenseToUpdate);
+  } catch {
+    res.sendStatus(500);
+  }
 };
 
 module.exports = {
-  getExpenses,
+  listAllExpenses,
   getExpenseById,
-  addExpense,
-  deleteExpenseById,
+  createExpense,
+  deleteExpense,
+  updateExpenseById,
 };
