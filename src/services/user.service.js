@@ -47,12 +47,3 @@ module.exports = {
   remove,
   change,
 };
-
-module.exports = {
-  start,
-  getAll,
-  getById,
-  create,
-  remove,
-  change,
-};
