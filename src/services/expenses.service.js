@@ -116,26 +116,26 @@ class ExpensesService extends AbstractService {
       spentAt = new Date(spentAt);
     }
 
-    const data = {};
+    let data = {};
 
     if (spentAt) {
-      Object.assign(data, { spentAt });
+      data = Object.assign(data, { spentAt });
     }
 
     if (title) {
-      Object.assign(data, { title });
+      data = Object.assign(data, { title });
     }
 
     if (amount) {
-      Object.assign(data, { amount });
+      data = Object.assign(data, { amount });
     }
 
     if (category) {
-      Object.assign(data, { category });
+      data = Object.assign(data, { category });
     }
 
     if (note) {
-      Object.assign(data, { note });
+      data = Object.assign(data, { note });
     }
 
     return {
