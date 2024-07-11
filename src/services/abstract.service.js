@@ -3,6 +3,10 @@ class AbstractService {
     this.collection = [];
   }
 
+  clearCollection() {
+    this.collection = [];
+  }
+
   getAll() {
     return this.collection;
   }

@@ -1,4 +1,5 @@
 const AbstractService = require('./abstract.service');
+const UserService = require('./users.service');
 
 class ExpensesService extends AbstractService {
   constructor(userService) {
@@ -144,4 +145,4 @@ class ExpensesService extends AbstractService {
   }
 }
 
-module.exports = ExpensesService;
+module.exports = new ExpensesService(UserService);

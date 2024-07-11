@@ -3,7 +3,7 @@ const { UserService } = require('./../services');
 const { UsersController } = require('./../controllers');
 
 const usersRouter = express.Router();
-const controller = new UsersController(new UserService());
+const controller = new UsersController(UserService);
 
 usersRouter.get('/', controller.getAll.bind(controller));
 usersRouter.post('/', controller.create.bind(controller));

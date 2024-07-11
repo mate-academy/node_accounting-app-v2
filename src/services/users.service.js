@@ -1,15 +1,6 @@
 const AbstractService = require('./abstract.service');
 
 class UserService extends AbstractService {
-  constructor() {
-    if (!UserService.instance) {
-      super();
-      UserService.instance = this;
-    }
-
-    return UserService.instance;
-  }
-
   parseCreateData(body) {
     const errors = [];
     const { name } = body;
@@ -33,4 +24,4 @@ class UserService extends AbstractService {
   }
 }
 
-module.exports = UserService;
+module.exports = new UserService();

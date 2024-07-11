@@ -1,11 +1,9 @@
 const express = require('express');
-const { UserService, ExpensesService } = require('./../services');
+const { ExpensesService } = require('./../services');
 const { ExpensesController } = require('./../controllers');
 
 const expensesRouter = express.Router();
-const controller = new ExpensesController(
-  new ExpensesService(new UserService()),
-);
+const controller = new ExpensesController(ExpensesService);
 
 expensesRouter.get('/', controller.getAll.bind(controller));
 expensesRouter.post('/', controller.create.bind(controller));
