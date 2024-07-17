@@ -1,13 +1,25 @@
 /* eslint-disable function-paren-newline */
 'use strict';
 
-const { generateId } = require('../helper/generateId');
-const { getUserById } = require('./users.service');
+const {
+  isValidUserId,
+  isValidDate,
+  isNonEmptyString,
+  isValidNumber,
+  isValidNote,
+  isValidDateOrUndefined,
+  isNonEmptyStringOrUndefined,
+  isNumberOrUndefined,
+} = require('../validators/expenseValidators');
 
-let expenses = [];
+const { generateId } = require('../helper/generateId');
+
+const expensesWrapper = {
+  expenses: [],
+};
 
 const getExpenses = ({ userId, categories, from, to }) => {
-  let filteredExpenses = [...expenses];
+  let filteredExpenses = [...expensesWrapper.expenses];
 
   if (userId) {
     filteredExpenses = filteredExpenses.filter(
@@ -39,16 +51,16 @@ const getExpenses = ({ userId, categories, from, to }) => {
 const getExpenseById = (id) => {
   const expenseId = +id;
 
-  return expenses.find((expense) => expense.id === expenseId);
+  return expensesWrapper.expenses.find((expense) => expense.id === expenseId);
 };
 
 const createExpense = (items) => {
   const newExpense = {
-    id: generateId(expenses),
+    id: generateId(expensesWrapper.expenses),
     ...items,
   };
 
-  expenses.push(newExpense);
+  expensesWrapper.expenses.push(newExpense);
 
   return newExpense;
 };
@@ -56,7 +68,9 @@ const createExpense = (items) => {
 const deleteExpense = (id) => {
   const expenseId = +id;
 
-  expenses = expenses.filter((expense) => expense.id !== expenseId);
+  expensesWrapper.expenses = expensesWrapper.expenses.filter(
+    (expense) => expense.id !== expenseId,
+  );
 };
 
 const updateExpense = (id, items) => {
@@ -75,15 +89,12 @@ const validateCreation = (items) => {
   const { userId, spentAt, title, amount, category, note } = items;
 
   const arePropsValid =
-    typeof userId === 'number' &&
-    getUserById(userId) &&
-    !isNaN(new Date(spentAt)) &&
-    typeof title === 'string' &&
-    title &&
-    typeof amount === 'number' &&
-    typeof category === 'string' &&
-    category &&
-    (typeof note === 'string' || typeof note === 'undefined');
+    isValidUserId(userId) &&
+    isValidDate(spentAt) &&
+    isNonEmptyString(title) &&
+    isValidNumber(amount) &&
+    isNonEmptyString(category) &&
+    isValidNote(note);
 
   const validatedProps = {
     userId,
@@ -101,12 +112,11 @@ const validateUpdate = (items) => {
   const { spentAt, title, amount, category, note } = items;
 
   const arePropsValid =
-    (!isNaN(new Date(spentAt)) || typeof spentAt === 'undefined') &&
-    ((typeof title === 'string' && title) || typeof title === 'undefined') &&
-    (typeof amount === 'number' || typeof amount === 'undefined') &&
-    ((typeof category === 'string' && category) ||
-      typeof category === 'undefined') &&
-    (typeof note === 'string' || typeof note === 'undefined');
+    isValidDateOrUndefined(spentAt) &&
+    isNonEmptyStringOrUndefined(title) &&
+    isNumberOrUndefined(amount) &&
+    isNonEmptyStringOrUndefined(category) &&
+    isNonEmptyStringOrUndefined(note);
 
   const validatedItems = {
     spentAt,
@@ -126,7 +136,7 @@ const validateUpdate = (items) => {
 };
 
 const clearExpenses = () => {
-  expenses = [];
+  expensesWrapper.expenses = [];
 };
 
 module.exports = {

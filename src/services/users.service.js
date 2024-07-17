@@ -2,7 +2,7 @@
 
 const { generateId } = require('../helper/generateId');
 
-let users = [];
+const users = []; // Use const instead of let
 
 const getAllUsers = () => {
   return users;
@@ -35,12 +35,15 @@ const updateUser = (id, name) => {
 
 const deleteUser = (id) => {
   const userId = +id;
+  const index = users.findIndex((user) => user.id === userId);
 
-  users = users.filter((user) => user.id !== userId);
+  if (index !== -1) {
+    users.splice(index, 1);
+  }
 };
 
 const clearUsers = () => {
-  users = [];
+  users.splice(0, users.length);
 };
 
 module.exports = {
