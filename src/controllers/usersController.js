@@ -1,7 +1,7 @@
 'use strict';
 
 const usersService = require('../services/usersService');
-const codeStatus = require('../codeStatuses');
+const codeStatus = require('../constants/codeStatuses');
 
 const get = (_, res) => {
   res.statusCode = codeStatus.SUCCESS;

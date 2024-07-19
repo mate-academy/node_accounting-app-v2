@@ -3,7 +3,7 @@
 const expensesService = require('../services/expensesService');
 const usersService = require('../services/usersService');
 
-const codeStatus = require('../codeStatuses');
+const codeStatus = require('../constants/codeStatuses');
 
 const getAll = (req, res) => {
   const { userId, categories, from, to } = req.query;
@@ -45,7 +45,7 @@ const create = (req, res) => {
 
   const newExpense = expensesService.create(data);
 
-  res.status(201).send(newExpense);
+  res.status(codeStatus.CREATED).send(newExpense);
 };
 
 const remove = (req, res) => {

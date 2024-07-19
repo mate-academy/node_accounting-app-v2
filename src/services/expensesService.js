@@ -6,6 +6,10 @@ const init = () => {
   expenses.length = 0;
 };
 
+const generateId = () => {
+  return expenses.length + 1;
+};
+
 const getAll = (params) => {
   let filteredExpenses = expenses;
 
@@ -43,7 +47,7 @@ const getById = (id) => {
 
 const create = (data) => {
   const newExpense = {
-    id: expenses.length + 1,
+    id: generateId(),
     ...data,
   };
 

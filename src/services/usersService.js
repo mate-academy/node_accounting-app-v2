@@ -6,19 +6,21 @@ const init = () => {
   users.length = 0;
 };
 
+const generateId = () => {
+  return users.length + 1;
+};
+
 const getAll = () => {
   return users;
 };
 
 const getUserById = (id) => {
-  const choosedUser = users.find((user) => user.id === +id);
-
-  return choosedUser;
+  return users.find((user) => user.id === +id);
 };
 
 const create = (name) => {
   const newUser = {
-    id: users.length + 1,
+    id: generateId(),
     name,
   };
 
@@ -28,7 +30,15 @@ const create = (name) => {
 };
 
 const update = ({ id, name }) => {
-  return Object.assign(getUserById(id), { name });
+  const userToUpdate = getUserById(id);
+
+  if (userToUpdate) {
+    userToUpdate.name = name;
+
+    return userToUpdate;
+  }
+
+  return null;
 };
 
 const remove = (id) => {
