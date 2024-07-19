@@ -7,62 +7,78 @@ function getUsers(req, res) {
 }
 
 function getUser(req, res) {
-  const id = req.params.id;
-  const response = usersService.getOne(id);
+  try {
+    const id = req.params.id;
+    const response = usersService.getOne(id);
 
-  if (response) {
-    res.send(response);
+    if (response) {
+      res.send(response);
 
-    return;
+      return;
+    }
+
+    res.sendStatus(404);
+  } catch (error) {
+    res.sendStatus(500);
   }
-
-  res.sendStatus(404);
 }
 
 function createUser(req, res) {
-  const name = req.body.name;
+  try {
+    const name = req.body.name;
 
-  if (!name) {
-    res.sendStatus(400);
+    if (!name) {
+      res.sendStatus(400);
 
-    return;
+      return;
+    }
+
+    lastId++;
+
+    const user = {
+      id: lastId,
+      name,
+    };
+
+    usersService.addUser(user);
+
+    res.statusCode = 201;
+    res.send(user);
+  } catch (error) {
+    res.sendStatus(500);
   }
-
-  lastId++;
-
-  const user = {
-    id: lastId,
-    name,
-  };
-
-  usersService.addUser(user);
-
-  res.statusCode = 201;
-  res.send(user);
 }
 
 function deleteUser(req, res) {
-  const id = req.params.id;
+  try {
+    const id = req.params.id;
 
-  const deletedUser = usersService.getOne(id);
+    const deletedUser = usersService.getOne(id);
 
-  if (deletedUser) {
-    usersService.deleteUser(deletedUser.id);
-    res.sendStatus(204);
-  } else {
-    res.sendStatus(404);
+    if (deletedUser) {
+      usersService.deleteUser(deletedUser.id);
+      res.sendStatus(204);
+    } else {
+      res.sendStatus(404);
+    }
+  } catch (error) {
+    res.sendStatus(500);
   }
 }
 
 function updateUser(req, res) {
-  const id = req.params.id;
-  const data = req.body;
+  try {
+    const id = req.params.id;
+    const data = req.body;
 
-  const userToUpdate = usersService.getOne(id);
-  const index = usersService.getIndexOf(userToUpdate);
-  const newUser = { ...userToUpdate, ...data };
+    const userToUpdate = usersService.getOne(id);
+    const index = usersService.getIndexOf(userToUpdate);
+    const newUser = { ...userToUpdate, ...data };
 
-  res.send(usersService.updateUser(index, newUser));
+    res.send(usersService.updateUser(index, newUser));
+  } catch (error) {
+    res.sendStatus(500);
+  }
 }
 
 module.exports = {

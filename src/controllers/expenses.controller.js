@@ -1,5 +1,5 @@
 const expensesService = require('../services/expenses.service');
-const usersService = require('../services/users.service');
+const isValidExpense = require('../isValidExpense');
 
 let lastId = 0;
 
@@ -15,79 +15,87 @@ function getExpenses(req, res) {
 }
 
 function getExpense(req, res) {
-  const id = req.params.id;
-  const response = expensesService.getOne(id);
+  try {
+    const id = req.params.id;
+    const response = expensesService.getOne(id);
 
-  if (response) {
-    res.send(response);
+    if (response) {
+      res.send(response);
 
-    return;
+      return;
+    }
+
+    res.sendStatus(404);
+  } catch (error) {
+    res.sendStatus(500);
   }
-
-  res.sendStatus(404);
 }
 
 function createExpense(req, res) {
-  const { userId, spentAt, title, amount, category, note } = req.body;
+  try {
+    const { userId, spentAt, title, amount, category, note } = req.body;
 
-  if (
-    !userId ||
-    !spentAt ||
-    !title ||
-    !amount ||
-    !category ||
-    !note ||
-    usersService.filterUsersById(userId).length === 0
-  ) {
-    res.sendStatus(400);
+    if (!isValidExpense.isValid(req.body)) {
+      res.sendStatus(400);
 
-    return;
+      return;
+    }
+
+    lastId++;
+
+    const expense = {
+      id: lastId,
+      userId,
+      spentAt,
+      title,
+      amount,
+      category,
+      note,
+    };
+
+    res.statusCode = 201;
+    res.send(expensesService.create(expense));
+  } catch (error) {
+    res.sendStatus(500);
   }
-
-  lastId++;
-
-  const expense = {
-    id: lastId,
-    userId,
-    spentAt,
-    title,
-    amount,
-    category,
-    note,
-  };
-
-  res.statusCode = 201;
-  res.send(expensesService.create(expense));
 }
 
 function deleteExpense(req, res) {
-  const id = req.params.id;
+  try {
+    const id = req.params.id;
 
-  const deletedExpense = expensesService.getOne(id);
+    const deletedExpense = expensesService.getOne(id);
 
-  if (deletedExpense) {
-    expensesService.deleteOne(deletedExpense.id);
-    res.sendStatus(204);
-  } else {
-    res.sendStatus(404);
+    if (deletedExpense) {
+      expensesService.deleteOne(deletedExpense.id);
+      res.sendStatus(204);
+    } else {
+      res.sendStatus(404);
+    }
+  } catch (error) {
+    res.sendStatus(500);
   }
 }
 
 function updateExpense(req, res) {
-  const id = req.params.id;
-  const data = req.body;
+  try {
+    const id = req.params.id;
+    const data = req.body;
 
-  if (expensesService.filterExpensesById(id).length === 0) {
-    res.sendStatus(404);
+    if (expensesService.filterExpensesById(id).length === 0) {
+      res.sendStatus(404);
 
-    return;
+      return;
+    }
+
+    const expenseToUpdate = expensesService.getOne(id);
+    const index = expensesService.getIndexOf(expenseToUpdate);
+    const newExpense = { ...expenseToUpdate, ...data };
+
+    res.send(expensesService.update(index, newExpense));
+  } catch (error) {
+    res.sendStatus(500);
   }
-
-  const expenseToUpdate = expensesService.getOne(id);
-  const index = expensesService.getIndexOf(expenseToUpdate);
-  const newExpense = { ...expenseToUpdate, ...data };
-
-  res.send(expensesService.update(index, newExpense));
 }
 
 module.exports = {
