@@ -7,7 +7,7 @@ function getExpenses(req, res) {
   const searchParams = new URLSearchParams(req.url.split('?')[1]);
 
   const userId = searchParams.get('userId');
-  const category = searchParams.get('category');
+  const category = searchParams.get('categories');
   const from = searchParams.get('from');
   const to = searchParams.get('to');
 

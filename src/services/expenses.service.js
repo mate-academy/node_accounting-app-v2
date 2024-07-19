@@ -45,6 +45,10 @@ function deleteOne(id) {
   expenses = expenses.filter((item) => item.id !== id);
 }
 
+function deleteAll() {
+  expenses = [];
+}
+
 module.exports = {
   getAll,
   getSortedExpenses,
@@ -54,4 +58,5 @@ module.exports = {
   getIndexOf,
   update,
   deleteOne,
+  deleteAll,
 };

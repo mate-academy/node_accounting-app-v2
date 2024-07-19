@@ -1,5 +1,9 @@
 let users = [];
 
+function deleteAll() {
+  users = [];
+}
+
 function getAll() {
   return users.sort((a, b) => a.id - b.id);
 }
@@ -38,4 +42,5 @@ module.exports = {
   getIndexOf,
   updateUser,
   filterUsersById,
+  deleteAll,
 };
