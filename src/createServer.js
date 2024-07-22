@@ -2,7 +2,7 @@
 
 const express = require('express');
 const { resetUsers } = require('./services/user.service');
-const { resetExpenses } = require('./services/expenses.sevice');
+const { resetExpenses } = require('./services/expenses.service');
 const { expensesRouter } = require('./router/expense.router');
 const { usersRouter } = require('./router/user.router');
 
