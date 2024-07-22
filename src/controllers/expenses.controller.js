@@ -1,4 +1,4 @@
-const expensesService = require('../services/expenses.sevice.js');
+const expensesService = require('../services/expenses.service.js');
 const { getUserById } = require('../services/user.service');
 
 const getAllExpenses = (req, res) => {
