@@ -1,11 +1,12 @@
 const { Router } = require('express');
 const { expensesController } = require('./expenses.controller');
+const { validateExpense } = require('../../middlewares/validateExpense');
 
 const expensesRouter = Router();
 
 expensesRouter.get('/', expensesController.getAll);
 
-expensesRouter.post('/', expensesController.create);
+expensesRouter.post('/', validateExpense, expensesController.create);
 
 expensesRouter.get('/:id', expensesController.getById);
 

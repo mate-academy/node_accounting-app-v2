@@ -1,5 +1,4 @@
 const { expensesService } = require('../../services/expenses/expenses.service');
-const { usersService } = require('../../services/users/users.service');
 const { filterExpensesWithQuery } = require('../../services/helperService');
 const getAll = (req, res) => {
   res.send(filterExpensesWithQuery(req.query));
@@ -7,13 +6,6 @@ const getAll = (req, res) => {
 
 const create = (req, res) => {
   const { userId, spentAt, title, amount, category, note } = req.body;
-  const user = usersService.getById(userId ?? 0);
-
-  if (!userId || !spentAt || !title || !amount || !category || !user) {
-    res.sendStatus(400);
-
-    return;
-  }
 
   const expense = expensesService.create({
     userId,
