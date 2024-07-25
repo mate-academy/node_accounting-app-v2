@@ -5,18 +5,22 @@ const getAll = (req, res) => {
 };
 
 const create = (req, res) => {
-  const { userId, spentAt, title, amount, category, note } = req.body;
+  try {
+    const { userId, spentAt, title, amount, category, note } = req.body;
 
-  const expense = expensesService.create({
-    userId,
-    spentAt,
-    title,
-    amount,
-    category,
-    note,
-  });
+    const expense = expensesService.create({
+      userId,
+      spentAt,
+      title,
+      amount,
+      category,
+      note,
+    });
 
-  res.status(201).send(expense);
+    res.status(201).send(expense);
+  } catch (error) {
+    res.status(500).send('Please try later.');
+  }
 };
 
 const getById = (req, res) => {
