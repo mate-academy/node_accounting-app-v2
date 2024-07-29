@@ -55,9 +55,9 @@ const create = (req, res) => {
 };
 
 const update = (req, res) => {
-  try {
-    const { id } = req.params;
+  const { id } = req.params;
 
+  try {
     const expense = expenseService.getOne(id);
 
     if (!expense) {

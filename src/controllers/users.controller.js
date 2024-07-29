@@ -12,8 +12,9 @@ const getAll = (req, res) => {
 };
 
 const getOne = (req, res) => {
+  const { id } = req.params;
+
   try {
-    const { id } = req.params;
     const user = userService.getOne(id);
 
     if (!user) {
@@ -22,7 +23,6 @@ const getOne = (req, res) => {
       return;
     }
 
-    // res.statusCode = 200;
     res.send(user);
   } catch {
     res.statusCode = 500;
@@ -31,13 +31,13 @@ const getOne = (req, res) => {
 };
 
 const create = (req, res) => {
+  if (!req.body.name) {
+    res.sendStatus(400);
+
+    return;
+  }
+
   try {
-    if (!req.body.name) {
-      res.sendStatus(400);
-
-      return;
-    }
-
     const user = userService.create(req.body);
 
     res.statusCode = 201;
@@ -49,20 +49,13 @@ const create = (req, res) => {
 };
 
 const update = (req, res) => {
-  try {
-    const { id } = req.params;
-    const { name } = req.body;
+  const { id } = req.params;
 
+  try {
     const user = userService.getOne(id);
 
     if (!user) {
       res.sendStatus(404);
-
-      return;
-    }
-
-    if (typeof name !== 'string') {
-      res.sendStatus(400);
 
       return;
     }
@@ -77,9 +70,9 @@ const update = (req, res) => {
 };
 
 const remove = (req, res) => {
-  try {
-    const { id } = req.params;
+  const { id } = req.params;
 
+  try {
     const user = userService.getOne(id);
 
     if (!user) {
