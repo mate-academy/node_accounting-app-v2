@@ -12,9 +12,8 @@ const getAll = (req, res) => {
 };
 
 const getOne = (req, res) => {
-  const { id } = req.params;
-
   try {
+    const { id } = req.params;
     const user = userService.getOne(id);
 
     if (!user) {
