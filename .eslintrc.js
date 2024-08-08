@@ -1,10 +1,7 @@
 module.exports = {
   extends: '@mate-academy/eslint-config',
   env: {
-    mocha: true,
-  },
-  globals: {
-    expect: 'readonly',
+    jest: true
   },
   rules: {
     'no-proto': 0
