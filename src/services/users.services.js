@@ -1,5 +1,7 @@
 'use strict';
 
+const { generateId } = require('../helpers/helpers.js');
+
 /**
  *@typedef {Object} User
  *@property {number} id
@@ -9,10 +11,10 @@
 let users = [];
 
 const getAll = () => {
-  return users;
+  return users.length !== 0 ? users : [];
 };
 
-const getById = (id) => {
+const getUserById = (id) => {
   return users.find((user) => user.id === id) || null;
 };
 
@@ -27,10 +29,8 @@ const removeById = (id) => {
 };
 
 const createUser = (name) => {
-  const createdId = new Date();
-
   const newUser = {
-    id: createdId.getTime(),
+    id: generateId(),
     name,
   };
 
@@ -47,6 +47,10 @@ const updateById = (id, name) => {
   return result;
 };
 
+const resetUsers = () => {
+  users = [];
+};
+
 module.exports = {
-  getAll, getById, removeById, createUser, updateById,
+  getAll, getUserById, removeById, createUser, updateById, resetUsers,
 };

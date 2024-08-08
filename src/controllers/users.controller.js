@@ -24,7 +24,7 @@ const createUser = (req, res) => {
 const getOne = (req, res) => {
   const { id } = req.params;
 
-  const currentUser = usersService.getById(+id);
+  const currentUser = usersService.getUserById(+id);
 
   if (!currentUser) {
     res.status(404).send({ message: 'Not found' });
