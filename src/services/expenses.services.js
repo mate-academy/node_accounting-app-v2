@@ -51,9 +51,9 @@ const getAllExpenses = ({ userId, from, to, categories }) => {
     conditions.push((expense) => categoryList.includes(expense.category));
   }
 
-  filteredExpenses = filteredExpenses.filter((expense) =>
-    conditions.every((condition) => condition(expense)),
-  );
+  filteredExpenses = filteredExpenses.filter((expense) => {
+    return conditions.every((condition) => condition(expense));
+  });
 
   return filteredExpenses;
 };
