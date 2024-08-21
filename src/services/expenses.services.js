@@ -15,7 +15,15 @@ const { generateId } = require('../helpers/helpers.js');
  */
 let expenses = [];
 
-const findExpenseById = (id) => expenses.find((item) => item.id === id);
+const findExpenseById = (id) => {
+  const searchedExpense = expenses.find((item) => item.id === id);
+
+  if (!searchedExpense) {
+    throw new Error('Not found');
+  }
+
+  return searchedExpense;
+};
 
 const getAllExpenses = ({ userId, from, to, categories }) => {
   let filteredExpenses = expenses;
@@ -84,18 +92,18 @@ const updateExpenseById = (id, { spentAt, title, amount, category, note }) => {
   return searchedExpense;
 };
 
-const getExpenseById = (id) => {
-  return findExpenseById(id) || null;
-};
+const getExpenseById = (id) => findExpenseById(id);
 
 const removeExpenseById = (id) => {
   const clearedExpenses = expenses.filter((expense) => expense.id !== id);
 
   const isRemoved = clearedExpenses.length !== expenses.length;
 
-  expenses = clearedExpenses;
+  if (!isRemoved) {
+    throw new Error('Not found');
+  }
 
-  return isRemoved;
+  expenses = clearedExpenses;
 };
 
 const resetExpenses = () => {

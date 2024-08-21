@@ -21,35 +21,30 @@ const createUser = (req, res) => {
   res.status(201).send(newUser);
 };
 
-const getOne = (req, res) => {
-  const { id } = req.params;
+const getOne = (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const currentUser = usersService.getUserById(+id);
 
-  const currentUser = usersService.getUserById(+id);
-
-  if (!currentUser) {
-    res.status(404).send({ message: 'Not found' });
-
-    return;
+    res.status(200).send(currentUser);
+  } catch (error) {
+    next(error);
   }
-
-  res.status(200).send(currentUser);
 };
 
-const remove = (req, res) => {
-  const { id } = req.params;
+const remove = (req, res, next) => {
+  try {
+    const { id } = req.params;
 
-  const isRemoved = usersService.removeById(+id);
+    usersService.removeById(+id);
 
-  if (!isRemoved) {
-    res.status(404).send({ message: 'Not found' });
-
-    return;
+    res.sendStatus(204);
+  } catch (error) {
+    next(error);
   }
-
-  res.sendStatus(204);
 };
 
-const update = (req, res) => {
+const update = (req, res, next) => {
   const { id } = req.params;
   const { name } = req.body;
 
@@ -59,15 +54,13 @@ const update = (req, res) => {
     return;
   }
 
-  const updatedUser = usersService.updateById(+id, name);
+  try {
+    const updatedUser = usersService.updateById(+id, name);
 
-  if (!updatedUser) {
-    res.status(404).send({ message: 'Not found' });
-
-    return;
+    res.status(200).send(updatedUser);
+  } catch (error) {
+    next(error);
   }
-
-  res.status(200).send(updatedUser);
 };
 
 module.exports = {

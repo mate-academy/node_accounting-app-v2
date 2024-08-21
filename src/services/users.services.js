@@ -14,18 +14,28 @@ const getAll = () => {
   return users;
 };
 
-const getUserById = (id) => {
-  return users.find((user) => user.id === id) || null;
+const getUserById = (id, forExpenses) => {
+  const searchedUser = users.find((user) => user.id === id);
+
+  if (!searchedUser && !forExpenses) {
+    throw new Error('Not found');
+  } else if (!searchedUser && forExpenses) {
+    throw new Error('Bad request');
+  }
+
+  return searchedUser;
 };
 
 const removeById = (id) => {
   const newUsers = users.filter((user) => user.id !== id);
 
-  const isRemoved = newUsers.length !== users.length || null;
+  const isRemoved = newUsers.length !== users.length;
+
+  if (!isRemoved) {
+    throw new Error('Not found');
+  }
 
   users = newUsers;
-
-  return isRemoved;
 };
 
 const createUser = (name) => {
@@ -42,9 +52,7 @@ const createUser = (name) => {
 const updateById = (id, name) => {
   const searchedUser = getUserById(id);
 
-  const result = searchedUser ? Object.assign(searchedUser, { name }) : null;
-
-  return result;
+  return Object.assign(searchedUser, { name });
 };
 
 const resetUsers = () => {
@@ -52,5 +60,10 @@ const resetUsers = () => {
 };
 
 module.exports = {
-  getAll, getUserById, removeById, createUser, updateById, resetUsers,
+  getAll,
+  getUserById,
+  removeById,
+  createUser,
+  updateById,
+  resetUsers,
 };
