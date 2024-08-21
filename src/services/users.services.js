@@ -11,7 +11,7 @@ const { generateId } = require('../helpers/helpers.js');
 let users = [];
 
 const getAll = () => {
-  return users.length !== 0 ? users : [];
+  return users;
 };
 
 const getUserById = (id) => {
@@ -40,7 +40,7 @@ const createUser = (name) => {
 };
 
 const updateById = (id, name) => {
-  const searchedUser = users.find((user) => user.id === id);
+  const searchedUser = getUserById(id);
 
   const result = searchedUser ? Object.assign(searchedUser, { name }) : null;
 

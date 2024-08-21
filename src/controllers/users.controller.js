@@ -71,5 +71,9 @@ const update = (req, res) => {
 };
 
 module.exports = {
-  getAll, createUser, getOne, remove, update,
+  getAll,
+  createUser,
+  getOne,
+  remove,
+  update,
 };

@@ -15,37 +15,37 @@ const { generateId } = require('../helpers/helpers.js');
  */
 let expenses = [];
 
-const findExpenseById = (id) => expenses.find(item => item.id === id);
+const findExpenseById = (id) => expenses.find((item) => item.id === id);
 
 const getAllExpenses = ({ userId, from, to, categories }) => {
   let filteredExpenses = expenses;
 
+  const conditions = [];
+
   if (userId) {
-    filteredExpenses = filteredExpenses.filter(
-      expense => expense.userId === +userId,
-    );
+    conditions.push((expense) => expense.userId === +userId);
   }
 
   if (from && to) {
     const fromDate = new Date(from);
     const toDate = new Date(to);
 
-    filteredExpenses = filteredExpenses.filter((expense) => {
+    conditions.push((expense) => {
       const spentAtDate = new Date(expense.spentAt);
-      const expenseInRangeOfDates = spentAtDate >= fromDate
-        && spentAtDate <= toDate;
 
-      return expenseInRangeOfDates;
+      return spentAtDate >= fromDate && spentAtDate <= toDate;
     });
   }
 
   if (categories) {
     const categoryList = categories.split(',');
 
-    filteredExpenses = filteredExpenses.filter((expense) => {
-      return categoryList.includes(expense.category);
-    });
+    conditions.push((expense) => categoryList.includes(expense.category));
   }
+
+  filteredExpenses = filteredExpenses.filter((expense) =>
+    conditions.every((condition) => condition(expense)),
+  );
 
   return filteredExpenses;
 };
@@ -70,25 +70,15 @@ const updateExpenseById = (id, { spentAt, title, amount, category, note }) => {
   const searchedExpense = findExpenseById(id);
 
   if (searchedExpense) {
-    if (spentAt) {
-      searchedExpense.spentAt = spentAt;
-    }
+    const updates = {
+      ...(spentAt && { spentAt }),
+      ...(title && { title }),
+      ...(amount && { amount }),
+      ...(category && { category }),
+      ...(note && { note }),
+    };
 
-    if (title) {
-      searchedExpense.title = title;
-    }
-
-    if (amount) {
-      searchedExpense.amount = amount;
-    }
-
-    if (category) {
-      searchedExpense.category = category;
-    }
-
-    if (note) {
-      searchedExpense.note = note;
-    }
+    Object.assign(searchedExpense, updates);
   }
 
   return searchedExpense;
@@ -101,7 +91,7 @@ const getExpenseById = (id) => {
 const removeExpenseById = (id) => {
   const clearedExpenses = expenses.filter((expense) => expense.id !== id);
 
-  const isRemoved = clearedExpenses.length !== expenses.length || null;
+  const isRemoved = clearedExpenses.length !== expenses.length;
 
   expenses = clearedExpenses;
 

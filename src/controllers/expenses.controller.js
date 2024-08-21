@@ -75,5 +75,9 @@ const updateExpense = (req, res) => {
 };
 
 module.exports = {
-  getAllExpenses, createExpense, getExpenseById, removeExpense, updateExpense,
+  getAllExpenses,
+  createExpense,
+  getExpenseById,
+  removeExpense,
+  updateExpense,
 };
