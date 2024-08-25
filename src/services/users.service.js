@@ -1,10 +1,14 @@
 let users = [];
 
+function clearUsers() {
+  users = [];
+}
+
 function getUsers() {
   return users;
 }
 
-function addUser(name) {
+function createUser(name) {
   const newUser = { id: users.length, name };
 
   users.push(newUser);
@@ -31,8 +35,9 @@ function updateUser(id, name) {
 }
 
 module.exports = {
+  clearUsers,
   getUsers,
-  addUser,
+  createUser,
   getUser,
   removeUser,
   updateUser,

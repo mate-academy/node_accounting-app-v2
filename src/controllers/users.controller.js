@@ -4,7 +4,7 @@ const getUsers = (req, res) => {
   res.send(usersService.getUsers());
 };
 
-const addUser = (req, res) => {
+const createUser = (req, res) => {
   const { name } = req.body;
 
   if (!name) {
@@ -13,7 +13,7 @@ const addUser = (req, res) => {
     return;
   }
 
-  const newUser = usersService.addUser(name);
+  const newUser = usersService.createUser(name);
 
   res.status(201).send(newUser);
 };
@@ -81,7 +81,7 @@ const updateUser = (req, res) => {
 
 module.exports = {
   getUsers,
-  addUser,
+  createUser,
   getUser,
   deleteUser,
   updateUser,

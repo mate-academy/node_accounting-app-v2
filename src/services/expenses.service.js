@@ -1,14 +1,30 @@
 let expenses = [];
 
-function getExpenses(userId, categories, from, to) {
-  const result = expenses.filter(
-    (expense) =>
-      expense.userId === userId &&
-      categories.includes(expense.category) &&
-      from <= expense.spentAt <= to,
-  );
+function clearExpenses() {
+  expenses = [];
+}
 
-  return result;
+function getExpenses(userId, categories, from, to) {
+  return expenses.filter((expense) => {
+    const userMatch = userId === undefined || expense.userId === +userId;
+
+    const categoryMatch =
+      !categories ||
+      categories.length === 0 ||
+      categories.includes(expense.category);
+
+    let dateMatch = true;
+
+    if (from && to) {
+      const expenseDate = new Date(expense.spentAt);
+      const fromDate = new Date(from);
+      const toDate = new Date(to);
+
+      dateMatch = expenseDate >= fromDate && expenseDate <= toDate;
+    }
+
+    return userMatch && categoryMatch && dateMatch;
+  });
 }
 
 function createExpense(userId, spentAt, title, amount, category, note) {
@@ -32,26 +48,21 @@ function getExpense(id) {
 }
 
 function removeExpense(id) {
-  const newExpenses = expenses.filter((expense) => expense.id !== id);
+  const newExpenses = expenses.filter((expense) => expense.id !== +id);
 
   expenses = newExpenses;
 }
 
-function updateExpense(id, spentAt, title, amount, category, note) {
+function updateExpense(id, fields) {
   const expense = getExpense(id);
 
-  Object.assign(expense, {
-    spentAt,
-    title,
-    amount,
-    category,
-    note,
-  });
+  Object.assign(expense, fields);
 
   return expense;
 }
 
 module.exports = {
+  clearExpenses,
   getExpenses,
   createExpense,
   getExpense,

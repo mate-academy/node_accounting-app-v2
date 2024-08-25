@@ -1,13 +1,8 @@
 const expensesService = require('../services/expenses.service');
+const usersService = require('../services/users.service');
 
 const getExpenses = (req, res) => {
   const { userId, categories, from, to } = req.query;
-
-  if (!userId || !categories || !from || !to) {
-    res.sendStatus(400);
-
-    return;
-  }
 
   res.send(expensesService.getExpenses(userId, categories, from, to));
 };
@@ -15,10 +10,15 @@ const getExpenses = (req, res) => {
 const createExpense = (req, res) => {
   const { userId, spentAt, title, amount, category, note } = req.body;
 
-  // eslint-disable-next-line no-console
-  console.log(req.body);
-
-  if (!userId || !spentAt || !title || !amount || !category || !note) {
+  if (
+    userId === undefined ||
+    !spentAt ||
+    !title ||
+    !amount ||
+    !category ||
+    !note ||
+    !usersService.getUser(userId)
+  ) {
     res.sendStatus(400);
 
     return;
@@ -33,7 +33,7 @@ const createExpense = (req, res) => {
     note,
   );
 
-  return newExpense;
+  res.status(201).send(newExpense);
 };
 
 const getExpense = (req, res) => {
@@ -78,23 +78,22 @@ const removeExpense = (req, res) => {
 
 const updateExpense = (req, res) => {
   const { id } = req.params;
-  const { spentAt, title, amount, category, note } = req.body;
 
-  if (!id || !spentAt || !title || !amount || !category || !note) {
+  if (!id || req.body.length === 0) {
     res.sendStatus(400);
 
     return;
   }
 
-  const newExpense = expensesService.updateExpense(
-    spentAt,
-    title,
-    amount,
-    category,
-    note,
-  );
+  if (!expensesService.getExpense(id)) {
+    res.sendStatus(404);
 
-  return newExpense;
+    return;
+  }
+
+  const newExpense = expensesService.updateExpense(id, req.body);
+
+  res.send(newExpense);
 };
 
 module.exports = {
