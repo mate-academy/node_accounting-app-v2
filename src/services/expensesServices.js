@@ -31,16 +31,18 @@ const getExpenses = (userId, categories, from, to) => {
     );
   }
 
-  if (from || to) {
-    if (from && to) {
-      filteredExpenses = expenses.filter(
-        (expense) => expense.spentAt >= from && expense.spentAt <= to,
-      );
-    } else if (to) {
-      filteredExpenses = expenses.filter((expense) => expense.spentAt <= to);
-    } else {
-      filteredExpenses = expenses.filter((expense) => expense.spentAt >= from);
-    }
+  if (from && to) {
+    return expenses.filter(
+      (expense) => expense.spentAt >= from && expense.spentAt <= to,
+    );
+  }
+
+  if (to) {
+    return expenses.filter((expense) => expense.spentAt <= to);
+  }
+
+  if (from) {
+    return expenses.filter((expense) => expense.spentAt >= from);
   }
 
   return filteredExpenses;
@@ -87,12 +89,12 @@ const updateExpense = (
   const selectedExpense = getOneExpense(+id);
 
   Object.assign(selectedExpense, {
-    ...(userId !== undefined && { userId }),
-    ...(spentAt !== undefined && { spentAt }),
-    ...(title !== undefined && { title }),
-    ...(amount !== undefined && { amount }),
-    ...(category !== undefined && { category }),
-    ...(note !== undefined && { note }),
+    ...(userId && { userId }),
+    ...(spentAt && { spentAt }),
+    ...(title && { title }),
+    ...(amount && { amount }),
+    ...(category && { category }),
+    ...(note && { note }),
   });
 
   return selectedExpense;
