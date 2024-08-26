@@ -9,7 +9,7 @@ const getOne = (req, res) => {
   const choosedUser = usersServices.getOneUser(id);
 
   if (choosedUser === -1) {
-    return res.status(404);
+    return res.status(404).send();
   }
 
   return res.status(200).send(choosedUser);
@@ -33,7 +33,7 @@ const patch = (req, res) => {
   const { name } = req.body;
   const choosedUser = usersServices.getOneUser(id);
 
-  if (name !== 'string') {
+  if (!name) {
     return res.status(400);
   }
 
@@ -46,8 +46,8 @@ const patch = (req, res) => {
 const post = (req, res) => {
   const { name } = req.body;
 
-  if (name !== 'string') {
-    return res.status(400);
+  if (!name) {
+    return res.status(400).send();
   }
 
   const user = usersServices.createUser(name);

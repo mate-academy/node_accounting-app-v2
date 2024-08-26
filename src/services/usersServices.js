@@ -15,7 +15,9 @@ const getUsers = () => {
 };
 
 const getOneUser = (id) => {
-  return users.find((user) => user.id === id);
+  const selectedUser = users.find((user) => user.id === id);
+
+  return selectedUser;
 };
 
 const createUser = (name) => {
