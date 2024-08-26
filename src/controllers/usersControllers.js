@@ -1,17 +1,18 @@
 const usersServices = require('../services/usersServices');
 
 const get = (req, res) => {
-  res.status(200).send(usersServices.getUsers());
+  return res.status(200).send(usersServices.getUsers());
 };
+
 const getOne = (req, res) => {
   const { id } = req.params;
   const choosedUser = usersServices.getOneUser(id);
 
-  if (!choosedUser) {
-    return res.sendStatus(404);
+  if (choosedUser === -1) {
+    return res.status(404);
   }
 
-  res.sendStatus(200).send(choosedUser);
+  return res.status(200).send(choosedUser);
 };
 
 const remove = (req, res) => {
@@ -19,10 +20,12 @@ const remove = (req, res) => {
   const choosedUser = usersServices.getOneUser(id);
 
   if (!choosedUser) {
-    return res.sendStatus(404);
+    return res.status(404);
   }
 
-  return res.sendStatus(200).send(usersServices.removeUser(id));
+  usersServices.removeUser(id);
+
+  return res.status(200).send();
 };
 
 const patch = (req, res) => {
@@ -31,23 +34,25 @@ const patch = (req, res) => {
   const choosedUser = usersServices.getOneUser(id);
 
   if (name !== 'string') {
-    return res.statusCode(400);
+    return res.status(400);
   }
 
   if (!choosedUser) {
-    return res.sendStatus(404);
+    return res.status(404);
   }
-  res.sendStatus(204).send(usersServices.updateUser({ id, name }));
+  res.status(204).send(usersServices.updateUser({ id, name }));
 };
 
 const post = (req, res) => {
   const { name } = req.body;
 
   if (name !== 'string') {
-    return res.statusCode(400);
+    return res.status(400);
   }
 
-  return res.sendStatus(200).send(usersServices(name));
+  const user = usersServices.createUser(name);
+
+  return res.status(201).send(user);
 };
 
 module.exports = {

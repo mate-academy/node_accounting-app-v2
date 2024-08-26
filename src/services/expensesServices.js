@@ -1,6 +1,4 @@
 const { v4: uuidv4 } = require('uuid');
-// const newId = uuidv4();
-
 const expenses = [];
 
 const resetExpenses = () => {
@@ -51,6 +49,8 @@ const createExpense = (userId, spentAt, title, amount, category, note) => {
   };
 
   expenses.push(newExpense);
+
+  return newExpense;
 };
 
 const removeExpense = (id) => {

@@ -1,5 +1,5 @@
 const expensesServices = require('../services/expensesServices');
-const usersSerwices = require('../services/usersServices');
+// const usersServices = require('../services/usersServices');
 
 const get = (req, res) => {
   const { userId, categories, from, to } = req.query;
@@ -14,7 +14,7 @@ const getOne = (req, res) => {
   const selectedExpense = expensesServices.getOneExpense(id);
 
   if (!selectedExpense) {
-    return res.statusCode(404);
+    return res.statusCode(404).send();
   }
 
   res.sendStatus(200).send(selectedExpense);
@@ -22,9 +22,9 @@ const getOne = (req, res) => {
 
 const remove = (req, res) => {
   const { id } = req.params;
-  const selectedExpense = expensesServices.removeExpense(id);
+  const isRemove = expensesServices.removeExpense(id);
 
-  if (!selectedExpense) {
+  if (!isRemove) {
     return res.sendStatus(404).send();
   }
 
@@ -37,10 +37,10 @@ const patch = (req, res) => {
   const selectedExpense = expensesServices.getOneExpense(id);
 
   if (!selectedExpense) {
-    return res.sendStatus(404);
+    return res.sendStatus(404).send();
   }
 
-  const updatedExpense = expensesServices.removeExpense(id, {
+  const updatedExpense = expensesServices.updateExpense(id, {
     spentAt,
     title,
     amount,
@@ -53,10 +53,10 @@ const patch = (req, res) => {
 
 const post = (req, res) => {
   const { userId, spentAt, title, amount, category, note } = req.body;
-  const selectedUser = usersSerwices.getOneUser(userId);
+  // const selectedUser = usersServices.getOneUser(userId);
 
-  if (!spentAt || !title || !amount || !category || !selectedUser) {
-    return res.sendStatus(400);
+  if (!spentAt || !title || !amount || !category) {
+    return res.status(400).send();
   }
 
   const newExpense = expensesServices.createExpense(
@@ -68,7 +68,7 @@ const post = (req, res) => {
     note,
   );
 
-  return res.sendStatus(201).send(newExpense);
+  return res.status(201).send(newExpense);
 };
 
 module.exports = {

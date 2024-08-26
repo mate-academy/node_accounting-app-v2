@@ -1,6 +1,10 @@
 const { v4: uuidv4 } = require('uuid');
-const newId = uuidv4();
-const users = [];
+const users = [
+  {
+    id: 1,
+    name: 'mirek',
+  },
+];
 
 const resetUsers = () => {
   users.splice(0, users.length);
@@ -11,20 +15,30 @@ const getUsers = () => {
 };
 
 const getOneUser = (id) => {
-  return users.find((user) => user.id === +id);
+  return users.find((user) => user.id === id);
 };
 
 const createUser = (name) => {
   const newUser = {
-    id: newId,
+    id: uuidv4(),
     name,
   };
 
   users.push(newUser);
+
+  return newUser;
 };
 
 const removeUser = (id) => {
-  return users.filter((user) => user.id !== id);
+  const index = users.findIndex((user) => user.id === id);
+
+  if (index !== -1) {
+    users.splice(index, 1);
+
+    return true;
+  }
+
+  return false;
 };
 
 const updateUser = ({ id, name }) => {
