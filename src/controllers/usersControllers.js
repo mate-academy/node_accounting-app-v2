@@ -6,9 +6,9 @@ const get = (req, res) => {
 
 const getOne = (req, res) => {
   const { id } = req.params;
-  const choosedUser = usersServices.getOneUser(id);
+  const choosedUser = usersServices.getOneUser(+id);
 
-  if (choosedUser === -1) {
+  if (!choosedUser) {
     return res.status(404).send();
   }
 
@@ -17,30 +17,33 @@ const getOne = (req, res) => {
 
 const remove = (req, res) => {
   const { id } = req.params;
-  const choosedUser = usersServices.getOneUser(id);
+  const choosedUser = usersServices.getOneUser(+id);
 
   if (!choosedUser) {
-    return res.status(404);
+    return res.status(404).send();
   }
 
-  usersServices.removeUser(id);
+  usersServices.removeUser(+id);
 
-  return res.status(200).send();
+  return res.status(204).send();
 };
 
 const patch = (req, res) => {
   const { id } = req.params;
   const { name } = req.body;
-  const choosedUser = usersServices.getOneUser(id);
+  const choosedUser = usersServices.getOneUser(+id);
 
   if (!name) {
-    return res.status(400);
+    return res.status(400).send('err name');
   }
 
   if (!choosedUser) {
-    return res.status(404);
+    return res.status(404).send('err ch');
   }
-  res.status(204).send(usersServices.updateUser({ id, name }));
+
+  const update = usersServices.updateUser({ id, name });
+
+  return res.status(200).send(update);
 };
 
 const post = (req, res) => {

@@ -1,5 +1,18 @@
-const { v4: uuidv4 } = require('uuid');
-const expenses = [];
+const getId = () => {
+  return Math.floor(Math.random() * 1000);
+};
+
+const expenses = [
+  {
+    id: 1,
+    userId: 1,
+    spentAt: 55,
+    title: 'kij',
+    amount: 66,
+    category: 'kk',
+    note: 'jh',
+  },
+];
 
 const resetExpenses = () => {
   expenses.splice(0, expenses.length);
@@ -34,12 +47,14 @@ const getExpenses = (userId, categories, from, to) => {
 };
 
 const getOneExpense = (id) => {
-  return expenses.find((expense) => expense.id === id);
+  const selectedExpense = expenses.find((expense) => expense.id === id);
+
+  return selectedExpense;
 };
 
 const createExpense = (userId, spentAt, title, amount, category, note) => {
   const newExpense = {
-    id: uuidv4(),
+    id: getId(),
     userId,
     spentAt,
     title,
@@ -69,7 +84,7 @@ const updateExpense = (
   id,
   { userId, spentAt, title, amount, category, note },
 ) => {
-  const selectedExpense = getOneExpense(id);
+  const selectedExpense = getOneExpense(+id);
 
   Object.assign(selectedExpense, {
     ...(userId !== undefined && { userId }),

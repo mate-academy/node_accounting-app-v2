@@ -1,4 +1,7 @@
-const { v4: uuidv4 } = require('uuid');
+const getId = () => {
+  return Math.floor(Math.random() * 1000);
+};
+
 const users = [
   {
     id: 1,
@@ -22,7 +25,7 @@ const getOneUser = (id) => {
 
 const createUser = (name) => {
   const newUser = {
-    id: uuidv4(),
+    id: getId(),
     name,
   };
 
@@ -44,7 +47,7 @@ const removeUser = (id) => {
 };
 
 const updateUser = ({ id, name }) => {
-  const selectedUser = getOneUser(id);
+  const selectedUser = getOneUser(+id);
 
   Object.assign(selectedUser, { name });
 

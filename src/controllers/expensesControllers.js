@@ -1,46 +1,48 @@
 const expensesServices = require('../services/expensesServices');
-// const usersServices = require('../services/usersServices');
+const usersServices = require('../services/usersServices');
 
 const get = (req, res) => {
   const { userId, categories, from, to } = req.query;
 
   return res
     .status(200)
-    .send(expensesServices.getExpenses(userId, categories, from, to));
+    .send(expensesServices.getExpenses(+userId, categories, from, to));
 };
 
 const getOne = (req, res) => {
   const { id } = req.params;
-  const selectedExpense = expensesServices.getOneExpense(id);
+  const selectedExpense = expensesServices.getOneExpense(+id);
 
   if (!selectedExpense) {
-    return res.statusCode(404).send();
+    return res.status(404).send('err');
   }
 
-  res.sendStatus(200).send(selectedExpense);
+  return res.status(200).send(selectedExpense);
 };
 
 const remove = (req, res) => {
   const { id } = req.params;
-  const isRemove = expensesServices.removeExpense(id);
+  const isFound = expensesServices.getOneExpense(+id);
 
-  if (!isRemove) {
-    return res.sendStatus(404).send();
+  if (!isFound) {
+    return res.status(404).send();
   }
 
-  return res.sendStatus(204).send();
+  expensesServices.removeExpense(+id);
+
+  return res.status(204).send();
 };
 
 const patch = (req, res) => {
   const { id } = req.params;
   const { spentAt, title, amount, category, note } = req.body;
-  const selectedExpense = expensesServices.getOneExpense(id);
+  const selectedExpense = expensesServices.getOneExpense(+id);
 
   if (!selectedExpense) {
-    return res.sendStatus(404).send();
+    return res.status(404).send();
   }
 
-  const updatedExpense = expensesServices.updateExpense(id, {
+  const updatedExpense = expensesServices.updateExpense(+id, {
     spentAt,
     title,
     amount,
@@ -48,14 +50,14 @@ const patch = (req, res) => {
     note,
   });
 
-  return res.sendStatus(204).send(updatedExpense);
+  return res.status(200).send(updatedExpense);
 };
 
 const post = (req, res) => {
   const { userId, spentAt, title, amount, category, note } = req.body;
-  // const selectedUser = usersServices.getOneUser(userId);
+  const selectedUser = usersServices.getOneUser(+userId);
 
-  if (!spentAt || !title || !amount || !category) {
+  if (!spentAt || !title || !amount || !category || !selectedUser) {
     return res.status(400).send();
   }
 
