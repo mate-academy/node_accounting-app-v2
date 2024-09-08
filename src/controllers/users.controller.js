@@ -3,68 +3,93 @@
 const userService = require('../services/users.service');
 
 const getAllUsers = (req, res) => {
-  const users = userService.getAll();
+  try {
+    const users = userService.getAll();
 
-  res.json(users);
+    res.json(users);
+  } catch {
+    res.statusCode = 500;
+    res.send('Something went wrong');
+  }
 };
 
 const getOneUser = (req, res) => {
-  const { id } = req.params;
-  const user = userService.getById(+id);
+  try {
+    const { id } = req.params;
+    const user = userService.getById(+id);
 
-  if (!user) {
-    res.statusCode = 404;
-    res.statusMessage = 'Error';
-    res.end();
+    if (!user) {
+      res.statusCode = 404;
+      res.statusMessage = 'Error';
+      res.end();
+    }
+    res.json(user);
+  } catch {
+    res.statusCode = 500;
+    res.send('Something went wrong');
   }
-  res.json(user);
 };
 
 const createUser = (req, res) => {
-  const { name } = req.body;
+  try {
+    const { name } = req.body;
 
-  if (!name) {
-    res.statusCode = 400;
-    res.statusMessage = 'Error';
+    if (!name) {
+      res.statusCode = 400;
+      res.statusMessage = 'Error';
+      res.end();
+    }
+
+    const newUser = userService.create(name);
+
+    res.statusCode = 201;
+    res.json(newUser);
     res.end();
+  } catch {
+    res.statusCode = 500;
+    res.send('Something went wrong');
   }
-
-  const newUser = userService.create(name);
-
-  res.statusCode = 201;
-  res.json(newUser);
-  res.end();
 };
 
 const updateUser = (req, res) => {
-  const { id } = req.params;
-  const { name } = req.body;
-  const user = userService.getById(+id);
+  try {
+    const { id } = req.params;
+    const { name } = req.body;
+    const user = userService.getById(+id);
 
-  if (!user || !name) {
-    res.statusCode = 404;
-    res.statusMessage = 'Error';
-    res.end();
+    if (!user || !name) {
+      res.statusCode = 404;
+      res.statusMessage = 'Error';
+      res.end();
+    }
+
+    const updatedUser = userService.update(id, name);
+
+    res.json(updatedUser);
+  } catch {
+    res.statusCode = 500;
+    res.send('Something went wrong');
   }
-
-  const updatedUser = userService.update(id, name);
-
-  res.json(updatedUser);
 };
 
 const removeUser = (req, res) => {
-  const { id } = req.params;
-  const user = userService.getById(+id);
+  try {
+    const { id } = req.params;
+    const user = userService.getById(+id);
 
-  if (!user) {
-    res.statusCode = 404;
-    res.statusMessage = 'Error';
+    if (!user) {
+      res.statusCode = 404;
+      res.statusMessage = 'Error';
+      res.end();
+    }
+
+    userService.remove(+id);
+    res.statusCode = 204;
     res.end();
+  } catch {
+    res.statusCode = 500;
+    res.send('Something went wrong');
   }
-
-  userService.remove(+id);
-  res.statusCode = 204;
-  res.end();
 };
 
 module.exports = {
