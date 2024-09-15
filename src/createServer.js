@@ -1,12 +1,25 @@
+/* eslint-disable max-len */
 'use strict';
 
-// const express = require('express');
+const express = require('express');
+const { usersRouter } = require('./routers/users.router');
+const { expenseRouter } = require('./routers/expenses.router.js');
+const { initUsers } = require('./services/users.service');
+const { intitExpenses } = require('./services/expenses.service');
 
-function createServer() {
-  // Use express to create a server
-  // Add a routes to the server
-  // Return the server (express app)
-}
+const createServer = () => {
+  const app = express();
+
+  initUsers();
+  intitExpenses();
+
+  app.use('/users', express.json(), usersRouter);
+  app.use('/expenses', express.json(), expenseRouter);
+
+  return app;
+};
+
+createServer();
 
 module.exports = {
   createServer,
