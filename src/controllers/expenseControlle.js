@@ -1,33 +1,39 @@
+/* eslint-disable no-console */
 /* eslint-disable no-useless-return */
 const expenseService = require('../services/expenseService');
 const userService = require('../services/userService');
 
 const getExpenses = (req, res) => {
-  const { userId, categories, from, to } = req.query;
+  try {
+    const { userId, categories, from, to } = req.query;
 
-  let expensesResult = expenseService.getAllExpense();
+    let expensesResult = expenseService.getAllExpense();
 
-  if (userId) {
-    expensesResult = expensesResult.filter(
-      (expense) => expense.userId === +userId,
-    );
+    if (userId) {
+      expensesResult = expensesResult.filter(
+        (expense) => expense.userId === +userId,
+      );
+    }
+
+    if (categories) {
+      expensesResult = expensesResult.filter(
+        (expense) => expense.category === categories,
+      );
+    }
+
+    if (from && to) {
+      expensesResult = expensesResult.filter(
+        (expense) =>
+          new Date(from) < new Date(expense.spentAt) &&
+          new Date(to) > new Date(expense.spentAt),
+      );
+    }
+
+    res.status(200).send(expensesResult);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ error: 'Internal Server Error' });
   }
-
-  if (categories) {
-    expensesResult = expensesResult.filter(
-      (expense) => expense.category === categories,
-    );
-  }
-
-  if (from && to) {
-    expensesResult = expensesResult.filter(
-      (expense) =>
-        new Date(from) < new Date(expense.spentAt) &&
-        new Date(to) > new Date(expense.spentAt),
-    );
-  }
-
-  res.send(expensesResult);
 };
 
 const getOneExpense = (req, res) => {
