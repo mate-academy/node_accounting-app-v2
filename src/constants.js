@@ -1,0 +1,25 @@
+'use strict';
+
+const PORT = 3000;
+
+const BASE_URL = `http://localhost:${PORT}`;
+
+const STATUS_CODE_OK = 200;
+
+const STATUS_CODE_CREATED = 201;
+
+const STATUS_CODE_NO_CONTENT = 204;
+
+const STATUS_CODE_BAD_REQUEST = 400;
+
+const STATUS_CODE_NOT_FOUND = 404;
+
+module.exports = {
+  PORT,
+  BASE_URL,
+  STATUS_CODE_OK,
+  STATUS_CODE_CREATED,
+  STATUS_CODE_NO_CONTENT,
+  STATUS_CODE_BAD_REQUEST,
+  STATUS_CODE_NOT_FOUND,
+};
