@@ -2,6 +2,10 @@ const { getNewId } = require('../getNewId');
 
 let expenses = [];
 
+const reset = () => {
+  expenses = [];
+};
+
 const get = () => {
   return expenses;
 };
@@ -31,6 +35,7 @@ const update = (id, updatedExpenseBody) => {
 };
 
 module.exports = {
+  reset,
   get,
   getById,
   create,

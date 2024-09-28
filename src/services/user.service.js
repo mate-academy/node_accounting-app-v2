@@ -2,6 +2,10 @@ const { getNewId } = require('../getNewId');
 
 let users = [];
 
+const reset = () => {
+  users = [];
+};
+
 const get = () => {
   return users;
 };
@@ -34,6 +38,7 @@ const update = (id, name) => {
 };
 
 module.exports = {
+  reset,
   get,
   getById,
   create,
