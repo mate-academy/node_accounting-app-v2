@@ -83,10 +83,21 @@ function updateExpense(expenseId, updating) {
   return Object.assign(expenseToUpdate, updating);
 }
 
+function validateNewExpense(req, res, next) {
+  const { userId, spentAt, title, amount, category, note } = req.body;
+
+  if (!userId || !spentAt || !title || !amount || !category || !note) {
+    return res.sendStatus(400);
+  }
+
+  next();
+}
+
 module.exports = {
   getAllExpenses,
   addExpense,
   getExpenseById,
   deleteExpense,
   updateExpense,
+  validateNewExpense,
 };

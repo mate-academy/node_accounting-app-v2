@@ -44,10 +44,19 @@ function updateUser(userId, userName) {
   return Object.assign(neededUser, { name: userName });
 }
 
+function validateNewUser(req, res, next) {
+  if (!req.body.name) {
+    return res.sendStatus(400);
+  }
+
+  next();
+}
+
 module.exports = {
   getAllUsers,
   addUser,
   getUser,
   deleteUser,
   updateUser,
+  validateNewUser,
 };

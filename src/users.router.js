@@ -1,26 +1,24 @@
-const { Router } = require('express');
 const service = require('./usersServices.js');
-const usersRouter = Router();
 
-usersRouter.get('/', async (req, res) => {
+const getAllUsers = async (req, res) => {
   const users = await service.getAllUsers();
 
   res.status(200).json(users);
-});
+};
 
-usersRouter.post('/', async (req, res) => {
+const addUser = async (req, res) => {
   const name = req.body.name;
 
-  if (!name) {
-    return res.sendStatus(400);
+  try {
+    const user = await service.addUser(name);
+
+    res.status(201).json(user);
+  } catch {
+    res.sendStatus(500);
   }
+};
 
-  const user = await service.addUser(name);
-
-  res.status(201).json(user);
-});
-
-usersRouter.get('/:id', async (req, res) => {
+const getUser = async (req, res) => {
   const userId = req.params.id;
 
   if (!userId) {
@@ -34,9 +32,9 @@ usersRouter.get('/:id', async (req, res) => {
   }
 
   res.status(200).json(foundUser);
-});
+};
 
-usersRouter.delete('/:id', async (req, res) => {
+const deleteUser = async (req, res) => {
   const userId = req.params.id;
 
   if (!userId) {
@@ -50,9 +48,9 @@ usersRouter.delete('/:id', async (req, res) => {
   }
 
   res.sendStatus(204);
-});
+};
 
-usersRouter.patch('/:id', async (req, res) => {
+const updateUser = async (req, res) => {
   const userToUpdateId = req.params.id;
   const userName = req.body.name;
 
@@ -63,8 +61,12 @@ usersRouter.patch('/:id', async (req, res) => {
   }
 
   res.status(200).json(updatedUser);
-});
+};
 
 module.exports = {
-  usersRouter,
+  getAllUsers,
+  addUser,
+  getUser,
+  deleteUser,
+  updateUser,
 };
