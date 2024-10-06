@@ -22,8 +22,12 @@ function createServer() {
     }
 
     if (categories) {
-      expensesCopy = expensesCopy.filter((expense) =>
-        categories.includes(expense.category));
+      expensesCopy = expensesCopy.filter(
+        (expense) =>
+          // eslint-disable-next-line comma-dangle
+          categories.includes(expense.category),
+        // eslint-disable-next-line function-paren-newline
+      );
     }
 
     if (from) {
