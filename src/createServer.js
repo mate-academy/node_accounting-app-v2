@@ -105,7 +105,41 @@ function createServer() {
 
   // отримати всі expenses з масиву
   app.get('/expenses', (req, res) => {
-    res.send(expenses);
+    const { userId, from, to, categories } = req.query;
+
+    if (!userId && !categories && (!from || !to)) {
+      res.send(expenses);
+    }
+
+    const normalizedCategories =
+      Array.isArray(categories) || !categories ? categories : [categories];
+
+    let filteredExpenses = expenses;
+
+    if (userId) {
+      filteredExpenses = filteredExpenses.filter((expense) => {
+        return expense.userId === parseInt(userId);
+      });
+    }
+
+    if (normalizedCategories) {
+      filteredExpenses = expenses.filter((expense) => {
+        return normalizedCategories.includes(expense.category);
+      });
+    }
+
+    if (from && to) {
+      const fromDate = new Date(from);
+      const toDate = new Date(to);
+
+      filteredExpenses = expenses.filter((expense) => {
+        const spentAt = new Date(expense.spentAt);
+
+        return spentAt >= fromDate && spentAt <= toDate;
+      });
+    }
+
+    res.send(filteredExpenses);
   });
 
   // отримати конкретний expense з масиву
@@ -172,98 +206,20 @@ function createServer() {
   });
 
   // відредагувати expense з масиву
-  app.put('/expenses/:id', express.json(), (req, res) => {
+  app.patch('/expenses/:id', express.json(), (req, res) => {
     const { id } = req.params;
-    const { spentAt, title, amount, category, note } = req.body;
 
     const chosenExpense = expenses.find(
       (expense) => expense.id === parseInt(id),
     );
 
-    if (
-      typeof amount !== 'number' ||
-      typeof title !== 'string' ||
-      typeof category !== 'string' ||
-      typeof note !== 'string'
-    ) {
-      return res.sendStatus(400);
-    }
-
     if (!chosenExpense) {
       return res.sendStatus(404);
     }
 
-    const isValidDate = Date.parse(spentAt);
-
-    if (isNaN(isValidDate)) {
-      return res.sendStatus(400);
-    }
-
-    Object.assign(chosenExpense, {
-      spentAt,
-      title,
-      amount,
-      category,
-      note,
-    });
+    Object.assign(chosenExpense, req.body);
 
     res.status(200).send(chosenExpense);
-  });
-
-  // отримати всі expenses для конкретного користувача
-  app.get('/expenses', (req, res) => {
-    const { userId } = req.query;
-
-    // Parse userId to integer
-    const parsedUserId = parseInt(userId, 10);
-
-    if (isNaN(parsedUserId)) {
-      return res.status(400);
-    }
-
-    // Filter expenses by userId
-    const userExpenses = expenses.filter(
-      (expense) => expense.userId === parsedUserId,
-    );
-
-    // eslint-disable-next-line no-console
-    console.log(userId, userExpenses, expenses);
-
-    res.send(userExpenses);
-  });
-
-  // отримати всі витрати між датами
-  app.get('/expenses/:from/:to', (req, res) => {
-    const { from, to } = req.params;
-
-    // Parse the dates
-    const fromDate = new Date(from);
-    const toDate = new Date(to);
-
-    // Check if the dates are valid
-    if (isNaN(fromDate.getTime()) || isNaN(toDate.getTime())) {
-      return res.status(400).send('Invalid date format. Use YYYY-MM-DD.');
-    }
-
-    // Filter expenses based on the date range
-    const filteredExpenses = expenses.filter((expense) => {
-      const expenseDate = new Date(expense.spentAt);
-
-      return expenseDate >= fromDate && expenseDate <= toDate;
-    });
-
-    res.send(filteredExpenses);
-  });
-
-  // отримати всі витрати за категорією
-  app.get('/expenses/category/:category', (req, res) => {
-    const { category } = req.params;
-
-    const categoryExpenses = expenses.filter(
-      (expense) => expense.category === category,
-    );
-
-    res.send(categoryExpenses);
   });
 
   return app;
