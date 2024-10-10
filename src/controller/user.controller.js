@@ -19,6 +19,7 @@ const getOne = (req, res) => {
 
   if (!user) {
     res.sendStatus(404);
+
     return;
   }
 
@@ -46,6 +47,7 @@ const update = (req, res) => {
 
   if (!updatedUser) {
     res.sendStatus(404);
+
     return;
   }
 
@@ -68,6 +70,7 @@ const create = (req, res) => {
 const remove = (req, res) => {
   const { id } = req.params;
   const userId = +id;
+
   if (userService.getById(userId)) {
     userService.deleteUser(userId);
     res.sendStatus(204);

@@ -1,4 +1,4 @@
-const { v4 } = require('uuid');
+// const { v4 } = require('uuid');
 let users = [];
 let nextId = 1;
 
@@ -12,6 +12,7 @@ const getById = (id) => {
 
 const updateUser = ({ id, name }) => {
   const user = getById(id);
+
   Object.assign(user, { name });
 
   return user;
@@ -30,6 +31,7 @@ const createUser = (name) => {
 
 const deleteUser = (id) => {
   const initialLength = users.length;
+
   users = users.filter((user) => user.id !== id);
 
   return users.length < initialLength;
