@@ -29,6 +29,7 @@ const getExpenses = (req, res) => {
 
     res.status(200).send(expensesResult);
   } catch (err) {
+    // eslint-disable-next-line no-console
     console.log(err);
     res.status(500).json({ error: 'Internal Server Error' });
   }
