@@ -15,9 +15,9 @@ describe('Expense', () => {
   describe('createExpense', () => {
     it('should create a new expense', async () => {
       const {
-        body: { id: userId },
+        body: { id: userId }
       } = await api.post('/users').send({
-        name: 'John Doe',
+        name: 'John Doe'
       });
 
       const expenseData = {
@@ -26,7 +26,7 @@ describe('Expense', () => {
         title: 'Buy a new laptop',
         amount: 999,
         category: 'Electronics',
-        note: 'I need a new laptop',
+        note: 'I need a new laptop'
       };
 
       const response = await api
@@ -38,8 +38,8 @@ describe('Expense', () => {
       expect(response.body).toEqual(
         expect.objectContaining({
           id: expect.any(Number),
-          ...expenseData,
-        }),
+          ...expenseData
+        })
       );
     });
 
@@ -54,7 +54,7 @@ describe('Expense', () => {
         title: 'Buy a new laptop',
         amount: 999,
         category: 'Electronics',
-        note: 'I need a new laptop',
+        note: 'I need a new laptop'
       };
 
       await api.post('/expenses').send(expenseData).expect(400);
@@ -73,9 +73,9 @@ describe('Expense', () => {
 
     it('should return all expenses', async () => {
       const {
-        body: { id: userId },
+        body: { id: userId }
       } = await api.post('/users').send({
-        name: 'John Doe',
+        name: 'John Doe'
       });
 
       const expenseData = {
@@ -84,11 +84,11 @@ describe('Expense', () => {
         title: 'Buy a new laptop',
         amount: 999,
         category: 'Electronics',
-        note: 'I need a new laptop',
+        note: 'I need a new laptop'
       };
 
       const {
-        body: { id: expenseId },
+        body: { id: expenseId }
       } = await api.post('/expenses').send(expenseData);
 
       const response = await api
@@ -99,22 +99,22 @@ describe('Expense', () => {
       expect(response.body).toEqual([
         {
           id: expenseId,
-          ...expenseData,
-        },
+          ...expenseData
+        }
       ]);
     });
 
     it('should return all expenses for a user', async () => {
       const {
-        body: { id: userId },
+        body: { id: userId }
       } = await api.post('/users').send({
-        name: 'John Doe',
+        name: 'John Doe'
       });
 
       const {
-        body: { id: userId2 },
+        body: { id: userId2 }
       } = await api.post('/users').send({
-        name: 'John Doe',
+        name: 'John Doe'
       });
 
       const expenseData = {
@@ -123,16 +123,16 @@ describe('Expense', () => {
         title: 'Buy a new laptop',
         amount: 999,
         category: 'Electronics',
-        note: 'I need a new laptop',
+        note: 'I need a new laptop'
       };
 
       const {
-        body: { id: expenseId },
+        body: { id: expenseId }
       } = await api.post('/expenses').send(expenseData);
 
       await api.post('/expenses').send({
         ...expenseData,
-        userId: userId2,
+        userId: userId2
       });
 
       const response = await api
@@ -143,16 +143,16 @@ describe('Expense', () => {
       expect(response.body).toEqual([
         {
           id: expenseId,
-          ...expenseData,
-        },
+          ...expenseData
+        }
       ]);
     });
 
     it('should return all expenses between dates', async () => {
       const {
-        body: { id: userId },
+        body: { id: userId }
       } = await api.post('/users').send({
-        name: 'John Doe',
+        name: 'John Doe'
       });
 
       const expenseData = {
@@ -161,22 +161,22 @@ describe('Expense', () => {
         title: 'Buy a new laptop',
         amount: 999,
         category: 'Electronics',
-        note: 'I need a new laptop',
+        note: 'I need a new laptop'
       };
 
       const {
-        body: { id: expenseId },
+        body: { id: expenseId }
       } = await api.post('/expenses').send(expenseData);
 
       await api.post('/expenses').send({
         ...expenseData,
-        spentAt: '2022-10-20T11:01:43.462Z',
+        spentAt: '2022-10-20T11:01:43.462Z'
       });
 
       const response = await api
         // eslint-disable-next-line max-len
         .get(
-          `/expenses?&from=2022-10-19T00:00:00.000Z&to=2022-10-19T23:59:59.999Z`,
+          `/expenses?&from=2022-10-19T00:00:00.000Z&to=2022-10-19T23:59:59.999Z`
         )
         .expect(200)
         .expect('Content-Type', /application\/json/);
@@ -184,16 +184,16 @@ describe('Expense', () => {
       expect(response.body).toEqual([
         {
           id: expenseId,
-          ...expenseData,
-        },
+          ...expenseData
+        }
       ]);
     });
 
     it('should return all expenses by category', async () => {
       const {
-        body: { id: userId },
+        body: { id: userId }
       } = await api.post('/users').send({
-        name: 'John Doe',
+        name: 'John Doe'
       });
 
       const expenseData = {
@@ -202,16 +202,16 @@ describe('Expense', () => {
         title: 'Buy a new laptop',
         amount: 999,
         category: 'Electronics',
-        note: 'I need a new laptop',
+        note: 'I need a new laptop'
       };
 
       const {
-        body: { id: expenseId },
+        body: { id: expenseId }
       } = await api.post('/expenses').send(expenseData);
 
       await api.post('/expenses').send({
         ...expenseData,
-        category: 'Food',
+        category: 'Food'
       });
 
       const response = await api
@@ -222,8 +222,8 @@ describe('Expense', () => {
       expect(response.body).toEqual([
         {
           id: expenseId,
-          ...expenseData,
-        },
+          ...expenseData
+        }
       ]);
     });
   });
@@ -231,9 +231,9 @@ describe('Expense', () => {
   describe('getExpense', () => {
     it('should return expense', async () => {
       const {
-        body: { id: userId },
+        body: { id: userId }
       } = await api.post('/users').send({
-        name: 'John Doe',
+        name: 'John Doe'
       });
 
       const expenseData = {
@@ -242,11 +242,11 @@ describe('Expense', () => {
         title: 'Buy a new laptop',
         amount: 999,
         category: 'Electronics',
-        note: 'I need a new laptop',
+        note: 'I need a new laptop'
       };
 
       const {
-        body: { id: expenseId },
+        body: { id: expenseId }
       } = await api.post('/expenses').send(expenseData);
 
       const response = await api
@@ -256,7 +256,7 @@ describe('Expense', () => {
 
       expect(response.body).toEqual({
         id: expenseId,
-        ...expenseData,
+        ...expenseData
       });
     });
 
@@ -268,9 +268,9 @@ describe('Expense', () => {
   describe('updateExpense', () => {
     it('should update expense', async () => {
       const {
-        body: { id: userId },
+        body: { id: userId }
       } = await api.post('/users').send({
-        name: 'John Doe',
+        name: 'John Doe'
       });
 
       const expenseData = {
@@ -279,17 +279,17 @@ describe('Expense', () => {
         title: 'Buy a new laptop',
         amount: 999,
         category: 'Electronics',
-        note: 'I need a new laptop',
+        note: 'I need a new laptop'
       };
 
       const {
-        body: { id: expenseId },
+        body: { id: expenseId }
       } = await api.post('/expenses').send(expenseData);
 
       const response = await api
         .patch(`/expenses/${expenseId}`)
         .send({
-          title: 'Buy a new TV',
+          title: 'Buy a new TV'
         })
         .expect(200)
         .expect('Content-Type', /application\/json/);
@@ -297,7 +297,7 @@ describe('Expense', () => {
       expect(response.body).toEqual({
         id: expenseId,
         ...expenseData,
-        title: 'Buy a new TV',
+        title: 'Buy a new TV'
       });
     });
 
@@ -309,9 +309,9 @@ describe('Expense', () => {
   describe('deleteExpense', () => {
     it('should delete expense', async () => {
       const {
-        body: { id: userId },
+        body: { id: userId }
       } = await api.post('/users').send({
-        name: 'John Doe',
+        name: 'John Doe'
       });
 
       const expenseData = {
@@ -320,11 +320,11 @@ describe('Expense', () => {
         title: 'Buy a new laptop',
         amount: 999,
         category: 'Electronics',
-        note: 'I need a new laptop',
+        note: 'I need a new laptop'
       };
 
       const {
-        body: { id: expenseId },
+        body: { id: expenseId }
       } = await api.post('/expenses').send(expenseData);
 
       await api.delete(`/expenses/${expenseId}`).expect(204);

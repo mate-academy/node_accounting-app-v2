@@ -19,7 +19,7 @@ describe('User', () => {
       const response = await api
         .post('/users')
         .send({
-          name,
+          name
         })
         .expect(201)
         .expect('Content-Type', /application\/json/);
@@ -27,8 +27,8 @@ describe('User', () => {
       expect(response.body).toEqual(
         expect.objectContaining({
           id: expect.any(Number),
-          name,
-        }),
+          name
+        })
       );
     });
 
@@ -50,11 +50,11 @@ describe('User', () => {
     it('should return all users', async () => {
       const users = [
         {
-          name: 'John Doe',
+          name: 'John Doe'
         },
         {
-          name: 'Jane Doe',
-        },
+          name: 'Jane Doe'
+        }
       ];
 
       const createdUsers = await Promise.all(
@@ -66,7 +66,7 @@ describe('User', () => {
             .expect('Content-Type', /application\/json/);
 
           return res.body;
-        }),
+        })
       );
 
       const response = await api
@@ -87,7 +87,7 @@ describe('User', () => {
       const name = 'John Doe';
 
       const createdUser = await api.post('/users').send({
-        name,
+        name
       });
 
       const response = await api
@@ -98,8 +98,8 @@ describe('User', () => {
       expect(response.body).toEqual(
         expect.objectContaining({
           id: createdUser.body.id,
-          name,
-        }),
+          name
+        })
       );
     });
   });
@@ -109,7 +109,7 @@ describe('User', () => {
       await api
         .put('/users/1')
         .send({
-          name: 'John Doe',
+          name: 'John Doe'
         })
         .expect(404);
     });
@@ -118,7 +118,7 @@ describe('User', () => {
       const name = 'John Doe';
 
       const createdUser = await api.post('/users').send({
-        name,
+        name
       });
 
       const newName = 'Jane Doe';
@@ -126,7 +126,7 @@ describe('User', () => {
       const response = await api
         .patch(`/users/${createdUser.body.id}`)
         .send({
-          name: newName,
+          name: newName
         })
         .expect(200)
         .expect('Content-Type', /application\/json/);
@@ -134,8 +134,8 @@ describe('User', () => {
       expect(response.body).toEqual(
         expect.objectContaining({
           id: createdUser.body.id,
-          name: newName,
-        }),
+          name: newName
+        })
       );
     });
   });
@@ -149,7 +149,7 @@ describe('User', () => {
       const name = 'John Doe';
 
       const createdUser = await api.post('/users').send({
-        name,
+        name
       });
 
       await api.delete(`/users/${createdUser.body.id}`).expect(204);
