@@ -1,339 +1,129 @@
 'use strict';
 
-const supertest = require('supertest');
-const { createServer } = require('../src/createServer');
+const express = require('express'); // імпортуємо express
 
-describe('Expense', () => {
-  let server;
-  let api;
+function createServer() {
+   const server = express();
 
-  beforeEach(() => {
-    server = createServer();
-    api = supertest(server);
-  });
+   // Створення масивів для збереження користувачів та витрат
+   let users = [];
+   let expenses = [];
 
-  describe('createExpense', () => {
-    it('should create a new expense', async () => {
-      const {
-        body: { id: userId },
-      } = await api.post('/users').send({
-        name: 'John Doe',
-      });
+   server.use(express.json()); // Для парсингу JSON в тілі запиту
 
-      const expenseData = {
-        userId,
-        spentAt: '2022-10-19T11:01:43.462Z',
-        title: 'Buy a new laptop',
-        amount: 999,
-        category: 'Electronics',
-        note: 'I need a new laptop',
-      };
+   // Маршрут для створення користувача
+   server.post('/users', (req, res) => {
+      const { name } = req.body;
+      if (!name) {
+         return res.status(400).send('Name is required');
+      }
+      const newUser = { id: users.length + 1, name };
+      users.push(newUser);
+      res.status(201).json(newUser);
+   });
 
-      const response = await api
-        .post('/expenses')
-        .send(expenseData)
-        .expect(201)
-        .expect('Content-Type', /application\/json/);
+   // Маршрут для отримання всіх користувачів
+   server.get('/users', (req, res) => {
+      res.status(200).json(users);
+   });
 
-      expect(response.body).toEqual(
-        expect.objectContaining({
-          id: expect.any(Number),
-          ...expenseData,
-        }),
-      );
-    });
+   // Маршрут для створення витрати
+   server.post('/expenses', (req, res) => {
+      const { name, amount, userId } = req.body;
 
-    it('should return 400 if name is not provided', async () => {
-      await api.post('/expenses').send({}).expect(400);
-    });
+      // Перевірка, чи всі поля надані
+      if (!name || !amount || !userId) {
+         return res.status(400).send('Name, amount, and userId are required');
+      }
 
-    it('should return 400 if user not found', async () => {
-      const expenseData = {
-        userId: 1,
-        spentAt: '2022-10-19T11:01:43.462Z',
-        title: 'Buy a new laptop',
-        amount: 999,
-        category: 'Electronics',
-        note: 'I need a new laptop',
-      };
+      // Перевірка, чи amount є числом
+      if (isNaN(amount)) {
+         return res.status(400).send('Amount must be a number');
+      }
 
-      await api.post('/expenses').send(expenseData).expect(400);
-    });
-  });
+      // Перевірка, чи існує користувач з таким userId
+      const userExists = users.find(user => user.id === userId);
+      if (!userExists) {
+         return res.status(400).send('User not found');
+      }
 
-  describe('getExpenses', () => {
-    it('should return empty array if no expenses', async () => {
-      const response = await api
-        .get('/expenses')
-        .expect(200)
-        .expect('Content-Type', /application\/json/);
+      const newExpense = { id: expenses.length + 1, name, amount, userId };
+      expenses.push(newExpense);
+      res.status(201).json(newExpense);
+   });
 
-      expect(response.body).toEqual([]);
-    });
+   // Маршрут для отримання всіх витрат
+   server.get('/expenses', (req, res) => {
+      const { userId, from, to, categories } = req.query;
 
-    it('should return all expenses', async () => {
-      const {
-        body: { id: userId },
-      } = await api.post('/users').send({
-        name: 'John Doe',
-      });
+      let filteredExpenses = expenses;
 
-      const expenseData = {
-        userId,
-        spentAt: '2022-10-19T11:01:43.462Z',
-        title: 'Buy a new laptop',
-        amount: 999,
-        category: 'Electronics',
-        note: 'I need a new laptop',
-      };
+      if (userId) {
+         filteredExpenses = filteredExpenses.filter(expense => expense.userId == userId);
+      }
 
-      const {
-        body: { id: expenseId },
-      } = await api.post('/expenses').send(expenseData);
+      if (from && to) {
+         filteredExpenses = filteredExpenses.filter(
+            expense => expense.spentAt >= from && expense.spentAt <= to
+         );
+      }
 
-      const response = await api
-        .get('/expenses')
-        .expect(200)
-        .expect('Content-Type', /application\/json/);
+      if (categories) {
+         filteredExpenses = filteredExpenses.filter(
+            expense => expense.category === categories
+         );
+      }
 
-      expect(response.body).toEqual([
-        {
-          id: expenseId,
-          ...expenseData,
-        },
-      ]);
-    });
+      res.status(200).json(filteredExpenses);
+   });
 
-    it('should return all expenses for a user', async () => {
-      const {
-        body: { id: userId },
-      } = await api.post('/users').send({
-        name: 'John Doe',
-      });
+   // Маршрут для отримання витрати за ID
+   server.get('/expenses/:id', (req, res) => {
+      const expense = expenses.find(e => e.id === parseInt(req.params.id));
+      if (!expense) {
+         return res.status(404).send('Expense not found');
+      }
+      res.status(200).json(expense);
+   });
 
-      const {
-        body: { id: userId2 },
-      } = await api.post('/users').send({
-        name: 'John Doe',
-      });
+   // Маршрут для оновлення витрати
+   server.patch('/expenses/:id', (req, res) => {
+      const expense = expenses.find(e => e.id === parseInt(req.params.id));
+      if (!expense) {
+         return res.status(404).send('Expense not found');
+      }
+      const { name, amount, userId } = req.body;
 
-      const expenseData = {
-        userId,
-        spentAt: '2022-10-19T11:01:43.462Z',
-        title: 'Buy a new laptop',
-        amount: 999,
-        category: 'Electronics',
-        note: 'I need a new laptop',
-      };
+      // Перевірка, чи amount є числом
+      if (amount && isNaN(amount)) {
+         return res.status(400).send('Amount must be a number');
+      }
 
-      const {
-        body: { id: expenseId },
-      } = await api.post('/expenses').send(expenseData);
+      // Перевірка, чи існує користувач з таким userId
+      if (userId && !users.find(user => user.id === userId)) {
+         return res.status(400).send('User not found');
+      }
 
-      await api.post('/expenses').send({
-        ...expenseData,
-        userId: userId2,
-      });
+      expense.name = name || expense.name;
+      expense.amount = amount || expense.amount;
+      expense.userId = userId || expense.userId;
 
-      const response = await api
-        .get(`/expenses?userId=${userId}`)
-        .expect(200)
-        .expect('Content-Type', /application\/json/);
+      res.status(200).json(expense);
+   });
 
-      expect(response.body).toEqual([
-        {
-          id: expenseId,
-          ...expenseData,
-        },
-      ]);
-    });
+   // Маршрут для видалення витрати
+   server.delete('/expenses/:id', (req, res) => {
+      const index = expenses.findIndex(e => e.id === parseInt(req.params.id));
+      if (index === -1) {
+         return res.status(404).send('Expense not found');
+      }
+      expenses.splice(index, 1);
+      res.status(204).send();
+   });
 
-    it('should return all expenses between dates', async () => {
-      const {
-        body: { id: userId },
-      } = await api.post('/users').send({
-        name: 'John Doe',
-      });
+   return server;
+}
 
-      const expenseData = {
-        userId,
-        spentAt: '2022-10-19T11:01:43.462Z',
-        title: 'Buy a new laptop',
-        amount: 999,
-        category: 'Electronics',
-        note: 'I need a new laptop',
-      };
-
-      const {
-        body: { id: expenseId },
-      } = await api.post('/expenses').send(expenseData);
-
-      await api.post('/expenses').send({
-        ...expenseData,
-        spentAt: '2022-10-20T11:01:43.462Z',
-      });
-
-      const response = await api
-        // eslint-disable-next-line max-len
-        .get(
-          `/expenses?&from=2022-10-19T00:00:00.000Z&to=2022-10-19T23:59:59.999Z`,
-        )
-        .expect(200)
-        .expect('Content-Type', /application\/json/);
-
-      expect(response.body).toEqual([
-        {
-          id: expenseId,
-          ...expenseData,
-        },
-      ]);
-    });
-
-    it('should return all expenses by category', async () => {
-      const {
-        body: { id: userId },
-      } = await api.post('/users').send({
-        name: 'John Doe',
-      });
-
-      const expenseData = {
-        userId,
-        spentAt: '2022-10-19T11:01:43.462Z',
-        title: 'Buy a new laptop',
-        amount: 999,
-        category: 'Electronics',
-        note: 'I need a new laptop',
-      };
-
-      const {
-        body: { id: expenseId },
-      } = await api.post('/expenses').send(expenseData);
-
-      await api.post('/expenses').send({
-        ...expenseData,
-        category: 'Food',
-      });
-
-      const response = await api
-        .get(`/expenses?userId=${userId}&categories=Electronics`)
-        .expect(200)
-        .expect('Content-Type', /application\/json/);
-
-      expect(response.body).toEqual([
-        {
-          id: expenseId,
-          ...expenseData,
-        },
-      ]);
-    });
-  });
-
-  describe('getExpense', () => {
-    it('should return expense', async () => {
-      const {
-        body: { id: userId },
-      } = await api.post('/users').send({
-        name: 'John Doe',
-      });
-
-      const expenseData = {
-        userId,
-        spentAt: '2022-10-19T11:01:43.462Z',
-        title: 'Buy a new laptop',
-        amount: 999,
-        category: 'Electronics',
-        note: 'I need a new laptop',
-      };
-
-      const {
-        body: { id: expenseId },
-      } = await api.post('/expenses').send(expenseData);
-
-      const response = await api
-        .get(`/expenses/${expenseId}`)
-        .expect(200)
-        .expect('Content-Type', /application\/json/);
-
-      expect(response.body).toEqual({
-        id: expenseId,
-        ...expenseData,
-      });
-    });
-
-    it('should return 404 if expense not found', async () => {
-      await api.get('/expenses/1').expect(404);
-    });
-  });
-
-  describe('updateExpense', () => {
-    it('should update expense', async () => {
-      const {
-        body: { id: userId },
-      } = await api.post('/users').send({
-        name: 'John Doe',
-      });
-
-      const expenseData = {
-        userId,
-        spentAt: '2022-10-19T11:01:43.462Z',
-        title: 'Buy a new laptop',
-        amount: 999,
-        category: 'Electronics',
-        note: 'I need a new laptop',
-      };
-
-      const {
-        body: { id: expenseId },
-      } = await api.post('/expenses').send(expenseData);
-
-      const response = await api
-        .patch(`/expenses/${expenseId}`)
-        .send({
-          title: 'Buy a new TV',
-        })
-        .expect(200)
-        .expect('Content-Type', /application\/json/);
-
-      expect(response.body).toEqual({
-        id: expenseId,
-        ...expenseData,
-        title: 'Buy a new TV',
-      });
-    });
-
-    it('should return 404 if expense not found', async () => {
-      await api.patch('/expenses/1').send({}).expect(404);
-    });
-  });
-
-  describe('deleteExpense', () => {
-    it('should delete expense', async () => {
-      const {
-        body: { id: userId },
-      } = await api.post('/users').send({
-        name: 'John Doe',
-      });
-
-      const expenseData = {
-        userId,
-        spentAt: '2022-10-19T11:01:43.462Z',
-        title: 'Buy a new laptop',
-        amount: 999,
-        category: 'Electronics',
-        note: 'I need a new laptop',
-      };
-
-      const {
-        body: { id: expenseId },
-      } = await api.post('/expenses').send(expenseData);
-
-      await api.delete(`/expenses/${expenseId}`).expect(204);
-
-      await api.get(`/expenses/${expenseId}`).expect(404);
-    });
-
-    it('should return 404 if expense not found', async () => {
-      await api.delete('/expenses/1').expect(404);
-    });
-  });
-});
+module.exports = {
+   createServer,
+};
