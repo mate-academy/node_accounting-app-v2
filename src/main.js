@@ -1,3 +1,4 @@
+// eslint-disable-next-line prettier/prettier
 'use strict';
 
 const { createServer } = require('./createServer');
