@@ -1,5 +1,3 @@
-'use strict';
-
 const express = require('express');
 
 function createServer() {
@@ -7,18 +5,17 @@ function createServer() {
   // Add a routes to the server
   // Return the server (express app)
   const app = express();
+
   let users = [];
 
-  app.get('/users', express.json(), async (res, req) => {
-    if (!users) {
-      return;
-    }
+  app.get('/users', express.json(), async (req, res) => {
     res.send(users);
   });
 
-  app.get('/users/:id', async (res, req) => {
+  app.get('/users/:id', async (req, res) => {
     const { id } = req.params;
-    const user = users.find((item) => item.id === id);
+
+    const user = users.find((targetUser) => targetUser.id === +id);
 
     if (!user) {
       res.sendStatus(404);
@@ -29,8 +26,8 @@ function createServer() {
     res.send(user);
   });
 
-  app.post('/users', async (req, res) => {
-    const { name } = req.params;
+  app.post('/users', express.json(), async (req, res) => {
+    const { name } = req.body;
     const newId = Math.max(...users.map((item) => item.id), 0) + 1;
 
     if (!name) {
@@ -45,15 +42,33 @@ function createServer() {
     };
 
     users.push(user);
-    res.statusCode = 201;
 
+    res.statusCode = 201;
     res.send(user);
   });
 
-  app.patch('/users/:id', express.json(), async (res, req) => {
+  app.delete('/users/:id', async (req, res) => {
+    const { id } = req.params;
+
+    const targetUser = users.find((user) => user.id === +id);
+
+    if (!targetUser) {
+      res.sendStatus(404);
+
+      return;
+    }
+
+    const newUsers = users.filter((user) => user.id !== +id);
+
+    users = newUsers;
+    res.sendStatus(204);
+  });
+
+  app.patch('/users/:id', express.json(), async (req, res) => {
     const { id } = req.params;
     const { name } = req.body;
-    const targetUser = users.find((item) => item.id === +id);
+
+    const targetUser = users.find((user) => user.id === +id);
 
     if (!targetUser) {
       res.sendStatus(404);
@@ -68,25 +83,8 @@ function createServer() {
     }
 
     Object.assign(targetUser, { name });
+
     res.send(targetUser);
-  });
-
-  app.delete('/users/:id', async (res, req) => {
-    const { id } = req.params;
-
-    const targetUser = users.find((item) => item.id === +id);
-
-    if (!targetUser) {
-      res.sendStatus(404);
-
-      return;
-    }
-
-    const newUsers = users.filer((item) => item.id === +id);
-
-    users = newUsers;
-
-    res.sendStatus(204);
   });
 
   let expenses = [];
@@ -157,8 +155,7 @@ function createServer() {
 
     expenses.push(newExpense);
 
-    res.status = 201;
-
+    res.statusCode = 201;
     res.send(newExpense);
   });
 
