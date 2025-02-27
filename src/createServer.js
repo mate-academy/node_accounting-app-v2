@@ -4,13 +4,12 @@ const express = require('express');
 
 function createServer() {
   const app = express();
-
-  app.use(express.join());
+  app.use(express.json());
 
   const users = [];
-  const expences = [];
-  const userId = 1;
-  const expenceId = 1;
+  const expenses = [];
+  let userId = 1;
+  let expenseId = 1;
 
   app.get('/users', (req, res) => {
     res.json(users);
@@ -23,27 +22,24 @@ function createServer() {
       return res.status(400).send('Name is required');
     }
 
-    const user = {
-      id: userId++,
-      name,
-    };
+    const user = { id: userId++, name };
 
     users.push(user);
     res.status(201).json(user);
   });
 
-  app.post('/users/:id', (req, res) => {
-    const user = users.find((u) => u.id === Number(req.params.id));
+  app.get('/users/:id', (req, res) => {
+    const user = users.find(u => u.id === Number(req.params.id));
 
     if (!user) {
-      res.status(404).send('User not found');
+      return res.status(404).send('User not found');
     }
 
     res.json(user);
   });
 
   app.patch('/users/:id', (req, res) => {
-    const user = users.find((u) => u.id === Number(req.params.id));
+    const user = users.find(u => u.id === Number(req.params.id));
 
     if (!user) {
       return res.status(404).send('User not found');
@@ -59,14 +55,14 @@ function createServer() {
     res.json(user);
   });
 
-  app.delete('users/:id', (req, res) => {
-    const user = users.find((u) => u.id === Number(req.params.id));
+  app.delete('/users/:id', (req, res) => {
+    const index = users.findIndex(u => u.id === Number(req.params.id));
 
-    if (user === -1) {
+    if (index === -1) {
       return res.status(404).send('User not found');
     }
 
-    users.splice(user, 1);
+    users.splice(index, 1);
     res.status(204).send();
   });
 
@@ -77,32 +73,26 @@ function createServer() {
   app.post('/expenses', (req, res) => {
     const { userId, spentAt, title, amount, category, note } = req.body;
 
-    if (!userId || !spentAt || !title || !amount || !category) {
-      return res.status(400).send('Missing required fields');
-    }
+    if (!userId) return res.status(400).send('User ID is required');
+    if (!spentAt) return res.status(400).send('SpentAt date is required');
+    if (!title) return res.status(400).send('Title is required');
+    if (!amount || amount <= 0) return res.status(400).send('Amount must be greater than zero');
+    if (!category) return res.status(400).send('Category is required');
 
-    const userExists = users.some((u) => u.id === userId);
+    const userExists = users.some(u => u.id === userId);
 
     if (!userExists) {
       return res.status(400).send('User not found');
     }
 
-    const expense = {
-      id: expenseId++,
-      userId,
-      spentAt,
-      title,
-      amount,
-      category,
-      note,
-    };
+    const expense = { id: expenseId++, userId, spentAt, title, amount, category, note };
 
     expenses.push(expense);
     res.status(201).json(expense);
   });
 
   app.get('/expenses/:id', (req, res) => {
-    const expense = expenses.find((e) => e.id === Number(req.params.id));
+    const expense = expenses.find(e => e.id === Number(req.params.id));
 
     if (!expense) {
       return res.status(404).send('Expense not found');
@@ -112,7 +102,7 @@ function createServer() {
   });
 
   app.patch('/expenses/:id', (req, res) => {
-    const expense = expenses.find((e) => e.id === Number(req.params.id));
+    const expense = expenses.find(e => e.id === Number(req.params.id));
 
     if (!expense) {
       return res.status(404).send('Expense not found');
@@ -123,7 +113,7 @@ function createServer() {
   });
 
   app.delete('/expenses/:id', (req, res) => {
-    const index = expenses.findIndex((e) => e.id === Number(req.params.id));
+    const index = expenses.findIndex(e => e.id === Number(req.params.id));
 
     if (index === -1) {
       return res.status(404).send('Expense not found');
@@ -136,6 +126,4 @@ function createServer() {
   return app;
 }
 
-module.exports = {
-  createServer,
-};
+module.exports = { createServer };
