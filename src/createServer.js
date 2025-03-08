@@ -1,76 +1,92 @@
 'use strict';
 
 const express = require('express');
+const { User } = require('./models/user');
+const { Expense } = require('./models/expense');
 
 function createServer() {
   const app = express();
   app.use(express.json());
 
-  const users = [];
-  const expenses = [];
-  let userId = 1;
-  let expenseId = 1;
-
-  app.get('/users', (req, res) => {
-    res.json(users);
+  app.get('/users', async (req, res) => {
+    try {
+      const users = await User.findAll();
+      res.json(users);
+    } catch (error) {
+      res.status(500).send('Error fetching users');
+    }
   });
 
-  app.post('/users', (req, res) => {
+  app.post('/users', async (req, res) => {
     const { name } = req.body;
-
     if (!name) {
       return res.status(400).send('Name is required');
     }
 
-    const user = { id: userId++, name };
-
-    users.push(user);
-    res.status(201).json(user);
+    try {
+      const user = await User.create({ name });
+      res.status(201).json(user);
+    } catch (error) {
+      res.status(500).send('Error creating user');
+    }
   });
 
-  app.get('/users/:id', (req, res) => {
-    const user = users.find(u => u.id === Number(req.params.id));
-
-    if (!user) {
-      return res.status(404).send('User not found');
+  app.get('/users/:id', async (req, res) => {
+    const { id } = req.params;
+    try {
+      const user = await User.findByPk(id);
+      if (!user) {
+        return res.status(404).send('User not found');
+      }
+      res.json(user);
+    } catch (error) {
+      res.status(500).send('Error fetching user');
     }
-
-    res.json(user);
   });
 
-  app.patch('/users/:id', (req, res) => {
-    const user = users.find(u => u.id === Number(req.params.id));
-
-    if (!user) {
-      return res.status(404).send('User not found');
-    }
-
+  app.patch('/users/:id', async (req, res) => {
+    const { id } = req.params;
     const { name } = req.body;
 
-    if (!name) {
-      return res.status(400).send('Name is required');
+    try {
+      const user = await User.findByPk(id);
+      if (!user) {
+        return res.status(404).send('User not found');
+      }
+
+      user.name = name || user.name;
+      await user.save();
+      res.json(user);
+    } catch (error) {
+      res.status(500).send('Error updating user');
     }
-
-    user.name = name;
-    res.json(user);
   });
 
-  app.delete('/users/:id', (req, res) => {
-    const index = users.findIndex(u => u.id === Number(req.params.id));
+  app.delete('/users/:id', async (req, res) => {
+    const { id } = req.params;
+    try {
+      const user = await User.findByPk(id);
+      if (!user) {
+        return res.status(404).send('User not found');
+      }
 
-    if (index === -1) {
-      return res.status(404).send('User not found');
+      await user.destroy();
+      res.status(204).send();
+    } catch (error) {
+      res.status(500).send('Error deleting user');
     }
-
-    users.splice(index, 1);
-    res.status(204).send();
   });
 
-  app.get('/expenses', (req, res) => {
-    res.json(expenses);
+  app.get('/expenses', async (req, res) => {
+    try {
+      const expenses = await Expense.findAll();
+      res.json(expenses);
+    } catch (error) {
+      res.status(500).send('Error fetching expenses');
+    }
   });
 
-  app.post('/expenses', (req, res) => {
+  app.post('/expenses', async (req, res) => {
     const { userId, spentAt, title, amount, category, note } = req.body;
 
     if (!userId) return res.status(400).send('User ID is required');
@@ -79,51 +95,79 @@ function createServer() {
     if (!amount || amount <= 0) return res.status(400).send('Amount must be greater than zero');
     if (!category) return res.status(400).send('Category is required');
 
-    const userExists = users.some(u => u.id === userId);
+    try {
+      const userExists = await User.findByPk(userId);
+      if (!userExists) {
+        return res.status(400).send('User not found');
+      }
 
-    if (!userExists) {
-      return res.status(400).send('User not found');
+      const expense = await Expense.create({
+        userId,
+        spentAt,
+        title,
+        amount,
+        category,
+        note,
+      });
+      res.status(201).json(expense);
+    } catch (error) {
+      res.status(500).send('Error creating expense');
     }
-
-    const expense = { id: expenseId++, userId, spentAt, title, amount, category, note };
-
-    expenses.push(expense);
-    res.status(201).json(expense);
   });
 
-  app.get('/expenses/:id', (req, res) => {
-    const expense = expenses.find(e => e.id === Number(req.params.id));
-
-    if (!expense) {
-      return res.status(404).send('Expense not found');
+  app.get('/expenses/:id', async (req, res) => {
+    const { id } = req.params;
+    try {
+      const expense = await Expense.findByPk(id);
+      if (!expense) {
+        return res.status(404).send('Expense not found');
+      }
+      res.json(expense);
+    } catch (error) {
+      res.status(500).send('Error fetching expense');
     }
-
-    res.json(expense);
   });
 
-  app.patch('/expenses/:id', (req, res) => {
-    const expense = expenses.find(e => e.id === Number(req.params.id));
+  app.patch('/expenses/:id', async (req, res) => {
+    const { id } = req.params;
+    const { spentAt, title, amount, category, note } = req.body;
 
-    if (!expense) {
-      return res.status(404).send('Expense not found');
+    try {
+      const expense = await Expense.findByPk(id);
+      if (!expense) {
+        return res.status(404).send('Expense not found');
+      }
+
+      expense.spentAt = spentAt || expense.spentAt;
+      expense.title = title || expense.title;
+      expense.amount = amount || expense.amount;
+      expense.category = category || expense.category;
+      expense.note = note || expense.note;
+      await expense.save();
+      res.json(expense);
+    } catch (error) {
+      res.status(500).send('Error updating expense');
     }
-
-    Object.assign(expense, req.body);
-    res.json(expense);
   });
 
-  app.delete('/expenses/:id', (req, res) => {
-    const index = expenses.findIndex(e => e.id === Number(req.params.id));
+  app.delete('/expenses/:id', async (req, res) => {
+    const { id } = req.params;
+    try {
+      const expense = await Expense.findByPk(id);
+      if (!expense) {
+        return res.status(404).send('Expense not found');
+      }
 
-    if (index === -1) {
-      return res.status(404).send('Expense not found');
+      await expense.destroy();
+      res.status(204).send();
+    } catch (error) {
+      res.status(500).send('Error deleting expense');
     }
-
-    expenses.splice(index, 1);
-    res.status(204).send();
   });
 
   return app;
 }
 
-module.exports = { createServer };
+module.exports = {
+  createServer,
+};
