@@ -19,9 +19,11 @@ const userService = {
 
     if (user) {
       users.delete(id);
+
+      return true;
     }
 
-    return user;
+    return false;
   },
 
   updateById: ({ id, name }) => {

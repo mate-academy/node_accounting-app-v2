@@ -42,9 +42,9 @@ const expensesController = {
   },
 
   remove: (req, res) => {
-    const userToRemove = expensesService.getById(+req.params.id);
+    const expenseToRemove = expensesService.getById(+req.params.id);
 
-    if (!userToRemove) {
+    if (!expenseToRemove) {
       return res.sendStatus(404);
     }
 
@@ -55,13 +55,13 @@ const expensesController = {
   update: (req, res) => {
     const id = +req.params.id;
 
-    const updatedUser = expensesService.updateById(id, req.body);
+    const updatedExpense = expensesService.updateById(id, req.body);
 
-    if (!updatedUser) {
+    if (!updatedExpense) {
       return res.sendStatus(404);
     }
 
-    return res.json(updatedUser);
+    return res.json(updatedExpense);
   },
 };
 
