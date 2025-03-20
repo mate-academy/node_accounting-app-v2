@@ -23,7 +23,7 @@ const getOneExpense = (req, res) => {
 const createExpense = (req, res) => {
   const { userId, title } = req.body;
 
-  if (!usersService.getById(userId) || !title) {
+  if (!usersService.getById(+userId) || !title) {
     return res.sendStatus(400);
   }
 
@@ -41,6 +41,10 @@ const updateExpense = (req, res) => {
   }
 
   const updatedExpense = expensesService.update(+id, req.body);
+
+  if (!updatedExpense) {
+    return res.sendStatus(404);
+  }
 
   res.status(200).send(updatedExpense);
 };

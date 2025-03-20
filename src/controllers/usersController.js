@@ -43,6 +43,10 @@ const updateUser = (req, res) => {
 
   const updatedUser = usersService.update(+id, name);
 
+  if (!updatedUser) {
+    return res.sendStatus(404);
+  }
+
   res.status(200).send(updatedUser);
 };
 

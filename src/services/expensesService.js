@@ -13,9 +13,13 @@ const getAll = ({ userId, categories, from, to }) => {
   }
 
   if (categories) {
-    filteredExpenses = filteredExpenses.filter(
-      (expense) => expense.category === categories,
-    );
+    const categoriesArray = Array.isArray(categories)
+      ? categories
+      : [categories];
+
+    filteredExpenses = filteredExpenses.filter((expense) => {
+      return categoriesArray.includes(expense.category);
+    });
   }
 
   if (from) {
