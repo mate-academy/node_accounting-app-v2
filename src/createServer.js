@@ -1,13 +1,22 @@
-'use strict';
+const express = require('express');
+const bodyParser = require('body-parser');
 
-// const express = require('express');
+// Destructure the router from the exported object
+const { router: usersRouter } = require('./routes/users');
+const expensesRouter = require('./routes/expenses');
 
 function createServer() {
-  // Use express to create a server
-  // Add a routes to the server
-  // Return the server (express app)
+  const app = express();
+
+  app.use(bodyParser.json());
+  app.use('/users', usersRouter); // Now using the correct router
+  app.use('/expenses', expensesRouter);
+
+  app.get('/', (req, res) => {
+    res.json({ message: 'Hello World' });
+  });
+
+  return app;
 }
 
-module.exports = {
-  createServer,
-};
+module.exports = { createServer };
