@@ -36,7 +36,7 @@ const expensesController = {
       return;
     }
 
-    const user = userService.getUserById(userId);
+    const user = userService.getUserById(+userId);
 
     if (!user) {
       res.sendStatus(400);

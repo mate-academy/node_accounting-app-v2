@@ -50,7 +50,9 @@ const expensesService = {
     const expenseToDelete = expenses.find((expense) => expense.id === id);
 
     if (expenseToDelete) {
-      expenses = expenses.filter((user) => user.id !== expenseToDelete.id);
+      expenses = expenses.filter(
+        (expense) => expense.id !== expenseToDelete.id,
+      );
     }
 
     return expenseToDelete;
