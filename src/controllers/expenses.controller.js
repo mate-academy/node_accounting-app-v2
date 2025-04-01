@@ -71,16 +71,8 @@ const expensesController = {
 
   update: (req, res) => {
     const id = +req.params.id;
-    const { userId, spentAt, title, amount, category, note } = req.body;
 
-    const expense = expensesService.update(id, {
-      userId,
-      spentAt,
-      title,
-      amount,
-      category,
-      note,
-    });
+    const expense = expensesService.update(id, req.body);
 
     if (!expense) {
       res.sendStatus(404);
