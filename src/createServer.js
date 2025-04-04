@@ -5,7 +5,7 @@ const express = require('express');
 function createServer() {
   const app = express();
 
-  app.use(express.json()); // додано парсер JSON
+  app.use(express.json());
 
   let users = [];
   let expenses = [];
@@ -104,15 +104,19 @@ function createServer() {
   });
 
   app.post('/expenses', async (req, res) => {
-    const { userId, spentAt, title, amount, category, note } = req.body;
+    let { userId, amount } = req.body;
+    const { spentAt, title, category, note } = req.body;
+
+    userId = Number(userId);
+    amount = Number(amount);
 
     if (
-      typeof userId !== 'number' ||
+      !Number.isInteger(userId) ||
       typeof spentAt !== 'string' ||
       typeof title !== 'string' ||
       typeof amount !== 'number' ||
-      typeof category !== 'string' ||
-      typeof note !== 'string'
+      isNaN(amount) ||
+      typeof category !== 'string'
     ) {
       return res.sendStatus(400);
     }
@@ -131,8 +135,11 @@ function createServer() {
       title,
       amount,
       category,
-      note,
     };
+
+    if (typeof note === 'string') {
+      newExpense.note = note;
+    }
 
     expenses.push(newExpense);
     res.status(201).send(newExpense);
