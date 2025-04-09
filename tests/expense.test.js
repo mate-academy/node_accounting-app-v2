@@ -2,6 +2,7 @@
 
 const supertest = require('supertest');
 const { createServer } = require('../src/createServer');
+const expensesService = require('../src/services/expenses.service');
 
 describe('Expense', () => {
   let server;
@@ -62,6 +63,10 @@ describe('Expense', () => {
   });
 
   describe('getExpenses', () => {
+    beforeEach(() => {
+      expensesService.clearExpenses(); // ← очищення перед кожним тестом
+    });
+
     it('should return empty array if no expenses', async () => {
       const response = await api
         .get('/expenses')

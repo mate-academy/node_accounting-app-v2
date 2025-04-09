@@ -2,6 +2,7 @@
 
 const supertest = require('supertest');
 const { createServer } = require('../src/createServer');
+const userService = require('../src/services/users.service');
 
 describe('User', () => {
   let server;
@@ -35,6 +36,11 @@ describe('User', () => {
     it('should return 400 if name is not provided', async () => {
       await api.post('/users').send({}).expect(400);
     });
+  });
+
+  // userService.clearUsers();
+  beforeEach(() => {
+    userService.clearUsers(); // ← очищення перед кожним тестом
   });
 
   describe('getUsers', () => {
