@@ -51,7 +51,7 @@ const removeUser = (req, res) => {
     return res.status(404).send('Not found');
   }
 
-  return res.sendStatus('204');
+  return res.sendStatus(204);
 };
 
 const updateUser = (req, res) => {

@@ -60,13 +60,13 @@ const add = (data) => {
     return false;
   }
 
-  const user = userService.get(userId);
+  const user = userService.get(+userId);
 
   if (!user) {
     return false;
   }
 
-  const newExpense = { id: countId, ...data };
+  const newExpense = { id: +countId, ...data };
 
   expenses.push(newExpense);
   countId++;
@@ -79,9 +79,9 @@ const get = (id) => {
     return false;
   }
 
-  const findExpense = expenses.find((expense) => expense.id === +id) || -1;
+  const findExpense = expenses.find((expense) => expense.id === +id);
 
-  if (findExpense < 0) {
+  if (!findExpense) {
     return false;
   }
 

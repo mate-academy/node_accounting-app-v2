@@ -11,9 +11,9 @@ const getAll = () => {
 };
 
 const get = (id) => {
-  const findOne = users.find((user) => user.id === id) || -1;
+  const findOne = users.find((user) => user.id === +id);
 
-  if (findOne < 0) {
+  if (!findOne) {
     return false;
   }
 
@@ -45,7 +45,7 @@ const remove = (id) => {
 };
 
 const update = ({ id, name }) => {
-  const user = get(id);
+  const user = get(+id);
 
   if (!user) {
     return false;

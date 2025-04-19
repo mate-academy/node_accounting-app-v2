@@ -54,7 +54,7 @@ const removeExpense = (req, res) => {
     return res.status(404).send('Not found');
   }
 
-  return res.sendStatus('204');
+  return res.sendStatus(204);
 };
 
 const updateExpense = (req, res) => {
@@ -69,7 +69,7 @@ const updateExpense = (req, res) => {
     return res.status(404).send('Not found');
   }
 
-  const updatedUser = update(id, expense);
+  const updatedUser = update(+id, expense);
 
   if (!updatedUser) {
     return res.status(404).send('Not found');
