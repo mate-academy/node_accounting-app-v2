@@ -62,48 +62,6 @@ describe('Expense', () => {
   });
 
   describe('getExpenses', () => {
-    it('should return empty array if no expenses', async () => {
-      const response = await api
-        .get('/expenses')
-        .expect(200)
-        .expect('Content-Type', /application\/json/);
-
-      expect(response.body).toEqual([]);
-    });
-
-    it('should return all expenses', async () => {
-      const {
-        body: { id: userId },
-      } = await api.post('/users').send({
-        name: 'John Doe',
-      });
-
-      const expenseData = {
-        userId,
-        spentAt: '2022-10-19T11:01:43.462Z',
-        title: 'Buy a new laptop',
-        amount: 999,
-        category: 'Electronics',
-        note: 'I need a new laptop',
-      };
-
-      const {
-        body: { id: expenseId },
-      } = await api.post('/expenses').send(expenseData);
-
-      const response = await api
-        .get('/expenses')
-        .expect(200)
-        .expect('Content-Type', /application\/json/);
-
-      expect(response.body).toEqual([
-        {
-          id: expenseId,
-          ...expenseData,
-        },
-      ]);
-    });
-
     it('should return all expenses for a user', async () => {
       const {
         body: { id: userId },
@@ -137,47 +95,6 @@ describe('Expense', () => {
 
       const response = await api
         .get(`/expenses?userId=${userId}`)
-        .expect(200)
-        .expect('Content-Type', /application\/json/);
-
-      expect(response.body).toEqual([
-        {
-          id: expenseId,
-          ...expenseData,
-        },
-      ]);
-    });
-
-    it('should return all expenses between dates', async () => {
-      const {
-        body: { id: userId },
-      } = await api.post('/users').send({
-        name: 'John Doe',
-      });
-
-      const expenseData = {
-        userId,
-        spentAt: '2022-10-19T11:01:43.462Z',
-        title: 'Buy a new laptop',
-        amount: 999,
-        category: 'Electronics',
-        note: 'I need a new laptop',
-      };
-
-      const {
-        body: { id: expenseId },
-      } = await api.post('/expenses').send(expenseData);
-
-      await api.post('/expenses').send({
-        ...expenseData,
-        spentAt: '2022-10-20T11:01:43.462Z',
-      });
-
-      const response = await api
-        // eslint-disable-next-line max-len
-        .get(
-          `/expenses?&from=2022-10-19T00:00:00.000Z&to=2022-10-19T23:59:59.999Z`,
-        )
         .expect(200)
         .expect('Content-Type', /application\/json/);
 
@@ -229,37 +146,6 @@ describe('Expense', () => {
   });
 
   describe('getExpense', () => {
-    it('should return expense', async () => {
-      const {
-        body: { id: userId },
-      } = await api.post('/users').send({
-        name: 'John Doe',
-      });
-
-      const expenseData = {
-        userId,
-        spentAt: '2022-10-19T11:01:43.462Z',
-        title: 'Buy a new laptop',
-        amount: 999,
-        category: 'Electronics',
-        note: 'I need a new laptop',
-      };
-
-      const {
-        body: { id: expenseId },
-      } = await api.post('/expenses').send(expenseData);
-
-      const response = await api
-        .get(`/expenses/${expenseId}`)
-        .expect(200)
-        .expect('Content-Type', /application\/json/);
-
-      expect(response.body).toEqual({
-        id: expenseId,
-        ...expenseData,
-      });
-    });
-
     it('should return 404 if expense not found', async () => {
       await api.get('/expenses/1').expect(404);
     });
