@@ -7,9 +7,10 @@ describe('User', () => {
   let server;
   let api;
 
-  beforeEach(() => {
+  beforeEach(async () => {
     server = createServer();
     api = supertest(server);
+    await api.post('/__test__/reset');
   });
 
   describe('createUser', () => {
