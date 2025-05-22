@@ -29,10 +29,8 @@ const getAll = (req, res) => {
       const spentDate = new Date(expense.spentAt);
 
       const isInDateRange = spentDate >= fromDate && spentDate <= toDate;
-      const isInCategory =
-        !expenseCategories || expenseCategories.includes(expense.category);
 
-      return isInDateRange && isInCategory;
+      return isInDateRange;
     });
   }
 
