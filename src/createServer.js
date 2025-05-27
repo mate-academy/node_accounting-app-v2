@@ -16,16 +16,14 @@ function createServer() {
   };
 
   app.get('/users', (req, res) => {
-    res.status(200);
-    res.json(inMemoryData.users);
+    res.status(200).json(inMemoryData.users);
   });
 
   app.post('/users', (req, res) => {
     const { name } = req.body;
 
-    if (!name) {
-      res.status(400);
-      res.json({ error: 'One or more fields are missing' });
+    if (name == null) {
+      res.status(400).json({ error: 'One or more fields are missing' });
 
       return;
     }
@@ -35,30 +33,24 @@ function createServer() {
       name: name,
     });
     inMemoryData.nextUserIndex++;
-    res.status(201);
-    res.json(inMemoryData.users.at(-1));
+    res.status(201).json(inMemoryData.users.at(-1));
   });
 
   app.get('/users/:id', (req, res) => {
     const id = parseInt(req.params.id);
 
     if (Number.isNaN(id)) {
-      res.status(400);
-      res.json({ error: 'Invalid ID' });
-
-      return;
+      res.status(400).json({ error: 'Invalid ID' });
     }
 
     const user = inMemoryData.users.find((u) => u.id === id);
 
-    if (!user) {
-      res.status(404);
-      res.json({ error: 'User not found' });
+    if (user == null) {
+      res.status(404).json({ error: 'User not found' });
 
       return;
     }
-    res.status(200);
-    res.json(user);
+    res.status(200).json(user);
   });
 
   app.delete('/users/:id', (req, res) => {
@@ -67,13 +59,12 @@ function createServer() {
     const userIndex = inMemoryData.users.findIndex((u) => u.id === id);
 
     if (userIndex === -1) {
-      res.status(404);
-      res.json({ error: 'User not found' });
+      res.status(404).json({ error: 'User not found' });
 
       return;
     }
     inMemoryData.users.splice(userIndex, 1);
-    res.status(204);
+    res.status(204).end();
   });
 
   app.patch('/users/:id', (req, res) => {
@@ -82,26 +73,23 @@ function createServer() {
     const userIndex = inMemoryData.users.findIndex((u) => u.id === id);
 
     if (userIndex === -1) {
-      res.status(404);
-      res.json({ error: 'User not found' });
+      res.status(404).json({ error: 'User not found' });
 
       return;
     }
 
-    if (!name) {
-      res.status(400);
-      res.json({ error: 'One or more fields are missing' });
+    if (name == null) {
+      res.status(400).json({ error: 'One or more fields are missing' });
 
       return;
     }
 
     inMemoryData.users[userIndex].name = name;
-    res.status(200);
-    res.json(inMemoryData.users[userIndex]);
+    res.status(200).json(inMemoryData.users[userIndex]);
   });
 
   app.get('/expenses', (req, res) => {
-    const { userId, categories, fromDate, toDate } = req.query;
+    const { userId, categories, from, to } = req.query;
     let filteredExpenses = inMemoryData.expenses;
 
     if (userId) {
@@ -123,28 +111,42 @@ function createServer() {
       }
     }
 
-    if (fromDate || toDate) {
+    if (from || to) {
       filteredExpenses = filteredExpenses.filter((expense) => {
-        const isAfterFromDate = fromDate
-          ? new Date(expense.spentAt) >= new Date(fromDate)
+        const isAfterFromDate = from
+          ? new Date(expense.spentAt) >= new Date(from)
           : true;
-        const isBeforeToDate = toDate
-          ? new Date(expense.spentAt) <= new Date(toDate)
+        const isBeforeToDate = to
+          ? new Date(expense.spentAt) <= new Date(to)
           : true;
 
         return isAfterFromDate && isBeforeToDate;
       });
     }
-    res.status(200);
-    res.json(filteredExpenses);
+    res.status(200).json(filteredExpenses);
   });
 
   app.post('/expenses', (req, res) => {
     const { userId, spentAt, title, amount, category, note } = req.body;
 
-    if (!userId || !spentAt || !title || !amount || !category) {
-      res.status(400);
-      res.json({ error: 'One or more required fields are missing' });
+    if (
+      userId == null ||
+      spentAt == null ||
+      title == null ||
+      amount == null ||
+      category == null
+    ) {
+      res
+        .status(400)
+        .json({ error: 'One or more required fields are missing' });
+
+      return;
+    }
+
+    const userExists = inMemoryData.users.find((u) => u.id === userId);
+
+    if (!userExists) {
+      res.status(400).json({ error: 'Invalid user ID' });
 
       return;
     }
@@ -159,30 +161,26 @@ function createServer() {
       note: note,
     });
     inMemoryData.nextExpenseIndex++;
-    res.status(201);
-    res.json(inMemoryData.expenses.at(-1));
+    res.status(201).json(inMemoryData.expenses.at(-1));
   });
 
   app.get('/expenses/:id', (req, res) => {
     const id = parseInt(req.params.id);
 
     if (Number.isNaN(id)) {
-      res.status(400);
-      res.json({ error: 'Invalid ID' });
+      res.status(400).json({ error: 'Invalid ID' });
 
       return;
     }
 
     const expense = inMemoryData.expenses.find((e) => e.id === id);
 
-    if (!expense) {
-      res.status(404);
-      res.json({ error: 'User not found' });
+    if (expense == null) {
+      res.status(404).json({ error: 'User not found' });
 
       return;
     }
-    res.status(200);
-    res.json(expense);
+    res.status(200).json(expense);
   });
 
   app.delete('/expenses/:id', (req, res) => {
@@ -191,13 +189,12 @@ function createServer() {
     const expenseIndex = inMemoryData.expenses.findIndex((e) => e.id === id);
 
     if (expenseIndex === -1) {
-      res.status(404);
-      res.json({ error: 'Expense not found' });
+      res.status(404).json({ error: 'Expense not found' });
 
       return;
     }
     inMemoryData.expenses.splice(expenseIndex, 1);
-    res.status(204);
+    res.status(204).end();
   });
 
   app.patch('/expenses/:id', (req, res) => {
@@ -206,8 +203,7 @@ function createServer() {
     const expenseIndex = inMemoryData.expenses.findIndex((e) => e.id === id);
 
     if (expenseIndex === -1) {
-      res.status(404);
-      res.json({ error: 'Expense not found' });
+      res.status(404).json({ error: 'Expense not found' });
 
       return;
     }
@@ -240,14 +236,12 @@ function createServer() {
     }
 
     if (!changed) {
-      res.status(400);
-      res.json({ error: 'At least one field is required' });
+      res.status(400).json({ error: 'At least one field is required' });
 
       return;
     }
 
-    res.status(200);
-    res.json(inMemoryData.expenses[expenseIndex]);
+    res.status(200).json(inMemoryData.expenses[expenseIndex]);
   });
 
   return app;
