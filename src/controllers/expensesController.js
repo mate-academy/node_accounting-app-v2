@@ -1,3 +1,4 @@
+/* eslint-disable function-paren-newline */
 const {
   getAll,
   getById,
@@ -17,13 +18,24 @@ const getAllExpenses = async (req, res) => {
   }
 
   if (categories) {
-    expenses = expenses.filter((expense) => expense.category === categories);
+    const categoryList = categories.split(',');
+
+    expenses = expenses.filter((expense) =>
+      categoryList.includes(expense.category),
+    );
   }
 
   if (from || to) {
-    expenses = expenses.filter(
-      (expense) => expense.spentAt >= from && expense.spentAt <= to,
-    );
+    expenses = expenses.filter((expense) => {
+      const expenseDate = new Date(expense.spentAt).getTime();
+      const fromDate = from ? new Date(from).getTime() : null;
+      const toDate = to ? new Date(to).getTime() : null;
+
+      return (
+        (!fromDate || expenseDate >= fromDate) &&
+        (!toDate || expenseDate <= toDate)
+      );
+    });
   }
   res.send(expenses);
 };
@@ -45,7 +57,7 @@ const addExpense = async (req, res) => {
     return res.status(400).send('Missing required fields');
   }
 
-  const user = getUserById(userId);
+  const user = await getUserById(userId);
 
   if (!user) {
     return res.status(400).send('User not found');
@@ -67,7 +79,7 @@ const updateExpense = async (req, res) => {
   }
 
   if (
-    (userId && typeof userId !== 'string') ||
+    (userId && typeof userId !== 'number') ||
     (spentAt && typeof spentAt !== 'string') ||
     (title && typeof title !== 'string') ||
     (amount && typeof amount !== 'number') ||

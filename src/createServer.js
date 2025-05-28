@@ -3,7 +3,7 @@
 const express = require('express');
 const cors = require('cors');
 const { expensesRouter } = require('./routes/expensesRouter');
-const { usersRouter } = require('./routes/usersRoutes');
+const { usersRouter } = require('./routes/usersRouter');
 const { reset: resetExpenses } = require('./services/expensesService');
 const { reset: resetUsers } = require('./services/usersService');
 

@@ -7,7 +7,9 @@ const {
 } = require('../services/usersService');
 
 const getAllUsers = async (req, res) => {
-  await res.send(getAll());
+  const users = await getAll();
+
+  res.send(users);
 };
 
 const getUserById = async (req, res) => {
