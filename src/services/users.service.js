@@ -30,21 +30,30 @@ function removeUser(userId) {
     users.splice(indexOfUser, 1);
 
     return true;
-  } else {
-    return false;
   }
+
+  return false;
 }
 
 function changeUser(userId, body) {
   const indexOfUser = users.findIndex((u) => u.id === +userId);
 
-  if (indexOfUser !== -1 || Object.keys(body).length !== 0) {
-    users[indexOfUser] = { ...users[indexOfUser], ...body };
-
-    return users[indexOfUser];
+  if (indexOfUser === -1) {
+    return -1;
   }
 
-  return -1;
+  if (Object.keys(body).length === 0) {
+    return false;
+  }
+
+  users[indexOfUser] = { ...users[indexOfUser], ...body };
+
+  return users[indexOfUser];
+}
+
+function resetUsers() {
+  users.length = 0;
+  nextUserId = 1;
 }
 
 module.exports = {
@@ -54,4 +63,5 @@ module.exports = {
   addUser,
   removeUser,
   changeUser,
+  resetUsers,
 };

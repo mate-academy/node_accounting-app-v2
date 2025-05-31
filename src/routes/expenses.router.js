@@ -20,7 +20,7 @@ expensesRouter.get('/:expenseId', (req, res) => {
   const { expenseId } = req.params;
 
   if (!expenseId) {
-    res.sendStatus(400);
+    res.status(400).send({ message: 'Expense ID is required' });
 
     return;
   }
@@ -28,7 +28,7 @@ expensesRouter.get('/:expenseId', (req, res) => {
   const expense = getExpense(expenseId);
 
   if (!expense) {
-    res.sendStatus(404);
+    res.status(404).send({ message: 'Expense not found' });
 
     return;
   }
@@ -36,7 +36,7 @@ expensesRouter.get('/:expenseId', (req, res) => {
   res.status(200).send(expense);
 });
 
-expensesRouter.post('/', express.json(), (req, res) => {
+expensesRouter.post('/', (req, res) => {
   const { userId, title, amount } = req.body;
 
   if (
@@ -46,7 +46,7 @@ expensesRouter.post('/', express.json(), (req, res) => {
     amount === null ||
     isNaN(Number(amount))
   ) {
-    res.sendStatus(400);
+    res.status(400).send({ message: 'Required fields: userId, title, amount' });
 
     return;
   }
@@ -54,7 +54,7 @@ expensesRouter.post('/', express.json(), (req, res) => {
   const expense = addExpense(req.body);
 
   if (!expense) {
-    res.status(400);
+    res.status(400).send({ message: 'User not found' });
 
     return;
   }
@@ -66,7 +66,7 @@ expensesRouter.delete('/:expenseId', (req, res) => {
   const { expenseId } = req.params;
 
   if (!expenseId) {
-    res.sendStatus(400);
+    res.status(400).send({ message: 'Expense ID is required' });
 
     return;
   }
@@ -74,7 +74,7 @@ expensesRouter.delete('/:expenseId', (req, res) => {
   const removed = removeExpense(expenseId);
 
   if (!removed) {
-    res.sendStatus(404);
+    res.status(404).send({ message: 'Expense not found' });
 
     return;
   }
@@ -82,26 +82,20 @@ expensesRouter.delete('/:expenseId', (req, res) => {
   res.sendStatus(204);
 });
 
-expensesRouter.patch('/:expenseId', express.json(), (req, res) => {
+expensesRouter.patch('/:expenseId', (req, res) => {
   const { expenseId } = req.params;
   const { body } = req;
-
-  if (!expenseId) {
-    res.sendStatus(400);
-
-    return;
-  }
 
   const expense = changeExpense(expenseId, body);
 
   if (expense === -1) {
-    res.sendStatus(404);
+    res.status(404).send({ message: 'Expense not found' });
 
     return;
   }
 
-  if (!expense) {
-    res.sendStatus(400);
+  if (expense === false) {
+    res.status(400).send({ message: 'Request body cannot be empty' });
 
     return;
   }

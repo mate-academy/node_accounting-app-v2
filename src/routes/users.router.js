@@ -21,7 +21,7 @@ usersRouter.get('/:userId', (req, res) => {
   const { userId } = req.params;
 
   if (!userId) {
-    res.sendStatus(400);
+    res.status(400).send({ message: 'User ID is required' });
 
     return;
   }
@@ -29,7 +29,7 @@ usersRouter.get('/:userId', (req, res) => {
   const user = getUser(userId);
 
   if (!user) {
-    res.sendStatus(404);
+    res.status(404).send({ message: 'User not found' });
 
     return;
   }
@@ -37,11 +37,11 @@ usersRouter.get('/:userId', (req, res) => {
   res.status(200).send(user);
 });
 
-usersRouter.post('/', express.json(), (req, res) => {
+usersRouter.post('/', (req, res) => {
   const { name } = req.body;
 
   if (!name) {
-    res.sendStatus(400);
+    res.status(400).send({ message: 'Name is required' });
 
     return;
   }
@@ -55,7 +55,7 @@ usersRouter.delete('/:userId', (req, res) => {
   const { userId } = req.params;
 
   if (!userId) {
-    res.sendStatus(400);
+    res.status(400).send({ message: 'User ID is required' });
 
     return;
   }
@@ -68,15 +68,21 @@ usersRouter.delete('/:userId', (req, res) => {
     return;
   }
 
-  res.sendStatus(404);
+  res.status(404).send({ message: 'User not found' });
 });
 
-usersRouter.patch('/:userId', express.json(), (req, res) => {
+usersRouter.patch('/:userId', (req, res) => {
   const { userId } = req.params;
   const { body } = req;
 
   if (!userId) {
-    res.sendStatus(400);
+    res.status(400).send({ message: 'User ID is required' });
+
+    return;
+  }
+
+  if (Object.keys(body).length === 0) {
+    res.status(400).send({ message: 'Request body cannot be empty' });
 
     return;
   }
@@ -84,13 +90,7 @@ usersRouter.patch('/:userId', express.json(), (req, res) => {
   const user = changeUser(userId, body);
 
   if (user === -1) {
-    res.sendStatus(404);
-
-    return;
-  }
-
-  if (Object.keys(body).length === 0) {
-    res.sendStatus(400);
+    res.status(404).send({ message: 'User not found' });
 
     return;
   }

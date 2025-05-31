@@ -1,6 +1,6 @@
-const { users } = require('../services/users.service');
+const { users } = require('./users.service');
 
-const expenses = [];
+let expenses = [];
 
 let nextExpenseId = 1;
 
@@ -64,23 +64,23 @@ function addExpense(body) {
 
   const userExists = users.some((u) => u.id === +userId);
 
-  if (userExists) {
-    const expense = {
-      id: nextExpenseId++,
-      userId: +userId,
-      spentAt: spentAt || new Date().toISOString(),
-      title,
-      amount: Number(amount),
-      category: category || 'Uncategorized',
-      note: note || '',
-    };
-
-    expenses.push(expense);
-
-    return expense;
-  } else {
+  if (!userExists) {
     return false;
   }
+
+  const expense = {
+    id: nextExpenseId++,
+    userId: +userId,
+    spentAt: spentAt || new Date().toISOString(),
+    title,
+    amount: Number(amount),
+    category: category || 'Uncategorized',
+    note: note || '',
+  };
+
+  expenses.push(expense);
+
+  return expense;
 }
 
 function removeExpense(expenseId) {
@@ -99,7 +99,7 @@ function changeExpense(expenseId, body) {
   const indexOfExpense = expenses.findIndex((e) => e.id === +expenseId);
 
   if (indexOfExpense === -1) {
-    return indexOfExpense;
+    return -1;
   }
 
   if (Object.keys(body).length === 0) {
@@ -111,10 +111,15 @@ function changeExpense(expenseId, body) {
   return expenses[indexOfExpense];
 }
 
+const resetExpenses = () => {
+  expenses = [];
+};
+
 module.exports = {
   getAllExpenses,
   getExpense,
   addExpense,
   removeExpense,
   changeExpense,
+  resetExpenses,
 };
