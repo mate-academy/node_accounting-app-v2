@@ -1,250 +1,219 @@
 'use strict';
 
 const express = require('express');
-const app = express();
 
-app.use(express.json()); // Middleware for parsing JSON
+function createServer() {
+  const app = express();
 
-// In-memory data stores
-const expenses = [];
-const users = [];
+  // Middleware to parse JSON
+  app.use(express.json());
 
-// --- USERS ENDPOINTS ---
-let userIdCounter = 1;
-let expenseIdCounter = 1;
+  // In-memory storage for users and expenses
+  const users = [];
+  const expenses = [];
 
-// POST /users - Create a user
-app.post('/users', (req, res) => {
-  const { name } = req.body;
-
-  if (!name) {
-    return res.status(400).json({ error: 'Name is required' });
-  }
-
-  const user = { id: userIdCounter++, name };
-
-  users.push(user);
-  res.status(201).json(user);
-});
-
-// GET /users - Get all users
-app.get('/users', (req, res) => {
-  res.json(users);
-});
-
-// GET /users/:id - Get user by id
-app.get('/users/:id', (req, res) => {
-  const user = users.find((u) => u.id === parseInt(req.params.id));
-
-  if (!user) {
-    return res.status(404).json({ error: 'User not found' });
-  }
-  res.json(user);
-});
-
-// PATCH /users/:id - Partial update user
-app.patch('/users/:id', (req, res) => {
-  const userId = parseInt(req.params.id);
-  const user = users.find((u) => u.id === userId);
-
-  if (!user) {
-    return res.status(404).json({ error: 'User not found' });
-  }
-
-  if (req.body.name !== undefined) {
-    user.name = req.body.name;
-  }
-
-  res.status(200).json(user);
-});
-
-// PUT /users/:id - Update user
-app.put('/users/:id', (req, res) => {
-  const userId = parseInt(req.params.id);
-  const user = users.find((u) => u.id === userId);
-
-  if (!user) {
-    return res.status(404).json({ error: 'User not found' });
-  }
-
-  const { name } = req.body;
-
-  if (!name) {
-    return res.status(400).json({ error: 'Name is required' });
-  }
-  user.name = name;
-  res.status(200).json(user);
-});
-
-// DELETE /users/:id - Delete user
-app.delete('/users/:id', (req, res) => {
-  const index = users.findIndex((u) => u.id === parseInt(req.params.id));
-
-  if (index === -1) {
-    return res.status(404).json({ error: 'User not found' });
-  }
-  users.splice(index, 1);
-  res.status(204).end();
-});
-
-// --- EXPENSES ENDPOINTS ---
-
-// POST /expenses - Create an expense
-app.post('/expenses', (req, res) => {
-  const { title, amount, spentAt, category, note, userId } = req.body;
-
-  if (!title || !amount || !spentAt || !category) {
-    return res.status(400).json({ error: 'Missing required parameters' });
-  }
-
-  // If userId is provided, check if user exists
-  if (userId !== undefined && !users.find((u) => u.id === userId)) {
-    return res.status(400).json({ error: 'User not found' });
-  }
-
-  const newExpense = {
-    id: expenseIdCounter++,
-    title,
-    amount,
-    spentAt,
-    category,
-    note: note || '',
-    userId: userId !== undefined ? userId : undefined,
-  };
-
-  expenses.push(newExpense);
-  res.status(201).json(newExpense);
-});
-
-// GET /expenses - Retrieve all expenses (with filters)
-app.get('/expenses', (req, res) => {
-  let result = [...expenses];
-
-  // Filter by userId
-  if (req.query.userId) {
-    result = result.filter((e) => e.userId === parseInt(req.query.userId));
-  }
-
-  // Filter by category
-  if (req.query.category) {
-    result = result.filter((e) => e.category === req.query.category);
-  }
-
-  if (req.query.categories) {
-    const cats = req.query.categories.split(',');
-
-    result = result.filter((e) => cats.includes(e.category));
-  }
-
-  // Filter by date range
-  if (req.query.from || req.query.to) {
-    result = result.filter((e) => {
-      const date = new Date(e.spentAt);
-
-      if (req.query.from && date < new Date(req.query.from)) {
-        return false;
-      }
-
-      if (req.query.to && date > new Date(req.query.to)) {
-        return false;
-      }
-
-      return true;
-    });
-  }
-
-  res.json(result);
-});
-
-// GET /expenses/:id - Retrieve a single expense
-app.get('/expenses/:id', (req, res) => {
-  const expense = expenses.find((e) => e.id === parseInt(req.params.id));
-
-  if (!expense) {
-    return res.status(404).json({ error: 'Expense not found' });
-  }
-  res.json(expense);
-});
-
-app.patch('/expenses/:id', (req, res) => {
-  const expenseId = parseInt(req.params.id);
-  const expense = expenses.find((e) => e.id === expenseId);
-
-  if (!expense) {
-    return res.status(404).json({ error: 'Expense not found' });
-  }
-
-  const allowedFields = [
-    'title',
-    'amount',
-    'spentAt',
-    'category',
-    'note',
-    'userId',
-  ];
-
-  for (const key of allowedFields) {
-    if (req.body[key] !== undefined) {
-      if (key === 'userId' && !users.find((u) => u.id === req.body.userId)) {
-        return res.status(400).json({ error: 'User not found' });
-      }
-      expense[key] = req.body[key];
-    }
-  }
-
-  res.status(200).json(expense);
-});
-
-// PUT /expenses/:id - Update an expense
-app.put('/expenses/:id', (req, res) => {
-  const expenseId = parseInt(req.params.id);
-  const expense = expenses.find((e) => e.id === expenseId);
-
-  if (!expense) {
-    return res.status(404).json({ error: 'Expense not found' });
-  }
-
-  const { title, amount, spentAt, category, note, userId } = req.body;
-
-  if (!title || !amount || !spentAt || !category) {
-    return res.status(400).json({ error: 'Missing required parameters' });
-  }
-
-  // If userId is provided, check if user exists
-  if (userId !== undefined && !users.find((u) => u.id === userId)) {
-    return res.status(400).json({ error: 'User not found' });
-  }
-
-  Object.assign(expense, {
-    title,
-    amount,
-    spentAt,
-    category,
-    note: note || '',
-    userId: userId !== undefined ? userId : undefined,
+  // Define routes for users and expenses
+  app.get('/users', (_, res) => {
+    res.json(users);
   });
-  res.status(200).json(expense);
-});
 
-// DELETE /expenses/:id - Delete an expense
-app.delete('/expenses/:id', (req, res) => {
-  const index = expenses.findIndex((e) => e.id === parseInt(req.params.id));
+  app.post('/users', (req, res) => {
+    const { name } = req.body;
 
-  if (index === -1) {
-    return res.status(404).json({ error: 'Expense not found' });
-  }
-  expenses.splice(index, 1);
-  res.status(204).end();
-});
+    if (!name) {
+      return res.status(400).send('Name is required');
+    }
 
-// --- TESTING ONLY: Reset all data (call from your test setup) ---
-app.post('/__test__/reset', (req, res) => {
-  users.length = 0;
-  userIdCounter = 1;
-  expenseIdCounter = 1;
-  expenses.length = 0;
-  res.status(204).end();
-});
+    const user = { id: users.length + 1, name };
 
-// Export the app instance (without calling app.listen)
-module.exports = { createServer: () => app };
+    users.push(user);
+    res.status(201).json(user);
+  });
+
+  app.get('/users/:id', (req, res) => {
+    const { id } = req.params;
+
+    const foundUser = users.find((user) => user.id === Number(id));
+
+    if (!foundUser) {
+      return res.status(404).send('User not found');
+    }
+
+    res.json(foundUser);
+  });
+
+  app.patch('/users/:id', (req, res) => {
+    const { id } = req.params;
+    const { name } = req.body;
+
+    const foundUser = users.find((user) => user.id === Number(id));
+
+    if (!foundUser) {
+      return res.status(404).send('User not found');
+    }
+
+    if (name) {
+      foundUser.name = name;
+    }
+
+    res.json(foundUser);
+  });
+
+  app.delete('/users/:id', (req, res) => {
+    const { id } = req.params;
+
+    const userIndex = users.findIndex((user) => user.id === Number(id));
+
+    if (userIndex === -1) {
+      return res.status(404).send('User not found');
+    }
+
+    users.splice(userIndex, 1);
+    res.status(204).send();
+  });
+
+  app.get('/expenses', (req, res) => {
+    const { userId, from, to, categories } = req.query;
+
+    let filteredExpenses = expenses;
+
+    // Filter by userId if provided
+    if (userId) {
+      filteredExpenses = filteredExpenses.filter(
+        (expense) => expense.userId === Number(userId),
+      );
+    }
+
+    // Filter by date range if provided
+    if (from || to) {
+      const fromDate = from ? new Date(from) : null;
+      const toDate = to ? new Date(to) : null;
+
+      filteredExpenses = filteredExpenses.filter((expense) => {
+        const spentAt = new Date(expense.spentAt);
+
+        // Ensure spentAt is a valid date
+        if (isNaN(spentAt)) {
+          return false;
+        }
+
+        const isAfterFromDate = fromDate ? spentAt >= fromDate : true;
+        const isBeforeToDate = toDate ? spentAt <= toDate : true;
+
+        return isAfterFromDate && isBeforeToDate;
+      });
+    }
+
+    // Filter by categories if provided
+    if (categories) {
+      const categoryList = categories.toLowerCase().split(',');
+
+      filteredExpenses = filteredExpenses.filter(
+        (expense) =>
+          expense.category &&
+          categoryList.includes(expense.category.toLowerCase()),
+      );
+    }
+
+    res.json(filteredExpenses);
+  });
+
+  app.get('/expenses/:id', (req, res) => {
+    const { id } = req.params;
+
+    const foundExpense = expenses.find((expense) => expense.id === Number(id));
+
+    if (!foundExpense) {
+      return res.status(404).send('Expense not found');
+    }
+
+    res.json(foundExpense);
+  });
+
+  app.post('/expenses', (req, res) => {
+    const { userId, title, amount, category, spentAt, note } = req.body;
+
+    if (
+      userId === undefined ||
+      !title ||
+      amount === undefined ||
+      !category ||
+      !spentAt
+    ) {
+      return res.status(400).send('All fields are required');
+    }
+
+    const userExists = users.some((user) => user.id === userId);
+
+    if (!userExists) {
+      return res.status(400).send('User not found');
+    }
+
+    const expense = {
+      id: expenses.length + 1,
+      userId,
+      title,
+      amount,
+      category,
+      spentAt,
+      note,
+    };
+
+    expenses.push(expense);
+    res.status(201).json(expense);
+  });
+
+  app.patch('/expenses/:id', (req, res) => {
+    const { id } = req.params;
+    const { title, amount, category, spentAt, note } = req.body;
+
+    const expense = expenses.find((e) => e.id === Number(id));
+
+    if (!expense) {
+      return res.status(404).send('Expense not found');
+    }
+
+    if (title) {
+      expense.title = title;
+    }
+
+    if (amount) {
+      expense.amount = amount;
+    }
+
+    if (category) {
+      expense.category = category;
+    }
+
+    if (spentAt) {
+      expense.spentAt = spentAt;
+    }
+
+    if (note) {
+      expense.note = note;
+    }
+
+    res.json(expense);
+  });
+
+  app.delete('/expenses/:id', (req, res) => {
+    const { id } = req.params;
+
+    const expenseIndex = expenses.findIndex(
+      (expense) => expense.id === Number(id),
+    );
+
+    if (expenseIndex === -1) {
+      return res.status(404).send('Expense not found');
+    }
+
+    expenses.splice(expenseIndex, 1);
+    res.status(204).send();
+  });
+
+  return app;
+}
+
+module.exports = {
+  createServer,
+};
