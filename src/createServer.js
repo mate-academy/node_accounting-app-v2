@@ -1,24 +1,22 @@
 'use strict';
 
 const express = require('express');
+const bodyParser = require('body-parser');
 const expenseRoutes = require('./routes/expenseRoutes');
 const userRoutes = require('./routes/userRoutes');
-const { users } = require('./controllers/userController');
-const { expenses } = require('./controllers/expenseController');
 
 function createServer() {
+  const users = [];
+  const expenses = [];
+
   const app = express();
 
-  app.use(express.json());
-  app.use('/expenses', expenseRoutes);
-  app.use('/users', userRoutes);
+  app.use(bodyParser.json());
 
-  users.length = 0;
-  expenses.length = 0;
+  app.use('/users', userRoutes(users));
+  app.use('/expenses', expenseRoutes(users, expenses));
 
   return app;
 }
 
-module.exports = {
-  createServer,
-};
+module.exports = { createServer };
