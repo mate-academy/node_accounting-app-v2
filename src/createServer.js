@@ -34,7 +34,7 @@ function createServer() {
   app.get('/users/:userId', (req, res) => {
     const userId = Number(req.params.userId);
 
-    if (!userId) {
+    if (!Number.isInteger(userId) || userId <= 0) {
       return res.status(400).json({ error: 'Bad request' });
     }
 
@@ -49,7 +49,7 @@ function createServer() {
   app.delete('/users/:userId', (req, res) => {
     const userId = Number(req.params.userId);
 
-    if (!userId) {
+    if (!Number.isInteger(userId) || userId <= 0) {
       return res.status(400).json({ error: 'Bad request' });
     }
 
@@ -72,7 +72,7 @@ function createServer() {
     const userId = Number(req.params.userId);
     const { name } = req.body;
 
-    if (!userId || !name) {
+    if (!Number.isInteger(userId) || userId <= 0 || !name) {
       return res.status(400).json({ error: 'Bad request' });
     }
 
@@ -162,7 +162,7 @@ function createServer() {
   app.get('/expenses/:expenseId', (req, res) => {
     const expenseId = Number(req.params.expenseId);
 
-    if (!expenseId) {
+    if (!Number.isInteger(expenseId) || expenseId <= 0) {
       return res.status(400).json({ error: 'Bad request' });
     }
 
@@ -191,7 +191,7 @@ function createServer() {
   app.delete('/expenses/:expenseId', (req, res) => {
     const expenseId = Number(req.params.expenseId);
 
-    if (!expenseId) {
+    if (!Number.isInteger(expenseId) || expenseId <= 0) {
       return res.status(400).json({ error: 'Bad request' });
     }
 
