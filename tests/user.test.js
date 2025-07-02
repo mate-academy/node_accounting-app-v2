@@ -2,12 +2,14 @@
 
 const supertest = require('supertest');
 const { createServer } = require('../src/createServer');
+const userService = require('../src/Services/userService');
 
 describe('User', () => {
   let server;
   let api;
 
   beforeEach(() => {
+    userService.reset(); // Reset users array before each test
     server = createServer();
     api = supertest(server);
   });
