@@ -1,213 +1,296 @@
 'use strict';
 
 const express = require('express');
+const { Client } = require('pg');
+const client = new Client({
+  host: 'localhost',
+  user: 'postgres',
+  password: 'millionnow',
+  database: 'postgres',
+});
+
+if (process.env.NODE_ENV === 'test') {
+  beforeAll(async () => {
+    await client.connect();
+  });
+
+  beforeEach(async () => {
+    await client.query('DELETE FROM expenses;');
+    await client.query('DELETE FROM users;');
+    await client.query('ALTER SEQUENCE users_id_seq RESTART WITH 1;');
+    await client.query('ALTER SEQUENCE expenses_id_seq RESTART WITH 1;');
+  });
+
+  afterAll(async () => {
+    await client.end();
+  });
+} else {
+  client.connect();
+}
 
 function createServer() {
   const app = express();
 
-  let users = [];
-  const expenses = [];
-  let nextId = 1;
-  let nextExpenseId = 1;
-
   app.use(express.json());
 
-  app.get('/users', (req, res) => {
-    res.status(200).json(users);
+  app.get('/users', async (req, res) => {
+    try {
+      const users = await client.query('SELECT id, name from users');
+
+      res.status(200).json(users.rows);
+    } catch (err) {
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
   });
 
-  app.post('/users', (req, res) => {
+  app.post('/users', async (req, res) => {
     const { name } = req.body;
 
     if (!name) {
       return res.status(400).json({ error: 'Name is required' });
     }
 
-    users.push({
-      id: nextId,
-      name: name,
-    });
-    nextId += 1;
-    res.status(201).json({ id: nextId - 1, name: name });
+    try {
+      const result = await client.query(
+        'INSERT INTO users (name) VALUES ($1) RETURNING id, name',
+        [name],
+      );
+
+      res.status(201).json(result.rows[0]);
+    } catch (err) {
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
   });
 
-  app.get('/users/:userId', (req, res) => {
-    const userId = Number(req.params.userId);
+  app.get('/users/:userId', async (req, res) => {
+    const userId = req.params.userId;
 
-    if (!Number.isInteger(userId) || userId <= 0) {
+    if (!userId) {
       return res.status(400).json({ error: 'Bad request' });
     }
 
-    const result = users.find((user) => user.id === userId);
+    try {
+      const result = await client.query(
+        'SELECT id, name FROM users WHERE id=$1',
+        [userId],
+      );
 
-    if (!result) {
-      return res.status(404).json({ error: 'Not found' });
+      if (!result.rows[0]) {
+        return res.status(404).json({ error: 'Not found' });
+      }
+
+      res.status(200).json(result.rows[0]);
+    } catch (err) {
+      res.status(500).json({ error: 'Internal Server Error' });
     }
-    res.status(200).json(result);
   });
 
-  app.delete('/users/:userId', (req, res) => {
-    const userId = Number(req.params.userId);
+  app.delete('/users/:userId', async (req, res) => {
+    const userId = req.params.userId;
 
-    if (!Number.isInteger(userId) || userId <= 0) {
+    if (!userId) {
       return res.status(400).json({ error: 'Bad request' });
     }
 
-    const result = users.find((user) => user.id === userId);
+    try {
+      const result = await client.query('DELETE FROM users WHERE id=$1', [
+        userId,
+      ]);
 
-    if (!result) {
-      return res.status(404).json({ error: 'Not found' });
+      if (result.rowCount === 0) {
+        return res.status(404).json({ error: 'Not found' });
+      }
+
+      res.status(204).end();
+    } catch (err) {
+      res.status(500).json({ error: 'Internal Server Error' });
     }
-
-    const idx = users.findIndex((u) => u.id === userId);
-
-    if (idx === -1) {
-      return res.status(404).json({ error: 'Not found' });
-    }
-    users.splice(idx, 1);
-    res.status(204).end();
   });
 
-  app.patch('/users/:userId', (req, res) => {
-    const userId = Number(req.params.userId);
+  app.patch('/users/:userId', async (req, res) => {
+    const userId = req.params.userId;
     const { name } = req.body;
 
-    if (!Number.isInteger(userId) || userId <= 0 || !name) {
-      return res.status(400).json({ error: 'Bad request' });
+    if (!name) {
+      return res.status(400).json({ error: 'Name is required' });
     }
 
-    const userIn = users.find((user) => user.id === userId);
+    try {
+      const result = await client.query(
+        'UPDATE users SET name = $1 WHERE id = $2 RETURNING id, name',
+        [name, userId],
+      );
 
-    if (!userIn) {
-      return res.status(404).json({ error: 'Not found' });
+      if (result.rowCount === 0) {
+        return res.status(404).json({ error: 'Not found' });
+      }
+
+      res.status(200).json(result.rows[0]);
+    } catch (err) {
+      res.status(500).json({ error: 'Internal Server Error' });
     }
-
-    userIn.name = name;
-
-    res.status(200).json(userIn);
   });
 
-  if (process.env.NODE_ENV === 'test') {
-    app.post('/__reset__', (req, res) => {
-      users = [];
-      nextId = 1;
-      res.status(204).end();
-    });
-  }
+  app.get('/expenses', async (req, res) => {
+    const { userId, from, to, categories } = req.query;
 
-  app.get('/expenses', (req, res) => {
-    let result = expenses;
+    let sql = 'SELECT * FROM expenses';
+    const params = [];
+    const conditions = [];
 
-    if (req.query.userId !== undefined) {
-      const userId = Number(req.query.userId);
-
-      result = result.filter((e) => e.userId === userId);
+    if (userId) {
+      params.push(userId);
+      conditions.push(`"userId" = $${params.length}`);
     }
 
-    if (req.query.from || req.query.to) {
-      result = result.filter((e) => {
-        const date = new Date(e.spentAt);
-
-        if (req.query.from && date < new Date(req.query.from)) {
-          return false;
-        }
-
-        if (req.query.to && date > new Date(req.query.to)) {
-          return false;
-        }
-
-        return true;
-      });
+    if (from) {
+      params.push(from);
+      conditions.push(`"spentAt" >= $${params.length}`);
     }
 
-    if (req.query.categories) {
-      const cats = req.query.categories.split(',').map((c) => c.trim());
-
-      result = result.filter((e) => cats.includes(e.category));
+    if (to) {
+      params.push(to);
+      conditions.push(`"spentAt" <= $${params.length}`);
     }
 
-    res.status(200).json(result);
+    if (categories) {
+      const cats = categories.split(',').map((c) => c.trim());
+
+      params.push(cats);
+      conditions.push(`category = ANY($${params.length})`);
+    }
+
+    if (conditions.length > 0) {
+      sql += ' WHERE ' + conditions.join(' AND ');
+    }
+
+    try {
+      const result = await client.query(sql, params);
+
+      res.status(200).json(result.rows);
+    } catch (err) {
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
   });
 
-  app.post('/expenses', (req, res) => {
-    const { userId, spentAt, title, amount, category, note } = req.body;
-    const userIm = users.find((user) => user.id === userId);
+  app.post('/expenses', async (req, res) => {
+    const { userId, spentAt, title, amount } = req.body;
+    const category = req.body.category || null;
+    const note = req.body.note || null;
+
+    const userIm = await client.query('SELECT * from users WHERE id = $1', [
+      userId,
+    ]);
 
     if (
       userId === undefined ||
       !spentAt ||
       !title ||
       amount === undefined ||
-      !category ||
-      !note ||
-      !userIm
+      !userIm.rows[0]
     ) {
       return res.status(400).json({ error: 'Bad Request' });
     }
 
-    const expense = {
-      id: nextExpenseId++,
-      userId,
-      spentAt,
-      title,
-      amount,
-      category,
-      note,
-    };
+    try {
+      const result = await client.query(
+        'INSERT into expenses ("userId", "spentAt", title, ' +
+          'amount, category, note) VALUES ' +
+          '($1, $2, $3, $4, $5, $6) RETURNING id, title, "userId",' +
+          ' "spentAt", amount, category, note',
+        [userId, spentAt, title, amount, category, note],
+      );
 
-    expenses.push(expense);
-    res.status(201).json(expense);
+      res.status(201).json(result.rows[0]);
+    } catch (err) {
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
   });
 
-  app.get('/expenses/:expenseId', (req, res) => {
-    const expenseId = Number(req.params.expenseId);
+  app.get('/expenses/:expenseId', async (req, res) => {
+    const expenseId = req.params.expenseId;
 
-    if (!Number.isInteger(expenseId) || expenseId <= 0) {
+    if (!expenseId) {
       return res.status(400).json({ error: 'Bad request' });
     }
 
-    const result = expenses.find((expense) => expense.id === expenseId);
+    try {
+      const result = await client.query('SELECT * FROM expenses WHERE id=$1', [
+        expenseId,
+      ]);
 
-    if (!result) {
-      return res.status(404).json({ error: 'Not found' });
+      if (!result.rows[0]) {
+        return res.status(404).json({ error: 'Not found' });
+      }
+
+      res.status(200).json(result.rows[0]);
+    } catch (err) {
+      res.status(500).json({ error: 'Internal Server Error' });
     }
-    res.status(200).json(result);
   });
 
-  app.patch('/expenses/:expenseId', (req, res) => {
-    const expenseId = Number(req.params.expenseId);
-    const expense = expenses.find((e) => e.id === expenseId);
+  app.patch('/expenses/:expenseId', async (req, res) => {
+    const expenseId = req.params.expenseId;
+    const allowedFields = [
+      'userId',
+      'spentAt',
+      'title',
+      'amount',
+      'category',
+      'note',
+    ];
+    const updates = [];
+    const values = [];
 
-    if (!expense) {
-      return res.status(404).json({ error: 'Not found' });
+    // Gather only provided, allowed fields
+    allowedFields.forEach((field) => {
+      if (req.body[field] !== undefined) {
+        updates.push(`${field} = $${updates.length + 1}`);
+        values.push(req.body[field]);
+      }
+    });
+
+    if (updates.length === 0) {
+      return res.status(404).json({ error: 'No valid fields to update' });
     }
 
-    // Only update fields that are present in the request body
-    Object.assign(expense, req.body);
+    // Add expenseId as last param
+    values.push(expenseId);
 
-    res.status(200).json(expense);
+    const sql = `UPDATE expenses SET ${updates.join(', ')} WHERE id = $${values.length} RETURNING *`;
+
+    try {
+      const result = await client.query(sql, values);
+
+      if (result.rowCount === 0) {
+        return res.status(404).json({ error: 'Not found' });
+      }
+      res.status(200).json(result.rows[0]);
+    } catch (err) {
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
   });
 
-  app.delete('/expenses/:expenseId', (req, res) => {
-    const expenseId = Number(req.params.expenseId);
+  app.delete('/expenses/:expenseId', async (req, res) => {
+    const expenseId = req.params.expenseId;
 
-    if (!Number.isInteger(expenseId) || expenseId <= 0) {
+    if (!expenseId) {
       return res.status(400).json({ error: 'Bad request' });
     }
 
-    const result = expenses.find((expense) => expense.id === expenseId);
+    try {
+      const result = await client.query('DELETE FROM expenses WHERE id=$1', [
+        expenseId,
+      ]);
 
-    if (!result) {
-      return res.status(404).json({ error: 'Not found' });
+      if (result.rowCount === 0) {
+        return res.status(404).json({ error: 'Not found' });
+      }
+
+      res.status(204).end();
+    } catch (err) {
+      res.status(500).json({ error: 'Internal Server Error' });
     }
-
-    const idx = expenses.findIndex((e) => e.id === expenseId);
-
-    if (idx === -1) {
-      return res.status(404).json({ error: 'Not found' });
-    }
-    expenses.splice(idx, 1);
-    res.status(204).end();
   });
 
   return app;
