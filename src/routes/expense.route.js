@@ -5,6 +5,6 @@ export const router = express.Router();
 
 router.get('/', expenseControl.getExpenses);
 router.get('/:id', expenseControl.getByIdExpenses);
-router.delete('/:id', expenseControl.removeExpenses);
+router.delete('/:id', expenseControl.removeExpense);
 router.post('/', expenseControl.addExpenses);
 router.patch('/:id', expenseControl.patchExpenses);

@@ -6,26 +6,26 @@ export const getExpenses = (req, res) => {
 
 export const getByIdExpenses = (req, res) => {
   const { id } = req.params;
-  const expens = expensesService.getExpensesById(id);
+  const expense = expensesService.getExpenseById(id);
 
-  if (!expens) {
+  if (!expense) {
     res.sendStatus(404);
 
     return;
   }
-  res.send(expens);
+  res.send(expense);
 };
 
-export const removeExpenses = (req, res) => {
+export const removeExpense = (req, res) => {
   const { id } = req.params;
 
-  if (!expensesService.getExpensesById(id)) {
+  if (!expensesService.getExpenseById(id)) {
     res.sendStatus(404);
 
     return;
   }
 
-  expensesService.deleteExpenses(id);
+  expensesService.deleteExpense(id);
 
   res.sendStatus(204);
 };
@@ -39,7 +39,7 @@ export const addExpenses = (req, res) => {
     return;
   }
 
-  const expens = expensesService.createExpense(
+  const newExpens = expensesService.createExpense(
     userId,
     spentAt,
     title,
@@ -48,13 +48,13 @@ export const addExpenses = (req, res) => {
     note,
   );
 
-  res.status(201).send(expens);
+  res.status(201).send(newExpens);
 };
 
 export const patchExpenses = (req, res) => {
   const { id } = req.params;
   const { spentAt, title, amount, category, note } = req.body;
-  const expens = expensesService.getExpensesById(id);
+  const expens = expensesService.getExpenseById(id);
 
   if (!spentAt || !title || !amount || !category || !note) {
     res.sendStatus(400);
@@ -81,6 +81,7 @@ export const patchExpenses = (req, res) => {
   }
 
   const updatedExpense = expensesService.updateExpense({
+    id,
     spentAt,
     title,
     amount,

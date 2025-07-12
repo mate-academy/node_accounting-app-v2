@@ -21,7 +21,7 @@ export const createUser = (name) => {
   return user;
 };
 
-export const updateUser = ({ id, name }) => {
+export const updatedUser = ({ id, name }) => {
   const user = getUserById(id);
 
   Object.assign(user, { name });

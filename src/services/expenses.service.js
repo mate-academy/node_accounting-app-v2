@@ -6,7 +6,7 @@ export const getAllExpenses = () => {
   return expenses;
 };
 
-export const getExpensesById = (id) => {
+export const getExpenseById = (id) => {
   return expenses.find((item) => item.id === id) || null;
 };
 
@@ -41,7 +41,7 @@ export const updateExpense = ({
   category,
   note,
 }) => {
-  const expens = getExpensesById(id);
+  const expens = getExpenseById(id);
 
   Object.assign(expens, {
     spentAt,
@@ -54,6 +54,6 @@ export const updateExpense = ({
   return expens;
 };
 
-export const deleteExpenses = (id) => {
+export const deleteExpense = (id) => {
   expenses = expenses.filter((item) => item.id !== id);
 };

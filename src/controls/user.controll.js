@@ -19,7 +19,7 @@ export const getByIdUsers = (req, res) => {
 export const removeUser = (req, res) => {
   const { id } = req.params;
 
-  if (!userService.getUsersById(id)) {
+  if (!userService.getUserById(id)) {
     res.sendStatus(404);
 
     return;
@@ -61,7 +61,7 @@ export const updateUser = (req, res) => {
     return;
   }
 
-  const uptatedUser = userService.updateUser({ id, name });
+  const updatedUser = userService.updatedUser({ id, name });
 
-  res.send(uptatedUser);
+  res.send(updatedUser);
 };
