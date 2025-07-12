@@ -6,7 +6,7 @@ export const getUsers = (req, res) => {
 
 export const getByIdUsers = (req, res) => {
   const { id } = req.params;
-  const user = userService.getUsersById(id);
+  const user = userService.getUserById(id);
 
   if (!user) {
     res.sendStatus(404);
@@ -47,7 +47,7 @@ export const createUser = (req, res) => {
 export const updateUser = (req, res) => {
   const { id } = req.params;
   const { name } = req.body;
-  const user = userService.getUsersById(id);
+  const user = userService.getUserById(id);
 
   if (!user) {
     res.sendStatus(404);
@@ -61,7 +61,7 @@ export const updateUser = (req, res) => {
     return;
   }
 
-  const uptatedUser = userService.uptadeUser({ id, name });
+  const uptatedUser = userService.updateUser({ id, name });
 
   res.send(uptatedUser);
 };

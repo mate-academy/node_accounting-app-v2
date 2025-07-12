@@ -2,7 +2,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 let expenses = [];
 
-export const getAllexpenses = () => {
+export const getAllExpenses = () => {
   return expenses;
 };
 
@@ -10,7 +10,7 @@ export const getExpensesById = (id) => {
   return expenses.find((item) => item.id === id) || null;
 };
 
-export const createExpenses = (
+export const createExpense = (
   userId,
   spentAt,
   title,
@@ -33,7 +33,7 @@ export const createExpenses = (
   return expens;
 };
 
-export const uptadeExpens = ({
+export const updateExpense = ({
   id,
   spentAt,
   title,
@@ -54,6 +54,6 @@ export const uptadeExpens = ({
   return expens;
 };
 
-export const deletExpenses = (id) => {
+export const deleteExpenses = (id) => {
   expenses = expenses.filter((item) => item.id !== id);
 };

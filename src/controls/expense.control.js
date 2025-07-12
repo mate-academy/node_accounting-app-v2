@@ -1,7 +1,7 @@
-import * as expensesService from '../services/expens.service.js';
+import * as expensesService from '../services/expenses.service.js';
 
 export const getExpenses = (req, res) => {
-  res.send(expensesService.getAllexpenses());
+  res.send(expensesService.getAllExpenses());
 };
 
 export const getByIdExpenses = (req, res) => {
@@ -25,7 +25,7 @@ export const removeExpenses = (req, res) => {
     return;
   }
 
-  expensesService.deletExpenses(id);
+  expensesService.deleteExpenses(id);
 
   res.sendStatus(204);
 };
@@ -39,7 +39,7 @@ export const addExpenses = (req, res) => {
     return;
   }
 
-  const expens = expensesService.createExpenses(
+  const expens = expensesService.createExpense(
     userId,
     spentAt,
     title,
@@ -80,7 +80,7 @@ export const patchExpenses = (req, res) => {
     return;
   }
 
-  const updatedExpense = expensesService.uptatedExpense({
+  const updatedExpense = expensesService.updateExpense({
     spentAt,
     title,
     amount,

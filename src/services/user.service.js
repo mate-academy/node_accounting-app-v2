@@ -6,7 +6,7 @@ export const getAllUsers = () => {
   return users;
 };
 
-export const getUsersById = (id) => {
+export const getUserById = (id) => {
   return users.find((item) => item.id === id) || null;
 };
 
@@ -21,8 +21,8 @@ export const createUser = (name) => {
   return user;
 };
 
-export const uptadeUser = ({ id, name }) => {
-  const user = getUsersById(id);
+export const updateUser = ({ id, name }) => {
+  const user = getUserById(id);
 
   Object.assign(user, { name });
 
