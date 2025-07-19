@@ -1,0 +1,56 @@
+[
+  {
+    "id": 1,
+    "userId": 1,
+    "spentAt": "2025-07-15T09:20:00.000Z",
+    "title": "Groceries",
+    "amount": 820.5,
+    "category": "Food",
+    "note": "Weekly shopping"
+  },
+  {
+    "id": 2,
+    "userId": 1,
+    "spentAt": "2025-07-16T14:45:00.000Z",
+    "title": "Bus Ticket",
+    "amount": 30,
+    "category": "Transport",
+    "note": "Daily commute"
+  },
+  {
+    "id": 3,
+    "userId": 2,
+    "spentAt": "2025-07-14T19:30:00.000Z",
+    "title": "Dinner",
+    "amount": 250,
+    "category": "Food",
+    "note": "With friends"
+  },
+  {
+    "id": 4,
+    "userId": 2,
+    "spentAt": "2025-07-17T21:00:00.000Z",
+    "title": "Taxi",
+    "amount": 120,
+    "category": "Transport",
+    "note": "Late night ride"
+  },
+  {
+    "id": 5,
+    "userId": 3,
+    "spentAt": "2025-07-13T08:00:00.000Z",
+    "title": "Internet Bill",
+    "amount": 400,
+    "category": "Utilities",
+    "note": "Monthly payment"
+  },
+  {
+    "id": 6,
+    "userId": 3,
+    "spentAt": "2020-07-18T13:01:52.619Z",
+    "title": "Gym Membership in past",
+    "amount": 500,
+    "category": "Health",
+    "note": "Monthly fee"
+  }
+]
