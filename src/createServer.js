@@ -32,6 +32,7 @@ function createServer() {
 
     if (!foundUser) {
       res.sendStatus(404);
+
       return;
     }
 
@@ -64,6 +65,7 @@ function createServer() {
 
     if (!foundUser) {
       res.sendStatus(404);
+
       return;
     }
 
@@ -124,6 +126,7 @@ function createServer() {
 
     if (!foundExpense) {
       res.sendStatus(404);
+
       return;
     }
 
