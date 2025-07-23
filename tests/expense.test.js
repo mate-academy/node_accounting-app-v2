@@ -3,6 +3,14 @@
 const supertest = require('supertest');
 const { createServer } = require('../src/createServer');
 
+const expenseService = require('../src/services/expense.service.js');
+const userService = require('../src/services/user.service.js');
+
+beforeEach(() => {
+  userService.reset();
+  expenseService.reset();
+});
+
 describe('Expense', () => {
   let server;
   let api;

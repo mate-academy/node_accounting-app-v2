@@ -2,6 +2,11 @@
 
 const supertest = require('supertest');
 const { createServer } = require('../src/createServer');
+const userService = require('../src/services/user.service.js');
+
+beforeEach(() => {
+  userService.reset();
+});
 
 describe('User', () => {
   let server;
