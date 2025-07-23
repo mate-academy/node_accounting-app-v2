@@ -2,7 +2,9 @@
 
 const { createServer } = require('./createServer');
 
-createServer().listen(3000, () => {
+const server = createServer();
+
+server.listen(3000, () => {
   // eslint-disable-next-line no-console
   console.log('Server is running on localhost:3000');
 });
