@@ -29,6 +29,8 @@ function createServer() {
     if (!user) {
       res.status(404);
       res.send('User not found');
+
+      return;
     }
 
     res.status(200);
@@ -37,12 +39,14 @@ function createServer() {
 
   app.post('/users', express.json(), (req, res) => {
     const { name } = req.body;
+
     if (!name || typeof name !== 'string' || name.trim() === '') {
       res.status(400);
       res.send('Name is not provided or invalid');
 
       return;
     }
+
     const newUser = userService.createUser(name);
 
     if (!newUser) {
@@ -170,7 +174,7 @@ function createServer() {
       return;
     }
 
-    res.status(204).json(expensService.deleteExpense(id));
+    res.status(204).send();
   });
 
   // Add a routes to the server

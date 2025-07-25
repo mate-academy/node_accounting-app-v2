@@ -1,4 +1,5 @@
 const expenses = [];
+let nextId = 1;
 
 const getExpenses = () => {
   return expenses;
@@ -16,7 +17,7 @@ const getExpenseById = (id) => {
 
 const createExpense = ({ userId, title, amount, category, note, spentAt }) => {
   const exp = {
-    id: expenses.length + 1,
+    id: nextId++,
     userId,
     spentAt: new Date(spentAt || new Date()),
     title,

@@ -1,4 +1,5 @@
 let usersList = [];
+let nextId = 1;
 
 const getUsers = () => {
   return usersList;
@@ -10,11 +11,9 @@ const getUser = (id) => {
 
 const createUser = (name) => {
   const user = {
-    id: usersList.length + 1,
+    id: nextId++,
     name,
   };
-
-
 
   usersList.push(user);
 
