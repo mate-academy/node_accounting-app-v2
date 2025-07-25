@@ -174,6 +174,7 @@ function createServer() {
       return;
     }
 
+    expensService.deleteExpense(id);
     res.status(204).send();
   });
 
