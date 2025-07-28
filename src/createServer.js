@@ -42,7 +42,7 @@ function createServer() {
     res.json(expense);
   });
 
-  app.put('/expense/:id', (req, res) => {
+  app.put('/expenses/:id', (req, res) => {
     const index = expenses.findIndex((e) => e.id === req.params.id);
 
     if (index === -1) {
@@ -64,7 +64,7 @@ function createServer() {
     res.json(expenses[index]);
   });
 
-  app.delete('/expense/:id', (req, res) => {
+  app.delete('/expenses/:id', (req, res) => {
     const index = expenses.findIndex((e) => e.id === req.params.id);
 
     if (index === -1) {
@@ -94,7 +94,7 @@ function createServer() {
     res.json(categories);
   });
 
-  app.get('/caterories/:id', (req, res) => {
+  app.get('/categories/:id', (req, res) => {
     const category = categories.find((c) => c.id === req.params.id);
 
     if (!category) {
@@ -113,7 +113,7 @@ function createServer() {
     const { name } = req.body;
 
     if (!name) {
-      return res.status(404).json({ message: 'Missing category name' });
+      return res.status(400).json({ message: 'Missing category name' });
     }
 
     categories[index].name = name;
