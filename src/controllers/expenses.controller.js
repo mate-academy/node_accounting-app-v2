@@ -1,22 +1,26 @@
 const expensesModel = require('../models/expenses.model');
 
-function getAllExpenses(req, res) {
+async function getAllExpenses(req, res) {
   try {
-    const expenses = expensesModel.getAllExpenses();
-
+    const expenses = await expensesModel.getAllExpenses();
     res.json(expenses);
   } catch (err) {
     res.status(500).json({ message: 'Не вдалося зчитати витрати' });
   }
 }
 
-function getExpense(req, res) {
+async function getExpense(req, res) {
   try {
     const expId = +req.params.expId;
-    const expense = expensesModel.getExpense(expId);
 
-    if (!expId || !expense) {
-      return res.status(400).json({ message: `Витрату ${expId} не знайдено` });
+    if (!expId) {
+      return res.status(400).json({ message: 'ID витрати не вказано' });
+    }
+
+    const expense = await expensesModel.getExpense(expId);
+
+    if (!expense) {
+      return res.status(404).json({ message: `Витрату ${expId} не знайдено` });
     }
 
     res.status(200).json(expense);
@@ -25,15 +29,15 @@ function getExpense(req, res) {
   }
 }
 
-function createExpense(req, res) {
+async function createExpense(req, res) {
   try {
     const body = req.body;
 
-    if (!body) {
+    if (!body || Object.keys(body).length === 0) {
       return res.status(400).json({ message: 'Не передано тіло запиту' });
     }
 
-    const newExpense = expensesModel.createExpense(body);
+    const newExpense = await expensesModel.createExpense(body);
 
     if (!newExpense) {
       return res.status(500).json({ message: 'Нову витрату не створено' });
@@ -45,32 +49,44 @@ function createExpense(req, res) {
   }
 }
 
-function removeExpense(req, res) {
+async function removeExpense(req, res) {
   try {
     const expId = +req.params.expId;
-    const removedExpense = expensesModel.removeExpense(expId);
+
+    if (!expId) {
+      return res.status(400).json({ message: 'Expense id is required in URL' });
+    }
+
+    const removedExpense = await expensesModel.removeExpense(expId);
 
     if (!removedExpense) {
       return res.status(404).json({ message: `Витрату ${expId} не знайдено` });
     }
+
     res.status(204).end();
   } catch (err) {
     res.status(500).json({ message: 'Не вдалося видалити витрату' });
   }
 }
 
-function updateExpense(req, res) {
+async function updateExpense(req, res) {
   try {
-    const body = req.body;
     const expId = +req.params.expId;
+    const body = req.body;
 
-    if (!body) {
-      return res.status(400).json({ error: 'Body is required' });
-    } else if (!expId) {
+    if (!expId) {
       return res.status(400).json({ error: 'Expense id is required in URL' });
     }
 
-    const updatedExpense = expensesModel.editExpense(expId, body);
+    if (!body || Object.keys(body).length === 0) {
+      return res.status(400).json({ error: 'Body is required' });
+    }
+
+    const updatedExpense = await expensesModel.editExpense(expId, body);
+
+    if (!updatedExpense) {
+      return res.status(404).json({ message: `Витрату ${expId} не знайдено` });
+    }
 
     res.status(200).json(updatedExpense);
   } catch (err) {
