@@ -20,7 +20,7 @@ class UserController {
     const { name } = req.body;
 
     if (!name) {
-      return res.status(400).send({ message: 'Name is require' });
+      return res.status(400).send({ message: 'Name is required' });
     }
 
     const newUser = userService.create(name);
@@ -40,7 +40,7 @@ class UserController {
     const { name } = req.body;
 
     if (!name || typeof name !== 'string' || name.trim() === '') {
-      return res.status(400).send({ message: 'Name is require' });
+      return res.status(400).send({ message: 'Name is required' });
     }
 
     const updatedUser = userService.update(id, { name });

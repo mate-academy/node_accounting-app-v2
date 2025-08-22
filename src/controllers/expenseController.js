@@ -30,7 +30,7 @@ class ExpenseController {
     const { userId, spentAt, title, amount, category, note } = req.body;
 
     if (!userId || !spentAt || !title || !amount || !category) {
-      return res.status(400).send({ message: 'Required fields missinge' });
+      return res.status(400).send({ message: 'Required fields missing' });
     }
 
     const user = userService.getById(userId);
@@ -62,11 +62,11 @@ class ExpenseController {
 
     const updates = req.body;
 
-    if (updates.userId) {
+    if ('userId' in updates) {
       const user = userService.getById(updates.userId);
 
       if (!user) {
-        return res.status(404).send({ message: 'User not found' });
+        return res.status(400).send({ message: 'User not found' });
       }
     }
 
@@ -74,13 +74,13 @@ class ExpenseController {
       const ts = Date.parse(updates.spentAt);
 
       if (!Number.isFinite(ts)) {
-        return res.status(400).send({ message: 'SpentAt is require' });
+        return res.status(400).send({ message: 'SpentAt is required' });
       }
     }
 
     if (updates.title) {
       if (typeof updates.title !== 'string' || updates.title.trim() === '') {
-        return res.status(400).send({ message: 'Title is require' });
+        return res.status(400).send({ message: 'Title is required' });
       }
     }
 
@@ -90,7 +90,7 @@ class ExpenseController {
         !Number.isFinite(updates.amount) ||
         updates.amount <= 0
       ) {
-        return res.status(400).send({ message: 'Amount is require' });
+        return res.status(400).send({ message: 'Amount is required' });
       }
     }
 
@@ -99,12 +99,12 @@ class ExpenseController {
         typeof updates.category !== 'string' ||
         updates.category.trim() === ''
       ) {
-        return res.status(400).send({ message: 'Category is require' });
+        return res.status(400).send({ message: 'Category is required' });
       }
     }
 
     if ('note' in updates && typeof updates.note !== 'string') {
-      return res.status(400).send({ message: 'Note is require' });
+      return res.status(400).send({ message: 'Note is required' });
     }
 
     const updatedExpenses = expenseService.update(id, updates);
