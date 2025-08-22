@@ -4,6 +4,7 @@ let userId = 1;
 class UserService {
   resetData = () => {
     users = [];
+    userId = 1;
   };
 
   getAll = () => {
@@ -25,11 +26,11 @@ class UserService {
     return newUser;
   };
 
-  update(id, { name }) {
+  update(id, updateObj) {
     const user = this.getById(id);
 
-    if (name) {
-      user.name = name;
+    if ('name' in updateObj) {
+      user.name = updateObj.name;
     }
 
     return user;

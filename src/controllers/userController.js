@@ -10,9 +10,7 @@ class UserController {
     const user = userService.getById(id);
 
     if (!user) {
-      res.sendStatus(404);
-
-      return;
+      return res.status(404).send({ message: 'User not found' });
     }
 
     res.send(user);
@@ -22,9 +20,7 @@ class UserController {
     const { name } = req.body;
 
     if (!name) {
-      res.sendStatus(400);
-
-      return;
+      return res.status(400).send({ message: 'Name is require' });
     }
 
     const newUser = userService.create(name);
@@ -38,17 +34,13 @@ class UserController {
     const user = userService.getById(id);
 
     if (!user) {
-      res.sendStatus(404);
-
-      return;
+      return res.status(404).send({ message: 'User not found' });
     }
 
     const { name } = req.body;
 
     if (!name || typeof name !== 'string' || name.trim() === '') {
-      res.sendStatus(400);
-
-      return;
+      return res.status(400).send({ message: 'Name is require' });
     }
 
     const updatedUser = userService.update(id, { name });
@@ -60,9 +52,7 @@ class UserController {
     const id = Number(req.params.id);
 
     if (!userService.getById(id)) {
-      res.sendStatus(404);
-
-      return;
+      return res.status(404).send({ message: 'User not found' });
     }
 
     userService.delete(id);

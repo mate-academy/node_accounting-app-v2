@@ -4,6 +4,7 @@ let expenseId = 1;
 class ExpensesService {
   resetData = () => {
     expenses = [];
+    expenseId = 1;
   };
 
   getByFilter = ({ categories, userId, from, to }) => {
@@ -59,27 +60,27 @@ class ExpensesService {
     const { userId, spentAt, title, amount, category, note } = expenseData;
     const expense = this.getById(id);
 
-    if (userId) {
+    if ('userId' in expenseData) {
       expense.userId = userId;
     }
 
-    if (spentAt) {
+    if ('spentAt' in expenseData) {
       expense.spentAt = spentAt;
     }
 
-    if (title) {
+    if ('title' in expenseData) {
       expense.title = title.trim();
     }
 
-    if (amount) {
+    if ('amount' in expenseData) {
       expense.amount = amount;
     }
 
-    if (category) {
+    if ('category' in expenseData) {
       expense.category = category;
     }
 
-    if (note) {
+    if ('note' in expenseData) {
       expense.note = note;
     }
 

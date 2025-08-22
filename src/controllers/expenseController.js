@@ -20,9 +20,7 @@ class ExpenseController {
     const expense = expenseService.getById(id);
 
     if (!expense) {
-      res.sendStatus(404);
-
-      return;
+      return res.status(404).send({ message: 'Expense not found' });
     }
 
     res.send(expense);
@@ -32,17 +30,13 @@ class ExpenseController {
     const { userId, spentAt, title, amount, category, note } = req.body;
 
     if (!userId || !spentAt || !title || !amount || !category) {
-      res.sendStatus(400);
-
-      return;
+      return res.status(400).send({ message: 'Required fields missinge' });
     }
 
     const user = userService.getById(userId);
 
     if (!user) {
-      res.sendStatus(400);
-
-      return;
+      return res.status(400).send({ message: 'User not found' });
     }
 
     const newExpense = expenseService.create({
@@ -63,9 +57,7 @@ class ExpenseController {
     const expense = expenseService.getById(id);
 
     if (!expense) {
-      res.sendStatus(404);
-
-      return;
+      return res.status(404).send({ message: 'Expense not found' });
     }
 
     const updates = req.body;
@@ -74,9 +66,7 @@ class ExpenseController {
       const user = userService.getById(updates.userId);
 
       if (!user) {
-        res.sendStatus(404);
-
-        return;
+        return res.status(404).send({ message: 'User not found' });
       }
     }
 
@@ -84,17 +74,13 @@ class ExpenseController {
       const ts = Date.parse(updates.spentAt);
 
       if (!Number.isFinite(ts)) {
-        res.sendStatus(404);
-
-        return;
+        return res.status(400).send({ message: 'SpentAt is require' });
       }
     }
 
     if (updates.title) {
       if (typeof updates.title !== 'string' || updates.title.trim() === '') {
-        res.sendStatus(404);
-
-        return;
+        return res.status(400).send({ message: 'Title is require' });
       }
     }
 
@@ -104,9 +90,7 @@ class ExpenseController {
         !Number.isFinite(updates.amount) ||
         updates.amount <= 0
       ) {
-        res.sendStatus(404);
-
-        return;
+        return res.status(400).send({ message: 'Amount is require' });
       }
     }
 
@@ -115,16 +99,12 @@ class ExpenseController {
         typeof updates.category !== 'string' ||
         updates.category.trim() === ''
       ) {
-        res.sendStatus(404);
-
-        return;
+        return res.status(400).send({ message: 'Category is require' });
       }
     }
 
     if ('note' in updates && typeof updates.note !== 'string') {
-      res.sendStatus(404);
-
-      return;
+      return res.status(400).send({ message: 'Note is require' });
     }
 
     const updatedExpenses = expenseService.update(id, updates);
@@ -136,9 +116,7 @@ class ExpenseController {
     const id = Number(req.params.id);
 
     if (!expenseService.getById(id)) {
-      res.sendStatus(404);
-
-      return;
+      return res.status(404).send({ message: 'Expense not found' });
     }
 
     expenseService.delete(id);
