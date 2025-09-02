@@ -8,8 +8,8 @@ module.exports = function (users) {
   router.post('/', (req, res) => {
     const { name } = req.body;
 
-    if (!name) {
-      return res.status(400).json({ error: 'Name is required' });
+    if (name === undefined) {
+      return res.status(400).json({ message: 'Name is required' });
     }
 
     const newUser = { id: userIdCounter++, name };
@@ -26,8 +26,9 @@ module.exports = function (users) {
     const user = users.find((u) => u.id === parseInt(req.params.id));
 
     if (!user) {
-      return res.status(404).json({ error: 'User not found' });
+      return res.status(404).json({ message: 'User not found' });
     }
+
     res.json(user);
   });
 
@@ -35,15 +36,16 @@ module.exports = function (users) {
     const user = users.find((u) => u.id === parseInt(req.params.id));
 
     if (!user) {
-      return res.status(404).json({ error: 'User not found' });
+      return res.status(404).json({ message: 'User not found' });
     }
 
     const { name } = req.body;
 
-    if (name) {
-      user.name = name;
+    if (name === undefined) {
+      return res.status(400).json({ message: 'No updatable fields provided' });
     }
 
+    user.name = name;
     res.json(user);
   });
 
@@ -51,10 +53,11 @@ module.exports = function (users) {
     const index = users.findIndex((u) => u.id === parseInt(req.params.id));
 
     if (index === -1) {
-      return res.status(404).json({ error: 'User not found' });
+      return res.status(404).json({ message: 'User not found' });
     }
 
     users.splice(index, 1);
+
     res.status(204).end();
   });
 
