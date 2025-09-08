@@ -1,4 +1,4 @@
-const Router = require('express');
+const { Router } = require('express');
 const expensesService = require('../services/expenses.service.js');
 const usersService = require('../services/users.service.js');
 
@@ -30,6 +30,11 @@ expensesRouter.get('/', async (req, res) => {
 
 expensesRouter.get('/:id', async (req, res) => {
   const id = Number(req.params.id);
+
+  if (Number.isNaN(id)) {
+    return null;
+  }
+
   const [exp] = await expensesService.get('id', id);
 
   if (!exp) {
@@ -55,6 +60,11 @@ expensesRouter.post('/', async (req, res) => {
 
 expensesRouter.patch('/:id', async (req, res) => {
   const id = Number(req.params.id);
+
+  if (Number.isNaN(id)) {
+    return null;
+  }
+
   const body = req.body;
 
   if (Number.isNaN(id)) {
@@ -72,13 +82,18 @@ expensesRouter.patch('/:id', async (req, res) => {
 
 expensesRouter.delete('/:id', async (req, res) => {
   const id = Number(req.params.id);
+
+  if (Number.isNaN(id)) {
+    return null;
+  }
+
   const exp = await expensesService.remove(id);
 
   if (!exp) {
     return res.sendStatus(404);
   }
 
-  res.status(204).json(exp);
+  res.sendStatus(204);
 });
 
 module.exports = expensesRouter;

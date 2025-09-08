@@ -1,4 +1,4 @@
-const Router = require('express');
+const { Router } = require('express');
 const usersService = require('../services/users.service.js');
 
 const usersRouter = Router();
@@ -11,6 +11,10 @@ usersRouter.get('/', async (req, res) => {
 
 usersRouter.get('/:id', async (req, res) => {
   const id = Number(req.params.id);
+
+  if (Number.isNaN(id)) {
+    return res.sendStatus(400);
+  }
 
   const user = await usersService.get(id);
 
@@ -36,6 +40,10 @@ usersRouter.post('/', async (req, res) => {
 usersRouter.delete('/:id', async (req, res) => {
   const id = Number(req.params.id);
 
+  if (Number.isNaN(+id)) {
+    return res.sendStatus(400);
+  }
+
   const user = await usersService.remove(id);
 
   if (!user) {
@@ -47,6 +55,11 @@ usersRouter.delete('/:id', async (req, res) => {
 
 usersRouter.patch('/:id', async (req, res) => {
   const id = Number(req.params.id);
+
+  if (Number.isNaN(+id)) {
+    return res.sendStatus(400);
+  }
+
   const body = req.body;
   const user = await usersService.update(id, body);
 
