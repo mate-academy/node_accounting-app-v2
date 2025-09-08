@@ -13,7 +13,11 @@ expensesRouter.get('/', async (req, res) => {
   }
 
   if (categories) {
-    expenses = expenses.filter((exp) => categories.includes(exp.category));
+    const cat = categories.split(',');
+
+    for (const value of cat) {
+      expenses = expenses.filter((exp) => value.includes(exp.category));
+    }
   }
 
   if (from) {
