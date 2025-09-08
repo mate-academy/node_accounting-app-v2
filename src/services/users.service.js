@@ -29,14 +29,14 @@ const remove = (id) => {
   return removed;
 };
 
-const update = (id, ...body) => {
+const update = (id, body) => {
   const user = users.find((item) => item.id === id);
 
   if (!user) {
     return;
   }
 
-  return Object.assign(user, ...body);
+  return Object.assign(user, body);
 };
 
 const reset = () => {
