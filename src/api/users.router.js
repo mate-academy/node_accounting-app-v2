@@ -56,7 +56,7 @@ usersRouter.delete('/:id', async (req, res) => {
 usersRouter.patch('/:id', async (req, res) => {
   const id = Number(req.params.id);
 
-  if (Number.isNaN(+id)) {
+  if (Number.isNaN(id)) {
     return res.sendStatus(400);
   }
 

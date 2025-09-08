@@ -8,15 +8,22 @@ expensesRouter.get('/', async (req, res) => {
   let expenses = await expensesService.getAll();
   const { userId, categories, from, to } = req.query;
 
+  if (Number.isNaN(userId)) {
+    return res.status(400).json({ message: 'Invalid userId' });
+  }
+
   if (userId) {
     expenses = expenses.filter((exp) => exp.userId === +userId);
   }
 
   if (categories) {
-    const cat = categories.split(',');
+    const cat = categories
+      .toString()
+      .split(',')
+      .map((item) => item.trim());
 
     for (const value of cat) {
-      expenses = expenses.filter((exp) => value.includes(exp.category));
+      expenses = expenses.filter((exp) => exp.category.includes(value));
     }
   }
 
@@ -36,7 +43,7 @@ expensesRouter.get('/:id', async (req, res) => {
   const id = Number(req.params.id);
 
   if (Number.isNaN(id)) {
-    return null;
+    return res.status(400).json({ message: 'Invalid id' });
   }
 
   const [exp] = await expensesService.get('id', id);
@@ -64,11 +71,6 @@ expensesRouter.post('/', async (req, res) => {
 
 expensesRouter.patch('/:id', async (req, res) => {
   const id = Number(req.params.id);
-
-  if (Number.isNaN(id)) {
-    return null;
-  }
-
   const body = req.body;
 
   if (Number.isNaN(id)) {
@@ -88,7 +90,7 @@ expensesRouter.delete('/:id', async (req, res) => {
   const id = Number(req.params.id);
 
   if (Number.isNaN(id)) {
-    return null;
+    return res.status(400).json({ message: 'Invalid id' });
   }
 
   const exp = await expensesService.remove(id);
