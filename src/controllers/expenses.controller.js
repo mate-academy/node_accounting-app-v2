@@ -56,7 +56,7 @@ const createExpense = async (req, res) => {
   });
 
   if (!expense) {
-    return res.sendStatus(404);
+    return res.sendStatus(400);
   }
 
   res.status(201);
