@@ -26,6 +26,7 @@ function createServer() {
 
     if (!user) {
       res.sendStatus(404);
+
       return;
     }
     res.send(user);
@@ -36,21 +37,21 @@ function createServer() {
 
     if (!name) {
       res.sendStatus(400);
+
       return;
     }
 
     const maxId = users.reduce((max, user) => Math.max(max, user.id), 0);
     const newId = maxId + 1;
 
-    const user = {
+    const newUser = {
       id: newId,
       name,
     };
 
-    users.push(user);
+    users.push(newUser);
 
-    res.statusCode = 201;
-    res.send(user);
+    res.status(201).send(newUser);
   });
 
   app.patch('/users/:id', (req, res) => {
@@ -61,6 +62,7 @@ function createServer() {
 
     if (!user) {
       res.sendStatus(404);
+
       return;
     }
 
@@ -68,7 +70,6 @@ function createServer() {
       user.name = name;
     }
 
-    user.name = name;
     res.send(user);
   });
 
@@ -78,6 +79,7 @@ function createServer() {
 
     if (newUsers.length === users.length) {
       res.sendStatus(404);
+
       return;
     }
 
@@ -86,31 +88,30 @@ function createServer() {
   });
 
   app.get('/expenses', (req, res) => {
-    let filteredExpenses = [...expenses];
+    let filtered = [...expenses];
 
     if (req.query.userId) {
-      filteredExpenses = filteredExpenses.filter(
-        (e) => e.userId === +req.query.userId,
-      );
+      filtered = filtered.filter((e) => e.userId === +req.query.userId);
     }
 
     if (req.query.from && req.query.to) {
       const fromDate = new Date(req.query.from);
       const toDate = new Date(req.query.to);
-      filteredExpenses = filteredExpenses.filter((e) => {
+
+      filtered = filtered.filter((e) => {
         const expenseDate = new Date(e.spentAt);
+
         return expenseDate >= fromDate && expenseDate <= toDate;
       });
     }
 
     if (req.query.categories) {
       const categories = req.query.categories.split(',');
-      filteredExpenses = filteredExpenses.filter((e) =>
-        categories.includes(e.category),
-      );
+
+      filtered = filtered.filter((e) => categories.includes(e.category));
     }
 
-    res.send(filteredExpenses);
+    res.send(filtered);
   });
 
   app.get('/expenses/:id', (req, res) => {
@@ -119,6 +120,7 @@ function createServer() {
 
     if (!expense) {
       res.sendStatus(404);
+
       return;
     }
     res.send(expense);
@@ -127,14 +129,61 @@ function createServer() {
   app.post('/expenses', (req, res) => {
     const { userId, spentAt, title, amount, category, note } = req.body;
 
-    if (!title || !amount || !category || !spentAt || !userId) {
-      res.sendStatus(400);
+    if (!title || typeof title !== 'string' || title.trim() === '') {
+      res
+        .status(400)
+        .send({ message: 'Title is required, must be a non-empty string' });
+
+      return;
+    }
+
+    if (!category || typeof category !== 'string' || category.trim() === '') {
+      res
+        .status(400)
+        .send({ message: 'Category is required, must be a non-empty string' });
+
+      return;
+    }
+
+    const numAmount = Number(amount);
+
+    if (!Number.isFinite(numAmount)) {
+      res
+        .status(400)
+        .send({ message: 'Amount is required and must be a valid number' });
+
+      return;
+    }
+
+    if (!spentAt) {
+      res.status(400).send({ message: 'SpentAt is required' });
+
+      return;
+    }
+
+    const spentAtDate = new Date(spentAt);
+
+    if (isNaN(spentAtDate.getTime())) {
+      res.status(400).send({ message: 'SpentAt must be a valid date' });
+
+      return;
+    }
+
+    const uid = Number(userId);
+
+    if (!Number.isFinite(uid)) {
+      res
+        .status(400)
+        .send({ message: 'UserId is required and must be a valid number' });
+
       return;
     }
 
     const user = users.find((u) => u.id === +userId);
+
     if (!user) {
       res.sendStatus(400);
+
       return;
     }
 
@@ -144,20 +193,19 @@ function createServer() {
     );
     const newId = maxId + 1;
 
-    const expense = {
+    const newExpense = {
       id: newId,
-      userId,
+      userId: uid,
       spentAt,
       title,
-      amount,
+      amount: numAmount,
       category,
       note,
     };
 
-    expenses.push(expense);
+    expenses.push(newExpense);
 
-    res.statusCode = 201;
-    res.send(expense);
+    res.status(201).send(newExpense);
   });
 
   app.patch('/expenses/:id', (req, res) => {
@@ -167,6 +215,7 @@ function createServer() {
 
     if (!expense) {
       res.sendStatus(404);
+
       return;
     }
 
@@ -174,19 +223,42 @@ function createServer() {
 
     if (userId !== undefined) {
       const uid = +userId;
-      const userExists = users.some(u => u.id === uid);
+
+      if (!Number.isFinite(uid)) {
+        res.sendStatus(400);
+
+        return;
+      }
+
+      const userExists = users.some((u) => u.id === uid);
+
       if (!userExists) {
         res.sendStatus(400);
+
         return;
       }
       expense.userId = uid;
     }
 
-    if (spentAt !== undefined) expense.spentAt = spentAt;
-    if (title !== undefined) expense.title = title;
-    if (amount !== undefined) expense.amount = amount;
-    if (category !== undefined) expense.category = category;
-    if (note !== undefined) expense.note = note;
+    if (spentAt !== undefined) {
+      expense.spentAt = spentAt;
+    }
+
+    if (title !== undefined) {
+      expense.title = title;
+    }
+
+    if (amount !== undefined) {
+      expense.amount = amount;
+    }
+
+    if (category !== undefined) {
+      expense.category = category;
+    }
+
+    if (note !== undefined) {
+      expense.note = note;
+    }
 
     res.send(expense);
   });
@@ -197,6 +269,7 @@ function createServer() {
 
     if (newExpenses.length === expenses.length) {
       res.sendStatus(404);
+
       return;
     }
 
