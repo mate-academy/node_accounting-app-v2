@@ -40,7 +40,7 @@ const getExpenses = async (req, res) => {
 const createExpense = async (req, res) => {
   const { userId, spentAt, title, amount, category, note } = req.body;
 
-  const userExists = usersService.getUser(userId);
+  const userExists = await usersService.getUser(userId);
 
   if (!userExists) {
     return res.sendStatus(400);
