@@ -64,6 +64,10 @@ function createServer() {
       return;
     }
 
+    if (name !== undefined) {
+      user.name = name;
+    }
+
     user.name = name;
     res.send(user);
   });
@@ -123,12 +127,12 @@ function createServer() {
   app.post('/expenses', (req, res) => {
     const { userId, spentAt, title, amount, category, note } = req.body;
 
-    if (!title) {
+    if (!title || !amount || !category || !spentAt || !userId) {
       res.sendStatus(400);
       return;
     }
 
-    const user = users.find((u) => u.id === userId);
+    const user = users.find((u) => u.id === +userId);
     if (!user) {
       res.sendStatus(400);
       return;
@@ -168,7 +172,16 @@ function createServer() {
 
     const { userId, spentAt, title, amount, category, note } = req.body;
 
-    if (userId !== undefined) expense.userId = userId;
+    if (userId !== undefined) {
+      const uid = +userId;
+      const userExists = users.some(u => u.id === uid);
+      if (!userExists) {
+        res.sendStatus(400);
+        return;
+      }
+      expense.userId = uid;
+    }
+
     if (spentAt !== undefined) expense.spentAt = spentAt;
     if (title !== undefined) expense.title = title;
     if (amount !== undefined) expense.amount = amount;
