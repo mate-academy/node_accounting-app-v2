@@ -57,7 +57,11 @@ const get = async (req, res) => {
 const create = async (req, res) => {
   const { title, userId, amount, category, note, spentAt } = req.body;
 
-  const userExists = await usersService.get(userId);
+  if (!title || !userId || !amount || !category || !spentAt) {
+    return res.sendStatus(400);
+  }
+
+  const userExists = await usersService.get(Number(userId));
 
   if (!userExists) {
     return res.sendStatus(400);
@@ -78,6 +82,10 @@ const create = async (req, res) => {
 const remove = async (req, res) => {
   const thisExpenseId = Number(req.params.id);
 
+  if (isNaN(thisExpenseId)) {
+    return res.sendStatus(400);
+  }
+
   const successfullDelete = await expensesService.deleteById(thisExpenseId);
 
   if (!successfullDelete) {
@@ -92,7 +100,7 @@ const update = async (req, res) => {
   const id = Number(req.params.id);
 
   if (isNaN(id)) {
-    return res.sendStatus(404);
+    return res.sendStatus(400);
   }
 
   const updatedExpense = await expensesService.update({
