@@ -134,7 +134,7 @@ function createServer() {
       typeof note !== 'string' &&
       typeof amount !== 'number'
     ) {
-      res.sendStatus(422);
+      res.sendStatus(422).send('Unprocessable Entity');
     }
 
     const currentExpense = {
@@ -188,25 +188,11 @@ function createServer() {
       return res.sendStatus(404);
     }
 
-    if (spentAt !== undefined) {
-      currentExpense.spentAt = spentAt;
-    }
-
-    if (title !== undefined) {
-      currentExpense.title = title;
-    }
-
-    if (amount !== undefined) {
-      currentExpense.amount = amount;
-    }
-
-    if (category !== undefined) {
-      currentExpense.category = category;
-    }
-
-    if (note !== undefined) {
-      currentExpense.note = note;
-    }
+    currentExpense.spentAt = spentAt ?? currentExpense.spentAt;
+    currentExpense.title = title ?? currentExpense.title;
+    currentExpense.amount = amount ?? currentExpense.amount;
+    currentExpense.category = category ?? currentExpense.category;
+    currentExpense.note = note ?? currentExpense.note;
 
     res.send(currentExpense);
   });
