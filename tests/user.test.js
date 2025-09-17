@@ -8,6 +8,17 @@ describe('User', () => {
   let api;
 
   beforeEach(() => {
+    const UserService = require('../src/services/user.service');
+    const ExpenseService = require('../src/services/expense.service');
+
+    if (UserService.reset) {
+      UserService.reset();
+    }
+
+    if (ExpenseService.reset) {
+      ExpenseService.reset();
+    }
+
     server = createServer();
     api = supertest(server);
   });
