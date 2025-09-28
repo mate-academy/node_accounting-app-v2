@@ -58,6 +58,12 @@ router.patch('/:id', (req, res) => {
 router.delete('/:id', (req, res) => {
   const id = parseInt(req.params.id, 10);
 
+  const userExists = users.some((u) => u.id === id);
+
+  if (!userExists) {
+    return res.status(404).json({ message: 'Користувача не знайдено' });
+  }
+
   users = users.filter((u) => u.id !== id);
 
   res.status(200).json({ message: 'Користувача видалено' });
