@@ -5,7 +5,35 @@ const { expenses } = require('../data/expensesData');
 const router = express.Router();
 
 router.get('/', (req, res) => {
-  res.json(expenses);
+  let result = expenses;
+
+  const { userId, from, to, categories } = req.query;
+
+  if (userId) {
+    const uid = parseInt(userId, 10);
+
+    result = result.filter((e) => e.userId === uid);
+  }
+
+  if (from) {
+    const fromDate = new Date(from);
+
+    result = result.filter((e) => new Date(e.spentAt) >= fromDate);
+  }
+
+  if (to) {
+    const toDate = new Date(to);
+
+    result = result.filter((e) => new Date(e.spentAt) <= toDate);
+  }
+
+  if (categories) {
+    const categoryList = categories.split(',');
+
+    result = result.filter((e) => categoryList.includes(e.category));
+  }
+
+  res.json(result);
 });
 
 router.get('/:id', (req, res) => {
@@ -23,17 +51,20 @@ router.get('/:id', (req, res) => {
 router.post('/', (req, res) => {
   const { userId, spentAt, title, amount, category, note } = req.body;
 
+  if (
+    userId === undefined ||
+    spentAt === undefined ||
+    !title ||
+    amount === undefined ||
+    !category
+  ) {
+    return res.status(400).json({ error: "Обов'язкові поля не заповнені" });
+  }
+
   const user = users.find((u) => u.id === req.body.userId);
 
   if (!user) {
     return res.status(400).json({ message: 'Користувача не знайдено' });
-  }
-
-  if (
-    (userId === undefined,
-    spentAt === undefined || !title || amount === undefined || !category)
-  ) {
-    return res.status(400).json({ error: "Обов'язкові поля не заповнені" });
   }
 
   const newExpense = {
@@ -88,6 +119,10 @@ router.patch('/:id', (req, res) => {
 router.delete('/:id', (req, res) => {
   const id = parseInt(req.params.id, 10);
 
+  if (!Number.isInteger(id)) {
+    return res.status(400).json({ message: 'Invalid id' });
+  }
+
   const index = expenses.findIndex((e) => e.id === id);
 
   if (index === -1) {
@@ -95,7 +130,8 @@ router.delete('/:id', (req, res) => {
   }
 
   expenses.splice(index, 1);
-  res.sendStatus(204);
+
+  return res.sendStatus(204);
 });
 
 module.exports = router;

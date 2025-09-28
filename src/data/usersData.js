@@ -1,7 +1,7 @@
-const users = [
-  // { id: 1, name: 'Софія' },
-  // { id: 2, name: 'Олег' },
-  // { id: 3, name: 'Анна' },
-];
+const users = [];
 
-module.exports = { users };
+function resetUsers() {
+  users.length = 0;
+}
+
+module.exports = { users, resetUsers };
