@@ -1,30 +1,8 @@
 const express = require('express');
+const { users } = require('../data/usersData');
+const { expenses } = require('../data/expensesData');
 
 const router = express.Router();
-
-let expenses = [
-  {
-    id: 1,
-    userId: 1,
-    category: 'food',
-    amount: 50,
-    spentAt: '2025-09-20T12:00:00Z',
-  },
-  {
-    id: 2,
-    userId: 1,
-    category: 'transport',
-    amount: 20,
-    spentAt: '2025-09-21T08:30:00Z',
-  },
-  {
-    id: 3,
-    userId: 2,
-    category: 'food',
-    amount: 30,
-    spentAt: '2025-09-21T09:00:00Z',
-  },
-];
 
 router.get('/', (req, res) => {
   res.json(expenses);
@@ -36,23 +14,32 @@ router.get('/:id', (req, res) => {
   const expense = expenses.find((e) => e.id === id);
 
   if (!expense) {
-    return res.status(404).json({ message: 'Витрату не знайдено' });
+    return res.status(404).json({ message: 'Expense not found' });
   }
 
   res.json(expense);
 });
 
 router.post('/', (req, res) => {
-  const { userId, title, amount, category, note } = req.body;
+  const { userId, spentAt, title, amount, category, note } = req.body;
 
-  if (userId === undefined || !title || amount === undefined || !category) {
+  const user = users.find((u) => u.id === req.body.userId);
+
+  if (!user) {
+    return res.status(400).json({ message: 'Користувача не знайдено' });
+  }
+
+  if (
+    (userId === undefined,
+    spentAt === undefined || !title || amount === undefined || !category)
+  ) {
     return res.status(400).json({ error: "Обов'язкові поля не заповнені" });
   }
 
   const newExpense = {
     id: expenses.length + 1,
     userId,
-    spentAt: new Date().toISOString(),
+    spentAt,
     title,
     amount,
     category,
@@ -101,15 +88,14 @@ router.patch('/:id', (req, res) => {
 router.delete('/:id', (req, res) => {
   const id = parseInt(req.params.id, 10);
 
-  const expenseExists = expenses.some((u) => u.id === id);
+  const index = expenses.findIndex((e) => e.id === id);
 
-  if (!expenseExists) {
-    return res.status(404).json({ message: 'Витрати не знайдено' });
+  if (index === -1) {
+    return res.status(404).json({ message: 'Expense not found' });
   }
 
-  expenses = expenses.filter((e) => e.id !== id);
-
-  res.status(200).json({ message: 'Витрату видалено' });
+  expenses.splice(index, 1);
+  res.sendStatus(204);
 });
 
 module.exports = router;

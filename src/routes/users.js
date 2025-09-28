@@ -1,12 +1,9 @@
 const express = require('express');
+const { users } = require('../data/usersData');
 
 const router = express.Router();
 
-let users = [
-  { id: 1, name: 'Софія' },
-  { id: 2, name: 'Олег' },
-  { id: 3, name: 'Анна' },
-];
+let nextId = 1;
 
 router.get('/', (req, res) => {
   res.json(users);
@@ -18,7 +15,7 @@ router.get('/:id', (req, res) => {
   const user = users.find((u) => u.id === id);
 
   if (!user) {
-    return res.status(404).json({ message: 'Користувача не знайдено' });
+    return res.status(404).json({ message: 'User not found' });
   }
 
   res.json(user);
@@ -26,7 +23,7 @@ router.get('/:id', (req, res) => {
 
 router.post('/', (req, res) => {
   const newUser = {
-    id: users.length + 1,
+    id: nextId++,
     name: req.body.name,
   };
 
@@ -40,6 +37,11 @@ router.post('/', (req, res) => {
 
 router.patch('/:id', (req, res) => {
   const id = parseInt(req.params.id, 10);
+
+  if (isNaN(id)) {
+    return res.status(400).json({ message: 'Невірний id' });
+  }
+
   const user = users.find((u) => u.id === id);
 
   if (!user) {
@@ -57,16 +59,14 @@ router.patch('/:id', (req, res) => {
 
 router.delete('/:id', (req, res) => {
   const id = parseInt(req.params.id, 10);
+  const index = users.findIndex((u) => u.id === id);
 
-  const userExists = users.some((u) => u.id === id);
-
-  if (!userExists) {
+  if (index === -1) {
     return res.status(404).json({ message: 'Користувача не знайдено' });
   }
 
-  users = users.filter((u) => u.id !== id);
-
-  res.status(200).json({ message: 'Користувача видалено' });
+  users.splice(index, 1);
+  res.sendStatus(204);
 });
 
 module.exports = router;
