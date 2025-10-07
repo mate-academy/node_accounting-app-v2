@@ -30,13 +30,13 @@ function createServer() {
   });
 
   app.get('/users/:userId', (req, res) => {
-    const id = parseInt(req.params.userId);
+    const id = Number(req.params.userId);
 
-    const foundUser = user.find((u) => u.id === id);
-
-    if (typeof id !== 'number') {
+    if (Number.isNaN(id)) {
       return res.sendStatus(400);
     }
+
+    const foundUser = user.find((u) => u.id === id);
 
     if (foundUser === undefined) {
       return res.sendStatus(404);
@@ -46,7 +46,12 @@ function createServer() {
   });
 
   app.delete('/users/:userId', (req, res) => {
-    const id = parseInt(req.params.userId);
+    const id = Number(req.params.userId);
+
+    if (Number.isNaN(id)) {
+      return res.sendStatus(400);
+    }
+
     const foundUser = user.find((u) => u.id === id);
 
     if (foundUser === undefined) {
@@ -58,15 +63,17 @@ function createServer() {
   });
 
   app.patch('/users/:userId', (req, res) => {
-    const id = parseInt(req.params.userId);
-    const foundUser = user.find((u) => u.id === id);
+    const id = Number(req.params.userId);
 
-    if (
-      typeof req.params.userId !== 'number' &&
-      typeof req.body.name !== 'string'
-    ) {
+    if (Number.isNaN(id)) {
       return res.sendStatus(400);
     }
+
+    if (typeof req.body.name !== 'string' || req.body.name.trim() === '') {
+      return res.sendStatus(400);
+    }
+
+    const foundUser = user.find((u) => u.id === id);
 
     if (foundUser === undefined) {
       return res.sendStatus(404);
@@ -115,7 +122,6 @@ function createServer() {
 
   app.post('/expenses', (req, res) => {
     const { userId, spentAt, title, amount, category, note } = req.body;
-    const foundUser = user.find((u) => u.id === userId);
 
     if (
       userId === undefined ||
@@ -126,6 +132,9 @@ function createServer() {
     ) {
       return res.sendStatus(400);
     }
+
+    const numericUserId = Number(userId);
+    const foundUser = user.find((u) => u.id === numericUserId);
 
     if (foundUser === undefined) {
       return res.sendStatus(400);
@@ -146,13 +155,13 @@ function createServer() {
   });
 
   app.get('/expenses/:id', (req, res) => {
-    const id = parseInt(req.params.id);
+    const id = Number(req.params.id);
 
-    if (typeof id !== 'number') {
+    if (Number.isNaN(id)) {
       return res.sendStatus(400);
     }
 
-    const foundExpense = expense.find((u) => u.id === id);
+    const foundExpense = expense.find((e) => e.id === id);
 
     if (foundExpense === undefined) {
       return res.sendStatus(404);
@@ -162,7 +171,12 @@ function createServer() {
   });
 
   app.delete('/expenses/:id', (req, res) => {
-    const id = parseInt(req.params.id);
+    const id = Number(req.params.id);
+
+    if (Number.isNaN(id)) {
+      return res.sendStatus(400);
+    }
+
     const foundExpense = expense.find((e) => e.id === id);
 
     if (foundExpense === undefined) {
@@ -174,19 +188,20 @@ function createServer() {
   });
 
   app.patch('/expenses/:id', (req, res) => {
-    const id = parseInt(req.params.id);
-    const foundExpense = expense.find((u) => u.id === id);
+    const id = Number(req.params.id);
     const { spentAt, title, amount, category, note } = req.body;
 
-    if (typeof id !== 'number') {
+    if (Number.isNaN(id)) {
       return res.sendStatus(400);
     }
+
+    const foundExpense = expense.find((e) => e.id === id);
 
     if (foundExpense === undefined) {
       return res.sendStatus(404);
     }
 
-    const index = expense.findIndex((u) => u.id === id);
+    const index = expense.findIndex((e) => e.id === id);
 
     const updates = {
       spentAt,
