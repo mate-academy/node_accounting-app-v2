@@ -9,8 +9,10 @@ function createServer() {
   app.use(express.json());
 
   let user = [];
-
   let expense = [];
+
+  let nextUserId = 0;
+  let nextExpenseId = 0;
 
   router.get('/users', (req, res) => {
     res.status(200).json(user);
@@ -19,11 +21,11 @@ function createServer() {
   router.post('/users', (req, res) => {
     const name = req.body.name;
 
-    if (typeof req.body.name !== 'string') {
+    if (typeof name !== 'string' || name.trim() === '') {
       return res.sendStatus(400);
     }
 
-    const newUser = { id: user.length, name: name };
+    const newUser = { id: nextUserId++, name: name };
 
     user.push(newUser);
     res.status(201).json(newUser);
@@ -88,7 +90,15 @@ function createServer() {
   app.get('/expenses', (req, res) => {
     const { userId, categories, from, to } = req.query;
 
-    const userIdNum = userId != null && userId !== '' ? Number(userId) : null;
+    let userIdNum = null;
+
+    if (userId != null && userId !== '') {
+      userIdNum = Number(userId);
+
+      if (Number.isNaN(userIdNum)) {
+        return res.sendStatus(400);
+      }
+    }
 
     /* eslint-disable indent */
     const categoryList = Array.isArray(categories)
@@ -134,6 +144,11 @@ function createServer() {
     }
 
     const numericUserId = Number(userId);
+
+    if (Number.isNaN(numericUserId)) {
+      return res.sendStatus(400);
+    }
+
     const foundUser = user.find((u) => u.id === numericUserId);
 
     if (foundUser === undefined) {
@@ -141,8 +156,8 @@ function createServer() {
     }
 
     const newExpense = {
-      id: expense.length,
-      userId: userId,
+      id: nextExpenseId++,
+      userId: numericUserId,
       spentAt: spentAt,
       title: title,
       amount: amount,
@@ -151,7 +166,7 @@ function createServer() {
     };
 
     expense.push(newExpense);
-    res.status(201).json(expense[expense.length - 1]);
+    res.status(201).json(newExpense);
   });
 
   app.get('/expenses/:id', (req, res) => {
