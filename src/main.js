@@ -1,5 +1,3 @@
-'use strict';
-
 const { createServer } = require('./createServer');
 
 createServer().listen(3000, () => {
