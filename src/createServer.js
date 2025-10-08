@@ -83,13 +83,21 @@ function createServer() {
       filtered = filtered.filter((exp) => categories === exp.category);
     }
 
-    if (from && to) {
-      const fromDate = new Date(from);
-      const toDate = new Date(to);
+    const fromDate = new Date(from);
+    const toDate = new Date(to);
 
+    if (from && to) {
       filtered = filtered.filter(
         (e) => fromDate <= new Date(e.spentAt) && new Date(e.spentAt) <= toDate,
       );
+    }
+
+    if (from && !to) {
+      filtered = filtered.filter((e) => fromDate <= new Date(e.spentAt));
+    }
+
+    if (!from && to) {
+      filtered = filtered.filter((e) => new Date(e.spentAt) <= toDate);
     }
 
     res.status(200).json(filtered);
@@ -98,7 +106,13 @@ function createServer() {
   app.post('/expenses', (req, res) => {
     const { userId, spentAt, title, amount, category, note } = req.body;
 
-    if (!userId || !spentAt || !title || !amount || !category) {
+    if (
+      userId == null ||
+      spentAt == null ||
+      title == null ||
+      amount == null ||
+      category == null
+    ) {
       return res.status(400).json({ message: 'Bad request' });
     }
 
@@ -113,7 +127,7 @@ function createServer() {
       userId: +userId,
       spentAt,
       title,
-      amount,
+      amount: +amount,
       category,
       note: note || '',
     };
@@ -128,17 +142,18 @@ function createServer() {
     if (!exp) {
       return res.status(404).json({ message: 'Expense not found' });
     }
-    res.json(exp);
+    res.status(200).json(exp);
   });
 
   app.patch('/expenses/:id', (req, res) => {
-    const exp = expenses.find((e) => e.id === +req.params.id);
+    const id = +req.params.id;
+    const exp = expenses.find((e) => e.id === id);
 
     if (!exp) {
       return res.status(404).json({ message: 'Expense not found' });
     }
 
-    Object.assign(exp, req.body, exp.id, exp.userId);
+    Object.assign(exp, req.body, { id: exp.id });
     res.json(exp);
   });
 
