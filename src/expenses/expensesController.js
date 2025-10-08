@@ -1,7 +1,7 @@
 const { expenseService } = require('./expensesService');
 
 const getAll = async (req, res) => {
-  const { userId, categories, dateFrom, dateTo } = req.body;
+  const { userId, categories, dateFrom, dateTo } = req.query;
 
   const expenses = await expenseService.getAllExpenses(
     userId,
@@ -16,11 +16,15 @@ const getAll = async (req, res) => {
 const getSingle = async (req, res) => {
   const exp = await expenseService.getSingleExpense(req.params.id);
 
+  if (!exp) {
+    return res.sendStatus(404);
+  }
+
   res.json(exp);
 };
 
 const create = async (req, res) => {
-  const { userId, title, amount, category, note } = req.body.name;
+  const { userId, title, amount, category, note } = req.body;
 
   if (!userId || !title || !amount || !category) {
     return res.sendStatus(400);
@@ -67,10 +71,12 @@ const update = async (req, res) => {
   res.json(updatedExpense);
 };
 
-export const expensesController = {
-  getAll,
-  getSingle,
-  create,
-  deleteExpense,
-  update,
+module.exports = {
+  expensesController: {
+    getAll,
+    getSingle,
+    create,
+    deleteExpense,
+    update,
+  },
 };

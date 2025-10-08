@@ -1,4 +1,5 @@
-import { v4 as uuidv4 } from 'uuid';
+/* eslint-disable function-paren-newline */
+const { v4: uuidv4 } = require('uuid');
 
 const expenses = [];
 
@@ -10,19 +11,21 @@ export function getAllExpenses(userId, categories, dateFrom, dateTo) {
   }
 
   if (Array.isArray(categories)) {
-    filteredExpenses = filteredExpenses.filter((c) => categories.includes(c));
+    filteredExpenses = filteredExpenses.filter((exp) =>
+      categories.includes(exp.category),
+    );
   }
 
   if (typeof dateFrom === 'string') {
-    const date = new Date(dateFrom);
-
-    filteredExpenses = filteredExpenses.filter((d) => date > d);
+    filteredExpenses = filteredExpenses.filter(
+      (e) => new Date(e.spentAt) >= new Date(dateFrom),
+    );
   }
 
   if (typeof dateTo === 'string') {
-    const date = new Date(dateTo);
-
-    filteredExpenses = filteredExpenses.filter((d) => d < date);
+    filteredExpenses = filteredExpenses.filter(
+      (e) => new Date(e.spentAt) <= new Date(dateTo),
+    );
   }
 
   return filteredExpenses;
@@ -37,7 +40,7 @@ export function addExpense({ userId, title, amount, category, note }) {
   const expense = {
     id: uuidv4(),
     userId,
-    spentAt: date.toDateString(),
+    spentAt: date.toISOString(),
     title,
     amount,
     category,
@@ -46,7 +49,7 @@ export function addExpense({ userId, title, amount, category, note }) {
 
   expenses.push(expense);
 
-  return expenses;
+  return expense;
 }
 
 export function removeExpense(id) {
@@ -87,10 +90,12 @@ export function updateExpense({
   });
 }
 
-export const expenseService = {
-  getAllExpenses,
-  getSingleExpense,
-  addExpense,
-  removeExpense,
-  updateExpense,
+module.exports = {
+  expenseService: {
+    getAllExpenses,
+    getSingleExpense,
+    addExpense,
+    removeExpense,
+    updateExpense,
+  },
 };

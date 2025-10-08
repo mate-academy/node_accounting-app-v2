@@ -9,6 +9,10 @@ const getAll = async (req, res) => {
 const getSingle = async (req, res) => {
   const user = await userService.getSingleUser(req.params.id);
 
+  if (!user) {
+    return res.sendStatus(404);
+  }
+
   res.json(user);
 };
 
@@ -50,10 +54,12 @@ const update = async (req, res) => {
   res.json(updatedUser);
 };
 
-export const usersController = {
-  getAll,
-  getSingle,
-  create,
-  deleteUser,
-  update,
+module.exports = {
+  usersController: {
+    getAll,
+    getSingle,
+    create,
+    deleteUser,
+    update,
+  },
 };

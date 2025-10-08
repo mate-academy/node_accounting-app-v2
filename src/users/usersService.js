@@ -1,4 +1,4 @@
-import { v4 as uuidv4 } from 'uuid';
+const { v4: uuidv4 } = require('uuid');
 
 const users = [];
 
@@ -40,10 +40,12 @@ export function updateUser({ id, name }) {
   return Object.assign(user, { id, name });
 }
 
-export const userService = {
-  getAllUsers,
-  getSingleUser,
-  addUser,
-  removeUser,
-  updateUser,
+module.exports = {
+  userService: {
+    getAllUsers,
+    getSingleUser,
+    addUser,
+    removeUser,
+    updateUser,
+  },
 };
