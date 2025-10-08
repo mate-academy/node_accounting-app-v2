@@ -2,15 +2,15 @@ const { v4: uuidv4 } = require('uuid');
 
 const users = [];
 
-export function getAllUsers() {
+function getAllUsers() {
   return users;
 }
 
-export function getSingleUser(id) {
+function getSingleUser(id) {
   return users.find((u) => u.id === id);
 }
 
-export function addUser(name) {
+function addUser(name) {
   const user = { id: uuidv4(), name };
 
   users.push(user);
@@ -18,7 +18,7 @@ export function addUser(name) {
   return user;
 }
 
-export function removeUser(id) {
+function removeUser(id) {
   const index = users.findIndex((u) => u.id === id);
 
   if (index === -1) {
@@ -30,7 +30,7 @@ export function removeUser(id) {
   return user;
 }
 
-export function updateUser({ id, name }) {
+function updateUser({ id, name }) {
   const user = users.find((u) => u.id === id);
 
   if (!user) {

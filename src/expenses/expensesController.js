@@ -26,7 +26,13 @@ const getSingle = async (req, res) => {
 const create = async (req, res) => {
   const { userId, title, amount, category, note } = req.body;
 
-  if (!userId || !title || !amount || !category) {
+  if (
+    !userId ||
+    !title ||
+    amount == null ||
+    !category ||
+    !Number.isFinite(Number(amount))
+  ) {
     return res.sendStatus(400);
   }
 

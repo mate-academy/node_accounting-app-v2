@@ -3,7 +3,7 @@ const { v4: uuidv4 } = require('uuid');
 
 const expenses = [];
 
-export function getAllExpenses(userId, categories, dateFrom, dateTo) {
+function getAllExpenses(userId, categories, dateFrom, dateTo) {
   let filteredExpenses = expenses;
 
   if (typeof userId === 'number') {
@@ -31,12 +31,13 @@ export function getAllExpenses(userId, categories, dateFrom, dateTo) {
   return filteredExpenses;
 }
 
-export function getSingleExpense(id) {
+function getSingleExpense(id) {
   return expenses.find((e) => e.id === id);
 }
 
-export function addExpense({ userId, title, amount, category, note }) {
+function addExpense({ userId, title, amount, category, note }) {
   const date = new Date();
+
   const expense = {
     id: uuidv4(),
     userId,
@@ -52,7 +53,7 @@ export function addExpense({ userId, title, amount, category, note }) {
   return expense;
 }
 
-export function removeExpense(id) {
+function removeExpense(id) {
   const index = expenses.findIndex((e) => e.id === id);
 
   if (index === -1) {
@@ -64,30 +65,38 @@ export function removeExpense(id) {
   return exp;
 }
 
-export function updateExpense({
-  id,
-  userId,
-  spentAt,
-  title,
-  amount,
-  category,
-  note,
-}) {
+function updateExpense({ id, userId, spentAt, title, amount, category, note }) {
   const exp = expenses.find((e) => e.id === id);
 
   if (!exp) {
     return;
   }
 
-  return Object.assign(exp, {
-    id,
-    userId,
-    spentAt,
-    title,
-    amount,
-    category,
-    note,
-  });
+  if (userId !== undefined) {
+    exp.userId = userId;
+  }
+
+  if (spentAt !== undefined) {
+    exp.spentAt = spentAt;
+  }
+
+  if (title !== undefined) {
+    exp.title = title;
+  }
+
+  if (amount !== undefined) {
+    exp.amount = amount;
+  }
+
+  if (category !== undefined) {
+    exp.category = category;
+  }
+
+  if (note !== undefined) {
+    exp.note = note;
+  }
+
+  return exp;
 }
 
 module.exports = {
