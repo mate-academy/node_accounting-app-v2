@@ -105,7 +105,7 @@ function createServer() {
     const userExists = users.some((u) => u.id === +userId);
 
     if (!userExists) {
-      return res.status(404).json({ message: 'User not found' });
+      return res.status(400).json({ message: 'User not found' });
     }
 
     const expense = {
