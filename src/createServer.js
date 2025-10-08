@@ -98,19 +98,19 @@ function createServer() {
   app.post('/expenses', (req, res) => {
     const { userId, spentAt, title, amount, category, note } = req.body;
 
+    if (!userId || !spentAt || !title || !amount || !category) {
+      return res.status(400).json({ message: 'Bad request' });
+    }
+
     const userExists = users.some((u) => u.id === +userId);
 
     if (!userExists) {
       return res.status(400).json({ message: 'User not found' });
     }
 
-    if (!userId || !spentAt || !title || !amount || !category) {
-      return res.status(400).json({ description: 'Bad request' });
-    }
-
     const expense = {
       id: expenseIdCounter++,
-      userId,
+      userId: +userId,
       spentAt,
       title,
       amount,
@@ -138,7 +138,7 @@ function createServer() {
       return res.status(404).json({ message: 'Expense not found' });
     }
 
-    Object.assign(exp, req.body);
+    Object.assign(exp, req.body, exp.id, exp.userId);
     res.json(exp);
   });
 
