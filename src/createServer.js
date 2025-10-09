@@ -80,7 +80,7 @@ function createServer() {
 
     const newExpense = {
       id: expenseId,
-      userId,
+      userId: +userId,
       spentAt,
       title,
       amount: +amount,
