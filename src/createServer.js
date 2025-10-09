@@ -18,11 +18,11 @@ function createServer() {
     const { userId, categories, from, to } = req.query;
     let filtered = [...expenses];
 
-    if (userId) {
+    if (userId != null) {
       filtered = filtered.filter((x) => x.userId === +userId);
     }
 
-    if (categories) {
+    if (categories != null) {
       filtered = filtered.filter((x) => x.category === categories);
     }
 
@@ -62,12 +62,12 @@ function createServer() {
     const { userId, spentAt, title, amount, category, note } = req.body;
 
     if (
-      userId === null ||
-      spentAt === null ||
-      title === null ||
+      userId == null ||
+      spentAt == null ||
+      title == null ||
       !Number.isFinite(+amount) ||
-      category === null ||
-      note === null
+      category == null ||
+      note == null
     ) {
       return res.status(400).json({ message: 'Bad request' });
     }
@@ -158,6 +158,24 @@ function createServer() {
 
     if (!expense) {
       return res.status(404).json({ message: 'Expense not found' });
+    }
+
+    const { userId, amount } = req.body;
+
+    if (userId != null) {
+      const user = users.find((u) => u.id === +userId);
+
+      if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+      expense.userId = +userId;
+    }
+
+    if (amount != null) {
+      if (!Number.isFinite(+amount)) {
+        return res.status(400).json({ message: 'Invalid amount' });
+      }
+      expense.amount = +amount;
     }
 
     Object.assign(expense, req.body, { id: expense.id });

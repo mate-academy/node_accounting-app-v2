@@ -1,6 +1,6 @@
 'use strict';
 
-import { createServer } from './createServer';
+const createServer = require('./createServer');
 
 const app = createServer();
 
