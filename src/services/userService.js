@@ -23,7 +23,7 @@ function deleteUserById(id) {
   const index = users.findIndex((u) => u.id === id);
 
   if (index === -1) {
-    return null;
+    return;
   }
 
   const [user] = users.splice(index, 1);
@@ -43,6 +43,7 @@ function updateUserById({ id, name }) {
 
 const resetUsers = () => {
   users = [];
+  currentId = 1;
 };
 
 module.exports = {

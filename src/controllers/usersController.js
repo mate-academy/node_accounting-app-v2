@@ -11,7 +11,7 @@ const getAllUsers = async (req, res) => {
 const getUser = async (req, res) => {
   const user = await userService.getUserById(parseInt(req.params.id, 10));
 
-  if (!user) {
+  if (user === undefined) {
     return res.status(404).send('User not found');
   }
 
@@ -21,7 +21,7 @@ const getUser = async (req, res) => {
 const createUser = async (req, res) => {
   const name = req.body.name;
 
-  if (!name) {
+  if (name === undefined) {
     return res.status(400).send('Name is not passed');
   }
 
@@ -35,7 +35,7 @@ const deleteUser = async (req, res) => {
     parseInt(req.params.id, 10),
   );
 
-  if (!deletedUser) {
+  if (deletedUser === undefined) {
     return res.sendStatus(404);
   }
 
@@ -45,13 +45,13 @@ const deleteUser = async (req, res) => {
 const updateUser = async (req, res) => {
   const { name } = req.body;
 
-  if (!name) {
+  if (name === undefined) {
     return res.status(400).send('Name is not passed');
   }
 
   const user = await userService.getUserById(parseInt(req.params.id, 10));
 
-  if (!user) {
+  if (user === undefined) {
     return res.status(404).send('User not found');
   }
 

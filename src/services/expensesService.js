@@ -96,6 +96,7 @@ function updateExpenseById({ id, spentAt, title, amount, category, note }) {
 
 const resetExpenses = () => {
   expenses = [];
+  currentId = 1;
 };
 
 module.exports = {

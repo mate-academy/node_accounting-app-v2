@@ -7,7 +7,7 @@ const getAllExpenses = async (req, res) => {
   const { userId, from, to, categories } = req.query;
 
   if (userId && !userService.getUserById(parseInt(userId))) {
-    return res.status(400).send('User not found');
+    return res.status(404).send('User not found');
   }
 
   const expenses = await expensesService.getExpenses({
@@ -25,7 +25,7 @@ const getExpense = async (req, res) => {
     parseInt(req.params.id, 10),
   );
 
-  if (!expense) {
+  if (expense === undefined) {
     return res.status(404).send('Expense not found');
   }
 
@@ -35,7 +35,13 @@ const getExpense = async (req, res) => {
 const createExpense = async (req, res) => {
   const { userId, spentAt, title, amount, category, note } = req.body;
 
-  if (!userId || !spentAt || !title || !amount || !category) {
+  if (
+    userId === undefined ||
+    spentAt === undefined ||
+    title === undefined ||
+    amount === undefined ||
+    category === undefined
+  ) {
     return res
       .status(400)
       .send(
@@ -43,7 +49,7 @@ const createExpense = async (req, res) => {
       );
   }
 
-  if (!userService.getUserById(parseInt(userId))) {
+  if (!userService.getUserById(parseInt(userId, 10))) {
     return res.status(400).send('User not found');
   }
 
@@ -64,7 +70,7 @@ const deleteExpense = async (req, res) => {
     parseInt(req.params.id, 10),
   );
 
-  if (!deletedExpense) {
+  if (deletedExpense === undefined) {
     return res.sendStatus(404);
   }
 
@@ -78,7 +84,7 @@ const updateExpense = async (req, res) => {
     parseInt(req.params.id, 10),
   );
 
-  if (!expense) {
+  if (expense === undefined) {
     return res.status(404).send('Expense not found');
   }
 
