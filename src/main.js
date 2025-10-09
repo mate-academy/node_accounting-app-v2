@@ -1,8 +1,12 @@
 'use strict';
 
-const { createServer } = require('./createServer');
+import { createServer } from './createServer';
 
-createServer().listen(3000, () => {
+const app = createServer();
+
+const PORT = 3000;
+
+app.listen(PORT, () => {
   // eslint-disable-next-line no-console
-  console.log('Server is running on localhost:3000');
+  console.log(`Server is running on http://localhost:${PORT}`);
 });
