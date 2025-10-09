@@ -1,6 +1,7 @@
 'use strict';
 
 let expenses = [];
+let currentId = 1;
 
 function getExpenses(filters = {}) {
   const { userId, from, to, categories } = filters;
@@ -35,9 +36,9 @@ function getExpensesById(id) {
   return expenses.find((expense) => expense.id === id);
 }
 
-function createExpense(userId, spentAt, title, amount, category, note) {
+function createExpense(userId, spentAt, title, amount, category, note = '') {
   const newExpense = {
-    id: expenses.length + 1,
+    id: currentId++,
     userId,
     spentAt,
     title,

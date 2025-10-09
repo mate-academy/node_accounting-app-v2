@@ -1,6 +1,7 @@
 'use strict';
 
 let users = [];
+let currentId = 1;
 
 function getUsers() {
   return users;
@@ -11,7 +12,7 @@ function getUserById(id) {
 }
 
 function createUser(name) {
-  const newUser = { id: users.length + 1, name };
+  const newUser = { id: currentId++, name };
 
   users.push(newUser);
 

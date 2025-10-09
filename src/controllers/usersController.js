@@ -49,7 +49,7 @@ const updateUser = async (req, res) => {
     return res.status(400).send('Name is not passed');
   }
 
-  const user = await userService.getUserById(parseInt(req.params.id));
+  const user = await userService.getUserById(parseInt(req.params.id, 10));
 
   if (!user) {
     return res.status(404).send('User not found');

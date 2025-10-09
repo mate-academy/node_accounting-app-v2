@@ -1,13 +1,14 @@
 'use strict';
 
-const expensesService = require('../services/expensesSevice');
+const expensesService = require('../services/expensesService');
 const userService = require('../services/userService');
 
 const getAllExpenses = async (req, res) => {
   const { userId, from, to, categories } = req.query;
 
-  // eslint-disable-next-line no-console
-  console.log(userId, from, to, categories);
+  if (userId && !userService.getUserById(parseInt(userId))) {
+    return res.status(400).send('User not found');
+  }
 
   const expenses = await expensesService.getExpenses({
     userId: userId ? Number(userId) : undefined,
@@ -34,8 +35,12 @@ const getExpense = async (req, res) => {
 const createExpense = async (req, res) => {
   const { userId, spentAt, title, amount, category, note } = req.body;
 
-  if (!userId || !spentAt || !title || !amount || !category || !note) {
-    return res.status(400).send('All fields is required');
+  if (!userId || !spentAt || !title || !amount || !category) {
+    return res
+      .status(400)
+      .send(
+        `Fields ${userId}, ${spentAt}, ${title}, ${amount}, ${category} is required`,
+      );
   }
 
   if (!userService.getUserById(parseInt(userId))) {
@@ -43,7 +48,7 @@ const createExpense = async (req, res) => {
   }
 
   const expense = await expensesService.createExpense(
-    userId,
+    Number(userId),
     spentAt,
     title,
     amount,
