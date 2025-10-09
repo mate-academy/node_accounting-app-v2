@@ -61,7 +61,14 @@ function createServer() {
   app.post('/expenses', (req, res) => {
     const { userId, spentAt, title, amount, category, note } = req.body;
 
-    if (!userId || !spentAt || !title || !amount || !category || !note) {
+    if (
+      userId === null ||
+      spentAt === null ||
+      title === null ||
+      !Number.isFinite(+amount) ||
+      category === null ||
+      note === null
+    ) {
       return res.status(400).json({ message: 'Bad request' });
     }
 
