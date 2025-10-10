@@ -52,7 +52,7 @@ router.post('/', (req, res) => {
   const userExists = users.find((u) => u.id === Number(userId));
 
   if (!userExists) {
-    return res.status(404).json({ error: 'User not found' });
+    return res.status(400).json({ error: 'User does not exist' });
   }
 
   const newExpense = {
