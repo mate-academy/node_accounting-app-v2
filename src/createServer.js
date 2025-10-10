@@ -2,7 +2,7 @@
 
 const express = require('express');
 
-const usersRouter = require('.//routers/users');
+const usersRouter = require('./routers/users');
 const expensesRouter = require('./routers/expenses');
 const { resetStore } = require('./data/store');
 

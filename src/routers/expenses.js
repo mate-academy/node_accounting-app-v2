@@ -30,7 +30,7 @@ router.get('/:id', (req, res) => {
   const expense = expenses.find((e) => e.id === Number(req.params.id));
 
   if (!expense) {
-    return res.status(404).json({ message: 'Expense not found' });
+    return res.status(404).json({ error: 'Expense not found' });
   }
 
   res.json(expense);
@@ -39,14 +39,20 @@ router.get('/:id', (req, res) => {
 router.post('/', (req, res) => {
   const { userId, spentAt, title, amount, category, note } = req.body;
 
-  if (!userId || !spentAt || !title || !amount || !category) {
-    return res.status(400).json({ message: 'Missing required fields' });
+  if (
+    userId === undefined ||
+    spentAt === undefined ||
+    title === undefined ||
+    amount === undefined ||
+    category === undefined
+  ) {
+    return res.status(400).json({ error: 'Missing required fields' });
   }
 
   const userExists = users.find((u) => u.id === Number(userId));
 
   if (!userExists) {
-    return res.status(400).json({ message: 'User does not exist' });
+    return res.status(404).json({ error: 'User not found' });
   }
 
   const newExpense = {
@@ -67,10 +73,20 @@ router.patch('/:id', (req, res) => {
   const expense = expenses.find((e) => e.id === Number(req.params.id));
 
   if (!expense) {
-    return res.status(404).json({ message: 'Expense not found' });
+    return res.status(404).json({ error: 'Expense not found' });
   }
 
   const { spentAt, title, amount, category, note } = req.body;
+
+  if (
+    spentAt === undefined &&
+    title === undefined &&
+    amount === undefined &&
+    category === undefined &&
+    note === undefined
+  ) {
+    return res.status(400).json({ error: 'No updatable fields provided' });
+  }
 
   if (spentAt !== undefined) {
     expense.spentAt = spentAt;
@@ -99,7 +115,7 @@ router.delete('/:id', (req, res) => {
   const index = expenses.findIndex((e) => e.id === Number(req.params.id));
 
   if (index === -1) {
-    return res.status(404).json({ message: 'Expense not found' });
+    return res.status(404).json({ error: 'Expense not found' });
   }
 
   expenses.splice(index, 1);
