@@ -3,12 +3,13 @@ const { expenses, users, getNextExpenseId } = require('../data/store');
 
 const router = express.Router();
 
+// GET all expenses
 router.get('/', (req, res) => {
   let result = [...expenses];
   const { userId, categories, from, to } = req.query;
 
   if (userId) {
-    result = result.filter((expense) => expense.userId === Number(userId));
+    result = result.filter((e) => e.userId === Number(userId));
   }
 
   if (categories) {
@@ -26,33 +27,29 @@ router.get('/', (req, res) => {
   res.json(result);
 });
 
+// GET expense by ID
 router.get('/:id', (req, res) => {
   const expense = expenses.find((e) => e.id === Number(req.params.id));
 
   if (!expense) {
-    return res.status(404).json({ error: 'Expense not found' });
+    return res.status(404).json({ message: 'Expense not found' });
   }
 
   res.json(expense);
 });
 
+// CREATE new expense
 router.post('/', (req, res) => {
   const { userId, spentAt, title, amount, category, note } = req.body;
 
-  if (
-    userId === undefined ||
-    spentAt === undefined ||
-    title === undefined ||
-    amount === undefined ||
-    category === undefined
-  ) {
-    return res.status(400).json({ error: 'Missing required fields' });
+  if (!userId || !spentAt || !title || !amount || !category) {
+    return res.status(400).json({ message: 'Required field missing' });
   }
 
   const userExists = users.find((u) => u.id === Number(userId));
 
   if (!userExists) {
-    return res.status(400).json({ error: 'User does not exist' });
+    return res.status(400).json({ message: 'User not found' });
   }
 
   const newExpense = {
@@ -69,24 +66,15 @@ router.post('/', (req, res) => {
   res.status(201).json(newExpense);
 });
 
+// UPDATE expense
 router.patch('/:id', (req, res) => {
   const expense = expenses.find((e) => e.id === Number(req.params.id));
 
   if (!expense) {
-    return res.status(404).json({ error: 'Expense not found' });
+    return res.status(404).json({ message: 'Expense not found' });
   }
 
   const { spentAt, title, amount, category, note } = req.body;
-
-  if (
-    spentAt === undefined &&
-    title === undefined &&
-    amount === undefined &&
-    category === undefined &&
-    note === undefined
-  ) {
-    return res.status(400).json({ error: 'No updatable fields provided' });
-  }
 
   if (spentAt !== undefined) {
     expense.spentAt = spentAt;
@@ -111,11 +99,12 @@ router.patch('/:id', (req, res) => {
   res.json(expense);
 });
 
+// DELETE expense
 router.delete('/:id', (req, res) => {
   const index = expenses.findIndex((e) => e.id === Number(req.params.id));
 
   if (index === -1) {
-    return res.status(404).json({ error: 'Expense not found' });
+    return res.status(404).json({ message: 'Expense not found' });
   }
 
   expenses.splice(index, 1);
