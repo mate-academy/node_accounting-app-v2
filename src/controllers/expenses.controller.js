@@ -2,9 +2,9 @@ const expenseService = require('../services/expense.service');
 const userService = require('../services/user.service');
 
 const get = (req, res) => {
-  const { category, userId, fromDate, toDate } = req.query;
+  const { categories, userId, fromDate, toDate } = req.query;
   const result = expenseService.getExpenses({
-    category,
+    categories,
     userId,
     fromDate,
     toDate,
@@ -18,9 +18,7 @@ const getById = (req, res) => {
   const expense = expenseService.getExpense(id);
 
   if (!expense) {
-    res.sendStatus(404);
-
-    return;
+    return res.status(404).send({ message: 'Expense not found' });
   }
 
   res.status(200).send(expense);
@@ -32,7 +30,7 @@ const create = (req, res) => {
   const isUser = userService.getUser(userId);
 
   if (!isUser) {
-    return res.sendStatus(400);
+    return res.status(404).send({ message: 'User not found' });
   }
 
   if (
@@ -49,9 +47,7 @@ const create = (req, res) => {
     isNaN(Date.parse(spentAt)) ||
     !spentAt
   ) {
-    res.sendStatus(422);
-
-    return;
+    return res.status(400).send({ message: 'Invalid data' });
   }
 
   const newExpense = expenseService.createExpense({
@@ -71,12 +67,10 @@ const remove = (req, res) => {
   const expenseToRemove = expenseService.getExpense(id);
 
   if (!expenseToRemove) {
-    res.sendStatus(404);
-
-    return;
+    return res.status(404).send({ message: 'Expense not found' });
   }
-  expenseService.deleteExpense(+id);
-  res.sendStatus(204);
+  expenseService.deleteExpense(id);
+  res.status(204).send({ message: 'Expense deleted' });
 };
 
 const update = (req, res) => {
@@ -85,9 +79,7 @@ const update = (req, res) => {
   const expenseToUpdate = expenseService.getExpense(id);
 
   if (!expenseToUpdate) {
-    res.sendStatus(404);
-
-    return;
+    return res.status(404).send({ message: 'Expense not found' });
   }
 
   if (
@@ -99,9 +91,7 @@ const update = (req, res) => {
       typeof spentAt !== 'string' &&
       isNaN(Date.parse(spentAt)))
   ) {
-    res.sendStatus(422);
-
-    return;
+    return res.status(400).send({ message: 'Invalid data' });
   }
 
   const updatedExpense = expenseService.updateExpense({

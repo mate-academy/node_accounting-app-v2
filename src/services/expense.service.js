@@ -1,10 +1,10 @@
 let expenses = [];
 
-const getExpenses = ({ category, userId, fromDate, toDate }) => {
+const getExpenses = ({ categories, userId, fromDate, toDate }) => {
   let result = expenses;
 
-  if (category) {
-    result = result.filter((r) => r.category === category);
+  if (categories) {
+    result = result.filter((r) => r.category === categories);
   }
 
   if (userId) {

@@ -9,7 +9,7 @@ const getById = (req, res) => {
   const user = userService.getUser(id);
 
   if (!user) {
-    return res.sendStatus(404);
+    return res.status(404).send({ message: 'User not found' });
   }
 
   res.status(200).send(user);
@@ -19,7 +19,7 @@ const create = (req, res) => {
   const { name } = req.body;
 
   if (!name || typeof name !== 'string') {
-    return res.sendStatus(400);
+    return res.status(400).send({ message: 'Invalid data' });
   }
 
   const newUser = userService.createUser(name);
@@ -31,10 +31,10 @@ const remove = (req, res) => {
   const { id } = req.params;
 
   if (!userService.getUser(id)) {
-    return res.sendStatus(404);
+    return res.status(404).send({ message: 'User not found' });
   }
-  userService.deleteUser(+id);
-  res.sendStatus(204);
+  userService.deleteUser(id);
+  res.status(204).send({ message: 'User deleted' });
 };
 
 const update = (req, res) => {
@@ -44,11 +44,11 @@ const update = (req, res) => {
   const user = userService.getUser(id);
 
   if (!user) {
-    return res.sendStatus(404);
+    return res.status(404).send({ message: 'User not found' });
   }
 
   if (typeof name !== 'string' || !name) {
-    return res.sendStatus(422);
+    return res.status(400).send({ message: 'Invalid data' });
   }
 
   const userToUpdate = userService.updateUser({ id, name });
