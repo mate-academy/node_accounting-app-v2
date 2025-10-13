@@ -29,10 +29,6 @@ const create = (req, res) => {
 
   const isUser = userService.getUser(userId);
 
-  if (!isUser) {
-    return res.status(400).send({ message: 'User not found' });
-  }
-
   if (
     typeof userId !== 'number' ||
     !userId ||
@@ -48,6 +44,10 @@ const create = (req, res) => {
     !spentAt
   ) {
     return res.status(400).send({ message: 'Invalid data' });
+  }
+
+  if (!isUser) {
+    return res.status(400).send({ message: 'User not found' });
   }
 
   const newExpense = expenseService.createExpense({
@@ -88,8 +88,7 @@ const update = (req, res) => {
     (amount !== undefined && typeof amount !== 'number') ||
     (category !== undefined && typeof category !== 'string') ||
     (spentAt !== undefined &&
-      typeof spentAt !== 'string' &&
-      isNaN(Date.parse(spentAt)))
+      (typeof spentAt !== 'string' || isNaN(Date.parse(spentAt))))
   ) {
     return res.status(400).send({ message: 'Invalid data' });
   }

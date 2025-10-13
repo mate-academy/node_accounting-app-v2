@@ -34,7 +34,7 @@ const remove = (req, res) => {
     return res.status(404).send({ message: 'User not found' });
   }
   userService.deleteUser(id);
-  res.status(204).send({ message: 'User deleted' });
+  res.status(204).send();
 };
 
 const update = (req, res) => {
