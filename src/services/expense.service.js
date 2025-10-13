@@ -1,6 +1,6 @@
 let expenses = [];
 
-const getExpenses = ({ categories, userId, fromDate, toDate }) => {
+const getExpenses = ({ categories, userId, from, to }) => {
   let result = expenses;
 
   if (categories) {
@@ -11,20 +11,16 @@ const getExpenses = ({ categories, userId, fromDate, toDate }) => {
     result = result.filter((r) => r.userId === +userId);
   }
 
-  if (fromDate) {
-    const start = new Date(fromDate);
+  if (from) {
+    const start = Date.parse(from);
 
-    if (!isNaN(start)) {
-      result = result.filter((r) => new Date(r.spentAt) >= start);
-    }
+    result = result.filter((r) => Date.parse(r.spentAt) >= start);
   }
 
-  if (toDate) {
-    const finish = new Date(toDate);
+  if (to) {
+    const finish = Date.parse(to);
 
-    if (!isNaN(finish)) {
-      result = result.filter((r) => new Date(r.spentAt) <= finish);
-    }
+    result = result.filter((r) => Date.parse(r.spentAt) <= finish);
   }
 
   return result;
@@ -87,10 +83,15 @@ const updateExpense = ({ id, spentAt, title, amount, category, note }) => {
   return expenseToUpdate;
 };
 
+const resetExpenses = () => {
+  expenses = [];
+};
+
 module.exports = {
   getExpenses,
   getExpense,
   createExpense,
   deleteExpense,
   updateExpense,
+  resetExpenses,
 };

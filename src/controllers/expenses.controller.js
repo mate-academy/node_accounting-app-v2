@@ -2,12 +2,12 @@ const expenseService = require('../services/expense.service');
 const userService = require('../services/user.service');
 
 const get = (req, res) => {
-  const { categories, userId, fromDate, toDate } = req.query;
+  const { categories, userId, from, to } = req.query;
   const result = expenseService.getExpenses({
     categories,
     userId,
-    fromDate,
-    toDate,
+    from,
+    to,
   });
 
   res.status(200).send(result);
@@ -30,7 +30,7 @@ const create = (req, res) => {
   const isUser = userService.getUser(userId);
 
   if (!isUser) {
-    return res.status(404).send({ message: 'User not found' });
+    return res.status(400).send({ message: 'User not found' });
   }
 
   if (
@@ -69,7 +69,7 @@ const remove = (req, res) => {
   if (!expenseToRemove) {
     return res.status(404).send({ message: 'Expense not found' });
   }
-  expenseService.deleteExpense(id);
+  expenseService.deleteExpense(+id);
   res.status(204).send({ message: 'Expense deleted' });
 };
 

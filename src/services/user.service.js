@@ -5,7 +5,7 @@ const getUsers = () => {
 };
 
 const getUser = (id) => {
-  return users.find((user) => user.id === +id);
+  return users.find((user) => user.id === +id) || null;
 };
 
 const createUser = (name) => {
@@ -35,6 +35,10 @@ const updateUser = ({ id, name }) => {
   return userToUpdate;
 };
 
+const resetUsers = () => {
+  users = [];
+};
+
 module.exports = {
   users,
   updateUser,
@@ -42,4 +46,5 @@ module.exports = {
   createUser,
   getUser,
   getUsers,
+  resetUsers,
 };
