@@ -109,8 +109,7 @@ function createServer() {
       spentAt == null ||
       title == null ||
       amount == null ||
-      category == null ||
-      note == null
+      category == null
     ) {
       return res.status(400).json({ message: 'Bad request' });
     }
