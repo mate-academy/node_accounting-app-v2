@@ -24,6 +24,8 @@ Additional to positive cases you for every request you should:
 - return 404 with any message if expected entity doesn't exist.
 - return 400 with any message if required parameter is not passed.
 
+
+
 This behavior described in tests (expected and checked by tests).
 
 Data should be empty initially. Store data in memory (just in code in some variable).
