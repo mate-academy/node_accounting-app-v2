@@ -6,6 +6,8 @@ class Expenses {
   }
 
   getAll(queryParams) {
+    let localeCopy = [...this.expenses];
+
     if (!queryParams) {
       return Array.isArray(this.expenses) ? this.expenses : [];
     }
@@ -13,32 +15,47 @@ class Expenses {
     const { userId, categories: cats, from, to } = queryParams;
 
     if (userId) {
-      this.expenses = this.expenses.filter(
+      localeCopy = localeCopy.filter(
         (ex) => Number(ex.userId) === Number(userId),
       );
     }
 
-    if (cats?.length) {
-      this.expenses = this.expenses.filter((ex) => cats.includes(ex.category));
+    let normalCats = cats;
+
+    if (!Array.isArray(cats)) {
+      if (typeof cats === 'string') {
+        normalCats = cats
+          .split(',')
+          .map((c) => c.trim())
+          .filter(Boolean);
+      } else {
+        normalCats = [];
+      }
+    }
+
+    if (normalCats?.length) {
+      localeCopy = localeCopy.filter((ex) => normalCats.includes(ex.category));
     }
 
     if (from) {
       const fromDate = new Date(from);
 
-      this.expenses = this.expenses.filter(
-        (ex) => new Date(ex.spentAt) >= fromDate,
-      );
+      if (!isNaN(fromDate)) {
+        localeCopy = localeCopy.filter(
+          (ex) => new Date(ex.spentAt) >= fromDate,
+        );
+      }
     }
 
     if (to) {
       const toDate = new Date(to);
 
-      this.expenses = this.expenses.filter(
-        (ex) => new Date(ex.spentAt) <= toDate,
-      );
+      if (!isNaN(toDate)) {
+        localeCopy = localeCopy.filter((ex) => new Date(ex.spentAt) <= toDate);
+      }
     }
 
-    return this.expenses;
+    return localeCopy;
   }
 
   getById(expId) {
@@ -46,7 +63,7 @@ class Expenses {
       return null;
     }
 
-    const result = this.expenses.find((ex) => Number(ex.id) === expId);
+    const result = this.expenses.find((ex) => Number(ex.id) === Number(expId));
 
     return result || null;
   }
@@ -90,7 +107,9 @@ class Expenses {
       return null;
     }
 
-    this.expenses = this.expenses.filter((ex) => ex.id !== expId);
+    this.expenses = this.expenses.filter(
+      (ex) => Number(ex.id) !== Number(expId),
+    );
 
     return true;
   }

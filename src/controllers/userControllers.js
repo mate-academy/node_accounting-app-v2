@@ -1,13 +1,9 @@
 module.exports = (usersService) => ({
   getAll() {
-    return async (req, res) => {
-      try {
-        const users = usersService.get();
+    return (req, res) => {
+      const users = usersService.get();
 
-        res.status(200).json(users);
-      } catch (err) {
-        res.status(400).send('Bad Request');
-      }
+      res.status(200).json(users);
     };
   },
 
@@ -41,7 +37,7 @@ module.exports = (usersService) => ({
 
         res.status(201).json(newUser);
       } catch (err) {
-        res.status(404).send('user not added!');
+        res.status(500).send('user not added!');
       }
     };
   },

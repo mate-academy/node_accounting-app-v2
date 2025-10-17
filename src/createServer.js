@@ -8,6 +8,10 @@ const createExpRouter = require('./routers/expenseRoutes');
 
 function createServer() {
   const app = express();
+
+  Users.count = 0;
+  Expenses.count = 0;
+
   const usersService = new Users();
   const expService = new Expenses();
   const userRouter = createUserRouter(usersService);

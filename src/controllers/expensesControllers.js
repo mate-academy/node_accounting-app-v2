@@ -1,6 +1,6 @@
 module.exports = (expService, usersService) => ({
   getAll() {
-    return async (req, res) => {
+    return (req, res) => {
       const querry = req.query;
 
       try {
@@ -17,6 +17,11 @@ module.exports = (expService, usersService) => ({
     return (req, res) => {
       const { id } = req.params;
       const numericId = Number(id);
+
+      if (!id || Number.isNaN(numericId)) {
+        return res.status(404).send('Expense not found');
+      }
+
       const expense = expService.getById(numericId);
 
       if (!expense) {
@@ -44,7 +49,7 @@ module.exports = (expService, usersService) => ({
   },
 
   updatedExp() {
-    return (req, res) => {
+    return async (req, res) => {
       if (typeof req.body !== 'object' || req.body === null) {
         return res.status(400).send('Required content is not passed');
       }
@@ -77,7 +82,7 @@ module.exports = (expService, usersService) => ({
         return res.status(404).send('Expense not found');
       }
 
-      res.status(204).send('Expense is delete');
+      res.status(204).end();
     };
   },
 });

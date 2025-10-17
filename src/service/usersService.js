@@ -14,13 +14,20 @@ class Users {
       return null;
     }
 
-    const result = this.users.find((user) => user.id === userId);
+    const result = this.users.find(
+      (user) => Number(user.id) === Number(userId),
+    );
 
     return result || null;
   }
 
   updateUser(userId, updatedName) {
-    const user = this.getById(userId);
+    const normalizeId = Number(userId);
+    const user = this.getById(normalizeId);
+
+    if (updatedName === null && !updatedName) {
+      return null;
+    }
 
     if (!user) {
       return null;
@@ -33,6 +40,11 @@ class Users {
 
   addUser(userName) {
     const id = Users.count;
+
+    if (userName === null && !userName.trim()) {
+      return null;
+    }
+
     const newUser = {
       name: userName,
       id: id,
@@ -55,7 +67,9 @@ class Users {
       return null;
     }
 
-    this.users = this.users.filter((user) => user.id !== userId);
+    this.users = this.users.filter(
+      (user) => Number(user.id) !== Number(userId),
+    );
 
     return true;
   }
