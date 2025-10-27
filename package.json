@@ -4,21 +4,23 @@
   "description": "Node.js accounting app",
   "main": "src/index.js",
   "scripts": {
+    "lint": "mate-scripts lint",
+    "lint:fix": "mate-scripts lint --fix",
+    "test": "mate-scripts test",
     "init": "mate-scripts init",
     "start": "node src/main.js",
     "dev": "node --watch src/main.js",
-    "lint": "npm run format && mate-scripts lint",
     "format": "prettier --ignore-path .prettierignore --write './src/**/*.{js,ts}'",
     "test:only": "mate-scripts test",
     "update": "mate-scripts update",
-    "postinstall": "npm run update",
-    "test": "npm run lint && npm run test:only"
+    "postinstall": "npm run update"
   },
   "author": "Mate academy",
   "license": "GPL-3.0",
   "dependencies": {
     "cors": "^2.8.5",
-    "express": "^4.19.2"
+    "express": "^4.19.2",
+    "uuid": "^13.0.0"
   },
   "devDependencies": {
     "@mate-academy/eslint-config": "latest",
