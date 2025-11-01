@@ -16,7 +16,7 @@ function createServer() {
   app.use(cors());
   app.use(express.json());
   app.use('/users', categoriesRouter);
-  app.use('/categories', categoriesRouter);
+  // app.use('/categories', categoriesRouter);
   app.use('/expenses', expensesRouter);
 
   return app;

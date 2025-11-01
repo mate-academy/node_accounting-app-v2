@@ -1,12 +1,15 @@
+/* eslint-disable function-paren-newline */
 let expenses = [];
 
-const getExpenses = ({ categories, userId, from, to }) => {
+const getExpenses = ({ category, userId, from, to }) => {
   let result = expenses;
 
-  if (categories) {
-    const categoryList = categories.split(',').map((c) => c.trim());
+  if (category && typeof category === 'string') {
+    const categoryList = category.split(',').map((c) => c.trim().toLowerCase());
 
-    result = result.filter((r) => categoryList.includes(r.category));
+    result = result.filter((r) =>
+      categoryList.includes(r.category.toLowerCase()),
+    );
   }
 
   if (userId) {
@@ -32,13 +35,20 @@ const getExpense = (id) => {
   return expenses.find((e) => e.id === +id);
 };
 
-const createExpense = ({ userId, spentAt, title, amount, category, note }) => {
+const createExpense = ({
+  amount,
+  description,
+  date,
+  category,
+  userId,
+  note,
+}) => {
   const newExpense = {
     id: Math.max(0, ...expenses.map((expense) => expense.id)) + 1,
-    userId: userId,
-    spentAt,
-    title,
-    amount: amount,
+    amount,
+    userId,
+    title: description,
+    spentAt: date,
     category,
     note,
   };
@@ -52,7 +62,7 @@ const deleteExpense = (id) => {
   expenses = expenses.filter((expense) => expense.id !== +id);
 };
 
-const updateExpense = ({ id, spentAt, title, amount, category, note }) => {
+const updateExpense = ({ id, amount, description, date, category, note }) => {
   const expenseToUpdate = getExpense(+id);
 
   if (!expenseToUpdate) {
@@ -61,24 +71,24 @@ const updateExpense = ({ id, spentAt, title, amount, category, note }) => {
 
   const updateFields = {};
 
-  if (title !== undefined) {
-    updateFields.title = title;
-  }
-
-  if (note !== undefined) {
-    updateFields.note = note;
-  }
-
   if (amount !== undefined) {
     updateFields.amount = amount;
+  }
+
+  if (description !== undefined) {
+    updateFields.title = description;
   }
 
   if (category !== undefined) {
     updateFields.category = category;
   }
 
-  if (spentAt !== undefined) {
-    updateFields.spentAt = spentAt;
+  if (date !== undefined) {
+    updateFields.spentAt = date;
+  }
+
+  if (note !== undefined) {
+    updateFields.note = note;
   }
 
   Object.assign(expenseToUpdate, updateFields);

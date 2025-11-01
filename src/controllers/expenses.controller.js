@@ -3,11 +3,15 @@ const categoryService = require('../services/categories.service.js');
 
 const get = (req, res) => {
   const { categories, userId, from, to } = req.query;
+
+  const categoryFilter =
+    categories && typeof categories === 'string' ? categories : undefined;
+
   const result = expenseService.getExpenses({
-    categories,
-    userId,
+    category: categoryFilter,
     from,
     to,
+    userId,
   });
 
   res.status(200).send(result);
@@ -28,13 +32,10 @@ const create = (req, res) => {
   const { userId, spentAt, title, amount, category, note } = req.body;
 
   if (
-    typeof userId !== 'number' ||
-    userId === null ||
-    (note !== undefined && typeof note !== 'string') ||
-    typeof title !== 'string' ||
-    !title ||
     typeof amount !== 'number' ||
     amount === null ||
+    typeof title !== 'string' ||
+    !title ||
     typeof category !== 'string' ||
     !category ||
     typeof spentAt !== 'string' ||
@@ -44,18 +45,20 @@ const create = (req, res) => {
     return res.status(400).send({ message: 'Invalid data' });
   }
 
-  const isUser = categoryService.getCategory(userId);
+  if (userId) {
+    const isUser = categoryService.getCategory(userId);
 
-  if (!isUser) {
-    return res.status(400).send({ message: 'User does not exist' });
+    if (!isUser) {
+      return res.status(400).send({ message: 'User does not exist' });
+    }
   }
 
   const newExpense = expenseService.createExpense({
-    userId,
-    spentAt,
-    title,
     amount,
+    description: title,
+    date: spentAt,
     category,
+    userId,
     note,
   });
 
@@ -93,15 +96,14 @@ const update = (req, res) => {
     return res.status(400).send({ message: 'Invalid data' });
   }
 
-  if (amount !== undefined && typeof amount === 'number' && amount === 0) {
-  } else if (amount !== undefined && typeof amount === 'number' && !amount) {
+  if (amount !== undefined && typeof amount === 'number' && !amount) {
     return res.status(400).send({ message: 'Invalid data' });
   }
 
   const updatedExpense = expenseService.updateExpense({
     id: +id,
-    spentAt,
-    title,
+    description: title,
+    date: spentAt,
     amount,
     category,
     note,
