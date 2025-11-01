@@ -1,5 +1,5 @@
 const expenseService = require('../services/expenses.service.js');
-const userService = require('../services/users.service.js');
+const categoryService = require('../services/categories.service.js');
 
 const get = (req, res) => {
   const { categories, userId, from, to } = req.query;
@@ -15,7 +15,7 @@ const get = (req, res) => {
 
 const getById = (req, res) => {
   const { id } = req.params;
-  const expense = expenseService.getExpense(id);
+  const expense = expenseService.getExpense(+id);
 
   if (!expense) {
     return res.status(404).send({ message: 'Expense not found' });
@@ -29,12 +29,12 @@ const create = (req, res) => {
 
   if (
     typeof userId !== 'number' ||
-    !userId ||
+    userId === null ||
     (note !== undefined && typeof note !== 'string') ||
     typeof title !== 'string' ||
     !title ||
     typeof amount !== 'number' ||
-    !amount ||
+    amount === null ||
     typeof category !== 'string' ||
     !category ||
     typeof spentAt !== 'string' ||
@@ -44,10 +44,10 @@ const create = (req, res) => {
     return res.status(400).send({ message: 'Invalid data' });
   }
 
-  const isUser = userService.getUser(userId);
+  const isUser = categoryService.getCategory(userId);
 
   if (!isUser) {
-    return res.status(400).send({ message: 'User does no exist' });
+    return res.status(400).send({ message: 'User does not exist' });
   }
 
   const newExpense = expenseService.createExpense({
@@ -64,19 +64,19 @@ const create = (req, res) => {
 
 const remove = (req, res) => {
   const { id } = req.params;
-  const expenseToRemove = expenseService.getExpense(id);
+  const expenseToRemove = expenseService.getExpense(+id);
 
   if (!expenseToRemove) {
     return res.status(404).send({ message: 'Expense not found' });
   }
   expenseService.deleteExpense(+id);
-  res.status(204).send({ message: 'Expense deleted' });
+  res.status(204).send();
 };
 
 const update = (req, res) => {
   const { id } = req.params;
   const { spentAt, title, amount, category, note } = req.body;
-  const expenseToUpdate = expenseService.getExpense(id);
+  const expenseToUpdate = expenseService.getExpense(+id);
 
   if (!expenseToUpdate) {
     return res.status(404).send({ message: 'Expense not found' });
@@ -90,11 +90,16 @@ const update = (req, res) => {
     (spentAt !== undefined &&
       (typeof spentAt !== 'string' || isNaN(Date.parse(spentAt))))
   ) {
-    return res.status(400).send();
+    return res.status(400).send({ message: 'Invalid data' });
+  }
+
+  if (amount !== undefined && typeof amount === 'number' && amount === 0) {
+  } else if (amount !== undefined && typeof amount === 'number' && !amount) {
+    return res.status(400).send({ message: 'Invalid data' });
   }
 
   const updatedExpense = expenseService.updateExpense({
-    id,
+    id: +id,
     spentAt,
     title,
     amount,

@@ -4,7 +4,9 @@ const getExpenses = ({ categories, userId, from, to }) => {
   let result = expenses;
 
   if (categories) {
-    result = result.filter((r) => r.category === categories);
+    const categoryList = categories.split(',').map((c) => c.trim());
+
+    result = result.filter((r) => categoryList.includes(r.category));
   }
 
   if (userId) {
@@ -32,11 +34,11 @@ const getExpense = (id) => {
 
 const createExpense = ({ userId, spentAt, title, amount, category, note }) => {
   const newExpense = {
-    id: Math.max(0, ...expenses.map((user) => user.id)) + 1,
-    userId: +userId,
+    id: Math.max(0, ...expenses.map((expense) => expense.id)) + 1,
+    userId: userId,
     spentAt,
     title,
-    amount: +amount,
+    amount: amount,
     category,
     note,
   };
@@ -49,6 +51,7 @@ const createExpense = ({ userId, spentAt, title, amount, category, note }) => {
 const deleteExpense = (id) => {
   expenses = expenses.filter((expense) => expense.id !== +id);
 };
+
 const updateExpense = ({ id, spentAt, title, amount, category, note }) => {
   const expenseToUpdate = getExpense(+id);
 
