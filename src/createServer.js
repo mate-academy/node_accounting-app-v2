@@ -15,6 +15,13 @@ function createServer() {
 
   const app = express();
 
+  app.locals.reset = () => {
+    users.length = 0;
+    expenses.length = 0;
+    nextUserId = 1;
+    nextExpenseId = 1;
+  };
+
   app.use(express.json());
 
   app.get('/users', (req, res) => {
@@ -64,7 +71,28 @@ function createServer() {
   });
 
   app.get('/expenses', (req, res) => {
-    res.json(expenses);
+    const { userId, from, to, categories } = req.query;
+    let result = expenses;
+
+    if (userId) {
+      result = result.filter((e) => e.userId === Number(userId));
+    }
+
+    if (from && to) {
+      result = result.filter(
+        (e) =>
+          new Date(e.spentAt) >= new Date(from) &&
+          new Date(e.spentAt) <= new Date(to),
+      );
+    }
+
+    if (categories) {
+      const cats = categories.split(',');
+
+      result = result.filter((e) => cats.includes(e.category));
+    }
+
+    res.json(result);
   });
 
   app.get('/expenses/:id', (req, res) => {
