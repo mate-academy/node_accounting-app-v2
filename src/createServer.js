@@ -148,7 +148,9 @@ function createServer() {
     }
 
     if (categories) {
-      filtered = filtered.filter((e) => categories.includes(e.category));
+      const categoriesArray = categories.split(',').map((c) => c.trim());
+
+      filtered = filtered.filter((e) => categoriesArray.includes(e.category));
     }
 
     if (from) {
@@ -192,7 +194,7 @@ function createServer() {
     const id = Number(req.params.id);
     const updates = req.body;
 
-    if (isNaN(id)) {
+    if (isNaN(id) || !Number.isInteger(id) || id <= 0) {
       return res.status(400).send('Invalid Expense ID format.');
     }
 
@@ -230,7 +232,7 @@ function createServer() {
   app.delete('/expenses/:id', (req, res) => {
     const id = Number(req.params.id);
 
-    if (isNaN(id)) {
+    if (isNaN(id) || !Number.isInteger(id) || id <= 0) {
       return res.status(400).send('Invalid Expense ID format.');
     }
 
