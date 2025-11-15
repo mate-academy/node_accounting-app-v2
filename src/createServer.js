@@ -102,7 +102,8 @@ function createServer() {
 
     if (
       isNaN(numUserId) ||
-      !isNaN(new Date(spentAt)) ||
+      numUserId <= 0 ||
+      isNaN(new Date(spentAt).getTime()) ||
       !title ||
       typeof title !== 'string' ||
       title.trim().length === 0 ||
@@ -112,7 +113,7 @@ function createServer() {
       typeof category !== 'string' ||
       category.trim().length === 0
     ) {
-      return res.status(404).send('Bad request.');
+      return res.status(400).send('Bad request.');
     }
 
     if (!store.users.find((u) => u.id === numUserId)) {
@@ -126,7 +127,7 @@ function createServer() {
       title,
       amount: numAmount,
       category,
-      note: note || undefined,
+      note: note,
     };
 
     store.expenses.push(newExpense);
@@ -195,14 +196,14 @@ function createServer() {
       return res.status(400).send('Invalid Expense ID format.');
     }
 
-    if (Object.keys(updates).length === 0) {
-      return res.status(400).send('No update fields provided.');
-    }
-
     const index = store.expenses.findIndex((e) => e.id === id);
 
     if (index === -1) {
       return res.status(404).send('Expense not found.');
+    }
+
+    if (Object.keys(updates).length === 0) {
+      return res.status(400).send('No update fields provided.');
     }
 
     if (updates.spentAt !== undefined) {
