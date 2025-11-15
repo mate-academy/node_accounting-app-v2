@@ -177,7 +177,7 @@ function createServer() {
   app.get('/expenses/:id', (req, res) => {
     const id = Number(req.params.id);
 
-    if (isNaN(id)) {
+    if (isNaN(id) || !Number.isInteger(id) || id <= 0) {
       return res.status(400).send('Invalid Expense ID format.');
     }
 
