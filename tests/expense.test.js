@@ -32,7 +32,7 @@ describe('Expense', () => {
       const response = await api
         .post('/expenses')
         .send(expenseData)
-        // .expect(201)
+        .expect(201)
         .expect('Content-Type', /application\/json/);
 
       expect(response.body).toEqual(

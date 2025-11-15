@@ -31,11 +31,11 @@ function createServer() {
     const newUser = { id: store.nextUserId++, name };
 
     store.users.push(newUser);
-    res.status(201).json(newUser);
+    res.status(201).send(newUser);
   });
 
   app.get('/users', (req, res) => {
-    res.status(200).json(store.users);
+    res.status(200).send(store.users);
   });
 
   app.get('/users/:id', (req, res) => {
@@ -51,7 +51,7 @@ function createServer() {
       return res.status(404).send('User not found.');
     }
 
-    res.status(200).json(user);
+    res.status(200).send(user);
   });
 
   app.patch('/users/:id', (req, res) => {
@@ -75,7 +75,7 @@ function createServer() {
     const updatedUser = { ...store.users[index], name };
 
     store.users[index] = updatedUser;
-    res.status(200).json(updatedUser);
+    res.status(200).send(updatedUser);
   });
 
   app.delete('/users/:id', (req, res) => {
@@ -102,8 +102,6 @@ function createServer() {
 
     if (
       isNaN(numUserId) ||
-      !Number.isInteger(numUserId) ||
-      numUserId <= 0 ||
       !isNaN(new Date(spentAt)) ||
       !title ||
       typeof title !== 'string' ||
@@ -114,11 +112,11 @@ function createServer() {
       typeof category !== 'string' ||
       category.trim().length === 0
     ) {
-      return res.status(400).send('Bad request.');
+      return res.status(404).send('Bad request.');
     }
 
     if (!store.users.find((u) => u.id === numUserId)) {
-      return res.status(404).send('User not found.');
+      return res.status(400).send('User not found.');
     }
 
     const newExpense = {
@@ -132,7 +130,7 @@ function createServer() {
     };
 
     store.expenses.push(newExpense);
-    res.status(201).json(newExpense);
+    res.status(201).send(newExpense);
   });
 
   app.get('/expenses', (req, res) => {
@@ -170,13 +168,13 @@ function createServer() {
       filtered = filtered.filter((e) => new Date(e.spentAt) <= dateTo);
     }
 
-    res.status(200).json(filtered);
+    res.status(200).send(filtered);
   });
 
   app.get('/expenses/:id', (req, res) => {
     const id = Number(req.params.id);
 
-    if (isNaN(id) || !Number.isInteger(id) || id <= 0) {
+    if (isNaN(id)) {
       return res.status(400).send('Invalid Expense ID format.');
     }
 
@@ -186,14 +184,14 @@ function createServer() {
       return res.status(404).send('Expense not found.');
     }
 
-    res.status(200).json(expense);
+    res.status(200).send(expense);
   });
 
   app.patch('/expenses/:id', (req, res) => {
     const id = Number(req.params.id);
     const updates = req.body;
 
-    if (isNaN(id) || !Number.isInteger(id) || id <= 0) {
+    if (isNaN(id)) {
       return res.status(400).send('Invalid Expense ID format.');
     }
 
@@ -225,13 +223,13 @@ function createServer() {
     const updatedExpense = { ...store.expenses[index], ...updates };
 
     store.expenses[index] = updatedExpense;
-    res.status(200).json(updatedExpense);
+    res.status(200).send(updatedExpense);
   });
 
   app.delete('/expenses/:id', (req, res) => {
     const id = Number(req.params.id);
 
-    if (isNaN(id) || !Number.isInteger(id) || id <= 0) {
+    if (isNaN(id)) {
       return res.status(400).send('Invalid Expense ID format.');
     }
 
