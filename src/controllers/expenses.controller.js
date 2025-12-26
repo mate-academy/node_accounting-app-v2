@@ -9,16 +9,18 @@ const getMore = (req, res) => {
     arrCategories = [categories];
   }
 
+  const numberUserId = Number(userId);
+
+  if (userId && Number.isNaN(numberUserId)) {
+    return res.sendStatus(400);
+  }
+
   const result = service.getByQuery({
-    userId,
-    arrCategories,
+    userId: numberUserId,
+    categories: arrCategories,
     from,
     to,
   });
-
-  if (result.length === 0) {
-    return res.sendStatus(404);
-  }
 
   res.send(result);
 };
@@ -31,12 +33,8 @@ const create = (req, res) => {
 
   const date = new Date(spentAt).getTime();
 
-  if (Number.isNaN(numberUserId)) {
+  if (Number.isNaN(numberUserId) || !usersService.getById(numberUserId)) {
     return res.sendStatus(400);
-  }
-
-  if (!usersService.getById(numberUserId)) {
-    return res.sendStatus(404);
   }
 
   if (
@@ -104,10 +102,6 @@ const update = (req, res) => {
     return res.sendStatus(400);
   }
 
-  if (!service.getById(numberId)) {
-    return res.sendStatus(404);
-  }
-
   const { spentAt, title, amount, category, note } = req.body;
   const numberAmount = Number(amount);
   const date = new Date(spentAt).getTime();
@@ -134,12 +128,16 @@ const update = (req, res) => {
     return res.sendStatus(400);
   }
 
-  const updatedExpense = service.update(id, {
+  const updatedExpense = service.update(numberId, {
     ...data,
     title,
     category,
     note,
   });
+
+  if (!updatedExpense) {
+    return res.sendStatus(404);
+  }
 
   res.send(updatedExpense);
 };

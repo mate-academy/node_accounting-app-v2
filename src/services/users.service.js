@@ -1,4 +1,8 @@
-const users = [];
+let users = [];
+
+const initUsers = () => {
+  users = [];
+};
 
 const getAll = () => {
   return users;
@@ -43,13 +47,20 @@ const deleteById = (id) => {
   return users.splice(index, 1);
 };
 
-const update = (id, { name }) => {
+const update = (id, data) => {
   const user = users.find((u) => u.id === id);
 
-  return Object.assign(user, { name });
+  Object.keys(data).forEach((key) => {
+    if (Object.hasOwn(user, key) && data[key] !== undefined) {
+      user[key] = data[key];
+    }
+  });
+
+  return user;
 };
 
 module.exports = {
+  initUsers,
   getAll,
   getById,
   create,

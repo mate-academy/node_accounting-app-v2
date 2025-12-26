@@ -1,4 +1,8 @@
-const expenses = [];
+let expenses = [];
+
+const initExpenses = () => {
+  expenses = [];
+};
 
 const getByQuery = (queryes) => {
   const { userId, categories, from, to } = queryes;
@@ -11,7 +15,7 @@ const getByQuery = (queryes) => {
     const fromIscorrect = from
       ? new Date(e.spentAt).valueOf() >= new Date(from).valueOf()
       : true;
-    const toIsCorrect = userId
+    const toIsCorrect = to
       ? new Date(e.spentAt).valueOf() <= new Date(to).valueOf()
       : true;
 
@@ -65,24 +69,23 @@ const deleteById = (id) => {
 };
 
 const update = (id, data) => {
-  const { spentAt, title, amount, category, note } = data;
-
   const expense = expenses.find((e) => e.id === id);
 
   if (!expense) {
     return;
   }
 
-  return Object.assign(expense, {
-    spentAt,
-    title,
-    amount,
-    category,
-    note,
+  Object.keys(data).forEach((key) => {
+    if (Object.hasOwn(expense, key) && data[key] !== undefined) {
+      expense[key] = data[key];
+    }
   });
+
+  return expense;
 };
 
 module.exports = {
+  initExpenses,
   getByQuery,
   getById,
   create,
