@@ -108,15 +108,15 @@ const update = (req, res) => {
 
   const data = {};
 
-  if (amount && !numberAmount) {
+  if (amount && Number.isNaN(numberAmount)) {
     return res.sendStatus(400);
-  } else if (numberAmount) {
+  } else if (Number.isFinite(numberAmount)) {
     data.amount = numberAmount;
   }
 
-  if (spentAt && !date) {
+  if (spentAt && Number.isNaN(date)) {
     return res.sendStatus(400);
-  } else if (date) {
+  } else if (Number.isFinite(data)) {
     data.spentAt = spentAt;
   }
 

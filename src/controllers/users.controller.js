@@ -58,6 +58,10 @@ const update = (req, res) => {
 
   const numberId = Number(id);
 
+  if (Number.isNaN(numberId)) {
+    return res.sendStatus(400);
+  }
+
   const userExist = service.getById(numberId);
 
   if (!userExist) {
