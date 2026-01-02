@@ -93,7 +93,11 @@ function createServer() {
     }
 
     if (req.query.categories) {
-      result = result.filter((e) => e.category === req.query.categories);
+      const categoriesToMatch = Array.isArray(req.query.categories)
+        ? req.query.categories
+        : [req.query.categories];
+
+      result = result.filter((e) => categoriesToMatch.includes(e.category));
     }
 
     if (req.query.from) {
