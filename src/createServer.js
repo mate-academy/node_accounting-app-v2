@@ -128,7 +128,7 @@ function createServer() {
     const userExists = usersArr.some((u) => u.id === Number(userId));
 
     if (!userExists) {
-      res.statusCode = 400;
+      res.statusCode = 404;
       res.json({ message: 'User not found' });
 
       return;
@@ -176,7 +176,13 @@ function createServer() {
       return;
     }
 
-    Object.assign(expense, req.body);
+    const allowedUpdates = ['spentAt', 'title', 'amount', 'category', 'note'];
+
+    allowedUpdates.forEach((key) => {
+      if (req.body[key] !== undefined) {
+        expense[key] = req.body[key];
+      }
+    });
 
     res.statusCode = 200;
     res.json(expense);
