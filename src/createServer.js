@@ -7,13 +7,13 @@ function createServer() {
 
   app.use(express.json());
 
-  const expenses = [];
-  const users = [];
+  const expensesArr = [];
+  const usersArr = [];
 
   // --- USERS ENDPOINTS ---
 
   app.get('/users', (req, res) => {
-    res.json(users);
+    res.json(usersArr);
   });
 
   app.post('/users', (req, res) => {
@@ -31,13 +31,13 @@ function createServer() {
       name,
     };
 
-    users.push(newUser);
+    usersArr.push(newUser);
     res.statusCode = 201;
     res.json(newUser);
   });
 
   app.get('/users/:userId', (req, res) => {
-    const user = users.find((u) => u.id === Number(req.params.userId));
+    const user = usersArr.find((u) => u.id === Number(req.params.userId));
 
     if (!user) {
       res.statusCode = 404;
@@ -50,7 +50,7 @@ function createServer() {
   });
 
   app.patch('/users/:userId', (req, res) => {
-    const user = users.find((u) => u.id === Number(req.params.userId));
+    const user = usersArr.find((u) => u.id === Number(req.params.userId));
 
     if (!user) {
       res.statusCode = 404;
@@ -69,7 +69,7 @@ function createServer() {
 
   app.delete('/users/:userId', (req, res) => {
     const userId = Number(req.params.userId);
-    const userIndex = users.findIndex((user) => user.id === userId);
+    const userIndex = usersArr.findIndex((user) => user.id === userId);
 
     if (userIndex === -1) {
       res.statusCode = 404;
@@ -78,13 +78,13 @@ function createServer() {
       return;
     }
 
-    users.splice(userIndex, 1);
+    usersArr.splice(userIndex, 1);
     res.statusCode = 204;
     res.end();
   });
 
   app.get('/expenses', (req, res) => {
-    let result = expenses;
+    let result = expensesArr;
 
     if (req.query.userId) {
       const userId = Number(req.query.userId);
@@ -121,7 +121,7 @@ function createServer() {
       return;
     }
 
-    const userExists = users.some((u) => u.id === Number(userId));
+    const userExists = usersArr.some((u) => u.id === Number(userId));
 
     if (!userExists) {
       res.statusCode = 400;
@@ -140,13 +140,13 @@ function createServer() {
       note: req.body.note || null,
     };
 
-    expenses.push(newExpense);
+    expensesArr.push(newExpense);
     res.statusCode = 201;
     res.json(newExpense);
   });
 
   app.get('/expenses/:expenseId', (req, res) => {
-    const expense = expenses.find(
+    const expense = expensesArr.find(
       (ex) => ex.id === Number(req.params.expenseId),
     );
 
@@ -161,7 +161,9 @@ function createServer() {
   });
 
   app.patch('/expenses/:expenseId', (req, res) => {
-    const expense = expenses.find((e) => e.id === Number(req.params.expenseId));
+    const expense = expensesArr.find(
+      (e) => e.id === Number(req.params.expenseId),
+    );
 
     if (!expense) {
       res.statusCode = 404;
@@ -178,7 +180,7 @@ function createServer() {
 
   app.delete('/expenses/:expenseId', (req, res) => {
     const expenseId = Number(req.params.expenseId);
-    const expenseIndex = expenses.findIndex((e) => e.id === expenseId);
+    const expenseIndex = expensesArr.findIndex((e) => e.id === expenseId);
 
     if (expenseIndex === -1) {
       res.statusCode = 404;
@@ -187,7 +189,7 @@ function createServer() {
       return;
     }
 
-    expenses.splice(expenseIndex, 1);
+    expensesArr.splice(expenseIndex, 1);
     res.statusCode = 204;
     res.end();
   });
