@@ -9,6 +9,7 @@ They are well-described in a [documentation](https://app.swaggerhub.com/apis/YUR
 <details>
   <summary>How to work with documentation</summary>
 
+
   If you open endpoint you will see request params, body. As well as expected response.
   Also, you can use `Try it out` and then `Execute` button to send the request to the mock server.
   It will send you demo response.
