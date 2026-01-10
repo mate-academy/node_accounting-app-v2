@@ -3,6 +3,7 @@
 Implement an expense tracking app.
 You need to implement 2 collections with 5 endpoints each.
 
+
 ## Business requirements
 They are well-described in a [documentation](https://app.swaggerhub.com/apis/YURIIHOLIUK_1/Accounting-App/1.0.0)
 <details>
