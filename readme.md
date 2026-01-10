@@ -3,10 +3,12 @@
 Implement an expense tracking app.
 You need to implement 2 collections with 5 endpoints each.
 
+
 ## Business requirements
 They are well-described in a [documentation](https://app.swaggerhub.com/apis/YURIIHOLIUK_1/Accounting-App/1.0.0)
 <details>
   <summary>How to work with documentation</summary>
+
 
   If you open endpoint you will see request params, body. As well as expected response.
   Also, you can use `Try it out` and then `Execute` button to send the request to the mock server.
