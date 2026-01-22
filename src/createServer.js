@@ -1,11 +1,20 @@
 'use strict';
 
-// const express = require('express');
+const http = require('http');
+const { createDB } = require('./db/createDB');
+const { validateURL } = require('./validation/validateURL');
 
 function createServer() {
-  // Use express to create a server
-  // Add a routes to the server
-  // Return the server (express app)
+  const { users, expenses } = createDB();
+
+  return http.createServer((req, res) => {
+    const val = validateURL(req);
+
+    if (!val.ok) {
+      res.statusCode = val.statusCode;
+      res.end(val.message);
+    }
+  });
 }
 
 module.exports = {
