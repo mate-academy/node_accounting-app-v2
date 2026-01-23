@@ -33,7 +33,7 @@ function validateBody(body, ent, method) {
   for (const key of bKeys) {
     // check data type
     if (typeof schema[key] !== typeof body[key]) {
-      return getValError(400, 'Unexpected keys');
+      return getValError(400, `Unexpected keys: ${key}; ${typeof body[key]}`);
     }
 
     // validate edge cases (date in our case)\

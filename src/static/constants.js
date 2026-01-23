@@ -14,6 +14,14 @@ const edgeCases = {
   date: 'spentAt',
 };
 
+const dbActions = {
+  getOne: 'getOne',
+  getAll: 'getAll',
+  post: 'post',
+  delete: 'delete',
+  patch: 'patch',
+};
+
 const expSchema = {
   [edgeCases.date]: 'dateIsoString',
   title: 'string',
@@ -41,4 +49,5 @@ module.exports = {
   bodySchemas,
   mthds,
   edgeCases,
+  dbActions,
 };
