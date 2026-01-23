@@ -27,7 +27,7 @@ class DB {
     ) {
       return {
         ok: false,
-        statusCode: 404,
+        statusCode: 400,
         msg: `Expense userId doesn't exist`,
       };
     }
@@ -45,6 +45,10 @@ class DB {
 
     this[entity] = this[entity].filter((el) => el !== obj);
 
+    if (entity === ent.usr) {
+      this[ent.exp] = this[ent.exp].filter((el) => el.userId !== id);
+    }
+
     return { ok: true, statusCode: 204 };
   }
   [dbActions.patch](entity, id, body) {
@@ -55,6 +59,17 @@ class DB {
     }
 
     const newObj = { ...this[entity][index], ...body };
+
+    if (
+      entity === ent.exp &&
+      !this[ent.usr].find((el) => el.id === newObj.userId)
+    ) {
+      return {
+        ok: false,
+        statusCode: 400,
+        msg: `Expense userId doesn't exist`,
+      };
+    }
 
     this[entity][index] = newObj;
 

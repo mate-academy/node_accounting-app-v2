@@ -21,7 +21,7 @@ function validateBody(body, ent, method) {
   const bKeys = Object.keys(body);
 
   // length check
-  if (bKeys.length !== scKeys.length) {
+  if (bKeys.length > scKeys.length) {
     return getValError(400, 'Invalid body structure');
   }
 
