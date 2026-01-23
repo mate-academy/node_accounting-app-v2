@@ -1,6 +1,6 @@
 'use strict';
 
-const http = require('http');
+const express = require('express');
 const { DB } = require('./db/createDB');
 const { validateRequest } = require('./validation/validateRequest');
 const { readBody } = require('./helpers/helpers');
@@ -9,10 +9,11 @@ const { validateBody } = require('./validation/validateBody');
 const { controllerRouter } = require('./controllers/controllers');
 
 function createServer() {
+  const app = express();
   // create instance of DB
   const db = new DB();
 
-  return http.createServer(async (req, res) => {
+  return app.all('*', async (req, res) => {
     // validate request
     res.setHeader('Access-Control-Allow-Origin', '*');
 
