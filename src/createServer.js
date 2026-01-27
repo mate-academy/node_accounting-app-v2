@@ -24,6 +24,8 @@ function createServer() {
   const hasFields = (obj, fields) =>
     obj && typeof obj === 'object' && fields.every((k) => obj[k] !== undefined);
 
+  // ---------- USERS ----------
+
   app.post('/users', (req, res) => {
     const { name } = req.body || {};
 
@@ -68,6 +70,25 @@ function createServer() {
     return res.status(200).json(user);
   });
 
+  app.put('/users/:id', (req, res) => {
+    const id = parseId(req.params.id);
+    const user = findById(users, id);
+
+    if (!user) {
+      return res.status(404).end();
+    }
+
+    const { name } = req.body || {};
+
+    if (!name) {
+      return res.status(400).end();
+    }
+
+    user.name = name;
+
+    return res.status(200).json(user);
+  });
+
   app.delete('/users/:id', (req, res) => {
     const id = parseId(req.params.id);
     const idx = users.findIndex((u) => u.id === id);
@@ -80,6 +101,8 @@ function createServer() {
 
     return res.status(204).end();
   });
+
+  // ---------- EXPENSES ----------
 
   const EXPENSE_FIELDS = [
     'userId',
@@ -212,6 +235,36 @@ function createServer() {
     if (p.note !== undefined) {
       expense.note = p.note;
     }
+
+    return res.status(200).json(expense);
+  });
+
+  app.put('/expenses/:id', (req, res) => {
+    const id = parseId(req.params.id);
+    const expense = findById(expenses, id);
+
+    if (!expense) {
+      return res.status(404).end();
+    }
+
+    const data = req.body;
+
+    if (!hasFields(data, EXPENSE_FIELDS)) {
+      return res.status(400).end();
+    }
+
+    const userId = parseId(data.userId);
+
+    if (!findById(users, userId)) {
+      return res.status(400).end();
+    }
+
+    expense.userId = userId;
+    expense.spentAt = data.spentAt;
+    expense.title = data.title;
+    expense.amount = data.amount;
+    expense.category = data.category;
+    expense.note = data.note;
 
     return res.status(200).json(expense);
   });
