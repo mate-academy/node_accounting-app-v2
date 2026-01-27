@@ -35,11 +35,11 @@ function createServer() {
 
     users.push(user);
 
-    res.status(201).json(user);
+    return res.status(201).json(user);
   });
 
   app.get('/users', (req, res) => {
-    res.json(users);
+    return res.status(200).json(users);
   });
 
   app.get('/users/:id', (req, res) => {
@@ -50,7 +50,7 @@ function createServer() {
       return res.status(404).end();
     }
 
-    res.json(user);
+    return res.status(200).json(user);
   });
 
   app.patch('/users/:id', (req, res) => {
@@ -65,22 +65,7 @@ function createServer() {
       user.name = req.body.name;
     }
 
-    res.json(user);
-  });
-
-  app.put('/users/:id', (req, res) => {
-    const id = parseId(req.params.id);
-    const user = findById(users, id);
-
-    if (!user) {
-      return res.status(404).end();
-    }
-
-    if (req.body?.name !== undefined) {
-      user.name = req.body.name;
-    }
-
-    res.json(user);
+    return res.status(200).json(user);
   });
 
   app.delete('/users/:id', (req, res) => {
@@ -92,7 +77,8 @@ function createServer() {
     }
 
     users.splice(idx, 1);
-    res.status(204).end();
+
+    return res.status(204).end();
   });
 
   const EXPENSE_FIELDS = [
@@ -128,7 +114,8 @@ function createServer() {
     };
 
     expenses.push(expense);
-    res.status(201).json(expense);
+
+    return res.status(201).json(expense);
   });
 
   app.get('/expenses', (req, res) => {
@@ -172,7 +159,7 @@ function createServer() {
       result = result.filter((e) => categories.includes(e.category));
     }
 
-    res.json(result);
+    return res.status(200).json(result);
   });
 
   app.get('/expenses/:id', (req, res) => {
@@ -183,7 +170,7 @@ function createServer() {
       return res.status(404).end();
     }
 
-    res.json(expense);
+    return res.status(200).json(expense);
   });
 
   app.patch('/expenses/:id', (req, res) => {
@@ -202,6 +189,7 @@ function createServer() {
       if (!findById(users, userId)) {
         return res.status(400).end();
       }
+
       expense.userId = userId;
     }
 
@@ -225,7 +213,7 @@ function createServer() {
       expense.note = p.note;
     }
 
-    res.json(expense);
+    return res.status(200).json(expense);
   });
 
   app.delete('/expenses/:id', (req, res) => {
@@ -237,7 +225,8 @@ function createServer() {
     }
 
     expenses.splice(idx, 1);
-    res.status(204).end();
+
+    return res.status(204).end();
   });
 
   return app;
