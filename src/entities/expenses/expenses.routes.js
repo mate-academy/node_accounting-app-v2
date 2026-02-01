@@ -2,11 +2,11 @@ const express = require('express');
 
 const createExpensesControllers = require('./expenses.controller');
 
-const createExpensesRouter = (createUsersService, expensesService) => {
+const createExpensesRouter = (usersService, expensesService) => {
   const expensesRouter = express.Router();
 
   const { create, getAll, expenseDelete, getOne, update } =
-    createExpensesControllers(createUsersService, expensesService);
+    createExpensesControllers(usersService, expensesService);
 
   expensesRouter.get('/', getAll);
   expensesRouter.post('/', create);
