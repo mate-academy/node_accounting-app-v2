@@ -1,13 +1,11 @@
-const ExpensesService = require('./expenses.services');
-
-const createExpenseController = (userService) => {
+const createExpenseController = (userService, expensesService) => {
   const {
     getExpenseByID,
     createExpense,
     deleteExpense,
     getAllExpenses,
     updateExpense,
-  } = new ExpensesService();
+  } = expensesService;
 
   const { getUserByID } = userService;
 
@@ -24,9 +22,15 @@ const createExpenseController = (userService) => {
   const getAll = (req, res) => {
     const { categories, userId, from, to } = req.query;
 
+    const categoriesArray = categories
+      ? Array.isArray(categories)
+        ? categories
+        : [categories]
+      : undefined;
+
     res.send(
       getAllExpenses({
-        categories,
+        categories: categoriesArray,
         userId,
         from,
         to,

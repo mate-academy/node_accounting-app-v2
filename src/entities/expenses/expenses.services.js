@@ -41,7 +41,7 @@ class ExpensesService {
       });
     }
 
-    if (categories) {
+    if (Array.isArray(categories) && categories.length > 0) {
       expenses = expenses.filter((expense) =>
         categories.includes(expense.category),
       ); // eslint-disable-line
