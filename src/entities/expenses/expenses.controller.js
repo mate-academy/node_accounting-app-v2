@@ -42,7 +42,7 @@ const createExpenseController = (userService) => {
     }
 
     if (!getUserByID(Number(userId))) {
-      return res.sendStatus(400);
+      return res.sendStatus(404);
     }
 
     res.status(201).send(

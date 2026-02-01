@@ -44,7 +44,13 @@ const createUserController = (userService) => {
   };
 
   const update = (req, res) => {
-    const user = updateUser(Number(req.params.id), req.body.name);
+    const { name } = req.body;
+
+    if (!name) {
+      return res.sendStatus(400);
+    }
+
+    const user = updateUser(Number(req.params.id), name);
 
     if (!user) {
       return res.sendStatus(404);

@@ -1,6 +1,7 @@
 class UserService {
   constructor() {
     this.users = [];
+    this.nextId = 1;
   }
 
   getUserByID = (id) => {
@@ -12,7 +13,7 @@ class UserService {
   };
 
   createUser = (name) => {
-    const newUser = { name, id: this.users.length + 1 };
+    const newUser = { name, id: this.nextId++ };
 
     this.users.push(newUser);
 
