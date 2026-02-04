@@ -36,7 +36,7 @@ function createServer() {
   app.get('/users/:id', (req, res) => {
     const id = Number(req.params.id);
 
-    if (!id) {
+    if (Number.isNaN(id)) {
       return res.status(400).send();
     }
 
@@ -53,7 +53,7 @@ function createServer() {
     const id = Number(req.params.id);
     const { name } = req.body;
 
-    if (!id || !name) {
+    if (Number.isNaN(id) || !name) {
       return res.status(400).send();
     }
 
@@ -70,6 +70,10 @@ function createServer() {
 
   app.delete('/users/:id', (req, res) => {
     const id = Number(req.params.id);
+
+    if (Number.isNaN(id)) {
+      return res.status(400).send();
+    }
 
     const index = users.findIndex((u) => u.id === id);
 
@@ -101,11 +105,15 @@ function createServer() {
     }
 
     if (from) {
-      result = result.filter((e) => new Date(e.spentAt) >= new Date(from));
+      result = result.filter(
+        (e) => new Date(e.spentAt) >= new Date(from),
+      );
     }
 
     if (to) {
-      result = result.filter((e) => new Date(e.spentAt) <= new Date(to));
+      result = result.filter(
+        (e) => new Date(e.spentAt) <= new Date(to),
+      );
     }
 
     res.status(200).json(result);
@@ -114,7 +122,13 @@ function createServer() {
   app.post('/expenses', (req, res) => {
     const { userId, spentAt, title, amount, category, note } = req.body;
 
-    if (!userId || !spentAt || !title || amount === undefined || !category) {
+    if (
+      userId === undefined
+      || !spentAt
+      || !title
+      || amount === undefined
+      || !category
+    ) {
       return res.status(400).send();
     }
 
@@ -142,7 +156,7 @@ function createServer() {
   app.get('/expenses/:id', (req, res) => {
     const id = Number(req.params.id);
 
-    if (!id) {
+    if (Number.isNaN(id)) {
       return res.status(400).send();
     }
 
@@ -158,7 +172,7 @@ function createServer() {
   app.patch('/expenses/:id', (req, res) => {
     const id = Number(req.params.id);
 
-    if (!id) {
+    if (Number.isNaN(id)) {
       return res.status(400).send();
     }
 
@@ -168,13 +182,43 @@ function createServer() {
       return res.status(404).send();
     }
 
-    Object.assign(expense, req.body);
+    const {
+      spentAt,
+      title,
+      amount,
+      category,
+      note,
+    } = req.body;
+
+    if (spentAt !== undefined) {
+      expense.spentAt = spentAt;
+    }
+
+    if (title !== undefined) {
+      expense.title = title;
+    }
+
+    if (amount !== undefined) {
+      expense.amount = amount;
+    }
+
+    if (category !== undefined) {
+      expense.category = category;
+    }
+
+    if (note !== undefined) {
+      expense.note = note;
+    }
 
     res.status(200).json(expense);
   });
 
   app.delete('/expenses/:id', (req, res) => {
     const id = Number(req.params.id);
+
+    if (Number.isNaN(id)) {
+      return res.status(400).send();
+    }
 
     const index = expenses.findIndex((e) => e.id === id);
 
