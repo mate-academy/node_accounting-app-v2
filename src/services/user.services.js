@@ -32,7 +32,9 @@ const remove = (id) => {
 const update = ({ id, name }) => {
   const user = getById(id);
 
-  Object.assign(user, { name });
+  if (user) {
+    Object.assign(user, { name });
+  }
 
   return user;
 };

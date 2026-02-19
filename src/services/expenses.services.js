@@ -37,12 +37,12 @@ const getAll = ({ userId, categories, from, to }) => {
 };
 
 const getById = (id) => {
-  return expenses.find((expense) => expense.id === Number(id));
+  return expenses.find((expense) => expense.id === Number(id)) || null;
 };
 
 const create = (fields) => {
   const newExpense = {
-    id: generateNextId(),
+    id: generateNextId(expenses),
     ...fields,
   };
 
@@ -58,31 +58,39 @@ const remove = (id) => {
 const update = (id, fieldsToUpdate) => {
   const expense = getById(id);
 
-  Object.assign(expense, fieldsToUpdate);
+  if (expense) {
+    Object.assign(expense, fieldsToUpdate);
+  }
 
   return expense;
 };
 
 const validateExpenseData = (data) => {
+  if (!data || typeof data !== 'object') {
+    return false;
+  }
+
   const { userId, spentAt, title, amount, category, note } = data;
 
-  const isUserIdValid = typeof userId === 'number';
-  const isSpentAtValid = typeof spentAt === 'string';
-  const isTitleValid = typeof title === 'string' && title.trim().length > 0;
-  const isAmountValid = typeof amount === 'number';
-  const isCategoryValid =
-    typeof category === 'string' && category.trim().length > 0;
-  const isNoteValid = typeof note === 'string' && note.trim().length > 0;
+  if (
+    typeof userId !== 'number' ||
+    typeof spentAt !== 'string' ||
+    typeof title !== 'string' ||
+    typeof amount !== 'number' ||
+    typeof category !== 'string'
+  ) {
+    return false;
+  }
 
-  return {
-    isValid:
-      isUserIdValid &&
-      isSpentAtValid &&
-      isTitleValid &&
-      isAmountValid &&
-      isCategoryValid &&
-      isNoteValid,
-  };
+  if (title.trim().length === 0 || category.trim().length === 0) {
+    return false;
+  }
+
+  if (note !== undefined && typeof note !== 'string') {
+    return false;
+  }
+
+  return true;
 };
 
 module.exports = {

@@ -30,13 +30,20 @@ const getById = (req, res) => {
 const create = (req, res) => {
   const data = req.body;
 
+  if (!data || typeof data !== 'object') {
+    return res.sendStatus(400);
+  }
+
   const isValidData = expensesServices.validateExpenseData(data);
+
+  if (!isValidData) {
+    return res.sendStatus(400);
+  }
+
   const user = userServices.getById(data.userId);
 
-  if (!user || !isValidData) {
-    res.sendStatus(400);
-
-    return;
+  if (!user) {
+    return res.sendStatus(400);
   }
 
   const newExpense = expensesServices.create(data);
@@ -56,7 +63,7 @@ const remove = (req, res) => {
 
   expensesServices.remove(id);
 
-  res.send(204);
+  res.sendStatus(204);
 };
 
 const update = (req, res) => {
@@ -66,6 +73,12 @@ const update = (req, res) => {
 
   if (!expense) {
     res.sendStatus(404);
+
+    return;
+  }
+
+  if (!Object.values(fieldsToUpdate).length) {
+    res.sendStatus(400);
 
     return;
   }
