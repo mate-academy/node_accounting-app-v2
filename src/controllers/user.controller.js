@@ -18,7 +18,7 @@ const getOne = (req, res) => {
 };
 
 const create = (req, res) => {
-  const { name } = req.body;
+  const { name } = req.body || {};
   const isNameValid = typeof name === 'string' && name.trim().length;
 
   if (!isNameValid) {
@@ -49,7 +49,7 @@ const remove = (req, res) => {
 
 const update = (req, res) => {
   const { id } = req.params;
-  const { name } = req.body;
+  const { name } = req.body || {};
 
   const user = userServices.getById(id);
 

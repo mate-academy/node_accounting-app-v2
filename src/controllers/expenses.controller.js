@@ -68,7 +68,7 @@ const remove = (req, res) => {
 
 const update = (req, res) => {
   const { id } = req.params;
-  const fieldsToUpdate = req.body;
+  const fieldsToUpdate = req.body || {};
   const expense = expensesServices.getById(id);
 
   if (!expense) {
@@ -77,10 +77,18 @@ const update = (req, res) => {
     return;
   }
 
-  if (!Object.values(fieldsToUpdate).length) {
-    res.sendStatus(400);
+  if (
+    typeof fieldsToUpdate !== 'object' ||
+    !Object.values(fieldsToUpdate).length
+  ) {
+    return res.sendStatus(400);
+  }
 
-    return;
+  const isValidData =
+    expensesServices.validatePartialExpenseData(fieldsToUpdate);
+
+  if (!isValidData) {
+    return res.sendStatus(400);
   }
 
   const updatedExpense = expensesServices.update(id, fieldsToUpdate);

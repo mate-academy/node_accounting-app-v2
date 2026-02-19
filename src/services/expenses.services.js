@@ -93,6 +93,40 @@ const validateExpenseData = (data) => {
   return true;
 };
 
+const validatePartialExpenseData = (data) => {
+  if (!data || typeof data !== 'object') {
+    return false;
+  }
+
+  const { spentAt, title, amount, category, note } = data;
+
+  if (spentAt !== undefined && typeof spentAt !== 'string') {
+    return false;
+  }
+
+  if (title !== undefined) {
+    if (typeof title !== 'string' || title.trim().length === 0) {
+      return false;
+    }
+  }
+
+  if (amount !== undefined && typeof amount !== 'number') {
+    return false;
+  }
+
+  if (category !== undefined) {
+    if (typeof category !== 'string' || category.trim().length === 0) {
+      return false;
+    }
+  }
+
+  if (note !== undefined && typeof note !== 'string') {
+    return false;
+  }
+
+  return true;
+};
+
 module.exports = {
   getAll,
   getById,
@@ -101,4 +135,5 @@ module.exports = {
   update,
   resetExpenses,
   validateExpenseData,
+  validatePartialExpenseData,
 };
