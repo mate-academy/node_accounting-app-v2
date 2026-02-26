@@ -94,7 +94,7 @@ function createServer() {
     } else {
       const expense = {
         id: nextExpenseId++,
-        userId,
+        userId: Number(userId),
         spentAt,
         title,
         amount,
@@ -132,7 +132,9 @@ function createServer() {
     if (req.query.userId) {
       const user = Number(req.query.user);
 
-      result = result.filter((e) => e.userId === user);
+      result = result.filter(
+        (e) => (Number(e.userId) === Number(e.user)) === Number(user),
+      );
     }
     res.json(result);
   });
