@@ -81,30 +81,32 @@ function createServer() {
   app.post('/expenses', (req, res) => {
     const { userId, spentAt, title, amount, category, note } = req.body;
 
-    const checkUser = users.find((u) => u.id === Number(userId));
-
-    if (!checkUser) {
+    if (!userId || !spentAt || !title || !amount || !category) {
       res.sendStatus(400);
 
       return;
     }
 
-    if (!userId || !spentAt || !title || !amount || !category) {
-      res.sendStatus(400);
-    } else {
-      const expense = {
-        id: nextExpenseId++,
-        userId: Number(userId),
-        spentAt,
-        title,
-        amount,
-        category,
-        note,
-      };
+    const checkUser = users.find((u) => u.id === Number(userId));
 
-      expenses.push(expense);
-      res.status(201).json(expense);
+    if (!checkUser) {
+      res.sendStatus(404);
+
+      return;
     }
+
+    const expense = {
+      id: nextExpenseId++,
+      userId: Number(userId),
+      spentAt,
+      title,
+      amount,
+      category,
+      note,
+    };
+
+    expenses.push(expense);
+    res.status(201).json(expense);
   });
 
   app.get('/expenses', (req, res) => {
@@ -132,6 +134,7 @@ function createServer() {
     if (userId) {
       result = result.filter((e) => e.userId === Number(userId));
     }
+
     res.json(result);
   });
 
@@ -140,7 +143,7 @@ function createServer() {
     const expense = expenses.find((e) => e.id === Number(id));
 
     if (!expense) {
-      res.sendStatus(400);
+      res.sendStatus(404);
 
       return;
     }
