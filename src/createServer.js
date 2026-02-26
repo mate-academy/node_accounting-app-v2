@@ -178,7 +178,7 @@ function createServer() {
       const checkUser = users.find((u) => u.id === Number(userId));
 
       if (!checkUser) {
-        res.sendStatus(400);
+        res.sendStatus(404);
 
         return;
       }
