@@ -108,7 +108,7 @@ function createServer() {
   });
 
   app.get('/expenses', (req, res) => {
-    const { from, to, categories } = req.query;
+    const { userId, from, to, categories } = req.query;
     let result = [...expenses];
 
     if (from) {
@@ -129,12 +129,8 @@ function createServer() {
       result = result.filter((data) => categoryList.includes(data.category));
     }
 
-    if (req.query.userId) {
-      const user = Number(req.query.user);
-
-      result = result.filter(
-        (e) => (Number(e.userId) === Number(e.user)) === Number(user),
-      );
+    if (userId) {
+      result = result.filter((e) => e.userId === Number(userId));
     }
     res.json(result);
   });
