@@ -140,7 +140,7 @@ function createServer() {
     const expense = expenses.find((e) => e.id === Number(id));
 
     if (!expense) {
-      res.sendStatus(404);
+      res.sendStatus(400);
 
       return;
     }
@@ -164,6 +164,7 @@ function createServer() {
 
   app.patch('/expenses/:id', (req, res) => {
     const { id } = req.params;
+    const { userId } = req.body;
 
     const expens = expenses.find((u) => u.id === Number(id));
 
@@ -171,6 +172,16 @@ function createServer() {
       res.sendStatus(404);
 
       return;
+    }
+
+    if (userId) {
+      const checkUser = users.find((u) => u.id === Number(userId));
+
+      if (!checkUser) {
+        res.sendStatus(400);
+
+        return;
+      }
     }
 
     Object.assign(expens, req.body);
