@@ -6,7 +6,7 @@ function createServer() {
   const expenses = [];
   const users = [];
   let nextExpenseId = 0;
-  let nextCategoryId = 0;
+  let nextUserId = 0;
 
   const app = express();
 
@@ -23,7 +23,7 @@ function createServer() {
 
     const exampleusers = {
       name: name,
-      id: nextCategoryId++,
+      id: nextUserId++,
     };
 
     users.push(exampleusers);
@@ -126,31 +126,36 @@ function createServer() {
   app.put('/expenses/:id', (req, res) => {
     const id = Number(req.params.id);
 
-    const findingId = expenses.find((i) => i.id === id);
+    let findingId = expenses.find(i => i.id === id);
 
     if (!findingId) {
       return res.sendStatus(404);
     }
 
+    const { title, amount, spentAt, userId, category, note } = req.body;
+
     if (
-      !req.body.title ||
-      !req.body.amount ||
-      !req.body.spentAt ||
-      !req.body.userId ||
-      !req.body.category
+      !title ||
+      amount === undefined ||
+      !spentAt ||
+      userId === undefined ||
+      !category
     ) {
       return res.sendStatus(400);
     }
 
-    findingId.userId = req.body.userId;
-    findingId.spentAt = req.body.spentAt;
-    findingId.note = req.body.note;
-    findingId.title = req.body.title;
-    findingId.amount = req.body.amount;
-    findingId.category = req.body.category;
+    findingId.userId = userId;
+    findingId.spentAt = spentAt;
 
-    return res.status(200).json(findingId);
-  });
+ 
+    findingId.note = note || '';
+
+    findingId.title = title;
+    findingId.amount = amount;
+    findingId.category = category;
+
+    return res.status(200).json(findingId)
+  })
 
   app.delete('/expenses/:id', (req, res) => {
     const id = Number(req.params.id);
