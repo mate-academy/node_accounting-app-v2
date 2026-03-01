@@ -1,47 +1,47 @@
-# Accounting app (with Node.js)
+# Бухгалтерський застосунок (на Node.js)
 
-Implement an expense tracking app.
-You need to implement 2 collections with 5 endpoints each.
+Реалізуйте застосунок для обліку витрат.
+Потрібно реалізувати 2 колекції з 5 ендпоінтами у кожній.
 
-## Business requirements
-They are well-described in a [documentation](https://app.swaggerhub.com/apis/YURIIHOLIUK_1/Accounting-App/1.0.0)
+## Бізнес-вимоги
+Вони детально описані в [документації](https://app.swaggerhub.com/apis/YURIIHOLIUK_1/Accounting-App/1.0.0)
 <details>
-  <summary>How to work with documentation</summary>
+  <summary>Як працювати з документацією</summary>
 
-  If you open endpoint you will see request params, body. As well as expected response.
-  Also, you can use `Try it out` and then `Execute` button to send the request to the mock server.
-  It will send you demo response.
+  Якщо відкрити ендпоінт, ви побачите параметри запиту та тіло. А також очікувану відповідь.
+  Також можна використати кнопку `Try it out`, а потім `Execute`, щоб надіслати запит на мок-сервер.
+  Він поверне вам демо-відповідь.
 
-  You can hide unneeded code editor:
-  ![hide documentation code editor](./docs/swagger_initial.png)
-  Result:
-  ![result documentation](docs/swagger_result.png)
+  Можна приховати зайвий редактор коду в документації:
+  ![приховати редактор коду в документації](./docs/swagger_initial.png)
+  Результат:
+  ![результат документації](docs/swagger_result.png)
 </details>
 
-## Technical requirements
+## Технічні вимоги
 
-Additional to positive cases you for every request you should:
-- return 404 with any message if expected entity doesn't exist.
-- return 400 with any message if required parameter is not passed.
+Окрім позитивних сценаріїв, для кожного запиту потрібно:
+- повертати 404 з будь-яким повідомленням, якщо очікувана сутність не існує.
+- повертати 400 з будь-яким повідомленням, якщо не передано обов’язковий параметр.
 
-This behavior described in tests (expected and checked by tests).
+Ця поведінка описана в тестах (очікується та перевіряється тестами).
 
-Data should be empty initially. Store data in memory (just in code in some variable).
-Changes should be persistent while server is working.
-It means, if I create expense in the first POST request it should be returned in the second GET request.
+Дані спочатку мають бути порожніми. Зберігати дані в пам’яті (просто в коді, у якійсь змінній).
+Зміни мають зберігатися, поки сервер працює.
+Тобто якщо я створю витрату першим POST-запитом, вона має повертатися другим GET-запитом.
 
-But after stop/start server again data should be empty.
+Але після зупинки та повторного запуску сервера дані мають бути порожніми.
 
-### Code requirements
-You have to work inside `src/createServer.js`.
-You should create, set up and return an express app from `createServer` function.
-> ❗️You shouldn't call `app.listen(...)`. I's done in tests and in the `main.js`
-You might create additional files and might not, but no one can guarantee approve by mentor 😉.
+### Вимоги до коду
+Працювати потрібно у файлі `src/createServer.js`.
+Потрібно створити, налаштувати та повернути express-додаток з функції `createServer`.
+> ❗️Не варто викликати `app.listen(...)`. Це робиться в тестах та в `main.js`
+Можна створювати додаткові файли, а можна й ні, але ніхто не гарантує схвалення ментором 😉.
 
-## How to work
-- `npm run dev` - to start server with auto-restart on code change.
-- `npm start` - just starts the server.
-- `npm run test:watch` - **[Recommended]** runs tests in watch mode (rerun them automatically on change).
-- `npm test` - runs ESLint and tests once.
-- `npm run lint` - runs ESLint.
-- `npm run lint:fix` - runs ESLint and fix fixable errors.
+## Як працювати
+- `npm run dev` — запуск сервера з автоматичним перезапуском при зміні коду.
+- `npm start` — просто запускає сервер.
+- `npm run test:watch` — **[Рекомендовано]** запускає тести в режимі watch (автоматичний перезапуск при змінах).
+- `npm test` — один раз запускає ESLint та тести.
+- `npm run lint` — запускає ESLint.
+- `npm run lint:fix` — запускає ESLint і виправляє те, що можна виправити автоматично.
