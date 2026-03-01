@@ -6,19 +6,27 @@ const getAllExpenses = async (req, res) => {
   let expenses = expensesService.getAll();
 
   if (userId) {
-    expenses = expenses.filter((e) => e.userId === Number(userId));
+    expenses = expenses.filter(
+      (expenseItem) => expenseItem.userId === Number(userId),
+    );
   }
 
   if (categories) {
-    expenses = expenses.filter((e) => e.category === categories);
+    expenses = expenses.filter(
+      (expenseItem) => expenseItem.category === categories,
+    );
   }
 
   if (from) {
-    expenses = expenses.filter((e) => new Date(e.spentAt) >= new Date(from));
+    expenses = expenses.filter(
+      (expenseItem) => new Date(expenseItem.spentAt) >= new Date(from),
+    );
   }
 
   if (to) {
-    expenses = expenses.filter((e) => new Date(e.spentAt) <= new Date(to));
+    expenses = expenses.filter(
+      (expenseItem) => new Date(expenseItem.spentAt) <= new Date(to),
+    );
   }
 
   res.json(expenses);

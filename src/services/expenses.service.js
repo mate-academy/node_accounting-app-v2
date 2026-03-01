@@ -37,7 +37,7 @@ const deleteById = (id) => {
 };
 
 const update = ({ id, ...data }) => {
-  const expense = expenses.find((e) => e.id === id);
+  const expense = expenses.find((expenseItem) => expenseItem.id === id);
 
   if (!expense) {
     return expense;
