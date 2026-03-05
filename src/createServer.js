@@ -77,17 +77,15 @@ function createServer() {
 
     const { name } = req.body || {};
 
-    if (name === undefined) {
-      return res.status(400).send('Bad request');
-    }
-
     const user = users.find((u) => u.id === id);
 
     if (!user) {
       return res.status(404).send('Not found');
     }
 
-    user.name = name;
+    if (name !== undefined) {
+      user.name = name;
+    }
 
     return res.status(200).json(user);
   });
