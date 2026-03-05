@@ -53,6 +53,10 @@ function createServer() {
   app.delete('/users/:id', (req, res) => {
     const id = Number(req.params.id);
 
+    if (!Number.isInteger(id)) {
+      return res.status(400).send('Bad request');
+    }
+
     const index = users.findIndex((u) => u.id === id);
 
     if (index === -1) {
@@ -230,10 +234,6 @@ function createServer() {
     }
 
     const { spentAt, title, amount, category, note } = req.body || {};
-
-    if (req.body === undefined || Object.keys(req.body).length === 0) {
-      return res.status(400).send('Bad request');
-    }
 
     if (spentAt !== undefined) {
       const spentAtMs = Date.parse(spentAt);
