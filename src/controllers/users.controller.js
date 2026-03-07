@@ -55,6 +55,12 @@ const updateUserById = (req, res) => {
     });
   }
 
+  if (!req.body.name) {
+    return res.status(400).json({
+      error: 'Name is required',
+    });
+  }
+
   const user = updateUserService(idNumber, req.body);
 
   if (!user) {
