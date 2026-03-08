@@ -15,4 +15,5 @@ router.get('/', getExpenses);
 router.get('/:id', getExpenseById);
 router.post('/', createNewExpense);
 router.put('/:id', updateExpenseById);
+router.patch('/:id', updateExpenseById);
 router.delete('/:id', deleteExpenseById);
