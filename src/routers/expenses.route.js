@@ -14,5 +14,5 @@ module.exports = { router };
 router.get('/', getExpenses);
 router.get('/:id', getExpenseById);
 router.post('/', createNewExpense);
-router.patch('/:id', updateExpenseById);
+router.put('/:id', updateExpenseById);
 router.delete('/:id', deleteExpenseById);
