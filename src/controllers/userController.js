@@ -33,6 +33,10 @@ const updateUser = (req, res) => {
   const id = Number(req.params.id);
   const { name } = req.body;
 
+  if (!name) {
+    return res.status(400).json({ message: 'Name is required' });
+  }
+
   const user = userService.update(id, name);
 
   if (!user) {

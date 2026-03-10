@@ -52,7 +52,12 @@ const update = (id, data) => {
     return null;
   }
 
-  Object.assign(expense, data);
+  const allowedFields = ['spentAt', 'title', 'amount', 'category', 'note'];
+  const updates = Object.fromEntries(
+    allowedFields.filter((key) => key in data).map((key) => [key, data[key]]),
+  );
+
+  Object.assign(expense, updates);
 
   return expense;
 };

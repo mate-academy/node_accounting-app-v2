@@ -31,7 +31,7 @@ const createExpense = (req, res) => {
   const user = userService.getById(Number(userId));
 
   if (!user) {
-    return res.status(400).json({ message: 'User not found' });
+    return res.status(404).json({ message: 'User not found' });
   }
 
   const expense = expenseService.create({

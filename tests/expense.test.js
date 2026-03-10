@@ -47,7 +47,7 @@ describe('Expense', () => {
       await api.post('/expenses').send({}).expect(400);
     });
 
-    it('should return 400 if user not found', async () => {
+    it('should return 404 if user not found', async () => {
       const expenseData = {
         userId: 1,
         spentAt: '2022-10-19T11:01:43.462Z',
@@ -57,7 +57,7 @@ describe('Expense', () => {
         note: 'I need a new laptop',
       };
 
-      await api.post('/expenses').send(expenseData).expect(400);
+      await api.post('/expenses').send(expenseData).expect(404);
     });
   });
 
