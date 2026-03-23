@@ -1,5 +1,5 @@
 module.exports = {
   extension: ['js'],
-  require: 'mochaGlobalFixtures.js',
+  require: 'mochaGlobalFixtures.cjs',
   spec: 'tests/**/*.test.js',
 };
