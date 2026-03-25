@@ -1,0 +1,2 @@
+1. Pour débuter : regarder et suivre la vidéo REST API with Express.
+2. Créer le tableau des users
