@@ -79,6 +79,10 @@ describe('User', () => {
   });
 
   describe('getUser', () => {
+    it('should return 400 if id is not an integer', async () => {
+      await api.get('/users/abc').expect(400);
+    });
+
     it('should return 404 if user does not exist', async () => {
       await api.get('/users/1').expect(404);
     });
@@ -105,9 +109,18 @@ describe('User', () => {
   });
 
   describe('updateUser', () => {
+    it('should return 400 if id is not an integer', async () => {
+      await api
+        .patch('/users/abc')
+        .send({
+          name: 'John Doe',
+        })
+        .expect(400);
+    });
+
     it('should return 404 if user does not exist', async () => {
       await api
-        .put('/users/1')
+        .patch('/users/1')
         .send({
           name: 'John Doe',
         })
@@ -141,6 +154,10 @@ describe('User', () => {
   });
 
   describe('deleteUser', () => {
+    it('should return 400 if id is not an integer', async () => {
+      await api.delete('/users/abc').expect(400);
+    });
+
     it('should return 404 if user does not exist', async () => {
       await api.delete('/users/1').expect(404);
     });
