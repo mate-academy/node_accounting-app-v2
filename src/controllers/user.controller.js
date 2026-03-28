@@ -28,6 +28,11 @@ function createUserController(store) {
 
   function getUserById(req, res) {
     const id = +req.params.id;
+
+    if (!Number.isInteger(id)) {
+      return res.status(400).json({ message: 'Invalid id' });
+    }
+
     const user = service.getById(id);
 
     if (!user) {
@@ -38,6 +43,11 @@ function createUserController(store) {
 
   function deleteUser(req, res) {
     const id = +req.params.id;
+
+    if (!Number.isInteger(id)) {
+      return res.status(400).json({ message: 'Invalid id' });
+    }
+
     const removed = service.remove(id);
 
     if (!removed) {
@@ -48,6 +58,11 @@ function createUserController(store) {
 
   function updateUser(req, res) {
     const id = +req.params.id;
+
+    if (!Number.isInteger(id)) {
+      return res.status(400).json({ message: 'Invalid id' });
+    }
+
     const { name } = req.body;
 
     if (
@@ -73,7 +88,6 @@ function createUserController(store) {
     getUserById,
     deleteUser,
     patchUser: updateUser,
-    putUser: updateUser,
   };
 }
 

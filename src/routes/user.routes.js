@@ -11,7 +11,6 @@ function createUserRouter(store) {
   router.get('/:id', c.getUserById);
   router.delete('/:id', c.deleteUser);
   router.patch('/:id', c.patchUser);
-  router.put('/:id', c.putUser);
 
   return router;
 }

@@ -167,7 +167,7 @@ function createExpenseController(store) {
     const { userId, spentAt, title, amount, category, note } = req.body;
 
     if (!userService.getById(userId)) {
-      return res.status(400).json({ message: 'User not found' });
+      return res.status(404).json({ message: 'User not found' });
     }
 
     const expense = expenseService.create({
