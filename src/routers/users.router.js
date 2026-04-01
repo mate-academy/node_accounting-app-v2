@@ -40,7 +40,7 @@ usersRoute.post('/', async (req, res) => {
     return;
   }
 
-  if (!name) {
+  if (name === undefined) {
     res.status(400).send({ message: 'Missing required field' });
 
     return;
@@ -73,7 +73,13 @@ usersRoute.patch('/:id', async (req, res) => {
 
   const idNum = Number(id);
 
-  if (!name) {
+  if (typeof name !== 'string') {
+    res.status(400).send({ message: 'Invalid field' });
+
+    return;
+  }
+
+  if (name === undefined) {
     res.status(400).send({ message: 'Missing required field' });
 
     return;
