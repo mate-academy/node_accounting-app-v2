@@ -61,7 +61,7 @@ usersRoute.delete('/:id', async (req, res) => {
   res.status(204).send();
 });
 
-usersRoute.put('/:id', async (req, res) => {
+usersRoute.patch('/:id', async (req, res) => {
   const { id } = req.params;
   const { name } = req.body;
 

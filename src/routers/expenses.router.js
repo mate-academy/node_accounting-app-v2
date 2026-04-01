@@ -7,10 +7,19 @@ const {
   remove,
 } = require('../services/expenses.service.js');
 
+const { getById: getByUserBy } = require('../services/users.service.js');
+
 const expensesRoute = express.Router();
 
 expensesRoute.get('/', async (req, res) => {
-  const expenses = await getAll();
+  const { userId, from, to, categories } = req.query;
+
+  const expenses = await getAll({
+    userId: userId ? Number(userId) : undefined,
+    from,
+    to,
+    categories,
+  });
 
   res.send(expenses);
 });
@@ -44,7 +53,7 @@ expensesRoute.post('/', async (req, res) => {
     return;
   }
 
-  const user = await getById(userId);
+  const user = await getByUserBy(userId);
 
   if (!user) {
     return res.status(400).send({ message: 'User not found' });
@@ -80,35 +89,24 @@ expensesRoute.delete('/:id', async (req, res) => {
   res.status(204).send();
 });
 
-expensesRoute.put('/:id', async (req, res) => {
+expensesRoute.patch('/:id', async (req, res) => {
   const { id } = req.params;
-  const { userId, spentAt, title, amount, category, note } = req.body;
 
-  if (
-    userId == null ||
-    spentAt == null ||
-    title == null ||
-    amount == null ||
-    category == null
-  ) {
-    res.status(400).send({ message: 'Missing required field' });
+  const existingExpense = await getById(id);
+
+  if (!existingExpense) {
+    res.status(404).send({ message: 'Not found' });
 
     return;
   }
 
-  if (typeof amount !== 'number' || Number.isNaN(new Date(spentAt).getTime())) {
-    return res.status(400).send({ message: 'Invalid field' });
-  }
-
-  const expense = await update({
+  const updatedData = {
+    ...existingExpense,
+    ...req.body,
     id,
-    userId,
-    spentAt,
-    title,
-    amount,
-    category,
-    note,
-  });
+  };
+
+  const expense = await update(updatedData);
 
   if (!expense) {
     res.status(404).send({ message: 'Not found' });

@@ -1,3 +1,4 @@
+/* eslint-disable function-paren-newline */
 let expenses = [];
 
 let nextExpenseId = 1;
@@ -6,8 +7,36 @@ const setInitExpanses = () => {
   expenses = [];
 };
 
-const getAll = () => {
-  return [...expenses];
+const getAll = (filters = {}) => {
+  let result = [...expenses];
+
+  const { userId, from, to, categories } = filters;
+
+  if (userId) {
+    result = result.filter((expense) => expense.userId === Number(userId));
+  }
+
+  if (from) {
+    result = result.filter(
+      (expense) => new Date(expense.spentAt) >= new Date(from),
+    );
+  }
+
+  if (to) {
+    result = result.filter(
+      (expense) => new Date(expense.spentAt) <= new Date(to),
+    );
+  }
+
+  if (categories) {
+    const categoryList = Array.isArray(categories) ? categories : [categories];
+
+    result = result.filter((expense) =>
+      categoryList.includes(expense.category),
+    );
+  }
+
+  return result;
 };
 
 const getById = (id) => {
