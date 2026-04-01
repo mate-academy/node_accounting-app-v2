@@ -35,6 +35,11 @@ async function createUser(req, res) {
 
 async function deleteUser(req, res) {
   const { id } = req.params;
+
+  if (!id || isNaN(+id)) {
+    return res.status(400).json({ message: 'Bad Request' });
+  }
+
   const wasDeleted = await usersService.deleteUser(+id);
 
   if (!wasDeleted) {

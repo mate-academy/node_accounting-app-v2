@@ -38,10 +38,11 @@ async function createExpense(req, res) {
   }
 
   if (
-    !userId ||
+    userId == null ||
     !spentAt ||
     !title ||
-    (!amount && isNaN(+amount)) ||
+    amount == null ||
+    isNaN(+amount) ||
     !category
   ) {
     return res.status(400).json({ message: 'Bad Request' });
@@ -89,7 +90,13 @@ async function updateExpense(req, res) {
 
   const { spentAt, title, amount, category, note } = req.body;
 
-  if (!spentAt && !title && !amount && !category && !note) {
+  if (
+    spentAt === undefined &&
+    title === undefined &&
+    amount === undefined &&
+    category === undefined &&
+    note === undefined
+  ) {
     return res.status(400).json({ message: 'Bad Request' });
   }
 

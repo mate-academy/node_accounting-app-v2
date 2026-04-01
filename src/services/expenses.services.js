@@ -3,6 +3,7 @@ let currentId = 1;
 
 function initExpenses() {
   expenses = [];
+  currentId = 1;
 }
 
 function getExpenses(data) {

@@ -3,6 +3,7 @@ let currentId = 1;
 
 const initUsers = () => {
   users = [];
+  currentId = 1;
 };
 
 function getUsers() {
