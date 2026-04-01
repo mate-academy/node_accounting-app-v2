@@ -1,10 +1,11 @@
 let users = [];
 
+let nextUserId = 1;
+
 const setInitUsers = () => {
   users = [];
+  nextUserId = 1;
 };
-
-let nextUserId = 1;
 
 const getAll = () => {
   return [...users];

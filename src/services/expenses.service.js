@@ -5,6 +5,7 @@ let nextExpenseId = 1;
 
 const setInitExpanses = () => {
   expenses = [];
+  nextExpenseId = 1;
 };
 
 const getAll = (filters = {}) => {

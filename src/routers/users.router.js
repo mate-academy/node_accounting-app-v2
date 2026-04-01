@@ -34,6 +34,12 @@ usersRoute.get('/:id', async (req, res) => {
 usersRoute.post('/', async (req, res) => {
   const { name } = req.body;
 
+  if (typeof name !== 'string') {
+    res.status(400).send({ message: 'Invalid field' });
+
+    return;
+  }
+
   if (!name) {
     res.status(400).send({ message: 'Missing required field' });
 

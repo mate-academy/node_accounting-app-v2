@@ -91,6 +91,7 @@ expensesRoute.delete('/:id', async (req, res) => {
 
 expensesRoute.patch('/:id', async (req, res) => {
   const { id } = req.params;
+  const { amount, spentAt } = req.body;
 
   const existingExpense = await getById(id);
 
@@ -98,6 +99,22 @@ expensesRoute.patch('/:id', async (req, res) => {
     res.status(404).send({ message: 'Not found' });
 
     return;
+  }
+
+  if (amount !== undefined && typeof amount !== 'number') {
+    res.status(400).send({ message: 'Invalid field' });
+
+    return;
+  }
+
+  if (spentAt !== undefined) {
+    const date = new Date(spentAt);
+
+    if (Number.isNaN(date.getTime())) {
+      res.status(400).send({ message: 'Invalid field' });
+
+      return;
+    }
   }
 
   const updatedData = {
