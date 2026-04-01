@@ -1,5 +1,9 @@
-const expenses = [];
+let expenses = [];
 let currentId = 1;
+
+function initExpenses() {
+  expenses = [];
+}
 
 function getExpenses(data) {
   const { userId, categories, from, to } = data;
@@ -19,11 +23,11 @@ function getExpenses(data) {
       }
     }
 
-    if (from && new Date(expense.date) < new Date(from)) {
+    if (from && new Date(expense.spentAt) < new Date(from)) {
       return false;
     }
 
-    if (to && new Date(expense.date) > new Date(to)) {
+    if (to && new Date(expense.spentAt) > new Date(to)) {
       return false;
     }
 
@@ -86,4 +90,5 @@ module.exports = {
   createExpense,
   deleteExpense,
   updateExpense,
+  initExpenses,
 };

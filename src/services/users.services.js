@@ -1,5 +1,9 @@
-const users = [];
+let users = [];
 let currentId = 1;
+
+const initUsers = () => {
+  users = [];
+};
 
 function getUsers() {
   return users;
@@ -49,4 +53,5 @@ module.exports = {
   deleteUser,
   getUserById,
   updateUser,
+  initUsers,
 };
