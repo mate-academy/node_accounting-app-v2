@@ -88,6 +88,35 @@ const fieldsValidation = ({
   return { status: true };
 };
 
+const validateUpdate = (data) => {
+  const { userId, spentAt, title, amount, category, note } = data;
+
+  if (userId !== undefined && typeof userId !== 'number') {
+    return { status: false, error: 'userId must be a number' };
+  }
+
+  if (amount !== undefined && typeof amount !== 'number') {
+    return { status: false, error: 'amount must be a number' };
+  }
+
+  if (
+    spentAt !== undefined &&
+    (typeof spentAt !== 'string' || isNaN(new Date(spentAt)))
+  ) {
+    return { status: false, error: 'spentAt must be a valid date string' };
+  }
+
+  const stringFields = { title, category, note };
+
+  for (const [key, value] of Object.entries(stringFields)) {
+    if (value !== undefined && typeof value !== 'string') {
+      return { status: false, error: `${key} must be a string` };
+    }
+  }
+
+  return { status: true };
+};
+
 const get = () => {
   return expenses;
 };
@@ -161,5 +190,6 @@ module.exports = {
   update,
   getWithFilters,
   fieldsValidation,
+  validateUpdate,
   reset,
 };
