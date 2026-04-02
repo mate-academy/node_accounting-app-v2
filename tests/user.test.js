@@ -109,7 +109,7 @@ describe('User', () => {
   describe('updateUser', () => {
     it('should return 404 if user does not exist', async () => {
       await api
-        .put('/users/1')
+        .patch('/users/1')
         .send({
           name: 'John Doe',
         })
@@ -140,17 +140,31 @@ describe('User', () => {
         }),
       );
     });
+
+    it('should return 400 if name is not provided', async () => {
+      const createdUser = await api.post('/users').send({
+        name: 'John Doe',
+      });
+
+      const response = await api
+        .patch(`/users/${createdUser.body.id}`)
+        .send({})
+        .expect(400);
+
+      expect(response.body).toEqual({
+        error: 'Bad Request',
+      });
+    });
   });
 
   describe('deleteUser', () => {
     it('should return 404 if user does not exist', async () => {
       const response = await api.delete('/users/1');
 
-      // console.log('status:', response.status);
-      // console.log('body:', response.body);
-      // console.log('text:', response.text);
-
       expect(response.status).toBe(404);
+      expect(response.body).toEqual({
+        error: 'Not found',
+      });
     });
 
     it('should delete user', async () => {
@@ -170,13 +184,6 @@ describe('User', () => {
       expect(response.text).toBe('');
 
       await api.get(`/users/${createdUser.body.id}`).expect(404);
-
-      // const getResponse = await api.get(`/users/${createdUser.body.id}`);
-
-      // console.log('GET after delete status:', getResponse.status);
-      // console.log('GET after delete body:', getResponse.body);
-
-      // expect(getResponse.status).toBe(404);
     });
 
     it('should clear exported users after delete and reset', async () => {

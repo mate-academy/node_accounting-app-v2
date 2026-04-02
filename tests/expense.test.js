@@ -80,6 +80,26 @@ describe('Expense', () => {
 
       await api.post('/expenses').send(expenseData).expect(400);
     });
+
+    it('should return 400 if required fields are missing', async () => {
+      const {
+        body: { id: userId },
+      } = await api.post('/users').send({
+        name: 'John Doe',
+      });
+
+      const response = await api.post('/expenses').send({
+        userId,
+        spentAt: '2022-10-19T11:01:43.462Z',
+        amount: 999,
+        category: 'Electronics',
+      });
+
+      expect(response.status).toBe(400);
+      expect(response.body).toEqual({
+        error: 'Bad Request',
+      });
+    });
   });
 
   describe('getExpenses', () => {
@@ -334,7 +354,38 @@ describe('Expense', () => {
     });
 
     it('should return 404 if expense not found', async () => {
-      await api.patch('/expenses/1').send({}).expect(404);
+      const response = await api.patch('/expenses/1').send({ title: 'TV' });
+
+      expect(response.status).toBe(404);
+      expect(response.body).toEqual({
+        error: 'Not found',
+      });
+    });
+
+    it('should return 400 if title is not provided', async () => {
+      const {
+        body: { id: userId },
+      } = await api.post('/users').send({
+        name: 'John Doe',
+      });
+
+      const {
+        body: { id: expenseId },
+      } = await api.post('/expenses').send({
+        userId,
+        spentAt: '2022-10-19T11:01:43.462Z',
+        title: 'Buy a new laptop',
+        amount: 999,
+        category: 'Electronics',
+        note: 'I need a new laptop',
+      });
+
+      const response = await api.patch(`/expenses/${expenseId}`).send({});
+
+      expect(response.status).toBe(400);
+      expect(response.body).toEqual({
+        error: 'Bad Request',
+      });
     });
   });
 
@@ -402,7 +453,12 @@ describe('Expense', () => {
     });
 
     it('should return 404 if expense not found', async () => {
-      await api.delete('/expenses/1').expect(404);
+      const response = await api.delete('/expenses/1');
+
+      expect(response.status).toBe(404);
+      expect(response.body).toEqual({
+        error: 'Not found',
+      });
     });
   });
 });

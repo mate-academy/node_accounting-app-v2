@@ -20,7 +20,7 @@ function remove(req, res) {
   const userIndex = store.users.findIndex((item) => item.id === Number(id));
 
   if (userIndex === -1) {
-    return res.status(404).send(store.users);
+    return res.status(404).json({ error: 'Not found' });
   }
 
   store.users.splice(userIndex, 1);
@@ -50,11 +50,15 @@ function update(req, res) {
 
   const user = store.users.find((item) => item.id === Number(id));
 
-  if (!user || !name) {
-    return res.status(404).send(store.users);
+  if (!user) {
+    return res.status(404).json({ error: 'Not found' });
   }
 
-  user['name'] = name;
+  if (!name) {
+    return res.status(400).json({ error: 'Bad Request' });
+  }
+
+  user.name = name;
 
   return res.status(200).send(user);
 }

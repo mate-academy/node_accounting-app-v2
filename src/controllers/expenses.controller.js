@@ -51,7 +51,7 @@ function remove(req, res) {
   );
 
   if (expenseIndex === -1) {
-    return res.status(404).send(store.expenses);
+    return res.status(404).json({ error: 'Not found' });
   }
 
   store.expenses.splice(expenseIndex, 1);
@@ -62,8 +62,14 @@ function remove(req, res) {
 function create(req, res) {
   const { userId, spentAt, title, amount, category, note } = req.body;
 
-  if (Object.keys(req.body).length === 0) {
-    return res.sendStatus(400);
+  if (
+    userId === undefined ||
+    !spentAt ||
+    !title ||
+    amount === undefined ||
+    !category
+  ) {
+    return res.status(400).json({ error: 'Bad Request' });
   }
 
   const findUser = store.users.find((item) => item.id === Number(userId));
@@ -92,8 +98,12 @@ function update(req, res) {
 
   const expens = store.expenses.find((item) => item.id === Number(id));
 
-  if (!expens || !title) {
-    return res.status(404).send(store.expenses);
+  if (!expens) {
+    return res.status(404).json({ error: 'Not found' });
+  }
+
+  if (!title) {
+    return res.status(400).json({ error: 'Bad Request' });
   }
 
   expens.title = title;
