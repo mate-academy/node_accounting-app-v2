@@ -16,10 +16,14 @@ const getOne = (req, res) => {
 };
 
 const createUser = (req, res) => {
+  if (!req.body.name) {
+    return res.status(400).send('Name is required');
+  }
+
   const { name } = req.body;
 
-  if (!name || typeof name !== 'string') {
-    return res.status(400).send('Name is required');
+  if (typeof name !== 'string') {
+    return res.status(400).send('Field name must be string');
   }
 
   const user = usersService.create(name);
@@ -40,6 +44,11 @@ const deleteUser = (req, res) => {
 
 const updateUser = (req, res) => {
   const id = Number(req.params.id);
+
+  if (!req.body.name) {
+    return res.status(400).send('Name is required');
+  }
+
   const { name } = req.body;
   const currentUser = usersService.getById(id);
 
@@ -47,8 +56,8 @@ const updateUser = (req, res) => {
     return res.status(404).send('User not found');
   }
 
-  if (!name || typeof name !== 'string') {
-    return res.status(400).send('Name is required');
+  if (typeof name !== 'string') {
+    return res.status(400).send('Field name must be string');
   }
 
   const updatedUser = usersService.update(id, name);

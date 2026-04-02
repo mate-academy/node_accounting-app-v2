@@ -25,7 +25,11 @@ const createExpense = (req, res) => {
   const { userId } = req.body;
 
   if (!usersService.getById(userId)) {
-    return res.status(400).send('User not found');
+    return res.status(400).send('Expense not found');
+  }
+
+  if (!req.body) {
+    return res.status(400).send('Fields must be filled');
   }
 
   const validation = expensesService.fieldsValidation(req.body);
