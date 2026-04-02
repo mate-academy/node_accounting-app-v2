@@ -46,17 +46,17 @@ function getExpenseById(req, res) {
 function remove(req, res) {
   const { id } = req.params;
 
-  const expens = store.expenses.find((item) => {
-    return item.id === Number(id);
-  });
+  const expenseIndex = store.expenses.findIndex(
+    (item) => item.id === Number(id),
+  );
 
-  if (!expens) {
+  if (expenseIndex === -1) {
     return res.status(404).send(store.expenses);
   }
 
-  store.expenses = store.expenses.filter((item) => item.id !== Number(id));
+  store.expenses.splice(expenseIndex, 1);
 
-  return res.status(204).send(store.expenses);
+  return res.sendStatus(204);
 }
 
 function create(req, res) {
@@ -73,7 +73,7 @@ function create(req, res) {
   }
 
   const expenses = {
-    id: store.getNextUserId(),
+    id: store.getNextExpenseId(),
     userId,
     spentAt,
     title,
@@ -92,14 +92,13 @@ function update(req, res) {
 
   const expens = store.expenses.find((item) => item.id === Number(id));
 
-  if (!expens) {
+  if (!expens || !title) {
     return res.status(404).send(store.expenses);
   }
 
-  return res.status(200).send({
-    ...expens,
-    title,
-  });
+  expens.title = title;
+
+  return res.status(200).send(expens);
 }
 
 module.exports = {

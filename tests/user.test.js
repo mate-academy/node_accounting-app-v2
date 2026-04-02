@@ -163,14 +163,11 @@ describe('User', () => {
       // console.log('CREATE status:', createdUser.status);
       // console.log('CREATE body:', createdUser.body);
 
-      await api.delete(`/users/${createdUser.body.id}`).expect(204);
+      const response = await api
+        .delete(`/users/${createdUser.body.id}`)
+        .expect(204);
 
-      // const deleteResponse = await api.delete(`/users/${createdUser.body.id}`);
-
-      // console.log('DELETE status:', deleteResponse.status);
-      // console.log('DELETE body:', deleteResponse.body);
-
-      // expect(deleteResponse.status).toBe(204);
+      expect(response.text).toBe('');
 
       await api.get(`/users/${createdUser.body.id}`).expect(404);
 
@@ -180,6 +177,25 @@ describe('User', () => {
       // console.log('GET after delete body:', getResponse.body);
 
       // expect(getResponse.status).toBe(404);
+    });
+
+    it('should clear exported users after delete and reset', async () => {
+      await api.post('/users').send({
+        name: 'John Doe',
+      });
+
+      const {
+        body: { id: secondUserId },
+      } = await api.post('/users').send({
+        name: 'Jane Doe',
+      });
+
+      await api.delete('/users/1').expect(204);
+
+      store.reset();
+
+      expect(store.users).toEqual([]);
+      await api.get(`/users/${secondUserId}`).expect(404);
     });
   });
 });

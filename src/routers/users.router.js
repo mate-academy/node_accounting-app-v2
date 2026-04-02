@@ -13,12 +13,6 @@ router.post('/', controller.create);
 
 router.delete('/:id', controller.remove);
 
-router.patch(
-  '/:id',
-  (req, res, next) => {
-    next();
-  },
-  controller.update,
-);
+router.patch('/:id', controller.update);
 
 module.exports = router;

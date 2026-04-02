@@ -17,15 +17,15 @@ function getUserById(req, res) {
 
 function remove(req, res) {
   const { id } = req.params;
-  const user = store.users.find((item) => item.id === Number(id));
+  const userIndex = store.users.findIndex((item) => item.id === Number(id));
 
-  if (!user) {
+  if (userIndex === -1) {
     return res.status(404).send(store.users);
   }
 
-  store.users = store.users.filter((exp) => exp.id !== Number(id));
+  store.users.splice(userIndex, 1);
 
-  return res.status(204).send(store.users);
+  return res.sendStatus(204);
 }
 
 function create(req, res) {
@@ -50,7 +50,7 @@ function update(req, res) {
 
   const user = store.users.find((item) => item.id === Number(id));
 
-  if (!user) {
+  if (!user || !name) {
     return res.status(404).send(store.users);
   }
 

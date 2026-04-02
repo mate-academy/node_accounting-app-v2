@@ -45,6 +45,25 @@ describe('Expense', () => {
       );
     });
 
+    it('should use a separate expense id sequence', async () => {
+      await api.post('/users').send({ name: 'John Doe' });
+
+      const {
+        body: { id: userId },
+      } = await api.post('/users').send({ name: 'Jane Doe' });
+
+      const response = await api.post('/expenses').send({
+        userId,
+        spentAt: '2022-10-19T11:01:43.462Z',
+        title: 'Buy a new laptop',
+        amount: 999,
+        category: 'Electronics',
+        note: 'I need a new laptop',
+      });
+
+      expect(response.body.id).toBe(1);
+    });
+
     it('should return 400 if name is not provided', async () => {
       await api.post('/expenses').send({}).expect(400);
     });
@@ -301,6 +320,17 @@ describe('Expense', () => {
         ...expenseData,
         title: 'Buy a new TV',
       });
+
+      const getResponse = await api
+        .get(`/expenses/${expenseId}`)
+        .expect(200)
+        .expect('Content-Type', /application\/json/);
+
+      expect(getResponse.body).toEqual({
+        id: expenseId,
+        ...expenseData,
+        title: 'Buy a new TV',
+      });
     });
 
     it('should return 404 if expense not found', async () => {
@@ -329,9 +359,46 @@ describe('Expense', () => {
         body: { id: expenseId },
       } = await api.post('/expenses').send(expenseData);
 
-      await api.delete(`/expenses/${expenseId}`).expect(204);
+      const response = await api.delete(`/expenses/${expenseId}`).expect(204);
+
+      expect(response.text).toBe('');
 
       await api.get(`/expenses/${expenseId}`).expect(404);
+    });
+
+    it('should clear exported expenses after delete and reset', async () => {
+      const {
+        body: { id: userId },
+      } = await api.post('/users').send({
+        name: 'John Doe',
+      });
+
+      await api.post('/expenses').send({
+        userId,
+        spentAt: '2022-10-19T11:01:43.462Z',
+        title: 'Buy a new laptop',
+        amount: 999,
+        category: 'Electronics',
+        note: 'I need a new laptop',
+      });
+
+      const {
+        body: { id: secondExpenseId },
+      } = await api.post('/expenses').send({
+        userId,
+        spentAt: '2022-10-20T11:01:43.462Z',
+        title: 'Buy a new TV',
+        amount: 499,
+        category: 'Electronics',
+        note: 'I need a new TV',
+      });
+
+      await api.delete('/expenses/1').expect(204);
+
+      store.reset();
+
+      expect(store.expenses).toEqual([]);
+      await api.get(`/expenses/${secondExpenseId}`).expect(404);
     });
 
     it('should return 404 if expense not found', async () => {
