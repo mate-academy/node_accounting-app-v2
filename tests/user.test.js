@@ -2,12 +2,14 @@
 
 const supertest = require('supertest');
 const { createServer } = require('../src/createServer');
+const store = require('../src/data/store');
 
 describe('User', () => {
   let server;
   let api;
 
   beforeEach(() => {
+    store.reset();
     server = createServer();
     api = supertest(server);
   });
@@ -142,7 +144,13 @@ describe('User', () => {
 
   describe('deleteUser', () => {
     it('should return 404 if user does not exist', async () => {
-      await api.delete('/users/1').expect(404);
+      const response = await api.delete('/users/1');
+
+      // console.log('status:', response.status);
+      // console.log('body:', response.body);
+      // console.log('text:', response.text);
+
+      expect(response.status).toBe(404);
     });
 
     it('should delete user', async () => {
@@ -152,9 +160,26 @@ describe('User', () => {
         name,
       });
 
+      // console.log('CREATE status:', createdUser.status);
+      // console.log('CREATE body:', createdUser.body);
+
       await api.delete(`/users/${createdUser.body.id}`).expect(204);
 
+      // const deleteResponse = await api.delete(`/users/${createdUser.body.id}`);
+
+      // console.log('DELETE status:', deleteResponse.status);
+      // console.log('DELETE body:', deleteResponse.body);
+
+      // expect(deleteResponse.status).toBe(204);
+
       await api.get(`/users/${createdUser.body.id}`).expect(404);
+
+      // const getResponse = await api.get(`/users/${createdUser.body.id}`);
+
+      // console.log('GET after delete status:', getResponse.status);
+      // console.log('GET after delete body:', getResponse.body);
+
+      // expect(getResponse.status).toBe(404);
     });
   });
 });
