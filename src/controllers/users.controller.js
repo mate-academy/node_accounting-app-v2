@@ -16,7 +16,7 @@ const getOne = (req, res) => {
 };
 
 const createUser = (req, res) => {
-  if (!req.body.name) {
+  if (!req.body) {
     return res.status(400).send('Name is required');
   }
 
@@ -45,7 +45,7 @@ const deleteUser = (req, res) => {
 const updateUser = (req, res) => {
   const id = Number(req.params.id);
 
-  if (!req.body.name) {
+  if (!req.body) {
     return res.status(400).send('Name is required');
   }
 

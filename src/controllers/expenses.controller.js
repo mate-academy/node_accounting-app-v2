@@ -22,14 +22,14 @@ const getOne = (req, res) => {
 };
 
 const createExpense = (req, res) => {
+  if (!req.body) {
+    return res.status(400).send('Fields must be filled');
+  }
+
   const { userId } = req.body;
 
   if (!usersService.getById(userId)) {
-    return res.status(400).send('Expense not found');
-  }
-
-  if (!req.body) {
-    return res.status(400).send('Fields must be filled');
+    return res.status(400).send('User not found');
   }
 
   const validation = expensesService.fieldsValidation(req.body);
@@ -59,7 +59,11 @@ const updateExpense = (req, res) => {
   const currentExpense = expensesService.getById(id);
 
   if (!currentExpense) {
-    return res.status(404).send('User not found');
+    return res.status(404).send('Expense not found');
+  }
+
+  if (!req.body) {
+    return res.status(400).send('Fields must be filled');
   }
 
   const updatedExpense = expensesService.update(id, req.body);

@@ -121,9 +121,9 @@ const getWithFilters = ({ userId, categories, from, to }) => {
 };
 
 const create = ({ userId, spentAt, title, amount, category, note }) => {
-  const maxId = expenses.length ? Math.max(...expenses.map((e) => e.id)) : 0;
+  const maxId = expenses.length ? Math.max(...expenses.map((e) => e.id)) : -1;
   const newExpense = {
-    id: maxId ? maxId + 1 : 0,
+    id: maxId + 1,
     userId,
     spentAt: spentAt || new Date().toISOString(),
     title,
