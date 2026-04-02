@@ -2,12 +2,14 @@
 
 const supertest = require('supertest');
 const { createServer } = require('../src/createServer');
+const store = require('../src/data/store');
 
 describe('User', () => {
   let server;
   let api;
 
   beforeEach(() => {
+    store.reset();
     server = createServer();
     api = supertest(server);
   });
@@ -107,7 +109,7 @@ describe('User', () => {
   describe('updateUser', () => {
     it('should return 404 if user does not exist', async () => {
       await api
-        .put('/users/1')
+        .patch('/users/1')
         .send({
           name: 'John Doe',
         })
@@ -138,11 +140,31 @@ describe('User', () => {
         }),
       );
     });
+
+    it('should return 400 if name is not provided', async () => {
+      const createdUser = await api.post('/users').send({
+        name: 'John Doe',
+      });
+
+      const response = await api
+        .patch(`/users/${createdUser.body.id}`)
+        .send({})
+        .expect(400);
+
+      expect(response.body).toEqual({
+        error: 'Bad Request',
+      });
+    });
   });
 
   describe('deleteUser', () => {
     it('should return 404 if user does not exist', async () => {
-      await api.delete('/users/1').expect(404);
+      const response = await api.delete('/users/1');
+
+      expect(response.status).toBe(404);
+      expect(response.body).toEqual({
+        error: 'Not found',
+      });
     });
 
     it('should delete user', async () => {
@@ -152,9 +174,35 @@ describe('User', () => {
         name,
       });
 
-      await api.delete(`/users/${createdUser.body.id}`).expect(204);
+      // console.log('CREATE status:', createdUser.status);
+      // console.log('CREATE body:', createdUser.body);
+
+      const response = await api
+        .delete(`/users/${createdUser.body.id}`)
+        .expect(204);
+
+      expect(response.text).toBe('');
 
       await api.get(`/users/${createdUser.body.id}`).expect(404);
+    });
+
+    it('should clear exported users after delete and reset', async () => {
+      await api.post('/users').send({
+        name: 'John Doe',
+      });
+
+      const {
+        body: { id: secondUserId },
+      } = await api.post('/users').send({
+        name: 'Jane Doe',
+      });
+
+      await api.delete('/users/1').expect(204);
+
+      store.reset();
+
+      expect(store.users).toEqual([]);
+      await api.get(`/users/${secondUserId}`).expect(404);
     });
   });
 });
