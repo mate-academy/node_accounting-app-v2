@@ -22,7 +22,7 @@ function createServer() {
   app.post('/users', (req, res) => {
     const { name } = req.body;
 
-    if (!name) {
+    if (typeof name !== 'string') {
       res.sendStatus(400);
 
       return;
@@ -277,7 +277,7 @@ function createServer() {
       return;
     }
 
-    if (note !== undefined && typeof note !== 'string') {
+    if (note !== undefined && note !== null && typeof note !== 'string') {
       res.sendStatus(400);
 
       return;
