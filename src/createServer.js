@@ -170,10 +170,10 @@ function createServer() {
 
     if (
       userId === undefined ||
-      !spentAt ||
-      !title ||
+      typeof spentAt !== 'string' ||
+      typeof title !== 'string' ||
       amount === undefined ||
-      !category
+      typeof category !== 'string'
     ) {
       res.sendStatus(400);
 
