@@ -62,9 +62,11 @@ function createServer() {
       return res.status(404).json({ error: 'User not found' });
     }
 
-    if (name) {
-      user.name = name;
+    if (!name) {
+      return res.status(400).json({ error: 'Name is required' });
     }
+
+    user.name = name;
 
     res.json(user);
   });
@@ -79,7 +81,9 @@ function createServer() {
     }
 
     if (categories) {
-      result = result.filter((e) => e.category === categories);
+      const categoriesArray = categories.split(',');
+
+      result = result.filter((e) => categoriesArray.includes(e.category));
     }
 
     if (from) {
