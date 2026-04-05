@@ -16,12 +16,21 @@ function createExpensesRoute(expenses, users) {
     }
 
     if (req.query.categories) {
-      filteredExpenses = filteredExpenses.filter(
-        (exp) =>
+      if (!req.query.categories.length) {
+        filteredExpenses = filteredExpenses.filter(
+          (exp) =>
+            // eslint-disable-next-line
+            req.query.categories === exp.category,
           // eslint-disable-next-line
-          req.query.categories.includes(exp.category),
-        // eslint-disable-next-line
-      );
+        );
+      } else {
+        filteredExpenses = filteredExpenses.filter(
+          (exp) =>
+            // eslint-disable-next-line
+            req.query.categories.includes(exp.category),
+          // eslint-disable-next-line
+        );
+      }
     }
 
     if (req.query.from) {
