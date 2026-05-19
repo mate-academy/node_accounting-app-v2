@@ -28,7 +28,7 @@ const getAll = ({ userId, from, to, categories }) => {
 
   if (Array.isArray(categories)) {
     filteredExpenses = filteredExpenses.filter((expense) => {
-      categories.includes(expense.category);
+      return categories.includes(expense.category);
     });
   } else if (categories !== undefined) {
     filteredExpenses = filteredExpenses.filter(
