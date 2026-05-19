@@ -2,7 +2,7 @@
   "name": "node_accounting-app",
   "version": "1.0.0",
   "description": "Node.js accounting app",
-  "main": "src/index.js",
+  "main": "src/main.js",
   "scripts": {
     "init": "mate-scripts init",
     "start": "node src/main.js",
@@ -17,12 +17,12 @@
   "author": "Mate academy",
   "license": "GPL-3.0",
   "dependencies": {
-    "cors": "^2.8.5",
+    "cors": "^2.8.6",
     "express": "^4.19.2"
   },
   "devDependencies": {
     "@mate-academy/eslint-config": "latest",
-    "@mate-academy/scripts": "^1.8.6",
+    "@mate-academy/scripts": "^2.1.3",
     "eslint": "^8.57.0",
     "eslint-plugin-jest": "^28.6.0",
     "eslint-plugin-node": "^11.1.0",
