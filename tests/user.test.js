@@ -83,6 +83,10 @@ describe('User', () => {
       await api.get('/users/1').expect(404);
     });
 
+    it('should return 400 if user id is invalid', async () => {
+      await api.get('/users/not-a-number').expect(400);
+    });
+
     it('should return user', async () => {
       const name = 'John Doe';
 
