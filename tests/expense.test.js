@@ -59,6 +59,24 @@ describe('Expense', () => {
 
       await api.post('/expenses').send(expenseData).expect(400);
     });
+
+    it('should return 400 if expense payload fields have invalid types', async () => {
+      const { body: { id: userId } } = await api.post('/users').send({
+        name: 'John Doe',
+      });
+
+      await api
+        .post('/expenses')
+        .send({
+          userId,
+          spentAt: 'not-a-date',
+          title: 'Buy a new laptop',
+          amount: '999',
+          category: 'Electronics',
+          note: 'I need a new laptop',
+        })
+        .expect(400);
+    });
   });
 
   describe('getExpenses', () => {
@@ -262,6 +280,10 @@ describe('Expense', () => {
 
     it('should return 404 if expense not found', async () => {
       await api.get('/expenses/1').expect(404);
+    });
+
+    it('should return 400 if expense id is invalid', async () => {
+      await api.get('/expenses/not-a-number').expect(400);
     });
   });
 
