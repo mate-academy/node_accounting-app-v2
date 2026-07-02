@@ -3,9 +3,9 @@ const expensesService = require('../services/expenses.services');
 const getExpenses = (req, res) => {
   const { userId, categories, from, to } = req.query;
 
-  if (!req.query) {
-    return res.status(400).send('Bad request');
-  }
+  // if (!req.query) {
+  //   return res.status(400).send('Bad request');
+  // }
 
   const result = expensesService.getFilteredExpenses(
     userId,
@@ -20,7 +20,14 @@ const getExpenses = (req, res) => {
 const createExpense = (req, res) => {
   const { userId, spentAt, title, amount, category, note } = req.body;
 
-  if (!(userId, spentAt, title, amount, category, note)) {
+  if (
+    !userId ||
+    !spentAt ||
+    !title ||
+    amount === undefined ||
+    !category ||
+    !note
+  ) {
     return res.status(400).send('Bad Request');
   }
 

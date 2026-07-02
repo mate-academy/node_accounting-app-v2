@@ -30,7 +30,7 @@ const getFilteredExpenses = (userId, categories, from, to) => {
 };
 
 const create = (userId, spentAt, title, amount, category, note) => {
-  const user = users.find((us) => us.id === userId);
+  const user = users.find((us) => us.id === Number(userId));
 
   if (!user) {
     return null;

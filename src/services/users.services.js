@@ -20,9 +20,9 @@ const remove = (id) => {
     return null;
   }
 
-  users.splice(userIndex, 1);
+  const [deletedUser] = users.splice(userIndex, 1);
 
-  return users;
+  return deletedUser;
 };
 
 const update = (id, name) => {

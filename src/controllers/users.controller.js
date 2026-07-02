@@ -2,6 +2,12 @@ const { users } = require('../db/users');
 const usersService = require('../services/users.services');
 
 const getUsers = (req, res) => {
+  // const { userId, from, to } = req.query;
+  //
+  // if (!userId || !from || !to) {
+  //   return res.status(400).send('Bad Request');
+  // }
+
   res.send(users);
 };
 
