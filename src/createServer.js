@@ -1,11 +1,212 @@
 'use strict';
 
-// const express = require('express');
+const express = require('express');
 
 function createServer() {
-  // Use express to create a server
-  // Add a routes to the server
-  // Return the server (express app)
+  const app = express();
+
+  app.use(express.json());
+
+  const users = [];
+  const expenses = [];
+  let nextUserId = 1;
+  let nextExpenseId = 1;
+
+  const findUserById = (id) => users.find((user) => user.id === id);
+
+  const findExpenseById = (id) => expenses.find((expense) => expense.id === id);
+
+  app.post('/users', (req, res) => {
+    const { name } = req.body;
+
+    if (!name) {
+      return res.status(400).json({ message: 'name is required' });
+    }
+
+    const user = {
+      id: nextUserId++,
+      name,
+    };
+
+    users.push(user);
+
+    return res.status(201).json(user);
+  });
+
+  app.get('/users', (req, res) => {
+    return res.json(users);
+  });
+
+  app.get('/users/:id', (req, res) => {
+    const id = Number(req.params.id);
+    const user = findUserById(id);
+
+    if (!user) {
+      return res.status(404).json({ message: 'user not found' });
+    }
+
+    return res.json(user);
+  });
+
+  app.put('/users/:id', (req, res) => {
+    const id = Number(req.params.id);
+    const user = findUserById(id);
+    const { name } = req.body;
+
+    if (!user) {
+      return res.status(404).json({ message: 'user not found' });
+    }
+
+    if (!name) {
+      return res.status(400).json({ message: 'name is required' });
+    }
+
+    user.name = name;
+
+    return res.json(user);
+  });
+
+  app.patch('/users/:id', (req, res) => {
+    const id = Number(req.params.id);
+    const user = findUserById(id);
+    const { name } = req.body;
+
+    if (!user) {
+      return res.status(404).json({ message: 'user not found' });
+    }
+
+    if (!name) {
+      return res.status(400).json({ message: 'name is required' });
+    }
+
+    user.name = name;
+
+    return res.json(user);
+  });
+
+  app.delete('/users/:id', (req, res) => {
+    const id = Number(req.params.id);
+    const userIndex = users.findIndex((user) => user.id === id);
+
+    if (userIndex === -1) {
+      return res.status(404).json({ message: 'user not found' });
+    }
+
+    users.splice(userIndex, 1);
+
+    return res.sendStatus(204);
+  });
+
+  app.post('/expenses', (req, res) => {
+    const { userId, spentAt, title, amount, category, note } = req.body;
+
+    if (!userId || !spentAt || !title || !amount || !category) {
+      return res.status(400).json({
+        message: 'userId, spentAt, title, amount and category are required',
+      });
+    }
+
+    const user = findUserById(Number(userId));
+
+    if (!user) {
+      return res.status(400).json({ message: 'user not found' });
+    }
+
+    const expense = {
+      id: nextExpenseId++,
+      userId: Number(userId),
+      spentAt,
+      title,
+      amount,
+      category,
+      note,
+    };
+
+    expenses.push(expense);
+
+    return res.status(201).json(expense);
+  });
+
+  app.get('/expenses', (req, res) => {
+    const { userId, from, to, categories } = req.query;
+
+    let filteredExpenses = [...expenses];
+
+    if (userId) {
+      filteredExpenses = filteredExpenses.filter(
+        (expense) => expense.userId === Number(userId),
+      );
+    }
+
+    if (from) {
+      filteredExpenses = filteredExpenses.filter(
+        (expense) => new Date(expense.spentAt) >= new Date(from),
+      );
+    }
+
+    if (to) {
+      filteredExpenses = filteredExpenses.filter(
+        (expense) => new Date(expense.spentAt) <= new Date(to),
+      );
+    }
+
+    if (categories) {
+      const categoriesList = categories.split(',');
+      const isExpenseInCategory = (expense) =>
+        categoriesList.includes(expense.category);
+
+      filteredExpenses = filteredExpenses.filter(isExpenseInCategory);
+    }
+
+    return res.json(filteredExpenses);
+  });
+
+  app.get('/expenses/:id', (req, res) => {
+    const id = Number(req.params.id);
+    const expense = findExpenseById(id);
+
+    if (!expense) {
+      return res.status(404).json({ message: 'expense not found' });
+    }
+
+    return res.json(expense);
+  });
+
+  app.patch('/expenses/:id', (req, res) => {
+    const id = Number(req.params.id);
+    const expense = findExpenseById(id);
+
+    if (!expense) {
+      return res.status(404).json({ message: 'expense not found' });
+    }
+
+    if (req.body.userId && !findUserById(Number(req.body.userId))) {
+      return res.status(404).json({ message: 'user not found' });
+    }
+
+    Object.assign(expense, req.body);
+
+    if (req.body.userId) {
+      expense.userId = Number(req.body.userId);
+    }
+
+    return res.json(expense);
+  });
+
+  app.delete('/expenses/:id', (req, res) => {
+    const id = Number(req.params.id);
+    const expenseIndex = expenses.findIndex((expense) => expense.id === id);
+
+    if (expenseIndex === -1) {
+      return res.status(404).json({ message: 'expense not found' });
+    }
+
+    expenses.splice(expenseIndex, 1);
+
+    return res.sendStatus(204);
+  });
+
+  return app;
 }
 
 module.exports = {
