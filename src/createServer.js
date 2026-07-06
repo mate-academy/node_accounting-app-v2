@@ -12,14 +12,21 @@ function createServer() {
   let nextUserId = 1;
   let nextExpenseId = 1;
 
+  const findUserById = (id) => users.find((user) => user.id === id);
+
+  const findExpenseById = (id) => expenses.find((expense) => expense.id === id);
+
   app.post('/users', (req, res) => {
     const { name } = req.body;
 
     if (!name) {
-      return res.sendStatus(400);
+      return res.status(400).json({ message: 'name is required' });
     }
 
-    const user = { id: nextUserId++, name };
+    const user = {
+      id: nextUserId++,
+      name,
+    };
 
     users.push(user);
 
@@ -32,42 +39,57 @@ function createServer() {
 
   app.get('/users/:id', (req, res) => {
     const id = Number(req.params.id);
-    const user = users.find((currentUser) => currentUser.id === id);
+    const user = findUserById(id);
 
     if (!user) {
-      return res.sendStatus(404);
+      return res.status(404).json({ message: 'user not found' });
     }
+
+    return res.json(user);
+  });
+
+  app.put('/users/:id', (req, res) => {
+    const id = Number(req.params.id);
+    const user = findUserById(id);
+    const { name } = req.body;
+
+    if (!user) {
+      return res.status(404).json({ message: 'user not found' });
+    }
+
+    if (!name) {
+      return res.status(400).json({ message: 'name is required' });
+    }
+
+    user.name = name;
 
     return res.json(user);
   });
 
   app.patch('/users/:id', (req, res) => {
     const id = Number(req.params.id);
-    const user = users.find((currentUser) => currentUser.id === id);
+    const user = findUserById(id);
+    const { name } = req.body;
 
     if (!user) {
-      return res.sendStatus(404);
+      return res.status(404).json({ message: 'user not found' });
     }
 
-    if (!req.body.name) {
-      return res.sendStatus(400);
+    if (!name) {
+      return res.status(400).json({ message: 'name is required' });
     }
 
-    user.name = req.body.name;
+    user.name = name;
 
     return res.json(user);
   });
 
-  app.put('/users/:id', (req, res) => {
-    return res.sendStatus(404);
-  });
-
   app.delete('/users/:id', (req, res) => {
     const id = Number(req.params.id);
-    const userIndex = users.findIndex((currentUser) => currentUser.id === id);
+    const userIndex = users.findIndex((user) => user.id === id);
 
     if (userIndex === -1) {
-      return res.sendStatus(404);
+      return res.status(404).json({ message: 'user not found' });
     }
 
     users.splice(userIndex, 1);
@@ -79,23 +101,25 @@ function createServer() {
     const { userId, spentAt, title, amount, category, note } = req.body;
 
     if (!userId || !spentAt || !title || !amount || !category) {
-      return res.sendStatus(400);
+      return res.status(400).json({
+        message: 'userId, spentAt, title, amount and category are required',
+      });
     }
 
-    const user = users.find((currentUser) => currentUser.id === userId);
+    const user = findUserById(Number(userId));
 
     if (!user) {
-      return res.sendStatus(400);
+      return res.status(400).json({ message: 'user not found' });
     }
 
     const expense = {
       id: nextExpenseId++,
-      userId,
+      userId: Number(userId),
       spentAt,
       title,
       amount,
       category,
-      note: note || '',
+      note,
     };
 
     expenses.push(expense);
@@ -128,7 +152,6 @@ function createServer() {
 
     if (categories) {
       const categoriesList = categories.split(',');
-
       const isExpenseInCategory = (expense) =>
         categoriesList.includes(expense.category);
 
@@ -140,10 +163,10 @@ function createServer() {
 
   app.get('/expenses/:id', (req, res) => {
     const id = Number(req.params.id);
-    const expense = expenses.find((currentExpense) => currentExpense.id === id);
+    const expense = findExpenseById(id);
 
     if (!expense) {
-      return res.sendStatus(404);
+      return res.status(404).json({ message: 'expense not found' });
     }
 
     return res.json(expense);
@@ -151,25 +174,31 @@ function createServer() {
 
   app.patch('/expenses/:id', (req, res) => {
     const id = Number(req.params.id);
-    const expense = expenses.find((currentExpense) => currentExpense.id === id);
+    const expense = findExpenseById(id);
 
     if (!expense) {
-      return res.sendStatus(404);
+      return res.status(404).json({ message: 'expense not found' });
+    }
+
+    if (req.body.userId && !findUserById(Number(req.body.userId))) {
+      return res.status(404).json({ message: 'user not found' });
     }
 
     Object.assign(expense, req.body);
+
+    if (req.body.userId) {
+      expense.userId = Number(req.body.userId);
+    }
 
     return res.json(expense);
   });
 
   app.delete('/expenses/:id', (req, res) => {
     const id = Number(req.params.id);
-    const expenseIndex = expenses.findIndex(
-      (currentExpense) => currentExpense.id === id,
-    );
+    const expenseIndex = expenses.findIndex((expense) => expense.id === id);
 
     if (expenseIndex === -1) {
-      return res.sendStatus(404);
+      return res.status(404).json({ message: 'expense not found' });
     }
 
     expenses.splice(expenseIndex, 1);
