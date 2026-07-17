@@ -215,7 +215,7 @@ describe('Expense', () => {
       });
 
       const response = await api
-        .get(`/expenses?userId=${userId}&categories=Electronics`)
+        .get(`/expenses?userId=${userId}&category=Electronics`)
         .expect(200)
         .expect('Content-Type', /application\/json/);
 
