@@ -22,27 +22,29 @@ function createServer() {
 
   app.get('/expenses', (req, res) => {
     const { userId, categories, from, to } = req.query;
-    let filterredExpenses = expenses;
+    let filteredExpenses = expenses;
 
     if (userId) {
-      filterredExpenses = filterredExpenses.filter(
+      filteredExpenses = filteredExpenses.filter(
         (expense) => expense.userId === +userId,
       );
     }
 
     if (categories) {
-      filterredExpenses = filterredExpenses.filter((e) => {
-        return categories.includes(e.category);
+      const categoryArr = categories.split(',');
+
+      filteredExpenses = filteredExpenses.filter((e) => {
+        return categoryArr.includes(e.category);
       });
     }
 
     if (from && to) {
-      filterredExpenses = filterredExpenses.filter(
+      filteredExpenses = filteredExpenses.filter(
         (expense) => expense.spentAt >= from && expense.spentAt <= to,
       );
     }
 
-    res.json(filterredExpenses);
+    res.json(filteredExpenses);
   });
 
   app.post('/users', (req, res) => {
