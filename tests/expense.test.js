@@ -1,7 +1,7 @@
 'use strict';
 
-const supertest = require('supertest');
-const { createServer } = require('../src/createServer');
+import supertest from 'supertest';
+import { createServer } from '../src/createServer.js';
 
 describe('Expense', () => {
   let server;
