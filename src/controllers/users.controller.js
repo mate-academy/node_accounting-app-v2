@@ -1,12 +1,12 @@
-import * as usersService from '../services/users.service.js';
+const usersService = require('../services/users.service');
 
-export function getAll(req, res) {
+function getAll(req, res) {
   const users = usersService.getAll();
 
   res.json(users);
 }
 
-export function getById(req, res) {
+function getById(req, res) {
   const userId = Number(req.params.id);
 
   if (!(userId >= 0)) {
@@ -22,7 +22,7 @@ export function getById(req, res) {
   }
 }
 
-export function create(req, res) {
+function create(req, res) {
   const { name } = req.body;
 
   if (!name) {
@@ -34,7 +34,7 @@ export function create(req, res) {
   res.status(201).json(user);
 }
 
-export function deleteById(req, res) {
+function deleteById(req, res) {
   const user = usersService.deleteById(Number(req.params.id));
 
   if (user) {
@@ -44,7 +44,7 @@ export function deleteById(req, res) {
   }
 }
 
-export function update(req, res) {
+function update(req, res) {
   const id = Number(req.params.id);
   const { name } = req.body;
 
@@ -60,3 +60,11 @@ export function update(req, res) {
     res.sendStatus(404);
   }
 }
+
+module.exports = {
+  create,
+  getAll,
+  getById,
+  update,
+  deleteById,
+};

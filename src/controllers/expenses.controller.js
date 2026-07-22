@@ -1,6 +1,6 @@
-import * as expensesService from '../services/expenses.service.js';
+const expensesService = require('../services/expenses.service');
 
-export function getAll(req, res) {
+function getAll(req, res) {
   const { userId, categories, from, to } = req.query;
   let query = {
     userId,
@@ -24,7 +24,7 @@ export function getAll(req, res) {
   res.json(users);
 }
 
-export function getById(req, res) {
+function getById(req, res) {
   const expenseId = Number(req.params.id);
 
   if (!(expenseId >= 0)) {
@@ -40,7 +40,7 @@ export function getById(req, res) {
   }
 }
 
-export function create(req, res) {
+function create(req, res) {
   const { userId, spentAt, title, amount, category, note } = req.body;
 
   const expense = {
@@ -65,7 +65,7 @@ export function create(req, res) {
   }
 }
 
-export function deleteById(req, res) {
+function deleteById(req, res) {
   const expense = expensesService.deleteById(Number(req.params.id));
 
   if (expense) {
@@ -75,7 +75,7 @@ export function deleteById(req, res) {
   }
 }
 
-export function update(req, res) {
+function update(req, res) {
   const id = Number(req.params.id);
   const fields = ['spentAt', 'title', 'amount', 'category', 'note'];
   const updateExpense = {};
@@ -94,3 +94,11 @@ export function update(req, res) {
     res.sendStatus(404);
   }
 }
+
+module.exports = {
+  create,
+  getAll,
+  getById,
+  update,
+  deleteById,
+};

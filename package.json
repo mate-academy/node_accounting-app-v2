@@ -3,14 +3,13 @@
   "version": "1.0.0",
   "description": "Node.js accounting app",
   "main": "src/index.js",
-  "type": "module",
   "scripts": {
     "init": "mate-scripts init",
     "start": "node src/main.js",
     "dev": "node --watch src/main.js",
     "lint": "npm run format && mate-scripts lint",
     "format": "prettier --ignore-path .prettierignore --write './src/**/*.{js,ts}'",
-    "test:only": "NODE_OPTIONS=--experimental-vm-modules mate-scripts test",
+    "test:only": "mate-scripts test",
     "update": "mate-scripts update",
     "postinstall": "npm run update",
     "test": "npm run lint && npm run test:only"

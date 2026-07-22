@@ -1,10 +1,10 @@
-import * as userService from './users.service.js';
+const userService = require('./users.service');
 
-export const expenses = [];
+const expenses = [];
 
 let maxExpenseId = -1;
 
-export function getAll(query) {
+function getAll(query) {
   if (!query) {
     return expenses;
   } else {
@@ -30,11 +30,11 @@ export function getAll(query) {
   }
 }
 
-export function getById(id) {
+function getById(id) {
   return expenses.find((expense) => expense.id === id);
 }
 
-export function create(expense) {
+function create(expense) {
   const id = ++maxExpenseId;
   const newExpense = { ...expense, id, spentAt: new Date(expense.spentAt) };
 
@@ -49,7 +49,7 @@ export function create(expense) {
   return newExpense;
 }
 
-export function deleteById(id) {
+function deleteById(id) {
   const index = expenses.findIndex((u) => u.id === id);
 
   if (index === -1) {
@@ -61,7 +61,7 @@ export function deleteById(id) {
   return expense;
 }
 
-export function update(id, updateExpense) {
+function update(id, updateExpense) {
   const expense = expenses.find((exp) => exp.id === id);
 
   if (!expense) {
@@ -70,3 +70,12 @@ export function update(id, updateExpense) {
 
   return Object.assign(expense, updateExpense);
 }
+
+module.exports = {
+  expenses,
+  create,
+  getAll,
+  getById,
+  update,
+  deleteById,
+};

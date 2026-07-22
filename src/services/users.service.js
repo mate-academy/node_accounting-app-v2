@@ -1,16 +1,16 @@
-export const users = [];
+const users = [];
 
 let maxUserId = -1;
 
-export function getAll() {
+function getAll() {
   return users;
 }
 
-export function getById(id) {
+function getById(id) {
   return users.find((user) => user.id === id);
 }
 
-export function create(name) {
+function create(name) {
   const id = ++maxUserId;
   const user = { id, name };
 
@@ -19,7 +19,7 @@ export function create(name) {
   return user;
 }
 
-export function deleteById(id) {
+function deleteById(id) {
   const index = users.findIndex((u) => u.id === id);
 
   if (index === -1) {
@@ -31,7 +31,7 @@ export function deleteById(id) {
   return user;
 }
 
-export function update({ id, name }) {
+function update({ id, name }) {
   const user = users.find((u) => u.id === id);
 
   if (!user) {
@@ -40,3 +40,12 @@ export function update({ id, name }) {
 
   return Object.assign(user, { name });
 }
+
+module.exports = {
+  users,
+  create,
+  getAll,
+  getById,
+  update,
+  deleteById,
+};

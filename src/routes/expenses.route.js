@@ -1,7 +1,7 @@
-import { Router } from 'express';
-import * as expenses from '../controllers/expenses.controller.js';
+const { Router } = require('express');
+const expenses = require('../controllers/expenses.controller');
 
-export const router = Router();
+const router = Router();
 
 router.get('/', expenses.getAll);
 
@@ -12,3 +12,5 @@ router.post('/', expenses.create);
 router.delete('/:id', expenses.deleteById);
 
 router.patch('/:id', expenses.update);
+
+module.exports = router;
