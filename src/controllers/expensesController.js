@@ -17,7 +17,7 @@ function createExpensesController(expensesService) {
       expenseData.note == null
     ) {
       return res.status(400).json({
-        message: 'Bad request',
+        message: 'Bad Request',
       });
     }
 
@@ -25,7 +25,7 @@ function createExpensesController(expensesService) {
 
     if (!createdExpense) {
       return res.status(400).json({
-        message: 'Bad request',
+        message: 'Bad Request',
       });
     }
 
@@ -33,12 +33,20 @@ function createExpensesController(expensesService) {
   };
 
   const getOne = (req, res) => {
-    const expenseId = +req.params.id;
+    const expenseId = Number(req.params.id);
+
+    if (Number.isNaN(expenseId)) {
+      return res.status(400).json({
+        message: 'Bad Request',
+      });
+    }
 
     const expense = expensesService.getExpenseById(expenseId);
 
     if (!expense) {
-      return res.status(404).json('Not Found');
+      return res.status(404).json({
+        message: 'Not Found',
+      });
     }
 
     return res.status(200).json(expense);
@@ -60,19 +68,17 @@ function createExpensesController(expensesService) {
 
   const update = (req, res) => {
     const expenseId = +req.params.id;
-    const { title } = req.body;
+    const expense = expensesService.updateExpense(expenseId, req.body);
 
-    if (title == null) {
+    if (!expense) {
       return res.status(404).json({
         message: 'Not Found',
       });
     }
 
-    const expense = expensesService.updateExpense(expenseId, req.body);
-
-    if (!expense) {
-      return res.status(404).json({
-        message: 'Not found',
+    if (req.body.title == null) {
+      return res.status(400).json({
+        message: 'Bad Request',
       });
     }
 

@@ -10,7 +10,7 @@ function createUsersController(usersService) {
 
     if (!name) {
       return res.status(400).json({
-        message: 'User name not correct',
+        message: 'Bad Request',
       });
     }
 
@@ -32,7 +32,7 @@ function createUsersController(usersService) {
 
     if (!user) {
       return res.status(404).json({
-        message: 'Not found',
+        message: 'Not Found',
       });
     }
 
@@ -46,7 +46,7 @@ function createUsersController(usersService) {
 
     if (!deleted) {
       return res.status(404).json({
-        message: 'Not found',
+        message: 'Not Found',
       });
     }
 
@@ -59,7 +59,7 @@ function createUsersController(usersService) {
 
     if (!name) {
       return res.status(400).json({
-        message: 'Bad request',
+        message: 'Bad Request',
       });
     }
 
@@ -67,7 +67,7 @@ function createUsersController(usersService) {
 
     if (!userToUpdate) {
       return res.status(404).json({
-        message: 'Not found',
+        message: 'Not Found',
       });
     }
 
