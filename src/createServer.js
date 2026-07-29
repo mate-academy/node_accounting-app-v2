@@ -110,6 +110,12 @@ function createServer() {
   app.post('/expenses', (req, res) => {
     const { userId, title, amount, category, note, spentAt } = req.body;
 
+    if (!title || amount === undefined || !category) {
+      return res.status(400).json({
+        error: 'Title, amount and category are required',
+      });
+    }
+
     const userFinded = dataBaseUsers.find((user) => user.id === userId);
 
     if (!userFinded) {
