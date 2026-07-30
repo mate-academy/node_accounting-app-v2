@@ -1,13 +1,29 @@
 'use strict';
 
-// const express = require('express');
+const express = require('express');
+const cors = require('cors');
+const routes = require('./api/routes.js');
 
-function createServer() {
-  // Use express to create a server
-  // Add a routes to the server
-  // Return the server (express app)
-}
+// It isneeded for tests to reset data before each test
+const usersService = require('./api/users/users.service.js');
+const expensesService = require('./api/expenses/expenses.service.js');
 
-module.exports = {
-  createServer,
+const createServer = function () {
+  // It is needed for tests to reset data before each test
+  usersService.reset();
+  expensesService.reset();
+
+  const app = express();
+
+  app.use(cors());
+  app.use(express.json());
+
+  // routes
+  for (const routeKey in routes) {
+    app.use(`/${routeKey}`, routes[routeKey]);
+  }
+
+  return app;
 };
+
+module.exports = { createServer };
