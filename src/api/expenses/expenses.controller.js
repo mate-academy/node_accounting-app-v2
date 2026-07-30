@@ -60,7 +60,7 @@ const update = async (req, res) => {
         return res.sendStatus(404);
     }
 
-    if (!isValidParams(req.body, true)) {
+    if (!req.body || !isValidParams(req.body, true)) {
         return res.sendStatus(400);
     }
 
@@ -78,6 +78,8 @@ const update = async (req, res) => {
 };
 
 const isValidParams = (params, isUpdate = false) => {
+    if (!params) return false;
+
     const { title, amount, category, userId, spentAt, note } = params;
 
     if (isUpdate) {

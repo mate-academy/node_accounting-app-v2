@@ -43,12 +43,12 @@ const deleteOne = async (req, res) => {
 const update = async (req, res) => {
   const user = await usersService.getById(req.params.id);
 
-  if (!isValidParams(req.body)) {
-    return res.sendStatus(400);
-  }
-
   if (!user) {
     return res.sendStatus(404);
+  }
+
+  if (!req.body || !isValidParams(req.body)) {
+    return res.sendStatus(400);
   }
 
   const updatedUser = await usersService.update({
@@ -60,6 +60,8 @@ const update = async (req, res) => {
 };
 
 const isValidParams = (params) => {
+  if (!params) return false;
+
   const { name } = params;
 
   return Boolean(name);
