@@ -1,6 +1,5 @@
 const { generateAnyIdNumber } = require('../../helpers');
 
-
 let expenses = [];
 
 function reset() {
