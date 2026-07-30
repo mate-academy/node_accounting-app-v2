@@ -60,7 +60,9 @@ const update = async (req, res) => {
 };
 
 const isValidParams = (params) => {
-  if (!params) return false;
+  if (!params) {
+    return false;
+  }
 
   const { name } = params;
 

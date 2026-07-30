@@ -78,7 +78,9 @@ const update = async (req, res) => {
 };
 
 const isValidParams = (params, isUpdate = false) => {
-    if (!params) return false;
+    if (!params) {
+        return false;
+    }
 
     const { title, amount, category, userId, spentAt, note } = params;
 
