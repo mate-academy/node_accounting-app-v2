@@ -17,13 +17,11 @@ const getOne = async (req, res) => {
 };
 
 const create = async (req, res) => {
-  const { name } = req.body;
-
-  if (!name) {
+  if (!isValidParams(req.body)) {
     return res.sendStatus(400);
   }
 
-  const user = await usersService.create(name);
+  const user = await usersService.create(req.body.name);
 
   res.status(201).json(user);
 };
@@ -43,8 +41,11 @@ const deleteOne = async (req, res) => {
 };
 
 const update = async (req, res) => {
-  const { name } = req.body;
   const user = await usersService.getById(req.params.id);
+
+  if (!isValidParams(req.body)) {
+    return res.sendStatus(400);
+  }
 
   if (!user) {
     return res.sendStatus(404);
@@ -52,10 +53,16 @@ const update = async (req, res) => {
 
   const updatedUser = await usersService.update({
     id: req.params.id,
-    name,
+    name: req.body.name,
   });
 
   res.json(updatedUser);
+};
+
+const isValidParams = (params) => {
+  const { name } = params;
+
+  return Boolean(name);
 };
 
 module.exports = {
