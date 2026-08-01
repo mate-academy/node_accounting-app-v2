@@ -31,14 +31,6 @@ const getOne = (req, res) => {
 const create = (req, res) => {
   const { userId, spentAt, title, amount, category, note } = req.body;
 
-  const user = usersService.getById(userId);
-
-  if (!user) {
-    res.sendStatus(400);
-
-    return;
-  }
-
   if (
     userId === undefined ||
     !spentAt ||
@@ -46,6 +38,14 @@ const create = (req, res) => {
     amount === undefined ||
     !category
   ) {
+    res.sendStatus(400);
+
+    return;
+  }
+
+  const user = usersService.getById(userId);
+
+  if (!user) {
     res.sendStatus(400);
 
     return;
