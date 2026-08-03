@@ -1,12 +1,12 @@
-const expenss = require('express');
-const userControler = require('./../controlers/user.controler');
+const express = require('express');
+const userController = require('../controllers/user.controller');
 
-const router = expenss.Router();
+const router = express.Router();
 
-router.get('/', userControler.get);
-router.get('/:id', userControler.getOne);
-router.post('/', userControler.create);
-router.delete('/:id', userControler.remove);
-router.patch('/:id', userControler.update);
+router.get('/', userController.get);
+router.get('/:id', userController.getOne);
+router.post('/', userController.create);
+router.delete('/:id', userController.remove);
+router.patch('/:id', userController.update);
 
 module.exports = { router };

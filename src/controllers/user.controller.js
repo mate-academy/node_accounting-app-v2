@@ -1,4 +1,4 @@
-const userService = require('./../services/user.service');
+const userService = require('../services/user.service');
 
 const get = (req, res) => res.send(userService.getAll());
 const getOne = (req, res) => {
@@ -52,7 +52,7 @@ const update = (req, res) => {
   }
 
   if (typeof name !== 'string') {
-    res.sendStatus(422);
+    res.sendStatus(400);
 
     return;
   }

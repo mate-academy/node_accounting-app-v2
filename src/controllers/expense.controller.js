@@ -1,18 +1,5 @@
-const expenseService = require('./../services/expense.service');
-const userService = require('./../services/user.service');
-
-// function get(req, res) {
-//   const { userId, categories, from, to } = req.query;
-
-//   res.json(
-//     expenseService.getAll({
-//       userId,
-//       categories,
-//       from,
-//       to,
-//     }),
-//   );
-// }
+const expenseService = require('../services/expense.service');
+const userService = require('../services/user.service');
 
 const get = (req, res) => {
   const { userId, categories, from, to } = req.query;
