@@ -1,3 +1,16 @@
+const { z } = require('zod');
+
+const expenseDataSchema = z.object({
+  userId: z.number(),
+  spentAt: z.string(),
+  title: z.string().min(1, 'Title is required'),
+  amount: z.number().positive(),
+  category: z.string().optional(),
+  note: z.string().optional(),
+});
+
+const updateExpenseSchema = expenseDataSchema.partial();
+
 function createExpensesController(expensesService) {
   const getAll = (req, res) => {
     const expenses = expensesService.getAllExpenses(req.query);
@@ -6,20 +19,15 @@ function createExpensesController(expensesService) {
   };
 
   const create = (req, res) => {
-    const expenseData = req.body;
+    const validationResult = expenseDataSchema.safeParse(req.body);
 
-    if (
-      expenseData.userId == null ||
-      expenseData.spentAt == null ||
-      expenseData.title == null ||
-      expenseData.amount == null ||
-      expenseData.category == null ||
-      expenseData.note == null
-    ) {
+    if (!validationResult.success) {
       return res.status(400).json({
         message: 'Bad Request',
       });
     }
+
+    const expenseData = validationResult.data;
 
     const createdExpense = expensesService.createExpense(expenseData);
 
@@ -67,18 +75,30 @@ function createExpensesController(expensesService) {
   };
 
   const update = (req, res) => {
-    const expenseId = +req.params.id;
-    const expense = expensesService.updateExpense(expenseId, req.body);
+    const expenseId = Number(req.params.id);
+
+    if (Number.isNaN(expenseId)) {
+      return res.status(400).json({
+        message: 'Bad Request',
+      });
+    }
+
+    const validationResult = updateExpenseSchema.safeParse(req.body);
+
+    if (!validationResult.success) {
+      return res.status(400).json({
+        message: 'Bad Request',
+      });
+    }
+
+    const expense = expensesService.updateExpense(
+      expenseId,
+      validationResult.data,
+    );
 
     if (!expense) {
       return res.status(404).json({
         message: 'Not Found',
-      });
-    }
-
-    if (req.body.title == null) {
-      return res.status(400).json({
-        message: 'Bad Request',
       });
     }
 

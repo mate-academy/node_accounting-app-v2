@@ -18,7 +18,8 @@
   "license": "GPL-3.0",
   "dependencies": {
     "cors": "^2.8.5",
-    "express": "^4.19.2"
+    "express": "^4.19.2",
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@mate-academy/eslint-config": "latest",
