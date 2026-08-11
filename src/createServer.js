@@ -42,8 +42,71 @@ function createServer() {
     res.send(someUser);
   });
 
+  app.delete('/users/:id', (req, res) => {
+    const userId = req.params.id;
+
+    const deletedUser = usersService.deleteUserById(userId, users);
+
+    if (!deletedUser) {
+      res.sendStatus(404);
+
+      return;
+    }
+
+    res.send(deletedUser);
+  });
+
+  app.patch('/users/:id', (req, res) => {
+    const userId = req.params.id;
+    const name = req.body.name;
+
+    if (!name) {
+      req.sendStatus(400);
+    }
+
+    const updateUser = usersService.patchItem(userId, name, users);
+
+    if (!updateUser) {
+      res.sendStatus(404);
+      res.send('Not found such user');
+
+      return;
+    }
+
+    res.send(updateUser);
+  });
+
+  // expenses
+
   app.get('/expenses', (req, res) => {
     res.send(expenses);
+  });
+
+  app.post('/expenses', (req, res) => {
+    const body = req.body;
+
+    if (
+      !body.userId ||
+      !body.spentAt ||
+      !body.title ||
+      !body.amount ||
+      !body.category ||
+      !body.note
+    ) {
+      res.sendStatus(400);
+
+      return;
+    }
+
+    const newExpense = expensesService.createExpense(body, expenses);
+
+    if (!newExpense) {
+      res.sendStatus(404);
+
+      return;
+    }
+
+    res.send(newExpense);
   });
 
   app.post('/expenses', (req, res) => {

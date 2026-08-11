@@ -6,3 +6,5 @@ export function updateExpenseFunction(body, expense, updateExpenseIndex) {
 }
 
 export const functions = { updateExpenseFunction };
+
+// export default updateExpenseFunction;

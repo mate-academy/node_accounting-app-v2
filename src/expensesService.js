@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 
-import { functions } from './updateExpenseFunction.js';
+import { functions } from './updateExpenseFunction.cjs';
 
 // const functions = require('./updateExpenseFunction');
 

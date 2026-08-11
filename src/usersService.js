@@ -18,6 +18,52 @@ export function getUserById(userId, users) {
   return user;
 }
 
+export function deleteUserById(userId, data) {
+  const index = data.findIndex((todo) => todo.id === userId);
+
+  if (index === -1) {
+    return;
+  }
+
+  const [item] = data.splice(index, 1);
+
+  if (!item) {
+    return;
+  }
+
+  return item;
+}
+
+export function patchItem(userId, name, data) {
+  const itemIndex = data.findIndex((el) => el.id === userId);
+
+  if (itemIndex === -1) {
+    return;
+  }
+
+  data[itemIndex].name = name;
+
+  return {
+    id: userId,
+    name,
+  };
+
+  // data.map((el) => {
+  //   if (el.id === userId) {
+  //     console.log(el.id);
+  //     console.log(userId);
+  //     console.log(el.id === userId);
+
+  //     return {
+  //       id: userId,
+  //       name: name,
+  //     };
+  //   }
+
+  //   return el;
+  // });
+}
+
 export function addOneUser(name, users) {
   const user = { id: uuidv4(), name };
 
@@ -43,6 +89,7 @@ export const usersService = {
   getUserById,
   create,
   addOneUser,
+  patchItem,
   deleteById,
   // update,
   // deleteMany,
