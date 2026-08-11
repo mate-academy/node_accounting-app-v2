@@ -13,19 +13,57 @@ export function create(title, users) {
 }
 
 export function getUserById(userId, users) {
-  console.log(userId, '-- userId');
-  console.log(userId === '1bd96089-3680-408a-a827-cbecf04c9e58');
-  console.log(users);
-
   const user = users.find((el) => {
-    console.log(el.id);
-    console.log('-------');
-    console.log(userId);
-
     return el.id === userId;
   });
 
   return user;
+}
+
+export function deleteUserById(userId, data) {
+  const index = data.findIndex((todo) => todo.id === userId);
+
+  if (index === -1) {
+    return;
+  }
+
+  const [item] = data.splice(index, 1);
+
+  if (!item) {
+    return;
+  }
+
+  return item;
+}
+
+export function patchItem(userId, name, data) {
+  const itemIndex = data.findIndex((el) => el.id === userId);
+
+  if (itemIndex === -1) {
+    return;
+  }
+
+  data[itemIndex].name = name;
+
+  return {
+    id: userId,
+    name,
+  };
+
+  // data.map((el) => {
+  //   if (el.id === userId) {
+  //     console.log(el.id);
+  //     console.log(userId);
+  //     console.log(el.id === userId);
+
+  //     return {
+  //       id: userId,
+  //       name: name,
+  //     };
+  //   }
+
+  //   return el;
+  // });
 }
 
 export function addOneUser(name, users) {
@@ -53,6 +91,7 @@ export const usersService = {
   getUserById,
   create,
   addOneUser,
+  patchItem,
   deleteById,
   // update,
   // deleteMany,
