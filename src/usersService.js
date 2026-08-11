@@ -13,17 +13,7 @@ export function create(title, users) {
 }
 
 export function getUserById(userId, users) {
-  console.log(userId, '-- userId');
-  console.log(userId === '1bd96089-3680-408a-a827-cbecf04c9e58');
-  console.log(users);
-
-  const user = users.find((el) => {
-    console.log(el.id);
-    console.log('-------');
-    console.log(userId);
-
-    return el.id === userId;
-  });
+  const user = users.find((el) => el.id === userId);
 
   return user;
 }

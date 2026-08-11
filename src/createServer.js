@@ -4,6 +4,7 @@ const express = require('express');
 // const Router = require('express');
 const cors = require('cors');
 const usersService = require('./usersService');
+const expensesService = require('./expensesService');
 
 function createServer() {
   const users = [];
@@ -30,15 +31,9 @@ function createServer() {
   app.get('/users/:id', (req, res) => {
     const userId = req.params.id;
 
-    console.log(typeof userId);
-
     const someUser = usersService.getUserById(userId, users);
 
-    console.log(someUser, 'user');
-
     if (someUser === undefined) {
-      console.log('user is udefined');
-
       res.sendStatus(404);
 
       return;
@@ -51,12 +46,98 @@ function createServer() {
     res.send(expenses);
   });
 
+  app.post('/expenses', (req, res) => {
+    const body = req.body;
+
+    if (
+      !body.userId ||
+      !body.spentAt ||
+      !body.title ||
+      !body.amount ||
+      !body.category ||
+      !body.note
+    ) {
+      res.sendStatus(400);
+
+      return;
+    }
+
+    const newExpense = expensesService.createExpense(body, expenses);
+
+    if (!newExpense) {
+      res.sendStatus(404);
+
+      return;
+    }
+
+    res.send(newExpense);
+  });
+
   app.get('/expenses/:id', (req, res) => {
     const id = req.params.id;
 
-    const someUser = usersService.getAll(id, expenses);
+    if (!id) {
+      req.sendStatus(400);
+    }
 
-    res.send(someUser);
+    const expense = expensesService.getExpenseById(id, expenses);
+
+    if (!expense) {
+      res.sendStatus(400);
+
+      return;
+    }
+
+    res.send(expense);
+  });
+
+  app.delete('/expenses/:id', (req, res) => {
+    const id = req.params.id;
+
+    if (!id) {
+      req.sendStatus(400);
+    }
+
+    const deletedExpense = expensesService.getExpenseById(id, expenses);
+
+    if (!deletedExpense) {
+      res.sendStatus(400);
+
+      return;
+    }
+
+    res.send(deletedExpense);
+  });
+
+  app.patch('/expenses/:id', (req, res) => {
+    const id = req.params.id;
+    const body = req.body;
+
+    if (!id) {
+      req.sendStatus(400);
+    }
+
+    if (
+      !body.spentAt ||
+      !body.title ||
+      !body.amount ||
+      !body.category ||
+      !body.note
+    ) {
+      req.statusCode(400);
+    }
+
+    const updatedExpense = expensesService.updateExpenseById(
+      id,
+      body,
+      expenses,
+    );
+
+    if (!updatedExpense) {
+      req.sendStatus(404);
+    }
+
+    req.send(updatedExpense);
   });
 
   return app;
