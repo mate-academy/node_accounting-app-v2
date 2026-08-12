@@ -86,12 +86,12 @@ function createServer() {
     const body = req.body;
 
     if (
-      !body.userId ||
-      !body.spentAt ||
-      !body.title ||
-      !body.amount ||
-      !body.category ||
-      !body.note
+      body.userId === undefined ||
+      body.spentAt === undefined ||
+      body.title === undefined ||
+      body.amount === undefined ||
+      body.category === undefined ||
+      body.note === undefined
     ) {
       res.sendStatus(400);
 
@@ -181,6 +181,7 @@ function createServer() {
     }
 
     if (
+      !body.userId ||
       !body.spentAt ||
       !body.title ||
       !body.amount ||

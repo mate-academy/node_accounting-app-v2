@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 
-import { functions } from './updateExpenseFunction.cjs';
+// import { functions } from './updateExpenseFunction.js';
 
 // const functions = require('./updateExpenseFunction');
 
@@ -37,22 +37,22 @@ export function deleteExpenseById(id, expenses) {
 export function updateExpenseById(id, body, expense) {
   const updateExpenseIndex = expense.findIndex((el) => el.id === id);
 
-  functions.updateExpenseFunction(body, expense, updateExpenseIndex);
+  // functions.updateExpenseFunction(body, expense, updateExpenseIndex);
 
-  // expense[updateExpenseIndex].spentAt =
-  //   body.spentAt || expense[updateExpenseIndex].spentAt;
+  expense[updateExpenseIndex].spentAt =
+    body.spentAt || expense[updateExpenseIndex].spentAt;
 
-  // expense[updateExpenseIndex].title =
-  //   body.title || expense[updateExpenseIndex].title;
+  expense[updateExpenseIndex].title =
+    body.title || expense[updateExpenseIndex].title;
 
-  // expense[updateExpenseIndex].amount =
-  //   body.amount || expense[updateExpenseIndex].amount;
+  expense[updateExpenseIndex].amount =
+    body.amount || expense[updateExpenseIndex].amount;
 
-  // expense[updateExpenseIndex].category =
-  //   body.category || expense[updateExpenseIndex].category;
+  expense[updateExpenseIndex].category =
+    body.category || expense[updateExpenseIndex].category;
 
-  // expense[updateExpenseIndex].note =
-  //   body.note || expense[updateExpenseIndex].note;
+  expense[updateExpenseIndex].note =
+    body.note || expense[updateExpenseIndex].note;
 
   return expense[updateExpenseIndex];
 }
