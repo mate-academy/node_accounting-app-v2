@@ -1,8 +1,6 @@
-const { v4: uuidv4 } = require('uuid');
-
 function createExpense(body, expenses) {
   const expense = {
-    id: uuidv4(),
+    id: Date.now(),
     userId: body.userId,
     spentAt: body.spentAt,
     title: body.title,
@@ -17,13 +15,13 @@ function createExpense(body, expenses) {
 }
 
 function getExpenseById(id, expenses) {
-  const seekExpense = expenses.find((el) => el.id === id);
+  const seekExpense = expenses.find((el) => el.id === +id);
 
   return seekExpense;
 }
 
 function deleteExpenseById(id, expenses) {
-  const index = expenses.findIndex((el) => el.id === id);
+  const index = expenses.findIndex((el) => el.id === +id);
 
   if (index === -1) {
     return;
@@ -31,13 +29,14 @@ function deleteExpenseById(id, expenses) {
 
   const item = expenses.splice(index, 1);
 
-  return item;
+  return item[0];
 }
 
 function updateExpenseById(id, body, expense) {
-  const updateExpenseIndex = expense.findIndex((el) => el.id === id);
+  const updateExpenseIndex = expense.findIndex((el) => el.id === +id);
 
-  // functions.updateExpenseFunction(body, expense, updateExpenseIndex);
+  expense[updateExpenseIndex].userId =
+    body.userId || expense[updateExpenseIndex].userId;
 
   expense[updateExpenseIndex].spentAt =
     body.spentAt || expense[updateExpenseIndex].spentAt;

@@ -1,11 +1,9 @@
-const { v4: uuidv4 } = require('uuid');
-
 function getAll(users) {
   return users;
 }
 
 function create(title, users) {
-  const user = { id: uuidv4(), title, completed: false };
+  const user = { id: Date.now(), title, completed: false };
 
   users.push(user);
 
@@ -13,19 +11,19 @@ function create(title, users) {
 }
 
 function getUserById(userId, users) {
-  const user = users.find((el) => el.id === userId);
+  const user = users.find((el) => el.id === +userId);
 
   return user;
 }
 
 function deleteUserById(userId, data) {
-  const index = data.findIndex((todo) => todo.id === userId);
+  const index = data.findIndex((todo) => todo.id === +userId);
 
   if (index === -1) {
     return;
   }
 
-  const [item] = data.splice(index, 1);
+  const item = data.splice(index, 1);
 
   if (!item) {
     return;
@@ -35,7 +33,7 @@ function deleteUserById(userId, data) {
 }
 
 function patchItem(userId, name, data) {
-  const itemIndex = data.findIndex((el) => el.id === userId);
+  const itemIndex = data.findIndex((el) => String(el.id) === userId);
 
   if (itemIndex === -1) {
     return;
@@ -50,7 +48,7 @@ function patchItem(userId, name, data) {
 }
 
 function addOneUser(name, users) {
-  const user = { id: uuidv4(), name };
+  const user = { id: Date.now(), name };
 
   users.push(user);
 
@@ -58,7 +56,7 @@ function addOneUser(name, users) {
 }
 
 function deleteById(id, users) {
-  const index = users.findIndex((el) => el.id === id);
+  const index = users.findIndex((el) => el.id === +id);
 
   if (index === -1) {
     return;

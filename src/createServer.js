@@ -21,11 +21,15 @@ function createServer() {
   });
 
   app.get('/users', (req, res) => {
-    res.status(201).json(users);
+    res.status(200).json(users);
   });
 
   app.post('/users', (req, res) => {
     const user = req.body.name;
+
+    if (user === undefined) {
+      res.sendStatus(400);
+    }
 
     const createdUser = usersService.addOneUser(user, users);
 
@@ -49,14 +53,16 @@ function createServer() {
       return;
     }
 
-    res.status(201).json(someUser);
+    res.status(200).json(someUser);
   });
 
   app.delete('/users/:id', (req, res) => {
     const userId = req.params.id;
 
-    if (userId) {
+    if (userId === undefined) {
       res.sendStatus(400);
+
+      return;
     }
 
     const deletedUser = usersService.deleteUserById(userId, users);
@@ -67,33 +73,38 @@ function createServer() {
       return;
     }
 
-    res.status(201).json(deletedUser);
+    res.status(204).json(deletedUser[0]);
   });
 
   app.patch('/users/:id', (req, res) => {
     const userId = req.params.id;
     const name = req.body.name;
 
-    if (!name || !userId) {
-      req.sendStatus(400);
+    if (!name) {
+      res.sendStatus(404);
+
+      return;
+    }
+
+    if (!userId) {
+      res.sendStatus(400);
+
+      return;
     }
 
     const updateUser = usersService.patchItem(userId, name, users);
 
     if (!updateUser) {
-      res.sendStatus(404);
-      res.send('Not found such user');
+      res.status(404);
 
       return;
     }
 
-    res.status(201).json(updateUser);
+    res.status(200).json(updateUser);
   });
 
-  // expenses
-
   app.get('/expenses', (req, res) => {
-    res.send(expenses);
+    res.status(200).json(expenses);
   });
 
   app.post('/expenses', (req, res) => {
@@ -114,7 +125,7 @@ function createServer() {
     const newExpense = expensesService.createExpense(body, expenses);
 
     if (!newExpense) {
-      res.sendStatus(404);
+      res.status(400);
 
       return;
     }
@@ -122,56 +133,34 @@ function createServer() {
     res.status(201).json(newExpense);
   });
 
-  // app.post('/expenses', (req, res) => {
-  //   const body = req.body;
-
-  //   if (
-  //     !body.userId ||
-  //     !body.spentAt ||
-  //     !body.title ||
-  //     !body.amount ||
-  //     !body.category ||
-  //     !body.note
-  //   ) {
-  //     res.sendStatus(400);
-
-  //     return;
-  //   }
-
-  //   const newExpense = expensesService.createExpense(body, expenses);
-
-  //   if (!newExpense) {
-  //     res.sendStatus(404);
-
-  //     return;
-  //   }
-
-  //   res.send(newExpense);
-  // });
 
   app.get('/expenses/:id', (req, res) => {
     const id = req.params.id;
 
     if (!id) {
-      req.sendStatus(400);
+      res.status(400);
+
+      return;
     }
 
     const expense = expensesService.getExpenseById(id, expenses);
 
     if (!expense) {
-      res.sendStatus(400);
+      res.status(400);
 
       return;
     }
 
-    res.status(201).json(expense);
+    res.status(200).json(expense);
   });
 
   app.delete('/expenses/:id', (req, res) => {
     const id = req.params.id;
 
     if (!id) {
-      req.sendStatus(400);
+      res.sendStatus(400);
+
+      return;
     }
 
     const deletedExpense = expensesService.deleteExpenseById(id, expenses);
@@ -182,15 +171,17 @@ function createServer() {
       return;
     }
 
-    res.status(201).json(deletedExpense);
+    res.status(204).json(deletedExpense);
   });
 
   app.patch('/expenses/:id', (req, res) => {
     const id = req.params.id;
     const body = req.body;
 
-    if (!id) {
-      req.sendStatus(400);
+    if (id === undefined) {
+      res.sendStatus(400);
+
+      return;
     }
 
     if (
@@ -201,7 +192,9 @@ function createServer() {
       body.category === undefined ||
       body.note === undefined
     ) {
-      req.statusCode(400);
+      res.sendStatus(400);
+
+      return;
     }
 
     const updatedExpense = expensesService.updateExpenseById(
@@ -211,10 +204,10 @@ function createServer() {
     );
 
     if (!updatedExpense) {
-      req.sendStatus(404);
-    }
+      res.status(404);
 
-    res.send(updatedExpense);
+      return;
+    }
 
     res.status(201).json(updatedExpense);
   });
