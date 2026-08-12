@@ -1,6 +1,6 @@
 const { v4: uuidv4 } = require('uuid');
 
-export function createExpense(body, expenses) {
+function createExpense(body, expenses) {
   const expense = {
     id: uuidv4(),
     userId: body.userId,
@@ -16,13 +16,13 @@ export function createExpense(body, expenses) {
   return expense;
 }
 
-export function getExpenseById(id, expenses) {
+function getExpenseById(id, expenses) {
   const seekExpense = expenses.find((el) => el.id === id);
 
   return seekExpense;
 }
 
-export function deleteExpenseById(id, expenses) {
+function deleteExpenseById(id, expenses) {
   const index = expenses.findIndex((el) => el.id === id);
 
   if (index === -1) {
@@ -34,7 +34,7 @@ export function deleteExpenseById(id, expenses) {
   return item;
 }
 
-export function updateExpenseById(id, body, expense) {
+function updateExpenseById(id, body, expense) {
   const updateExpenseIndex = expense.findIndex((el) => el.id === id);
 
   // functions.updateExpenseFunction(body, expense, updateExpenseIndex);

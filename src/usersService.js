@@ -1,10 +1,10 @@
 const { v4: uuidv4 } = require('uuid');
 
-export function getAll(users) {
+function getAll(users) {
   return users;
 }
 
-export function create(title, users) {
+function create(title, users) {
   const user = { id: uuidv4(), title, completed: false };
 
   users.push(user);
@@ -12,13 +12,13 @@ export function create(title, users) {
   return user;
 }
 
-export function getUserById(userId, users) {
+function getUserById(userId, users) {
   const user = users.find((el) => el.id === userId);
 
   return user;
 }
 
-export function deleteUserById(userId, data) {
+function deleteUserById(userId, data) {
   const index = data.findIndex((todo) => todo.id === userId);
 
   if (index === -1) {
@@ -34,7 +34,7 @@ export function deleteUserById(userId, data) {
   return item;
 }
 
-export function patchItem(userId, name, data) {
+function patchItem(userId, name, data) {
   const itemIndex = data.findIndex((el) => el.id === userId);
 
   if (itemIndex === -1) {
@@ -47,24 +47,9 @@ export function patchItem(userId, name, data) {
     id: userId,
     name,
   };
-
-  // data.map((el) => {
-  //   if (el.id === userId) {
-  //     console.log(el.id);
-  //     console.log(userId);
-  //     console.log(el.id === userId);
-
-  //     return {
-  //       id: userId,
-  //       name: name,
-  //     };
-  //   }
-
-  //   return el;
-  // });
 }
 
-export function addOneUser(name, users) {
+function addOneUser(name, users) {
   const user = { id: uuidv4(), name };
 
   users.push(user);
@@ -72,7 +57,7 @@ export function addOneUser(name, users) {
   return user;
 }
 
-export function deleteById(id, users) {
+function deleteById(id, users) {
   const index = users.findIndex((el) => el.id === id);
 
   if (index === -1) {
@@ -91,9 +76,6 @@ const usersService = {
   addOneUser,
   patchItem,
   deleteById,
-  // update,
-  // deleteMany,
-  // updateMany
 };
 
 module.exports = {

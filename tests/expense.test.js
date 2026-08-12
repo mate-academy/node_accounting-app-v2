@@ -13,7 +13,7 @@ describe('Expense', () => {
   });
 
   describe('createExpense', () => {
-    it('should create a new expense', async () => {
+    it.only('should create a new expense', async () => {
       const {
         body: { id: userId },
       } = await api.post('/users').send({

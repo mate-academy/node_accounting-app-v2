@@ -15,20 +15,31 @@ function createServer() {
 
   app.use(cors());
 
+  app.use((req, res, next) => {
+    res.set('Access-Control-Allow-Origin', '*');
+    next();
+  });
+
   app.get('/users', (req, res) => {
-    res.send(users);
+    res.status(201).json(users);
   });
 
   app.post('/users', (req, res) => {
     const user = req.body.name;
 
-    usersService.addOneUser(user, users);
+    const createdUser = usersService.addOneUser(user, users);
 
-    res.send(users);
+    res.status(201).json(createdUser);
   });
 
   app.get('/users/:id', (req, res) => {
     const userId = req.params.id;
+
+    if (!userId) {
+      res.sendStatus(400);
+
+      return;
+    }
 
     const someUser = usersService.getUserById(userId, users);
 
@@ -38,11 +49,15 @@ function createServer() {
       return;
     }
 
-    res.send(someUser);
+    res.status(201).json(someUser);
   });
 
   app.delete('/users/:id', (req, res) => {
     const userId = req.params.id;
+
+    if (userId) {
+      res.sendStatus(400);
+    }
 
     const deletedUser = usersService.deleteUserById(userId, users);
 
@@ -52,14 +67,14 @@ function createServer() {
       return;
     }
 
-    res.send(deletedUser);
+    res.status(201).json(deletedUser);
   });
 
   app.patch('/users/:id', (req, res) => {
     const userId = req.params.id;
     const name = req.body.name;
 
-    if (!name) {
+    if (!name || !userId) {
       req.sendStatus(400);
     }
 
@@ -72,7 +87,7 @@ function createServer() {
       return;
     }
 
-    res.send(updateUser);
+    res.status(201).json(updateUser);
   });
 
   // expenses
@@ -85,7 +100,6 @@ function createServer() {
     const body = req.body;
 
     if (
-      body.userId === undefined ||
       body.spentAt === undefined ||
       body.title === undefined ||
       body.amount === undefined ||
@@ -105,35 +119,35 @@ function createServer() {
       return;
     }
 
-    res.send(newExpense);
+    res.status(201).json(newExpense);
   });
 
-  app.post('/expenses', (req, res) => {
-    const body = req.body;
+  // app.post('/expenses', (req, res) => {
+  //   const body = req.body;
 
-    if (
-      !body.userId ||
-      !body.spentAt ||
-      !body.title ||
-      !body.amount ||
-      !body.category ||
-      !body.note
-    ) {
-      res.sendStatus(400);
+  //   if (
+  //     !body.userId ||
+  //     !body.spentAt ||
+  //     !body.title ||
+  //     !body.amount ||
+  //     !body.category ||
+  //     !body.note
+  //   ) {
+  //     res.sendStatus(400);
 
-      return;
-    }
+  //     return;
+  //   }
 
-    const newExpense = expensesService.createExpense(body, expenses);
+  //   const newExpense = expensesService.createExpense(body, expenses);
 
-    if (!newExpense) {
-      res.sendStatus(404);
+  //   if (!newExpense) {
+  //     res.sendStatus(404);
 
-      return;
-    }
+  //     return;
+  //   }
 
-    res.send(newExpense);
-  });
+  //   res.send(newExpense);
+  // });
 
   app.get('/expenses/:id', (req, res) => {
     const id = req.params.id;
@@ -150,7 +164,7 @@ function createServer() {
       return;
     }
 
-    res.send(expense);
+    res.status(201).json(expense);
   });
 
   app.delete('/expenses/:id', (req, res) => {
@@ -168,7 +182,7 @@ function createServer() {
       return;
     }
 
-    res.send(deletedExpense);
+    res.status(201).json(deletedExpense);
   });
 
   app.patch('/expenses/:id', (req, res) => {
@@ -200,7 +214,9 @@ function createServer() {
       req.sendStatus(404);
     }
 
-    res.send('request sended');
+    res.send(updatedExpense);
+
+    res.status(201).json(updatedExpense);
   });
 
   return app;
