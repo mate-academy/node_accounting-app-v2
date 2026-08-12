@@ -1,4 +1,4 @@
-import { v4 as uuidv4 } from 'uuid';
+const { v4: uuidv4 } = require('uuidv4');
 
 export function getAll(users) {
   return users;
@@ -84,7 +84,7 @@ export function deleteById(id, users) {
   return user;
 }
 
-export const usersService = {
+const usersService = {
   getAll,
   getUserById,
   create,
@@ -94,4 +94,8 @@ export const usersService = {
   // update,
   // deleteMany,
   // updateMany
+};
+
+module.exports = {
+  usersService,
 };

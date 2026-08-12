@@ -1,4 +1,4 @@
-import { v4 as uuidv4 } from 'uuid';
+const { v4: uuidv4 } = require('uuidv4');
 
 // import { functions } from './updateExpenseFunction.js';
 
@@ -29,6 +29,10 @@ export function getExpenseById(id, expenses) {
 export function deleteExpenseById(id, expenses) {
   const index = expenses.findIndex((el) => el.id === id);
 
+  if (index === -1) {
+    return;
+  }
+
   const item = expenses.splice(index, 1);
 
   return item;
@@ -57,9 +61,13 @@ export function updateExpenseById(id, body, expense) {
   return expense[updateExpenseIndex];
 }
 
-export const expensesService = {
+const expensesService = {
   createExpense,
   getExpenseById,
   deleteExpenseById,
   updateExpenseById,
+};
+
+module.exports = {
+  expensesService,
 };

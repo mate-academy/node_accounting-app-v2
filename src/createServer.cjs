@@ -3,8 +3,8 @@
 const express = require('express');
 // const Router = require('express');
 const cors = require('cors');
-const usersService = require('./usersService');
-const expensesService = require('./expensesService');
+const usersService = require('./usersService.сjs');
+const expensesService = require('./expensesService.сjs');
 
 function createServer() {
   const users = [];
@@ -161,7 +161,7 @@ function createServer() {
       req.sendStatus(400);
     }
 
-    const deletedExpense = expensesService.getExpenseById(id, expenses);
+    const deletedExpense = expensesService.deleteExpenseById(id, expenses);
 
     if (!deletedExpense) {
       res.sendStatus(400);
@@ -181,12 +181,12 @@ function createServer() {
     }
 
     if (
-      !body.userId ||
-      !body.spentAt ||
-      !body.title ||
-      !body.amount ||
-      !body.category ||
-      !body.note
+      body.userId === undefined ||
+      body.spentAt === undefined ||
+      body.title === undefined ||
+      body.amount === undefined ||
+      body.category === undefined ||
+      body.note === undefined
     ) {
       req.statusCode(400);
     }
@@ -201,7 +201,7 @@ function createServer() {
       req.sendStatus(404);
     }
 
-    req.send(updatedExpense);
+    res.send('request sended');
   });
 
   return app;
