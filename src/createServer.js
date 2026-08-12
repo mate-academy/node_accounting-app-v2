@@ -1,10 +1,9 @@
 'use strict';
 
 const express = require('express');
-// const Router = require('express');
 const cors = require('cors');
-const usersService = require('./usersService.сjs');
-const expensesService = require('./expensesService.сjs');
+const usersService = require('./usersService.js');
+const expensesService = require('./expensesService.js');
 
 function createServer() {
   const users = [];

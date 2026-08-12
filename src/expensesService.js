@@ -1,8 +1,4 @@
-const { v4: uuidv4 } = require('uuidv4');
-
-// import { functions } from './updateExpenseFunction.js';
-
-// const functions = require('./updateExpenseFunction');
+const { v4: uuidv4 } = require('uuid');
 
 export function createExpense(body, expenses) {
   const expense = {
@@ -68,6 +64,4 @@ const expensesService = {
   updateExpenseById,
 };
 
-module.exports = {
-  expensesService,
-};
+module.exports = expensesService;

@@ -1,4 +1,4 @@
-const { v4: uuidv4 } = require('uuidv4');
+const { v4: uuidv4 } = require('uuid');
 
 export function getAll(users) {
   return users;
@@ -97,5 +97,6 @@ const usersService = {
 };
 
 module.exports = {
-  usersService,
+  ...usersService,
+  deleteUserById,
 };
