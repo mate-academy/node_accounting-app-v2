@@ -1,10 +1,9 @@
-export function updateExpenseFunction(body, expense, updateExpenseIndex) {
+function updateExpenseFunction(body, expenses, updateExpenseIndex) {
   for (const prop in body) {
-    expense[updateExpenseIndex][prop] =
-      body[prop] || expense[updateExpenseIndex][prop];
+    if (body[prop]) {
+      expenses[updateExpenseIndex][prop] = body[prop];
+    }
   }
 }
 
-export const functions = { updateExpenseFunction };
-
-// export default updateExpenseFunction;
+module.exports = { updateExpenseFunction };

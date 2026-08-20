@@ -11,13 +11,13 @@ function create(title, users) {
 }
 
 function getUserById(userId, users) {
-  const user = users.find((el) => el.id === +userId);
+  const user = users.find((el) => +el.id === +userId);
 
   return user;
 }
 
 function deleteUserById(userId, data) {
-  const index = data.findIndex((todo) => todo.id === +userId);
+  const index = data.findIndex((todo) => +todo.id === +userId);
 
   if (index === -1) {
     return;
@@ -33,7 +33,7 @@ function deleteUserById(userId, data) {
 }
 
 function patchItem(userId, name, data) {
-  const itemIndex = data.findIndex((el) => String(el.id) === userId);
+  const itemIndex = data.findIndex((el) => +el.id === +userId);
 
   if (itemIndex === -1) {
     return;
@@ -42,7 +42,7 @@ function patchItem(userId, name, data) {
   data[itemIndex].name = name;
 
   return {
-    id: userId,
+    id: String(userId),
     name,
   };
 }
@@ -56,7 +56,7 @@ function addOneUser(name, users) {
 }
 
 function deleteById(id, users) {
-  const index = users.findIndex((el) => el.id === +id);
+  const index = users.findIndex((el) => +el.id === +id);
 
   if (index === -1) {
     return;

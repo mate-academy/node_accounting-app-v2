@@ -14,6 +14,10 @@ function createExpense(body, expenses) {
   return expense;
 }
 
+function findUser(id, users) {
+  return users.find((el) => el.id === id);
+}
+
 function getExpenseById(id, expenses) {
   const seekExpense = expenses.find((el) => el.id === +id);
 
@@ -32,33 +36,20 @@ function deleteExpenseById(id, expenses) {
   return item[0];
 }
 
-function updateExpenseById(id, body, expense) {
-  const updateExpenseIndex = expense.findIndex((el) => el.id === +id);
+function updateExpenseById(id, body, patchingExpense) {
+  for (const prop in body) {
+    if (body[prop]) {
+      patchingExpense[prop] = body[prop];
+    }
+  }
 
-  expense[updateExpenseIndex].userId =
-    body.userId || expense[updateExpenseIndex].userId;
-
-  expense[updateExpenseIndex].spentAt =
-    body.spentAt || expense[updateExpenseIndex].spentAt;
-
-  expense[updateExpenseIndex].title =
-    body.title || expense[updateExpenseIndex].title;
-
-  expense[updateExpenseIndex].amount =
-    body.amount || expense[updateExpenseIndex].amount;
-
-  expense[updateExpenseIndex].category =
-    body.category || expense[updateExpenseIndex].category;
-
-  expense[updateExpenseIndex].note =
-    body.note || expense[updateExpenseIndex].note;
-
-  return expense[updateExpenseIndex];
+  return patchingExpense;
 }
 
 const expensesService = {
   createExpense,
   getExpenseById,
+  findUser,
   deleteExpenseById,
   updateExpenseById,
 };

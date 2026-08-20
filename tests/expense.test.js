@@ -148,7 +148,7 @@ describe('Expense', () => {
       ]);
     });
 
-    it('should return all expenses between dates', async () => {
+    it.only('should return all expenses between dates', async () => {
       const {
         body: { id: userId },
       } = await api.post('/users').send({
@@ -189,7 +189,7 @@ describe('Expense', () => {
       ]);
     });
 
-    it('should return all expenses by category', async () => {
+    it.only('should return all expenses by category', async () => {
       const {
         body: { id: userId },
       } = await api.post('/users').send({

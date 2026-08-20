@@ -95,7 +95,7 @@ function createServer() {
     const updateUser = usersService.patchItem(userId, name, users);
 
     if (!updateUser) {
-      res.status(404);
+      res.status(404).json('Not found');
 
       return;
     }
@@ -115,17 +115,19 @@ function createServer() {
       body.title === undefined ||
       body.amount === undefined ||
       body.category === undefined ||
-      body.note === undefined
+      body.note === undefined ||
+      body.userId === undefined
     ) {
       res.sendStatus(400);
 
       return;
     }
 
+    const user = expensesService.findUser(body.userId, users);
     const newExpense = expensesService.createExpense(body, expenses);
 
-    if (!newExpense) {
-      res.status(400);
+    if (!newExpense || user === undefined) {
+      res.status(400).json('Not found');
 
       return;
     }
@@ -133,12 +135,11 @@ function createServer() {
     res.status(201).json(newExpense);
   });
 
-
   app.get('/expenses/:id', (req, res) => {
     const id = req.params.id;
 
     if (!id) {
-      res.status(400);
+      res.status(400).json('Bad request');
 
       return;
     }
@@ -146,7 +147,7 @@ function createServer() {
     const expense = expensesService.getExpenseById(id, expenses);
 
     if (!expense) {
-      res.status(400);
+      res.status(404).json('Not found');
 
       return;
     }
@@ -166,7 +167,7 @@ function createServer() {
     const deletedExpense = expensesService.deleteExpenseById(id, expenses);
 
     if (!deletedExpense) {
-      res.sendStatus(400);
+      res.sendStatus(404);
 
       return;
     }
@@ -184,15 +185,11 @@ function createServer() {
       return;
     }
 
-    if (
-      body.userId === undefined ||
-      body.spentAt === undefined ||
-      body.title === undefined ||
-      body.amount === undefined ||
-      body.category === undefined ||
-      body.note === undefined
-    ) {
-      res.sendStatus(400);
+    const updateExpenseIndex = expenses.findIndex((el) => el.id === +id);
+    const patchingExpense = expenses[updateExpenseIndex];
+
+    if (patchingExpense === undefined) {
+      res.status(404).json('Not found');
 
       return;
     }
@@ -200,14 +197,8 @@ function createServer() {
     const updatedExpense = expensesService.updateExpenseById(
       id,
       body,
-      expenses,
+      patchingExpense,
     );
-
-    if (!updatedExpense) {
-      res.status(404);
-
-      return;
-    }
 
     res.status(201).json(updatedExpense);
   });
