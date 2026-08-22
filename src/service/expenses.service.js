@@ -5,10 +5,10 @@ function createExpensesService(usersService) {
   let lastId = 0;
 
   const getAll = ({ userId, categories, from, to } = {}) => {
-    let result = expenses;
+    let res = expenses;
 
     if (userId) {
-      result = result.filter((expense) => expense.userId === +userId);
+      res = res.filter((expense) => expense.userId === +userId);
     }
 
     if (categories) {
@@ -16,29 +16,22 @@ function createExpensesService(usersService) {
         ? categories
         : categories.split(',');
 
-      result = result.filter(
-        (expense) =>
-          // eslint-disable-next-line
-          categoryList.includes(expense.category),
-        // eslint-disable-next-line
-      );
+      res = res.filter((expense) => categoryList.includes(expense.category));
     }
 
     if (from) {
       const fromDate = new Date(from);
 
-      result = result.filter(
-        (expense) => new Date(expense.spentAt) >= fromDate,
-      );
+      res = res.filter((expense) => new Date(expense.spentAt) >= fromDate);
     }
 
     if (to) {
       const toDate = new Date(to);
 
-      result = result.filter((expense) => new Date(expense.spentAt) <= toDate);
+      res = res.filter((expense) => new Date(expense.spentAt) <= toDate);
     }
 
-    return result;
+    return res;
   };
 
   const getById = (id) => expenses.find((expense) => expense.id === id);
