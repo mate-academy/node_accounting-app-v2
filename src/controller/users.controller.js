@@ -1,64 +1,72 @@
-const { usersService } = require('../service/users.service');
+'use strict';
 
-const getUsers = async (req, res) => {
-  const users = await usersService.getUsers();
+function createUsersController(usersService) {
+  const getAll = (req, res) => {
+    res.json(usersService.getAll());
+  };
 
-  res.json(users);
-};
+  const getOne = (req, res) => {
+    const user = usersService.getById(+req.params.id);
 
-const getUser = async (req, res) => {
-  const user = await usersService.getUser(+req.params.id);
+    if (!user) {
+      res.sendStatus(404);
 
-  if (!user) {
-    return res.sendStatus(404);
-  }
+      return;
+    }
 
-  res.json(user);
-};
+    res.json(user);
+  };
 
-const createUser = async (req, res) => {
-  const { name } = req.body;
+  const create = (req, res) => {
+    const { name } = req.body;
 
-  if (!name) {
-    return res.sendStatus(400);
-  }
+    if (!name) {
+      res.sendStatus(400);
 
-  const user = usersService.createUser(name);
+      return;
+    }
 
-  res.status(201).json(user);
-};
+    const user = usersService.create(name);
 
-const deleteUser = async (req, res) => {
-  const deletedUser = await usersService.deleteUser(+req.params.id);
+    res.status(201).json(user);
+  };
 
-  if (!deletedUser) {
-    return res.sendStatus(404);
-  }
+  const update = (req, res) => {
+    const { name } = req.body;
+    const user = usersService.getById(+req.params.id);
 
-  res.sendStatus(204);
-};
+    if (!user) {
+      res.sendStatus(404);
 
-const updateUser = async (req, res) => {
-  const name = req.body.name;
-  const user = await usersService.getUser(+req.params.id);
+      return;
+    }
 
-  if (!user) {
-    return res.sendStatus(404);
-  }
+    const updatedUser = usersService.update(+req.params.id, name);
 
-  const updatedUser = usersService.updateUser(+req.params.id, name);
+    res.json(updatedUser);
+  };
 
-  res.json(updatedUser);
-};
+  const remove = (req, res) => {
+    const deletedUser = usersService.remove(+req.params.id);
 
-const usersController = {
-  getUsers,
-  getUser,
-  createUser,
-  deleteUser,
-  updateUser,
-};
+    if (!deletedUser) {
+      res.sendStatus(404);
+
+      return;
+    }
+
+    res.sendStatus(204);
+  };
+
+  return {
+    getAll,
+    getOne,
+    create,
+    update,
+    remove,
+  };
+}
 
 module.exports = {
-  usersController,
+  createUsersController,
 };

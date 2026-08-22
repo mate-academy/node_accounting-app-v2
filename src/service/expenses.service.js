@@ -1,58 +1,102 @@
-const expenses = [];
+'use strict';
 
-const getAllExpenses = (params) => {
-  return expenses;
-};
+function createExpensesService(usersService) {
+  const expenses = [];
+  let lastId = 0;
 
-const getExpenseById = (id) => {
-  return expenses.find((expense) => expense.id === id);
-};
+  const getAll = ({ userId, categories, from, to } = {}) => {
+    let result = expenses;
 
-const createExpense = (name) => {
-  const maxId =
-    expenses.length > 0
-      ? Math.max(...expenses.map((expense) => expense.id))
-      : 0;
-  const newId = maxId + 1;
+    if (userId) {
+      result = result.filter((expense) => expense.userId === +userId);
+    }
 
-  const newExpense = {
-    id: newId,
-    name: name,
+    if (categories) {
+      const categoryList = Array.isArray(categories)
+        ? categories
+        : categories.split(',');
+
+      result = result.filter(
+        (expense) =>
+          // eslint-disable-next-line
+          categoryList.includes(expense.category),
+        // eslint-disable-next-line
+      );
+    }
+
+    if (from) {
+      const fromDate = new Date(from);
+
+      result = result.filter(
+        (expense) => new Date(expense.spentAt) >= fromDate,
+      );
+    }
+
+    if (to) {
+      const toDate = new Date(to);
+
+      result = result.filter((expense) => new Date(expense.spentAt) <= toDate);
+    }
+
+    return result;
   };
 
-  expenses.push(newExpense);
+  const getById = (id) => expenses.find((expense) => expense.id === id);
 
-  return expenses;
-};
+  const userExists = (userId) => Boolean(usersService.getById(+userId));
 
-const changeExpense = (id, newName) => {
-  const findExpenses = expenses.find((expense) => expense.id === id);
+  const create = ({ userId, spentAt, title, amount, category, note }) => {
+    lastId += 1;
 
-  Object.assign(findExpenses, { newName });
+    const newExpense = {
+      id: lastId,
+      userId,
+      spentAt,
+      title,
+      amount,
+      category,
+      note,
+    };
 
-  return findExpenses;
-};
+    expenses.push(newExpense);
 
-const deleteExpense = (id) => {
-  const index = expenses.findIndex((expense) => expense.id === id);
+    return newExpense;
+  };
 
-  if (index === -1) {
-    return;
-  }
+  const update = (id, changes) => {
+    const expense = getById(id);
 
-  const [deletedExpenses] = expenses.splice(index, 1);
+    if (!expense) {
+      return null;
+    }
 
-  return deletedExpenses;
-};
+    Object.assign(expense, changes);
 
-const expensesService = {
-  getAllExpenses,
-  getExpenseById,
-  createExpense,
-  changeExpense,
-  deleteExpense,
-};
+    return expense;
+  };
+
+  const remove = (id) => {
+    const index = expenses.findIndex((expense) => expense.id === id);
+
+    if (index === -1) {
+      return null;
+    }
+
+    const [deletedExpense] = expenses.splice(index, 1);
+
+    return deletedExpense;
+  };
+
+  return {
+    getAll,
+    getById,
+    userExists,
+    create,
+    update,
+    remove,
+  };
+}
 
 module.exports = {
-  expensesService,
+  createExpensesService,
 };

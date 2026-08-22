@@ -1,64 +1,93 @@
-const { expensesService } = require('../service/expenses.service');
+'use strict';
 
-const getAll = async (req, res) => {
-  const users = await expensesService.getAll();
+function createExpensesController(expensesService) {
+  const getAll = (req, res) => {
+    const { userId, categories, from, to } = req.query;
 
-  res.json(users);
-};
+    res.json(
+      expensesService.getAll({
+        userId,
+        categories,
+        from,
+        to,
+      }),
+    );
+  };
 
-const getById = async (req, res) => {
-  const user = await expensesService.getById(+req.params.id);
+  const getOne = (req, res) => {
+    const expense = expensesService.getById(+req.params.id);
 
-  if (!user) {
-    return res.sendStatus(404);
-  }
+    if (!expense) {
+      res.sendStatus(404);
 
-  res.json(user);
-};
+      return;
+    }
 
-const create = async (req, res) => {
-  const { name } = req.body;
+    res.json(expense);
+  };
 
-  if (!name) {
-    return res.sendStatus(400);
-  }
+  const create = (req, res) => {
+    const { userId, spentAt, title, amount, category, note } = req.body;
 
-  const user = expensesService.create(name);
+    if (!userId || !title || !amount || !category || !spentAt) {
+      res.sendStatus(400);
 
-  res.status(201).json(user);
-};
+      return;
+    }
 
-const deleteOne = async (req, res) => {
-  const deletedUser = await expensesService.remove(+req.params.id);
+    if (!expensesService.userExists(userId)) {
+      res.sendStatus(400);
 
-  if (!deletedUser) {
-    return res.sendStatus(404);
-  }
+      return;
+    }
 
-  res.sendStatus(204);
-};
+    const expense = expensesService.create({
+      userId,
+      spentAt,
+      title,
+      amount,
+      category,
+      note,
+    });
 
-const changeOne = async (req, res) => {
-  const name = req.body.name;
-  const user = await expensesService.getById(+req.params.id);
+    res.status(201).json(expense);
+  };
 
-  if (!user) {
-    return res.sendStatus(404);
-  }
+  const update = (req, res) => {
+    const expense = expensesService.getById(+req.params.id);
 
-  const updatedUser = expensesService.change(+req.params.id, name);
+    if (!expense) {
+      res.sendStatus(404);
 
-  res.json(updatedUser);
-};
+      return;
+    }
 
-const expensesController = {
-  getAll,
-  getById,
-  create,
-  deleteOne,
-  changeOne,
-};
+    const updatedExpense = expensesService.update(+req.params.id, req.body);
+
+    res.json(updatedExpense);
+  };
+
+  const remove = (req, res) => {
+    const deletedExpense = expensesService.remove(+req.params.id);
+
+    if (!deletedExpense) {
+      res.sendStatus(404);
+
+      return;
+    }
+
+    res.sendStatus(204);
+  };
+
+  return {
+    getAll,
+    getOne,
+    create,
+    update,
+    remove,
+  };
+}
 
 module.exports = {
-  expensesController,
+  createExpensesController,
 };
