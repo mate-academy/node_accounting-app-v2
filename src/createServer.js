@@ -133,7 +133,7 @@ function createServer() {
     const user = users.find((u) => u.id === Number(userId));
 
     if (!user) {
-      res.sendStatus(404);
+      res.sendStatus(400);
 
       return;
     }
