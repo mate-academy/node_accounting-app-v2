@@ -133,14 +133,14 @@ function createServer() {
     const user = users.find((u) => u.id === Number(userId));
 
     if (!user) {
-      res.sendStatus(400);
+      res.sendStatus(404);
 
       return;
     }
 
     const newExpense = {
       id: expenses.length + 1,
-      userId,
+      userId: Number(userId),
       spentAt,
       title,
       amount,
