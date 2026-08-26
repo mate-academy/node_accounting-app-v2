@@ -186,6 +186,13 @@ function createServer() {
 
   app.patch('/expenses/:id', (req, res) => {
     const { id } = req.params;
+
+    if (!Number.isInteger(Number(id))) {
+      res.sendStatus(400);
+
+      return;
+    }
+
     const expense = expenses.find((e) => e.id === Number(id));
 
     if (!expense) {
