@@ -80,14 +80,8 @@ function createServer() {
     const userId = req.params.id;
     const name = req.body.name;
 
-    if (!name) {
+    if (!name || !userId) {
       res.sendStatus(404);
-
-      return;
-    }
-
-    if (!userId) {
-      res.sendStatus(400);
 
       return;
     }
@@ -104,7 +98,34 @@ function createServer() {
   });
 
   app.get('/expenses', (req, res) => {
-    res.status(200).json(expenses);
+    let filteredExpenses = expenses;
+    const categories = req.query.categories;
+    const userId = req.query.userId;
+
+    if (userId !== undefined) {
+      filteredExpenses = filteredExpenses.filter((exp) => {
+        return exp.userId === +userId;
+      });
+    }
+
+    if (categories) {
+      filteredExpenses = filteredExpenses.filter((exp) => {
+        return exp.category === categories;
+      });
+    }
+
+    if (req.query.from && req.query.to) {
+      const fromDate = new Date(req.query.from);
+      const toDate = new Date(req.query.to);
+
+      filteredExpenses = filteredExpenses.filter((expense) => {
+        const expenseDate = new Date(expense.spentAt);
+
+        return expenseDate >= fromDate && expenseDate <= toDate;
+      });
+    }
+
+    res.status(200).json(filteredExpenses);
   });
 
   app.post('/expenses', (req, res) => {
@@ -200,7 +221,7 @@ function createServer() {
       patchingExpense,
     );
 
-    res.status(201).json(updatedExpense);
+    res.status(200).json(updatedExpense);
   });
 
   return app;

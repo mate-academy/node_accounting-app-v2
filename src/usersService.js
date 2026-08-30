@@ -42,7 +42,7 @@ function patchItem(userId, name, data) {
   data[itemIndex].name = name;
 
   return {
-    id: String(userId),
+    id: +userId,
     name,
   };
 }
