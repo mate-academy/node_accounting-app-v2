@@ -39,7 +39,7 @@ const remove = (req, res) => {
   const user = usersService.getById(id);
 
   if (!user) {
-    res.sendStatus(404);
+    res.sendStatus(400);
 
     return;
   }
