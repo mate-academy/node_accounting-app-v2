@@ -126,9 +126,10 @@ function createServer() {
         Array.isArray(categories) ? categories : [categories]
       ).flatMap((category) => category.split(','));
 
-      result = result.filter((expense) =>
-        categoryList.includes(expense.category),
-      );
+      const matchesCategory = (expense) =>
+        categoryList.includes(expense.category);
+
+      result = result.filter(matchesCategory);
     }
 
     return res.json(result);
