@@ -54,7 +54,7 @@ const update = (req, res) => {
   const { name } = req.body;
 
   if (!name) {
-    res.sendStatus(404);
+    res.sendStatus(400);
 
     return;
   }

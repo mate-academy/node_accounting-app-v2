@@ -36,7 +36,7 @@ const create = (req, res) => {
     amount === undefined ||
     category === undefined
   ) {
-    res.sendStatus(400);
+    return res.sendStatus(400);
   }
 
   const user = usersService.getById(userId);
