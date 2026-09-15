@@ -61,6 +61,23 @@ exports.updateExpense = (req, res) => {
     return;
   }
 
+  const title = changes.title ?? expense.title;
+  const amount = changes.amount ?? expense.amount;
+  const spentAt = changes.spentAt ?? expense.spentAt;
+  const category = changes.category ?? expense.category;
+
+  if (
+    !title ||
+    !title.trim() ||
+    amount === undefined ||
+    !spentAt ||
+    !category
+  ) {
+    res.sendStatus(400);
+
+    return;
+  }
+
   res.status(200).json(expenseService.update(expense.id, changes));
 };
 

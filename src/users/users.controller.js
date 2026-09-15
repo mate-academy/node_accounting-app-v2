@@ -42,6 +42,14 @@ exports.updateUser = (req, res) => {
     return;
   }
 
+  const name = changes.name ?? user.name;
+
+  if (!name || !name.trim()) {
+    res.sendStatus(400);
+
+    return;
+  }
+
   res.status(200).json(userService.update(user.id, changes));
 };
 
