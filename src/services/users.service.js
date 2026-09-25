@@ -13,7 +13,9 @@ function getAll() {
 }
 
 function getById(id) {
-  return users.find((user) => user.id === id) || null;
+  const numericId = Number(id);
+
+  return users.find((user) => user.id === numericId) || null;
 }
 
 function create(name) {
@@ -42,7 +44,9 @@ function update(id, { name }) {
 }
 
 function remove(id) {
-  users = users.filter((user) => user.id !== id);
+  const numericId = Number(id);
+
+  users = users.filter((user) => user.id !== numericId);
 }
 
 module.exports = {

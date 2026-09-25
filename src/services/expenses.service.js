@@ -39,7 +39,9 @@ function getAll({ userId, categories, from, to } = {}) {
 }
 
 function getById(id) {
-  return expenses.find((expense) => expense.id === id) || null;
+  const numericId = Number(id);
+
+  return expenses.find((expense) => expense.id === numericId) || null;
 }
 
 function create({ userId, spentAt, title, amount, category, note }) {
@@ -47,7 +49,7 @@ function create({ userId, spentAt, title, amount, category, note }) {
 
   const expense = {
     id: lastId,
-    userId,
+    userId: userId !== undefined ? Number(userId) : undefined,
     spentAt,
     title,
     amount,
@@ -77,7 +79,9 @@ function update(id, data) {
 }
 
 function remove(id) {
-  expenses = expenses.filter((expense) => expense.id !== id);
+  const numericId = Number(id);
+
+  expenses = expenses.filter((expense) => expense.id !== numericId);
 }
 
 module.exports = {
