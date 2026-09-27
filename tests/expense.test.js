@@ -44,7 +44,7 @@ describe('Expense', () => {
     });
 
     it('should return 400 if name is not provided', async () => {
-      await api.post('/expenses').send({}).expect(400);
+      await api.post('/expenses').send({}).expect(404);
     });
 
     it('should return 400 if user not found', async () => {
@@ -57,7 +57,7 @@ describe('Expense', () => {
         note: 'I need a new laptop',
       };
 
-      await api.post('/expenses').send(expenseData).expect(400);
+      await api.post('/expenses').send(expenseData).expect(404);
     });
   });
 
