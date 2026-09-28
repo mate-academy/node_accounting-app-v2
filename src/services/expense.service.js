@@ -4,7 +4,7 @@ let expenses = [];
 let currentId = 1;
 
 const getAll = async (query = {}) => {
-  const { userId, from, to } = query;
+  const { userId, from, to, categories } = query;
   let result = [...expenses];
 
   if (userId !== undefined) {
@@ -17,6 +17,15 @@ const getAll = async (query = {}) => {
 
   if (to) {
     result = result.filter((item) => new Date(item.spentAt) <= new Date(to));
+  }
+
+  if (categories) {
+    const list = []
+      .concat(categories)
+      .flatMap((c) => String(c).split(','))
+      .filter(Boolean);
+
+    result = result.filter((item) => list.includes(item.category));
   }
 
   return result;
@@ -64,8 +73,7 @@ const deleteById = async (id) => {
   return true;
 };
 
-// Сброс состояния хранилища между тестами
-const removeAll = async () => {
+const removeAll = () => {
   expenses = [];
   currentId = 1;
 };

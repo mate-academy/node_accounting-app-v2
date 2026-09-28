@@ -48,8 +48,7 @@ const deleteById = async (id) => {
   return true;
 };
 
-// Сброс состояния хранилища между тестами
-const removeAll = async () => {
+const removeAll = () => {
   users = [];
   currentId = 1;
 };
