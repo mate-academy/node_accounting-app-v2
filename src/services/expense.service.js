@@ -1,106 +1,84 @@
 'use strict';
 
-const expenses = [];
-let lastId = 0;
+let expenses = [];
+let currentId = 1;
 
-function getAll(filters = {}) {
+const getAll = async (query = {}) => {
+  const { userId, from, to } = query;
   let result = [...expenses];
-  const { userId, categories, category, from, to } = filters;
 
   if (userId !== undefined) {
-    result = result.filter((item) => item.userId === +userId);
+    result = result.filter((item) => item.userId === Number(userId));
   }
 
-  const targetCategory = categories || category;
-
-  if (targetCategory !== undefined) {
-    const wanted = Array.isArray(targetCategory)
-      ? targetCategory
-      : [targetCategory];
-
-    result = result.filter((item) => wanted.includes(item.category));
-  }
-
-  if (from !== undefined) {
+  if (from) {
     result = result.filter((item) => new Date(item.spentAt) >= new Date(from));
   }
 
-  if (to !== undefined) {
+  if (to) {
     result = result.filter((item) => new Date(item.spentAt) <= new Date(to));
   }
 
   return result;
-}
+};
 
-function getByCategory(cat) {
-  return expenses.filter((item) => item.category === cat);
-}
+const getById = async (id) => {
+  return expenses.find((item) => item.id === id) || null;
+};
 
-function getById(id) {
-  return expenses.find((item) => item.id === +id) || null;
-}
-
-function getByUserId(userId) {
-  return expenses.filter((item) => item.userId === +userId);
-}
-
-function createExpense(expense) {
-  lastId++;
-
-  const newExpense = { ...expense, id: lastId };
+const createExpense = async (expenseData) => {
+  const newExpense = {
+    id: currentId++,
+    ...expenseData,
+  };
 
   expenses.push(newExpense);
 
   return newExpense;
-}
+};
 
-function deleteById(id) {
-  const index = expenses.findIndex((item) => item.id === +id);
+const update = async (id, body) => {
+  const index = expenses.findIndex((item) => item.id === id);
 
   if (index === -1) {
     return null;
   }
 
-  const [deletedExpense] = expenses.splice(index, 1);
+  expenses[index] = {
+    ...expenses[index],
+    ...body,
+  };
 
-  return deletedExpense;
-}
+  return expenses[index];
+};
 
-function update(id, body) {
-  const expense = getById(id);
+const deleteById = async (id) => {
+  const index = expenses.findIndex((item) => item.id === id);
 
-  if (!expense) {
-    return null;
+  if (index === -1) {
+    return false;
   }
 
-  return Object.assign(expense, body);
-}
+  expenses.splice(index, 1);
 
-function resetExpenses() {
-  expenses.length = 0;
-  lastId = 0;
-}
+  return true;
+};
+
+// Сброс состояния хранилища между тестами
+const removeAll = async () => {
+  expenses = [];
+  currentId = 1;
+};
 
 const expensesService = {
   getAll,
-  getByCategory,
   getById,
-  getByUserId,
   createExpense,
-  deleteById,
   update,
-  resetExpenses,
+  deleteById,
+  removeAll,
 };
 
 module.exports = {
   expensesService,
-  getAll,
-  getByCategory,
-  getById,
-  getByUserId,
-  createExpense,
-  deleteById,
-  update,
-  reset: resetExpenses,
-  resetExpenses,
 };

@@ -5,13 +5,13 @@ const { expensesService } = require('../services/expense.service');
 const { usersService } = require('../services/user.service');
 
 const getAll = async (req, res) => {
-  const result = expensesService.getAll(req.query);
+  const result = await expensesService.getAll(req.query);
 
   res.status(200).json(result);
 };
 
 const getOne = async (req, res) => {
-  const { id } = req.params;
+  const id = Number(req.params.id);
 
   const oneExpense = await expensesService.getById(id);
 
@@ -19,7 +19,7 @@ const getOne = async (req, res) => {
     return res.status(404).json({ error: 'No such expense' });
   }
 
-  res.send(oneExpense);
+  res.status(200).json(oneExpense);
 };
 
 const create = async (req, res) => {
@@ -35,7 +35,7 @@ const create = async (req, res) => {
     return res.status(400).json({ error: 'Missing required fields' });
   }
 
-  const user = await usersService.getById(userId);
+  const user = await usersService.getById(Number(userId));
 
   if (!user) {
     return res.status(400).json({ error: 'No such user' });
@@ -47,7 +47,7 @@ const create = async (req, res) => {
 };
 
 const update = async (req, res) => {
-  const { id } = req.params;
+  const id = Number(req.params.id);
   const body = req.body;
 
   const expense = await expensesService.getById(id);
@@ -56,13 +56,13 @@ const update = async (req, res) => {
     return res.status(404).json({ error: 'No such expense' });
   }
 
-  const updatedExpense = expensesService.update(id, body);
+  const updatedExpense = await expensesService.update(id, body);
 
   res.status(200).json(updatedExpense);
 };
 
 const removeExpense = async (req, res) => {
-  const { id } = req.params;
+  const id = Number(req.params.id);
   const expense = await expensesService.getById(id);
 
   if (!expense) {

@@ -1,67 +1,68 @@
-/* eslint-disable no-console */
 'use strict';
 
-const users = [];
-let lastId = 0;
+let users = [];
+let currentId = 1;
 
-function getAll() {
+const getAll = async () => {
   return users;
-}
+};
 
-function getById(id) {
-  return users.find((user) => user.id === +id) || null;
-}
+const getById = async (id) => {
+  return users.find((user) => user.id === id) || null;
+};
 
-function create(name) {
-  lastId++;
+const create = async ({ name }) => {
+  const newUser = {
+    id: currentId++,
+    name,
+  };
 
-  const user = { id: lastId, name };
+  users.push(newUser);
 
-  users.push(user);
+  return newUser;
+};
 
-  return user;
-}
-
-function deleteById(id) {
-  const index = users.findIndex((user) => user.id === +id);
-
-  if (index !== -1) {
-    users.splice(index, 1);
-  }
-}
-
-function update(id, { name }) {
-  const user = getById(id);
+const update = async (id, { name }) => {
+  const user = users.find((u) => u.id === id);
 
   if (!user) {
     return null;
   }
 
-  user.name = name;
+  if (name !== undefined) {
+    user.name = name;
+  }
 
   return user;
-}
+};
 
-function resetUsers() {
-  users.length = 0;
-  lastId = 0;
-}
+const deleteById = async (id) => {
+  const index = users.findIndex((u) => u.id === id);
+
+  if (index === -1) {
+    return false;
+  }
+
+  users.splice(index, 1);
+
+  return true;
+};
+
+// Сброс состояния хранилища между тестами
+const removeAll = async () => {
+  users = [];
+  currentId = 1;
+};
 
 const usersService = {
   getAll,
   getById,
   create,
-  deleteById,
   update,
-  resetUsers,
+  deleteById,
+  removeAll,
 };
 
 module.exports = {
   usersService,
-  getAll,
-  getById,
-  create,
-  update,
-  remove: deleteById,
-  reset: resetUsers,
 };

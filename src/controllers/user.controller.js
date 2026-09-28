@@ -1,24 +1,39 @@
-/* eslint-disable no-console */
+'use strict';
+
 const { usersService } = require('../services/user.service');
 
 const getAll = async (req, res) => {
-  res.send(usersService.getAll());
+  const users = await usersService.getAll();
+
+  res.status(200).json(users);
+};
+
+const getById = async (req, res) => {
+  const id = Number(req.params.id);
+  const user = await usersService.getById(id);
+
+  if (!user) {
+    return res.status(404).json({ error: 'User not found' });
+  }
+
+  res.status(200).json(user);
 };
 
 const createNewUser = async (req, res) => {
   const { name } = req.body;
 
   if (!name) {
-    return res.status(400).json({ error: 'Missing name' });
+    return res.status(400).json({ error: 'Name is required' });
   }
 
-  const newUser = usersService.create(name);
+  const newUser = await usersService.create({ name });
 
   res.status(201).json(newUser);
 };
 
-const getById = async (req, res) => {
-  const { id } = req.params;
+const update = async (req, res) => {
+  const id = Number(req.params.id);
+  const { name } = req.body;
 
   const user = await usersService.getById(id);
 
@@ -26,50 +41,32 @@ const getById = async (req, res) => {
     return res.status(404).json({ error: 'User not found' });
   }
 
-  res.send(user);
-};
+  const updatedUser = await usersService.update(id, { name });
 
-const updateUser = async (req, res) => {
-  const { id } = req.params;
-  const { name } = req.body;
-
-  const user = await usersService.getById(+id);
-
-  if (!user) {
-    return res.status(404).json({ error: 'User not found' });
-  }
-
-  const updatedUser = usersService.update(id, { name });
-
-  res.send(updatedUser);
+  res.status(200).json(updatedUser);
 };
 
 const removeUser = async (req, res) => {
-  const { id } = req.params;
+  const id = Number(req.params.id);
 
   const user = await usersService.getById(id);
 
   if (!user) {
-    return res.status(404).json({ error: 'User does not exist' });
+    return res.status(404).json({ error: 'User not found' });
   }
 
   await usersService.deleteById(id);
-  res.sendStatus(204);
+  res.status(204).send();
 };
 
 const usersController = {
   getAll,
   getById,
   createNewUser,
-  updateUser,
+  update,
   removeUser,
 };
 
 module.exports = {
-  getAll,
-  getById,
-  createNewUser,
-  updateUser,
-  removeUser,
   usersController,
 };
