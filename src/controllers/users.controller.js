@@ -37,6 +37,10 @@ const createUser = (req, res) => {
 const deleteUser = (req, res) => {
   const id = Number(req.params.id);
 
+  if (isNaN(id)) {
+    return res.sendStatus(400);
+  }
+
   const user = userService.getUserById(id);
 
   if (!user) {
@@ -50,6 +54,11 @@ const deleteUser = (req, res) => {
 
 const updateUser = (req, res) => {
   const id = Number(req.params.id);
+
+  if (isNaN(id)) {
+    return res.sendStatus(400);
+  }
+
   const { name } = req.body;
 
   if (!name) {

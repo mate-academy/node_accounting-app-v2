@@ -19,8 +19,10 @@ function getExpensesBetweenDates(expensesList, from, to) {
 }
 
 function getExpenseByCategories(expensesList, categories) {
+  const categoriesArray = categories.split(',');
+
   return expensesList.filter((expense) => {
-    return categories.includes(expense.category);
+    return categoriesArray.includes(expense.category);
   });
 }
 

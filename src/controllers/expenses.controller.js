@@ -61,6 +61,10 @@ const getExpense = (req, res) => {
 const deleteExpense = (req, res) => {
   const id = Number(req.params.id);
 
+  if (isNaN(id)) {
+    return res.sendStatus(400);
+  }
+
   const expense = expenseService.getExpenseById(id);
 
   if (!expense) {
@@ -74,6 +78,10 @@ const deleteExpense = (req, res) => {
 
 const updateExpense = (req, res) => {
   const id = Number(req.params.id);
+
+  if (isNaN(id)) {
+    return res.sendStatus(400);
+  }
 
   const expense = expenseService.getExpenseById(id);
 
