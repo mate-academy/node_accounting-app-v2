@@ -25,7 +25,7 @@ function deleteUser(id) {
     return;
   }
 
-  return users.splice(userIndex, 1);
+  users.splice(userIndex, 1);
 }
 
 function updateUser({ id, name }) {

@@ -6,23 +6,16 @@ const getExpenses = (req, res) => {
   const { userId, from, to, categories } = req.query;
 
   if (userId) {
-    expenses = expenseService.getExpensesByUser(Number(userId));
+    expenses = expenseService.getExpensesByUser(expenses, Number(userId));
   }
 
   if (from || to) {
-    expenses = expenseService.getExpensesBetweenDates(from, to);
+    expenses = expenseService.getExpensesBetweenDates(expenses, from, to);
   }
 
   if (categories) {
-    expenses = expenseService.getExpenseByCategories(categories);
+    expenses = expenseService.getExpenseByCategories(expenses, categories);
   }
-
-  res.status(200).json(expenses);
-};
-
-const getExpensesForUser = (req, res) => {
-  const userId = Number(req.query.userId);
-  const expenses = expenseService.getExpensesByUser(userId);
 
   res.status(200).json(expenses);
 };
@@ -32,7 +25,7 @@ const createExpense = (req, res) => {
 
   const user = userService.getUserById(userId);
 
-  if (!title || !user) {
+  if (!title || !user || !amount || !category || !note || !spentAt) {
     return res.sendStatus(400);
   }
 
@@ -51,11 +44,12 @@ const createExpense = (req, res) => {
 
 const getExpense = (req, res) => {
   const id = Number(req.params.id);
-  const expense = expenseService.getExpenseById(id);
 
   if (isNaN(id)) {
     return res.sendStatus(400);
   }
+
+  const expense = expenseService.getExpenseById(id);
 
   if (!expense) {
     return res.sendStatus(404);
@@ -73,7 +67,9 @@ const deleteExpense = (req, res) => {
     return res.sendStatus(404);
   }
 
-  res.status(204).json(expenseService.deleteExpense(id));
+  expenseService.deleteExpense(id);
+
+  res.sendStatus(204);
 };
 
 const updateExpense = (req, res) => {
@@ -85,7 +81,7 @@ const updateExpense = (req, res) => {
     return res.sendStatus(404);
   }
 
-  const { spentAt, title, amount, category, note } = req.body;
+  const { title, amount, category, note, spentAt } = req.body;
 
   if (!title) {
     return res.sendStatus(400);
@@ -105,7 +101,6 @@ const updateExpense = (req, res) => {
 
 module.exports = {
   getExpenses,
-  getExpensesForUser,
   createExpense,
   getExpense,
   deleteExpense,

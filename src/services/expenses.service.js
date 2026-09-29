@@ -8,18 +8,20 @@ function getAllExpenses() {
   return expenses;
 }
 
-function getExpensesByUser(userId) {
-  return expenses.filter((expense) => expense.userId === userId);
+function getExpensesByUser(expensesList, userId) {
+  return expensesList.filter((expense) => expense.userId === userId);
 }
 
-function getExpensesBetweenDates(from, to) {
-  return expenses.filter(
+function getExpensesBetweenDates(expensesList, from, to) {
+  return expensesList.filter(
     (expense) => expense.spentAt >= from && expense.spentAt <= to,
   );
 }
 
-function getExpenseByCategories(categories) {
-  return expenses.filter((expense) => categories.includes(expense.category));
+function getExpenseByCategories(expensesList, categories) {
+  return expensesList.filter((expense) => {
+    return categories.includes(expense.category);
+  });
 }
 
 function getExpenseById(id) {
@@ -39,7 +41,7 @@ function deleteExpense(id) {
     return;
   }
 
-  return expenses.splice(expenseIndex, 1);
+  expenses.splice(expenseIndex, 1);
 }
 
 function updateExpense(updatedExpense) {

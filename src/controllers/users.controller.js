@@ -8,11 +8,12 @@ const getUsers = (req, res) => {
 
 const getUser = (req, res) => {
   const id = Number(req.params.id);
-  const user = userService.getUserById(id);
 
   if (isNaN(id)) {
     return res.sendStatus(400);
   }
+
+  const user = userService.getUserById(id);
 
   if (!user) {
     return res.sendStatus(404);
@@ -42,7 +43,9 @@ const deleteUser = (req, res) => {
     return res.sendStatus(404);
   }
 
-  res.status(204).json(userService.deleteUser(id));
+  userService.deleteUser(id);
+
+  res.sendStatus(204);
 };
 
 const updateUser = (req, res) => {
