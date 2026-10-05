@@ -1,19 +1,21 @@
-import { v4 as uuidv4 } from 'uuid';
-
 const expenses = [];
 
 const getAll = (userId, categories, from, to) => {
+  if (!userId || !categories || !from || !to) {
+    return null;
+  }
+
   return expenses;
 };
 
 const getById = (id) => {
-  return expenses.find((expens) => expens.id === id) || null;
+  return expenses.find((expens) => expens.id === +id) || null;
 };
 
-const create = ({ userId, spentAt, title, amount, category, note }) => {
+const create = (userId, spentAt, title, amount, category, note) => {
   const ex = {
-    id: uuidv4(),
-    userId: +userId,
+    id: Date.now(),
+    userId: userId,
     spentAt,
     title,
     amount: +amount,
@@ -27,7 +29,19 @@ const create = ({ userId, spentAt, title, amount, category, note }) => {
 };
 
 const upDate = ({ id, spentAt, title, amount, category, note }) => {
-  const expensUpdate = expenses.find((e) => e.id === id);
+  const expensUpdate = expenses.find((e) => e.id === +id);
+
+  if (!expensUpdate) {
+    return null;
+  }
+
+  Object.assign(expensUpdate, {
+    spentAt,
+    title,
+    amount,
+    category,
+    note,
+  });
 
   return expensUpdate;
 };
@@ -44,14 +58,24 @@ const deletaById = (id) => {
   return exp;
 };
 
-const expensesService = {
+const resetExpenses = () => {
+  // eslint-disable-next-line no-const-assign
+  expenses = [];
+};
+
+// const expensesService = {
+//   getAll,
+//   getById,
+//   create,
+//   upDate,
+//   deletaById,
+// };
+
+module.exports = {
   getAll,
   getById,
   create,
   upDate,
   deletaById,
-};
-
-export default {
-  expensesService,
+  resetExpenses,
 };
