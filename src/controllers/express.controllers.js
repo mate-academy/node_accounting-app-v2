@@ -1,8 +1,6 @@
 const expensesService = require('../services/expense.service');
 const userService = require('../services/user.service');
 
-// перевір чи userId і categories існують, а потім вже викликай сервіс
-
 const getAll = async (req, res) => {
   const { userId, categories, from, to } = req.query;
 

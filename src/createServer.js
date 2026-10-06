@@ -4,8 +4,8 @@ const express = require('express');
 const cors = require('cors');
 const { createExpensesRouter } = require('./routers/expreseRouter');
 const { createUserRouter } = require('./routers/userRouter');
-const { resetUser } = require('../src/services/user.service');
-const { resetExpenses } = require('../src/services/expense.service');
+const { resetUser } = require('./services/user.service');
+const { resetExpenses } = require('./services/expense.service');
 
 function createServer() {
   const app = express();
