@@ -1,10 +1,10 @@
-const expenses = [];
+let expenses = [];
 
 const getAll = (userId, categories, from, to) => {
   let exp = expenses;
 
   if (userId) {
-    return (exp = exp.filter((item) => item.userId === +userId));
+    exp = exp.filter((item) => item.userId === +userId);
   }
 
   if (categories) {
@@ -89,7 +89,7 @@ const deleteById = (id) => {
 };
 
 const resetExpenses = () => {
-  expenses.length = 0;
+  expenses = [];
 };
 
 module.exports = {

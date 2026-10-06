@@ -1,4 +1,4 @@
-const users = [];
+let users = [];
 
 const getAll = () => {
   return users;
@@ -44,7 +44,7 @@ const deleteById = (id) => {
 };
 
 const resetUser = () => {
-  users.length = 0;
+  users = [];
 };
 
 module.exports = {
