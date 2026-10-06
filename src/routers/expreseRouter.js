@@ -13,7 +13,7 @@ const createExpensesRouter = () => {
 
   expreseRouter.patch('/:id', expensesController.upDate);
 
-  expreseRouter.delete('/:id', expensesController.remove);
+  expreseRouter.delete('/:id', expensesController.deleteById);
 
   return expreseRouter;
 };

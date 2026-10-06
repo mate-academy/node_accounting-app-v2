@@ -7,8 +7,8 @@ function createUserRouter() {
 
   userRouter.get('/', userController.getAll);
   userRouter.get('/:id', userController.getById);
-  userRouter.post('/', userController.creat);
-  userRouter.delete('/:id', userController.deletaById);
+  userRouter.post('/', userController.create);
+  userRouter.delete('/:id', userController.deleteById);
   userRouter.patch('/:id', userController.upDate);
 
   return userRouter;

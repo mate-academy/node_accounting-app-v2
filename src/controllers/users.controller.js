@@ -1,7 +1,7 @@
 const userService = require('../services/user.service');
 
 const getAll = (req, res) => {
-  return res.json(userService.getAll);
+  return res.json(userService.getAll());
 };
 
 const getById = (req, res) => {
@@ -22,7 +22,7 @@ const create = (req, res) => {
     return res.status(400).send({ message: 'Bad request' });
   }
 
-  const newUser = userService.create();
+  const newUser = userService.create(name);
 
   res.status(201).json(newUser);
 };
@@ -30,7 +30,7 @@ const create = (req, res) => {
 const upDate = (req, res) => {
   const { id } = req.params;
 
-  const userUpdate = userService.upDate(id);
+  const userUpdate = userService.upDate({ id, ...req.body });
 
   if (!userUpdate) {
     return res.status(404).send({ message: 'Not found' });
@@ -40,22 +40,15 @@ const upDate = (req, res) => {
   res.json(userUpdate);
 };
 
-const deletaById = (req, res) => {
-  // const { id } = req.params;
-  const index = userService.getById();
+const deleteById = (req, res) => {
+  const { id } = req.params;
+  const deleteUser = userService.deleteById(id);
 
-  if (index === -1) {
+  if (!deleteUser) {
     return res.status(404).send({ message: 'Not found' });
   }
 
-  const newUserDelete = userService.deletaById();
-
-  return res.json(newUserDelete);
-};
-
-const resetUser = () => {
-  // eslint-disable-next-line no-const-assign
-  users = [];
+  return res.status(204).end();
 };
 
 const userController = {
@@ -63,8 +56,7 @@ const userController = {
   getById,
   create,
   upDate,
-  deletaById,
-  resetUser,
+  deleteById,
 };
 
 module.exports = {

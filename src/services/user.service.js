@@ -26,12 +26,12 @@ const upDate = ({ id, name }) => {
     return null;
   }
 
-  Object.assign(userUpdate, name);
+  Object.assign(userUpdate, { name });
 
   return userUpdate;
 };
 
-const deletaById = (id) => {
+const deleteById = (id) => {
   const index = users.findIndex((e) => e.id === +id);
 
   if (index === -1) {
@@ -44,8 +44,7 @@ const deletaById = (id) => {
 };
 
 const resetUser = () => {
-  // eslint-disable-next-line no-const-assign
-  users = [];
+  users.length = 0;
 };
 
 module.exports = {
@@ -53,6 +52,6 @@ module.exports = {
   getById,
   create,
   upDate,
-  deletaById,
+  deleteById,
   resetUser,
 };
