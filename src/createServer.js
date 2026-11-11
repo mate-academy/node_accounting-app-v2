@@ -37,20 +37,14 @@ function createServer() {
   app.post('/expenses', (req, res) => {
     const { userId, spentAt, title, amount, category, note } = req.body;
 
-    if (
-      userId === undefined ||
-      spentAt === undefined ||
-      title === undefined ||
-      amount === undefined ||
-      category === undefined
-    ) {
+    if (!userId) {
       return res.status(400).send('Bad request');
     }
 
     const user = users.find((item) => item.id === userId);
 
     if (!user) {
-      return res.status(404).send('Bad request');
+      return res.status(400).send('Bad request');
     }
 
     const expense = {
