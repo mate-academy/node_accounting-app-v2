@@ -50,7 +50,7 @@ function createServer() {
     const user = users.find((item) => item.id === userId);
 
     if (!user) {
-      return res.status(400).send('Bad request');
+      return res.status(404).send('Bad request');
     }
 
     const expense = {
