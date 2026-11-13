@@ -162,7 +162,7 @@ function createServer() {
     const userExists = users.some((u) => u.id === userId);
 
     if (!userExists) {
-      return res.status(404).json({ message: 'User not found' });
+      return res.status(400).json({ message: 'User does not exist' });
     }
 
     const expense = {
@@ -271,6 +271,7 @@ function createServer() {
 
   // ---------- errors ----------
 
+  // Некоректний JSON у тілі запиту -> 400
   // eslint-disable-next-line no-unused-vars
   app.use((err, req, res, next) => {
     if (err.type === 'entity.parse.failed') {
