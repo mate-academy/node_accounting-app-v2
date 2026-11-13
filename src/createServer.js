@@ -271,7 +271,6 @@ function createServer() {
 
   // ---------- errors ----------
 
-  // Некоректний JSON у тілі запиту -> 400
   // eslint-disable-next-line no-unused-vars
   app.use((err, req, res, next) => {
     if (err.type === 'entity.parse.failed') {
