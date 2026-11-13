@@ -162,7 +162,7 @@ function createServer() {
     const userExists = users.some((u) => u.id === userId);
 
     if (!userExists) {
-      return res.status(400).json({ message: 'User does not exist' });
+      return res.status(404).json({ message: 'User not found' });
     }
 
     const expense = {
@@ -268,6 +268,8 @@ function createServer() {
     expenses = expenses.filter((e) => e.id !== id);
     res.sendStatus(204);
   });
+
+  // ---------- errors ----------
 
   // eslint-disable-next-line no-unused-vars
   app.use((err, req, res, next) => {
