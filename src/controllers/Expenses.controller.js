@@ -79,6 +79,10 @@ function createExpensesController(ExpensesService, UsersService) {
     updateExpensesById: (req, res) => {
       const { id } = req.params;
 
+      if (id === undefined || id === null) {
+        return res.sendStatus(400);
+      }
+
       const expense = ExpensesService.getExpensesById(id);
 
       if (!expense) {

@@ -22,9 +22,7 @@ function createUserController(UserService) {
       const { id } = req.params;
 
       if (!id) {
-        res.sendStatus(400);
-
-        return;
+        return res.sendStatus(400);
       }
 
       const user = UserService.getUserById(id);
@@ -44,21 +42,17 @@ function createUserController(UserService) {
       const { name } = req.body;
 
       if (!id || !name) {
-        res.sendStatus(400);
-
-        return;
+        return res.sendStatus(400);
       }
 
-      const user = UserService.updateUserById(id, name);
-
-      if (!user) {
+      if (!UserService.getUserById(id)) {
         res.sendStatus(404);
 
         return;
       }
 
       res.statusCode = 200;
-      res.send(user);
+      res.send(UserService.updateUserById(id, name));
     },
 
     deleteUserById: (req, res) => {
