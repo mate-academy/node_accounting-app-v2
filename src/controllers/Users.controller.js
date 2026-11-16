@@ -43,7 +43,7 @@ function createUserController(UserService) {
       const { id } = req.params;
       const { name } = req.body;
 
-      if (!id && !name) {
+      if (!id || !name) {
         res.sendStatus(400);
 
         return;

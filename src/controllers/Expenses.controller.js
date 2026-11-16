@@ -35,7 +35,7 @@ function createExpensesController(ExpensesService, UsersService) {
       }
 
       if (!UsersService.getUserById(userId)) {
-        res.sendStatus(400);
+        res.sendStatus(404);
 
         return;
       }
