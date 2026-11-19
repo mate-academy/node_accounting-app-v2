@@ -57,7 +57,7 @@ describe('Expense', () => {
         note: 'I need a new laptop',
       };
 
-      await api.post('/expenses').send(expenseData).expect(400);
+      await api.post('/expenses').send(expenseData).expect(404);
     });
   });
 
