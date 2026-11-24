@@ -18,6 +18,11 @@ function createServer() {
     return Number.isInteger(Number(id)) && Number(id) > 0;
   };
 
+  // Helper: validate non-empty string
+  const isNonEmptyString = (value) => {
+    return typeof value === 'string' && value.trim() !== '';
+  };
+
   // Helper: find entity
   const findById = (collection, id) => {
     return collection.find((item) => item.id === Number(id));
@@ -36,7 +41,7 @@ function createServer() {
   app.post('/users', (req, res) => {
     const { name } = req.body || {};
 
-    if (typeof name !== 'string') {
+    if (!isNonEmptyString(name)) {
       return res.status(400).json({
         message: 'Name is required',
       });
@@ -78,7 +83,7 @@ function createServer() {
     const { id } = req.params;
     const { name } = req.body || {};
 
-    if (!isValidId(id) || typeof name !== 'string') {
+    if (!isValidId(id) || !isNonEmptyString(name)) {
       return res.status(400).json({
         message: 'Invalid request',
       });
@@ -315,7 +320,7 @@ function createServer() {
 
     if (!isValidId(id)) {
       return res.status(400).json({
-        message: 'Expense not found',
+        message: 'Invalid expense id',
       });
     }
 
