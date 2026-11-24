@@ -102,8 +102,8 @@ function createServer() {
     const { id } = req.params;
 
     if (!isValidId(id)) {
-      return res.status(404).json({
-        message: 'User not found',
+      return res.status(400).json({
+        message: 'Invalid user id',
       });
     }
 
@@ -201,7 +201,7 @@ function createServer() {
     const user = findById(users, userId);
 
     if (!user) {
-      return res.status(404).json({
+      return res.status(400).json({
         message: 'User not found',
       });
     }
@@ -314,7 +314,7 @@ function createServer() {
     const { id } = req.params;
 
     if (!isValidId(id)) {
-      return res.status(404).json({
+      return res.status(400).json({
         message: 'Expense not found',
       });
     }
