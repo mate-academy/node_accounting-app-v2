@@ -41,7 +41,7 @@ function createServer() {
 
     users.splice(index, 1);
 
-    res.sendStatus(204).json(user);
+    res.sendStatus(204);
   });
 
   app.get('/users', (req, res) => {
@@ -125,7 +125,7 @@ function createServer() {
 
     expenses.splice(index, 1);
 
-    res.sendStatus(204).json(expens);
+    res.sendStatus(204);
   });
 
   app.patch('/expenses/:id', (req, res) => {
@@ -148,7 +148,7 @@ function createServer() {
     const user = users.find((item) => item.id === Number(userId));
 
     if (!user) {
-      return res.sendStatus(400);
+      return res.sendStatus(404);
     }
 
     if (!userId) {
