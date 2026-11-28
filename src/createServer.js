@@ -152,7 +152,7 @@ function createServer() {
     const user = users.find((item) => item.id === Number(userId));
 
     if (!user) {
-      return res.sendStatus(404);
+      return res.sendStatus(400);
     }
 
     if (!spentAt) {
