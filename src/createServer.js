@@ -145,14 +145,14 @@ function createServer() {
   app.post('/expenses', (req, res) => {
     const { userId, spentAt, title, amount, category, note } = req.body;
 
+    if (!userId) {
+      return res.sendStatus(400);
+    }
+
     const user = users.find((item) => item.id === Number(userId));
 
     if (!user) {
       return res.sendStatus(404);
-    }
-
-    if (!userId) {
-      return res.sendStatus(400);
     }
 
     if (!spentAt) {
